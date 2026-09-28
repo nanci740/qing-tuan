@@ -7557,6 +7557,225 @@
             color: var(--win-deep);
         }
 
+        /* ---------------- 设置主页 · 古早小窗口风：每组一扇窗，各有来历 ---------------- */
+        #settingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+        }
+
+        /* 窗口本体 */
+        #settingsPage .settings-content > .settings-section {
+            margin-bottom: 14px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            overflow: hidden;
+        }
+
+        /* 标题栏 */
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-section-title::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 窗口里的条目：去掉原来的边框，行与行之间一条虚线 */
+        #settingsPage .settings-content > .settings-section .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-item:last-child {
+            min-height: 48px;
+            padding: 6px 12px 6px 10px;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item + .settings-item::before {
+            left: 51px;
+            right: 12px;
+            height: 0;
+            background: none;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item:active {
+            background: var(--win-bar);
+        }
+
+        /* 条目图标：凸起的小方块 */
+        #settingsPage .settings-content > .settings-section .settings-item-icon,
+        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+            width: 29px;
+            height: 29px;
+            flex: 0 0 29px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #FFFFFF;
+            color: var(--win-deep);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item-action {
+            color: var(--win-line);
+        }
+
+        /* 1 个人信息：浏览器小窗，顶上一条三圆点标题栏 */
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: #FFFFFF;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding-top: 30px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            left: 10px;
+            top: 6px;
+            width: 32px;
+            height: 8px;
+            border: 0;
+            border-radius: 0;
+            z-index: 3;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 20px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 0;
+            background: #F6F7F7;
+            -webkit-mask: none;
+            mask: none;
+            z-index: 2;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
+            border: 1px solid var(--win-line);
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+        /* 2 个性化内容：经典对话框，深色标题栏白字 */
+        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title {
+            background: var(--win-deep);
+            color: #FFFFFF;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title::after {
+            background: #FFFFFF;
+        }
+
+        /* 3 智能连接与服务：古早 iPod 状态条 */
+        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: #F1F1EE;
+            color: #8E969C;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: #E2E2DE;
+            box-shadow: none;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: #9AA3A9;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+        /* 4 系统与存储：表单分组框，标题压在框线上 */
+        #settingsPage .settings-content > .settings-section:nth-child(4) {
+            position: relative;
+            overflow: visible;
+            margin-top: 22px;
+            box-shadow: none;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            z-index: 1;
+            transform: translateY(-50%);
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
+            box-shadow: none;
+            font-weight: 500;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title::after {
+            display: none;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title + .settings-item {
+            margin-top: 8px;
+        }
+
+        /* 5 关于：双层框对话框，右上只有 ? 和关闭 */
+        #settingsPage .settings-content > .settings-section:nth-child(5) {
+            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title {
+            margin: 4px 4px 0;
+            border: 1px solid var(--win-line);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item {
+            margin: 0 4px 4px;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
