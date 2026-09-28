@@ -319,6 +319,42 @@
             animation: none;
         }
 
+        /* 右侧竖排日期，像书页边的页眉 */
+        .splash-date {
+            position: absolute;
+            top: 17vh;
+            right: 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--splash-soft);
+            font-family: var(--font-active);
+            pointer-events: none;
+            opacity: 0;
+            animation: splashFadeIn 1.2s ease 0.45s forwards;
+        }
+
+        .splash-date::before {
+            content: '';
+            width: 1px;
+            height: 26px;
+            background: var(--theme-color);
+        }
+
+        /* 逐字竖排，比 writing-mode 在各字体下都稳 */
+        .splash-date-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--splash-ink);
+            opacity: 0.72;
+        }
+
+
         .splash-entry-tip {
             position: absolute;
             left: 50%;
@@ -487,7 +523,8 @@
         @media (prefers-reduced-motion: reduce) {
             .splash-icon-stage,
             .splash-text-block,
-            .splash-entry-tip {
+            .splash-entry-tip,
+            .splash-date {
                 animation: none;
                 opacity: 1;
             }
@@ -11069,6 +11106,8 @@
             </div>
         </div>
 
+        <div class="splash-date" id="splashDate" aria-hidden="true"><span class="splash-date-day"></span></div>
+
         <div class="splash-entry-tip"><span class="tip-line"></span><span>Tap to begin</span><span class="tip-line"></span></div>
     </div>
 
@@ -12084,7 +12123,30 @@
             butterflyAnimId = requestAnimationFrame(tick);
         }
 
+        function renderSplashDate() {
+            const box = document.getElementById('splashDate');
+            if (!box) return;
+            const digits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            const toCn = (n) => {
+                if (n <= 10) return n === 10 ? '十' : digits[n];
+                const tens = Math.floor(n / 10);
+                const ones = n % 10;
+                const head = tens === 1 ? '十' : tens === 2 ? '廿' : '卅';
+                return ones === 0 ? (tens === 2 ? '二十' : tens === 3 ? '三十' : '十') : head + digits[ones];
+            };
+            const now = new Date();
+            const stack = (el, text) => {
+                el.replaceChildren(...Array.from(text, (ch) => {
+                    const span = document.createElement('span');
+                    span.textContent = ch;
+                    return span;
+                }));
+            };
+            stack(box.querySelector('.splash-date-day'), `${toCn(now.getMonth() + 1)}月${toCn(now.getDate())}`);
+        }
+
         function playSplashSequence() {
+            renderSplashDate();
             splashPhase = 'quiet';
             if (splashButterfly) splashButterfly.style.display = 'none';
             if (butterflyLandingEffects) butterflyLandingEffects.style.display = 'none';
