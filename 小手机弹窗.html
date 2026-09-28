@@ -53,7 +53,7 @@
         }
 
         body {
-            background-color: #F9F9F9; /* 带一点灰的白色 */
+            background-color: #F9F9F7; /* 暖米白，与开屏一致 */
         }
 
         #main-content {
@@ -71,7 +71,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
             font-family: var(--font-active);
-            background-color: #F9F9F9;
+            background-color: #F9F9F7;
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -1357,6 +1357,9 @@
         }
         .ticket-card{width:100%;max-width:330px;transform:scale(.98)translateY(20px);transform-origin:top center}
         .ticket-card svg{width:100%;height:auto;display:block}
+        /* 开屏那对青团，缩小后坐在票根上沿，把开屏和主画面连起来 */
+        .ticket-card{position:relative}
+        .ticket-dumplings{position:absolute;left:54%;bottom:100%;width:42px;height:auto;margin-bottom:-1px;pointer-events:none}
 
         /* ---------------- 底部 Dock 导航栏 ---------------- */
         .dock-bar {
@@ -11285,12 +11288,13 @@
 </div>
 <div class="ticket-section">
 <div class="ticket-card">
+<img class="ticket-dumplings" id="ticketDumplings" alt="" aria-hidden="true">
 <svg aria-label="daily greeting card" role="img" viewbox="0 0 880 420">
 <path d="M 22 0 H 648 A 32 32 0 0 0 712 0 H 858 A 22 22 0 0 1 880 22 V 34 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 l 0 11 a 11 11 0 0 0 0 22 V 398 A 22 22 0 0 1 858 420 H 712 A 32 32 0 0 0 648 420 H 22 A 22 22 0 0 1 0 398 V 386 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 l 0 -11 a 11 11 0 0 0 0 -22 V 22 A 22 22 0 0 1 22 0 Z" fill="#ffffff"></path>
-<line stroke="#e2e2e2" stroke-dasharray="7 8" stroke-width="2" x1="680" x2="680" y1="40" y2="380"></line>
+<line stroke="#DCE0E4" stroke-dasharray="7 8" stroke-width="2" x1="680" x2="680" y1="40" y2="380"></line>
 <text fill="#5F6772" font-size="27" font-weight="700" id="tgreet" letter-spacing="1" x="69" y="70">Everlasting</text>
 <text fill="#5F6772" font-size="26" font-weight="700" text-anchor="middle" id="ttemprange" x="576" y="70">23°/31°</text>
-<line stroke="#d9d9d9" stroke-dasharray="8 7" stroke-width="2" x1="65" x2="616" y1="110" y2="110"></line>
+<line stroke="#DCE0E4" stroke-dasharray="8 7" stroke-width="2" x1="65" x2="616" y1="110" y2="110"></line>
 <g fill="none" stroke="#727A86" stroke-linecap="round" stroke-width="2.6"><circle cx="74" cy="170" r="12"></circle><path d="M74 170 V162 M74 170 L81 174"></path></g>
 <text fill="#727A86" font-size="25" id="tgmt" x="116" y="177">GMT+08:00</text>
 <text fill="#8A919B" font-size="25" id="tclock" text-anchor="end" x="607" y="177">02:36:50 PM</text>
@@ -11322,7 +11326,7 @@
 <g fill="none" stroke="#727A86" stroke-linecap="round" stroke-width="2.6"><path d="M63 360 A 11 11 0 0 1 85 360 M60 360 H88 M64 366 H84 M74 339 V335 M65 343 L62 340 M83 343 L86 340"></path></g>
 <text fill="#727A86" font-size="25" id="tsunlabel" x="116" y="363">Sunrise &amp; Sunset</text>
 <text fill="#8A919B" font-size="25" id="tsun" text-anchor="end" x="607" y="363">↑ 07:00 ↓ 17:51</text>
-<g fill="#5F6772"><rect height="9" width="60" x="732" y="47"></rect><rect height="14" width="60" x="732" y="69"></rect><rect height="7" width="60" x="732" y="96"></rect><rect height="15" width="60" x="732" y="116"></rect><rect height="10" width="60" x="732" y="144"></rect><rect height="6" width="60" x="732" y="167"></rect><rect height="14" width="60" x="732" y="186"></rect><rect height="9" width="60" x="732" y="213"></rect><rect height="16" width="60" x="732" y="235"></rect><rect height="7" width="60" x="732" y="264"></rect><rect height="12" width="60" x="732" y="284"></rect><rect height="6" width="60" x="732" y="309"></rect><rect height="13" width="60" x="732" y="328"></rect><rect height="9" width="60" x="732" y="354"></rect></g>
+<g fill="#A9B0B8"><rect height="9" width="60" x="732" y="47"></rect><rect height="14" width="60" x="732" y="69"></rect><rect height="7" width="60" x="732" y="96"></rect><rect height="15" width="60" x="732" y="116"></rect><rect height="10" width="60" x="732" y="144"></rect><rect height="6" width="60" x="732" y="167"></rect><rect height="14" width="60" x="732" y="186"></rect><rect height="9" width="60" x="732" y="213"></rect><rect height="16" width="60" x="732" y="235"></rect><rect height="7" width="60" x="732" y="264"></rect><rect height="12" width="60" x="732" y="284"></rect><rect height="6" width="60" x="732" y="309"></rect><rect height="13" width="60" x="732" y="328"></rect><rect height="9" width="60" x="732" y="354"></rect></g>
 <text fill="#5F6772" font-size="18" font-weight="700" letter-spacing="4" id="tweekshort" transform="translate(835,90) rotate(-90)">WED</text>
 <text fill="#5F6772" font-size="17" font-weight="700" letter-spacing="2" id="tserial" transform="translate(835,365) rotate(-90)" style="cursor: default;">NO.20181230901740</text>
 </svg>
@@ -12066,6 +12070,11 @@
 
             butterflyAnimId = requestAnimationFrame(tick);
         }
+
+        // 票根上的小青团与开屏共用同一张内嵌图，不重复存一份
+        const ticketDumplings = document.getElementById('ticketDumplings');
+        const splashIconImage = document.querySelector('.splash-icon-image');
+        if (ticketDumplings && splashIconImage) ticketDumplings.src = splashIconImage.getAttribute('src');
 
         function playSplashSequence() {
             splashPhase = 'quiet';
