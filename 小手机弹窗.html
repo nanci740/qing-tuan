@@ -7557,7 +7557,7 @@
             color: var(--win-deep);
         }
 
-        /* ---------------- 设置主页 · 古早小窗口风：每组一扇窗，各有来历 ---------------- */
+        /* ---------------- 设置主页 · Web 1.0 个人主页风：格子、条纹、蕾丝、便签框、导航按钮，偶尔一张贴纸 ---------------- */
         #settingsPage {
             --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
@@ -7568,47 +7568,23 @@
             --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
         }
 
-        /* 窗口本体 */
+        /* 页面底：极淡的格子布 */
+        #settingsPage .settings-content {
+            background:
+                linear-gradient(90deg, rgba(var(--theme-rgb), 0.07) 50%, transparent 50%) 0 0 / 16px 16px,
+                linear-gradient(rgba(var(--theme-rgb), 0.07) 50%, transparent 50%) 0 0 / 16px 16px,
+                #F9F9F7;
+        }
+
         #settingsPage .settings-content > .settings-section {
-            margin-bottom: 14px;
-            border: 1px solid var(--win-line);
-            border-radius: 4px;
-            background: #FFFFFF;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
-            overflow: hidden;
+            margin-bottom: 16px;
         }
 
-        /* 标题栏 */
-        #settingsPage .settings-content > .settings-section .settings-section-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin: 0;
-            padding: 6px 8px 6px 10px;
-            border-bottom: 1px solid var(--win-line);
-            background: var(--win-bar);
-            color: var(--win-ink);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            box-shadow: inset 0 1px 0 var(--win-hi);
-        }
-
-        #settingsPage .settings-content > .settings-section .settings-section-title::after {
-            content: '';
-            flex: 0 0 46px;
-            height: 12px;
-            background: var(--win-line);
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
-        }
-
-        /* 窗口里的条目：去掉原来的边框，行与行之间一条虚线 */
+        /* 通用：条目行、图标 */
         #settingsPage .settings-content > .settings-section .settings-item,
         #settingsPage .settings-content > .settings-section .settings-section-title + .settings-item,
         #settingsPage .settings-content > .settings-section .settings-item:last-child {
-            min-height: 48px;
+            min-height: 46px;
             padding: 6px 12px 6px 10px;
             border: 0 !important;
             border-radius: 0 !important;
@@ -7620,24 +7596,23 @@
             right: 12px;
             height: 0;
             background: none;
-            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            border-top: 1px dotted var(--win-line);
         }
 
         #settingsPage .settings-content > .settings-section .settings-item:active {
             background: var(--win-bar);
         }
 
-        /* 条目图标：凸起的小方块 */
         #settingsPage .settings-content > .settings-section .settings-item-icon,
         #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
             width: 29px;
             height: 29px;
             flex: 0 0 29px;
             border: 1px solid var(--win-line);
-            border-radius: 3px !important;
+            border-radius: 6px !important;
             background: #FFFFFF;
             color: var(--win-deep);
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset 0 -2px 0 rgba(var(--theme-rgb), 0.28);
         }
 
         #settingsPage .settings-content > .settings-section .settings-item-icon svg {
@@ -7649,30 +7624,36 @@
             color: var(--win-line);
         }
 
-        /* 1 个人信息：浏览器小窗，顶上一条三圆点标题栏 */
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0;
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            border: 0;
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-section-title::after {
+            display: none;
+        }
+
+        /* 个人信息：个人主页的资料卡。顶上一条格子布、下沿蕾丝花边，头像像贴上去的照片，右上角一张青团贴纸 */
+        #settingsPage .settings-content > .settings-section.settings-section-personal {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card {
-            border: 0 !important;
-            border-radius: 0 !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 6px !important;
             background: #FFFFFF;
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
             padding-top: 30px;
-        }
-
-        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
-            display: block !important;
-            content: '' !important;
-            position: absolute;
-            left: 10px;
-            top: 6px;
-            width: 32px;
-            height: 8px;
-            border: 0;
-            border-radius: 0;
-            z-index: 3;
-            background: var(--theme-color);
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
         }
 
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
@@ -7680,100 +7661,142 @@
             content: '' !important;
             position: absolute;
             inset: 0 0 auto 0;
-            height: 20px;
+            height: 22px;
             border: 0;
-            border-bottom: 1px solid var(--win-line);
             border-radius: 0;
-            background: #F6F7F7;
-            -webkit-mask: none;
-            mask: none;
+            background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.22) 50%, transparent 50%) 0 0 / 10px 10px, linear-gradient(rgba(var(--theme-rgb), 0.22) 50%, transparent 50%) 0 0 / 10px 10px, var(--win-bar);
+            -webkit-mask: linear-gradient(#000, #000) 0 0 / 100% 16px no-repeat, radial-gradient(circle at 5px 16px, #000 4.5px, transparent 5px) 0 0 / 10px 22px repeat-x;
+            mask: linear-gradient(#000, #000) 0 0 / 100% 16px no-repeat, radial-gradient(circle at 5px 16px, #000 4.5px, transparent 5px) 0 0 / 10px 22px repeat-x;
             z-index: 2;
         }
 
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
+            display: none !important;
+        }
+
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            outline: 1px solid var(--win-line);
+            transform: rotate(-3deg);
+            box-shadow: 2px 3px 0 rgba(var(--theme-rgb), 0.35);
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar img {
+            border-radius: 2px;
+        }
+
+        #settingsPage .settings-sticker {
+            position: absolute;
+            top: -12px;
+            right: 14px;
+            width: 58px;
+            height: auto;
+            z-index: 4;
+            transform: rotate(8deg);
+            pointer-events: none;
+            filter: drop-shadow(1.5px 0 0 #FFFFFF) drop-shadow(-1.5px 0 0 #FFFFFF) drop-shadow(0 1.5px 0 #FFFFFF) drop-shadow(0 -1.5px 0 #FFFFFF) drop-shadow(1px 2px 1px rgba(75, 90, 98, 0.18));
+        }
+
+        /* 01 个性化内容：导航栏。格子布标题条、居中白色标签，条目是一颗颗圆角导航按钮 */
+        #settingsPage .settings-content > .settings-section:nth-child(2) {
+            padding: 0 8px 8px;
             border: 1px solid var(--win-line);
+            border-radius: 6px;
+            background: #FFFFFF;
             box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            overflow: hidden;
         }
 
-        /* 2 个性化内容：经典对话框，深色标题栏白字 */
         #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title {
-            background: var(--win-deep);
-            color: #FFFFFF;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            justify-content: center;
+            margin: 0 -8px 8px;
+            padding: 7px 8px;
+            background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.22) 50%, transparent 50%) 0 0 / 10px 10px, linear-gradient(rgba(var(--theme-rgb), 0.22) 50%, transparent 50%) 0 0 / 10px 10px, var(--win-bar);
+            border-bottom: 1px solid var(--win-line);
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title::after {
+        #settingsPage .settings-content > .settings-section:nth-child(2) .retro-sec-head {
+            padding: 2px 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 999px;
             background: #FFFFFF;
         }
 
-        /* 3 智能连接与服务：古早 iPod 状态条 */
-        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title {
-            padding-top: 4px;
-            padding-bottom: 4px;
-            background: #F1F1EE;
-            color: #8E969C;
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 2.5px;
-            border-bottom-color: #E2E2DE;
-            box-shadow: none;
+        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-item {
+            margin-top: 6px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 8px !important;
+            background: #FFFFFF;
+            box-shadow: inset 0 -3px 0 rgba(var(--theme-rgb), 0.22), 0 1px 0 rgba(var(--theme-rgb), 0.3);
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title::after {
-            flex-basis: 34px;
-            height: 10px;
-            background: #9AA3A9;
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
-        }
-
-        /* 4 系统与存储：表单分组框，标题压在框线上 */
-        #settingsPage .settings-content > .settings-section:nth-child(4) {
-            position: relative;
-            overflow: visible;
-            margin-top: 22px;
-            box-shadow: none;
-        }
-
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
-            position: absolute;
-            top: 0;
-            left: 10px;
-            z-index: 1;
-            transform: translateY(-50%);
-            padding: 0 6px;
-            border: 0;
-            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
-            box-shadow: none;
-            font-weight: 500;
-        }
-
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title::after {
+        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-item + .settings-item::before {
             display: none;
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title + .settings-item {
-            margin-top: 8px;
+        /* 02 智能连接与服务：更新日志式的虚线便签框，标题像一张夹在框上的小标签 */
+        #settingsPage .settings-content > .settings-section:nth-child(3) {
+            position: relative;
+            margin-top: 26px;
+            padding: 12px 4px 4px;
+            border: 1.5px dashed var(--win-line);
+            border-radius: 10px;
+            background: #FFFFFF;
+            overflow: visible;
         }
 
-        /* 5 关于：双层框对话框，右上只有 ? 和关闭 */
+        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title {
+            position: absolute;
+            top: -12px;
+            left: 12px;
+            z-index: 1;
+            padding: 4px 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 8px 8px 8px 2px;
+            background: var(--win-bar);
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.4);
+        }
+
+        /* 03 系统与存储：条纹标题条，标题放在白底小框里 */
+        #settingsPage .settings-content > .settings-section:nth-child(4) {
+            border: 1px solid var(--win-line);
+            border-radius: 6px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            overflow: hidden;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--win-line);
+            background: repeating-linear-gradient(-45deg, rgba(var(--theme-rgb), 0.3) 0 4px, transparent 4px 8px), #FFFFFF;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .retro-sec-head {
+            padding: 2px 8px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+        }
+
+        /* 04 关于：蕾丝相框。一圈大圆点花边，里面细框，标题居中 */
         #settingsPage .settings-content > .settings-section:nth-child(5) {
-            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            padding: 8px;
+            border: 5px dotted color-mix(in srgb, var(--theme-color) 70%, #FFFFFF);
+            border-radius: 12px;
+            background: #FFFFFF;
+            background-clip: padding-box;
         }
 
         #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title {
-            margin: 4px 4px 0;
-            border: 1px solid var(--win-line);
-        }
-
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title::after {
-            flex-basis: 29px;
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            justify-content: center;
+            padding: 4px 0 6px;
+            border-bottom: 1px dashed var(--win-line);
+            margin-bottom: 2px;
         }
 
         #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item {
-            margin: 0 4px 4px;
+            border-radius: 6px !important;
         }
 
         /* ---------------- 设置主页 · 程序标题栏、地址栏、分组编号与折叠、底部状态栏 ---------------- */
@@ -13258,6 +13281,17 @@
                 title.addEventListener('click', flip);
                 title.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
             });
+
+            const personal = page.querySelector('.settings-section-personal');
+            const splashArt = document.querySelector('.splash-icon-image');
+            if (personal && splashArt && !personal.querySelector('.settings-sticker')) {
+                const sticker = document.createElement('img');
+                sticker.className = 'settings-sticker';
+                sticker.alt = '';
+                sticker.setAttribute('aria-hidden', 'true');
+                sticker.src = splashArt.getAttribute('src');
+                personal.appendChild(sticker);
+            }
 
             const counter = document.getElementById('settingsVisitorCounter');
             if (counter) {
