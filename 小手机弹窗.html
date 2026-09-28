@@ -1485,6 +1485,55 @@
             font-weight: 600;
         }
 
+        /* ---------------- 主画面青色系：全部由主题色调出，换主题时一起变 ---------------- */
+        #main-content {
+            --mc-ink: color-mix(in srgb, var(--theme-color) 30%, #4B5A62);      /* 主文字、主图标 */
+            --mc-ink-soft: color-mix(in srgb, var(--theme-color) 42%, #7E8894); /* 次要文字 */
+            --mc-deep: color-mix(in srgb, var(--theme-color) 62%, #4E8C92);     /* 强调：进度、选中 */
+            --mc-mist: color-mix(in srgb, var(--theme-color) 34%, #FFFFFF);     /* 浅轨道、分隔线 */
+            --ui-text-primary: var(--mc-ink);
+        }
+
+        #main-content .subtitle { color: var(--mc-ink-soft); }
+        #main-content .sound-wave span { background-color: var(--mc-deep); }
+        #main-content .progress-bar-bg { background: var(--mc-mist); }
+        #main-content .progress-bar-fill { background: var(--mc-deep); }
+        #main-content .time-stamps { color: var(--mc-ink-soft); }
+        #main-content .player-mini-cover span { color: var(--mc-ink-soft); }
+        #main-content .btn-star svg,
+        #main-content .btn-heart svg,
+        #main-content .btn-prev svg,
+        #main-content .btn-next svg,
+        #main-content .btn-play svg.icon-play { fill: var(--mc-ink); }
+        #main-content .btn-play .pause-bars span { background: var(--mc-ink); }
+        #main-content .btn-heart.liked svg,
+        #main-content .btn-star.starred svg { fill: var(--mc-deep); }
+
+        #main-content .icon-box svg { stroke: var(--mc-ink); }
+        #main-content .app-item:hover .icon-box svg { stroke: var(--mc-deep); }
+
+        #main-content .earphone-wires path { stroke: var(--theme-color); opacity: 0.7; }
+        #main-content .earphone-wires ellipse { fill: var(--theme-color); opacity: 0.7; }
+
+        #main-content .polaroid-tape { background: rgba(var(--theme-rgb), 0.38); }
+
+        #main-content .dock-item svg,
+        #main-content .dock-item.cat-item svg { stroke: var(--mc-ink-soft); }
+        #main-content .dock-item span { color: var(--mc-ink-soft); }
+        #main-content .dock-item.active svg,
+        #main-content .dock-item.cat-item.active svg { stroke: var(--mc-deep); }
+        #main-content .dock-item.active svg { fill: rgba(var(--theme-rgb), 0.18); }
+        #main-content .dock-item.active span { color: var(--mc-deep); }
+
+        /* 票根：SVG 里写死的灰按原来的深浅换成对应的青灰 */
+        #main-content .ticket-card [fill="#5F6772"] { fill: var(--mc-ink); }
+        #main-content .ticket-card [fill="#727A86"] { fill: var(--mc-ink-soft); }
+        #main-content .ticket-card [fill="#8A919B"] { fill: color-mix(in srgb, var(--mc-ink-soft) 80%, #FFFFFF); }
+        #main-content .ticket-card [fill="#A2A8B2"] { fill: var(--mc-mist); }
+        #main-content .ticket-card [stroke="#727A86"] { stroke: var(--mc-deep); }
+        #main-content .ticket-card [stroke="#DCE0E4"] { stroke: var(--mc-mist); }
+        #main-content .ticket-card [fill="#A9B0B8"] { fill: var(--theme-color); }
+
         /* ---------------- 票根地区触发与无边框下拉箭头 ---------------- */
         .ticket-loc-trigger {
             cursor: pointer;
