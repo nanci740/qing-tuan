@@ -7082,6 +7082,157 @@
             border-radius: 3px !important;
         }
 
+        /* ---------------- 美化设置 · 七扇窗各有来历 ---------------- */
+        #themeSettingsPage {
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+        }
+
+        /* 1 界面配色：经典对话框，深青标题栏白字 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label {
+            background: var(--win-deep);
+            color: #FFFFFF;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::after {
+            background: #FFFFFF;
+        }
+
+        /* 2 界面质感：浏览器小窗，左上三颗圆点，标题居中 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label {
+            justify-content: center;
+            position: relative;
+            background: #F6F7F7;
+            color: #8A949C;
+            font-weight: 500;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::after {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin: -5px 0 0;
+            width: 38px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+        /* 3 开屏设置：古早 iPod 的状态条，细、灰、右边一个播放三角和电池 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: #F1F1EE;
+            color: #8E969C;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: #E2E2DE;
+            box-shadow: none;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: #9AA3A9;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+        /* 4 字体样式：表单分组框，没有标题栏，标题压在框线上 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) {
+            position: relative;
+            overflow: visible;
+            margin-top: 26px;
+            background: transparent;
+            box-shadow: none;
+            border-style: solid;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            background: #FFFFFF;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            transform: translateY(-50%);
+            margin-left: 10px;
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
+            box-shadow: none;
+            color: var(--win-ink);
+            font-weight: 500;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label::after {
+            display: none;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            padding-top: 20px;
+        }
+
+        /* 5 主画面文字：对话框，双层框线，右上只有「?」和关闭 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) {
+            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label {
+            margin: 4px 4px 0;
+            border: 1px solid var(--win-line);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+        /* 6 主画面背景：看图窗口，底部一条状态栏，右下角拖拽纹 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card {
+            position: relative;
+            padding-bottom: 34px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 18px;
+            border-top: 1px solid var(--win-line);
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px,
+                var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            pointer-events: none;
+        }
+
+        /* 7 图标样式：文件夹窗口，标题前一个小文件夹 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::after {
+            margin-left: auto;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
