@@ -6792,12 +6792,20 @@
             border-radius: 5px !important;
             background: rgba(var(--theme-rgb), 0.08);
             color: var(--theme-color);
+            width: 31px;
+            height: 31px;
+            flex: 0 0 31px;
         }
 
         #settingsPage .settings-item-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             stroke-width: 1.65;
+        }
+
+        /* 方块缩小后，分隔线起点跟着对齐文字：12 内边距 + 31 方块 + 12 间距 */
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 55px;
         }
 
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
