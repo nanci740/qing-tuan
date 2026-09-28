@@ -7496,6 +7496,67 @@
             -webkit-backdrop-filter: none !important;
         }
 
+        /* ---------------- 美化设置 · 调色板方色块、统一虚线、预览印章、链接式恢复 ---------------- */
+        /* 色块：老画图软件的方色格，选中时外面套一圈虚线框 */
+        #themeSettingsPage .theme-swatch {
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(62, 70, 81, 0.28);
+            border-radius: 2px !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage .theme-swatch.active {
+            transform: none;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.08);
+            outline: 1px dashed var(--win-ink);
+            outline-offset: 3px;
+        }
+
+        #themeSettingsPage .theme-swatch:active {
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* 主题色与自定义色两个大色块：贴在窗口里的方色卡 */
+        #themeSettingsPage .theme-color-picker-wrap,
+        #themeSettingsPage .theme-custom-picker-btn {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        /* 柔和色系与浅色系之间也改成虚线，和下面一条一致 */
+        #themeSettingsPage .theme-palette-group-light {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* 背景预览里的「默认灰白背景」：和 DEFAULT 同款小印章 */
+        #themeSettingsPage .theme-wallpaper-preview span {
+            padding: 4px 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        /* 恢复默认青色：老网页那种带下划线的链接字 */
+        #themeSettingsPage .theme-reset-btn {
+            min-height: 30px;
+            margin-top: 8px;
+            color: var(--win-ink);
+            text-decoration: underline;
+            text-decoration-color: color-mix(in srgb, var(--theme-color) 60%, #9AA3AC);
+            text-underline-offset: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        #themeSettingsPage .theme-reset-btn:active {
+            color: var(--win-deep);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
