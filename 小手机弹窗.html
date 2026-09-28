@@ -7776,6 +7776,156 @@
             margin: 0 4px 4px;
         }
 
+        /* ---------------- 设置主页 · 程序标题栏、地址栏、分组编号与折叠、底部状态栏 ---------------- */
+        /* 顶栏变成程序标题栏：深色底白字，右侧三个窗口小方块 */
+        #settingsPage .settings-header {
+            background: var(--win-deep);
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #settingsPage .settings-header h2,
+        #settingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+        #settingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        #settingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 地址栏：浅色条里一格凹陷输入框，写着当前路径 */
+        #settingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #settingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        #settingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+        }
+
+        #settingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+        #settingsPage .settings-content {
+            padding-top: 14px;
+        }
+
+        /* 分组标题：前面一个折叠三角和楼层编号，点标题栏可以收起 / 展开 */
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-head {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle {
+            flex: 0 0 8px;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            transition: transform 0.18s ease;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-no {
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        #settingsPage .settings-content > .settings-section.is-collapsed .retro-sec-toggle {
+            transform: rotate(-90deg);
+        }
+
+        #settingsPage .settings-content > .settings-section.is-collapsed > .settings-item {
+            display: none;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4).is-collapsed {
+            min-height: 18px;
+        }
+
+        /* 底部状态栏：左边版本号，右边访客计数，右下角拖拽纹 */
+        #settingsPage .retro-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 4px 18px 4px 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 3px bottom 3px / 9px 9px,
+                var(--win-bar);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            letter-spacing: 0.3px;
+        }
+
+        #settingsPage .retro-counter {
+            display: inline-block;
+            margin-left: 4px;
+            padding: 1px 4px;
+            border-radius: 1px;
+            background: var(--win-deep);
+            color: #FFFFFF;
+            letter-spacing: 1.5px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
@@ -10639,6 +10789,10 @@
                 <h2>设置</h2>
             </div>
         </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\</span>
+        </div>
         <div class="settings-content">
             <!-- 个人信息独立卡片 -->
             <div class="settings-section settings-section-personal">
@@ -10781,6 +10935,10 @@
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                 </div>
+            </div>
+            <div class="retro-status-bar" aria-hidden="true">
+                <span>青团机 v0.1.0</span>
+                <span class="retro-visitor">you are visitor No.<span class="retro-counter" id="settingsVisitorCounter">000001</span></span>
             </div>
         </div>
     </div>
@@ -13069,6 +13227,48 @@
         const ticketDumplings = document.getElementById('ticketDumplings');
         const splashIconImage = document.querySelector('.splash-icon-image');
         if (ticketDumplings && splashIconImage) ticketDumplings.src = splashIconImage.getAttribute('src');
+
+        // 设置主页：给分组标题加折叠三角和楼层编号，点标题栏收起 / 展开；访客计数每次打开小手机加一
+        (function initRetroSettingsHome() {
+            const page = document.getElementById('settingsPage');
+            if (!page) return;
+            let no = 0;
+            page.querySelectorAll('.settings-content > .settings-section').forEach((section) => {
+                const title = section.querySelector(':scope > .settings-section-title');
+                if (!title || title.querySelector('.retro-sec-head')) return;
+                no += 1;
+                const head = document.createElement('span');
+                head.className = 'retro-sec-head';
+                const toggle = document.createElement('span');
+                toggle.className = 'retro-sec-toggle';
+                const num = document.createElement('span');
+                num.className = 'retro-sec-no';
+                num.textContent = String(no).padStart(2, '0');
+                const text = document.createElement('span');
+                text.textContent = title.textContent.trim();
+                head.append(toggle, num, text);
+                title.replaceChildren(head);
+                title.setAttribute('role', 'button');
+                title.setAttribute('tabindex', '0');
+                title.setAttribute('aria-expanded', 'true');
+                const flip = () => {
+                    const collapsed = section.classList.toggle('is-collapsed');
+                    title.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                };
+                title.addEventListener('click', flip);
+                title.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+            });
+
+            const counter = document.getElementById('settingsVisitorCounter');
+            if (counter) {
+                let visits = 1;
+                try {
+                    visits = (parseInt(localStorage.getItem('qingtuan_visitor_count'), 10) || 0) + 1;
+                    localStorage.setItem('qingtuan_visitor_count', String(visits));
+                } catch (err) {}
+                counter.textContent = String(visits).padStart(6, '0');
+            }
+        })();
 
         function playSplashSequence() {
             splashPhase = 'quiet';
