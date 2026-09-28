@@ -180,7 +180,8 @@
             position: relative;
             width: min(340px, 86vw);
             gap: 16px;
-            transform: translateY(-42px);
+            /* 标题组整体上移；蝴蝶坐标相对这里，会一起跟着走 */
+            transform: translateY(-120px);
             opacity: 1;
             animation: none;
         }
@@ -219,6 +220,8 @@
             padding: 0;
             position: relative;
             z-index: 2;
+            /* 图标单独下放 18px，收紧与「青团」的距离，蝴蝶落点不受影响 */
+            transform: translateY(18px);
             overflow: hidden;
             isolation: isolate;
             backdrop-filter: blur(6px) saturate(105%);
