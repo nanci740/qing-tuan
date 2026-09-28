@@ -3729,6 +3729,18 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* 提示条：古早小提示窗，白底细框、右下淡色投影，不再毛玻璃 */
+        #saveToast.save-toast {
+            padding: 7px 12px;
+            border: 1px solid color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            border-radius: 3px;
+            background: #FFFFFF;
+            color: var(--ui-text-primary);
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.85), 2px 2px 0 rgba(var(--theme-rgb), 0.4);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
 
         /* 主画面可编辑文字：不显示浏览器默认黄色/蓝色聚焦框 */
         #mainSubtitle[contenteditable="true"]:focus,
@@ -6958,6 +6970,591 @@
             border-color: var(--glass-edge-soft);
             -webkit-mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
             mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+        }
+
+        /* ---------------- 美化设置 · 古早小窗口：每组是一扇带标题栏的小窗，按钮凸起、输入框凹陷，颜色全部取自主题色 ---------------- */
+        #themeSettingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            background: #F9F9F7;
+        }
+
+        #themeSettingsPage .settings-header {
+            background: #F9F9F7;
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        /* 窗口本体 */
+        #themeSettingsPage .theme-setting-group {
+            margin-bottom: 16px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            overflow: hidden;
+        }
+
+        /* 标题栏：浅青底、深青字，右侧最小化 / 最大化 / 关闭三个小方框 */
+        #themeSettingsPage .theme-setting-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #themeSettingsPage .theme-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: 10px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 窗口内容区：去掉原卡片的边框和圆角 */
+        #themeSettingsPage .theme-setting-card {
+            border: 0;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+        /* 分隔线改成纸品上的虚线 */
+        #themeSettingsPage .theme-custom-color-panel {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* 按钮：凸起的斜面，按下去凹进去 */
+        #themeSettingsPage .theme-settings-content .theme-action-btn,
+        #themeSettingsPage .theme-settings-content .theme-text-btn,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #themeSettingsPage .theme-settings-content .theme-action-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-text-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:active,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* 输入框与选择框：凹陷 */
+        #themeSettingsPage .theme-custom-color-input,
+        #themeSettingsPage .theme-font-url-input,
+        #themeSettingsPage input[type="text"],
+        #themeSettingsPage textarea {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        /* 分段选择：外框凹陷，选中项凸起 */
+        #themeSettingsPage .theme-segmented {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #themeSettingsPage .theme-segment-btn {
+            border-radius: 2px !important;
+        }
+
+        #themeSettingsPage .theme-segment-btn.active {
+            border: 1px solid var(--win-line);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* 预览框和图标格子：细实线方框 */
+        #themeSettingsPage .theme-wallpaper-preview,
+        #themeSettingsPage .theme-icon-choice-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+        }
+
+        /* ---------------- 美化设置 · 七扇窗各有来历 ---------------- */
+        #themeSettingsPage {
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            /* 按主题色本身加深，色相和饱和度不变：青还是青，粉还是粉，不会混成灰紫 */
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+        }
+
+        /* 1 界面配色：经典对话框，深青标题栏白字 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label {
+            background: var(--win-deep);
+            color: #FFFFFF;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::after {
+            background: #FFFFFF;
+        }
+
+        /* 2 界面质感：浏览器小窗，左上三颗圆点，标题居中 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label {
+            justify-content: center;
+            position: relative;
+            background: #F6F7F7;
+            color: #8A949C;
+            font-weight: 500;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::after {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin: -5px 0 0;
+            width: 38px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+        /* 3 开屏设置：古早 iPod 的状态条，细、灰、右边一个播放三角和电池 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: #F1F1EE;
+            color: #8E969C;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: #E2E2DE;
+            box-shadow: none;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: #9AA3A9;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+        /* 4 字体样式：表单分组框，没有标题栏，标题压在框线上 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) {
+            position: relative;
+            overflow: visible;
+            margin-top: 26px;
+            background: transparent;
+            box-shadow: none;
+            border-style: solid;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            background: #FFFFFF;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            transform: translateY(-50%);
+            margin-left: 10px;
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
+            box-shadow: none;
+            color: var(--win-ink);
+            font-weight: 500;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label::after {
+            display: none;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            padding-top: 20px;
+        }
+
+        /* 5 主画面文字：对话框，双层框线，右上只有「?」和关闭 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) {
+            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label {
+            margin: 4px 4px 0;
+            border: 1px solid var(--win-line);
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+        /* 6 主画面背景：看图窗口，底部一条状态栏，右下角拖拽纹 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card {
+            position: relative;
+            padding-bottom: 34px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 18px;
+            border-top: 1px solid var(--win-line);
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px,
+                var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            pointer-events: none;
+        }
+
+        /* 7 图标样式：文件夹窗口，标题前一个小文件夹 */
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::after {
+            margin-left: auto;
+        }
+
+        /* ---------------- 美化设置 · 自定义颜色弹窗：古早调色对话框 ---------------- */
+        #themeSettingsPage #themeColorModal .theme-color-modal-backdrop {
+            background: rgba(60, 70, 76, 0.22) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card {
+            padding: 0 0 14px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px !important;
+            background: #FFFFFF;
+            box-shadow: 3px 3px 0 rgba(var(--theme-rgb), 0.38);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            overflow: hidden;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card > :not(.theme-color-modal-header) {
+            margin-left: 14px;
+            margin-right: 14px;
+        }
+
+        /* 标题栏：与「界面配色」窗口同一种深色，白字 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-header {
+            margin: 0 0 14px;
+            padding: 6px 6px 6px 12px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-title {
+            color: #FFFFFF;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+        /* 关闭钮：凸起的小方块 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-close {
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.16);
+            color: #FFFFFF;
+            font-size: 13px;
+            line-height: 15px;
+            box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        /* 预览区：凹进去的框，色块像一张贴上去的色卡 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview-wrap {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #F7F8F8;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview {
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+        /* 滑杆：凹陷的槽，方形凸起的滑块 */
+        #themeSettingsPage #themeColorModal .theme-color-range {
+            height: 12px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* HEX 输入框凹陷，三个按钮与页面上的按钮同一套斜面 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-hex-input {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+            background: #FFFFFF !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:not(.primary),
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus {
+            background: #FFFFFF !important;
+            color: var(--ui-text-primary) !important;
+            -webkit-text-fill-color: var(--ui-text-primary) !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* ---------------- 美化设置 · 页面滑杆、DEFAULT 标签、弹窗主按钮 ---------------- */
+        /* 玻璃感强度：凹陷长槽，方形凸起滑块 */
+        #themeSettingsPage .theme-glass-range {
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: rgba(var(--theme-rgb), 0.32);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        #themeSettingsPage .theme-glass-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage .theme-glass-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        /* 图片透明度：同一种长槽，已选部分填主色，其余是浅灰槽底 */
+        #themeSettingsPage #wallpaperOpacity {
+            height: 22px;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-runnable-track {
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            box-sizing: border-box;
+            background: linear-gradient(
+                to right,
+                var(--theme-color) 0%,
+                var(--theme-color) var(--wallpaper-fill),
+                #EEF1F2 var(--wallpaper-fill),
+                #EEF1F2 100%
+            );
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+            margin-top: -6px;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #EEF1F2;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-progress {
+            height: 8px;
+            border-radius: 2px;
+            background: var(--theme-color);
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        /* DEFAULT 标签：像盖在纸上的小印章，细框、字距拉开 */
+        #themeSettingsPage .theme-font-badge {
+            padding: 3px 6px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        /* 弹窗里的青色按钮：和页面上的青色按钮一样，实心主色、白字 */
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* ---------------- 美化设置 · 调色板方色块、统一虚线、预览印章、链接式恢复 ---------------- */
+        /* 色块：老画图软件的方色格，选中时外面套一圈虚线框 */
+        #themeSettingsPage .theme-swatch {
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(62, 70, 81, 0.28);
+            border-radius: 2px !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage .theme-swatch.active {
+            transform: none;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.08);
+            outline: 1px dashed var(--win-ink);
+            outline-offset: 3px;
+        }
+
+        #themeSettingsPage .theme-swatch:active {
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* 主题色与自定义色两个大色块：贴在窗口里的方色卡 */
+        #themeSettingsPage .theme-color-picker-wrap,
+        #themeSettingsPage .theme-custom-picker-btn {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        /* 柔和色系与浅色系之间也改成虚线，和下面一条一致 */
+        #themeSettingsPage .theme-palette-group-light {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* 背景预览里的「默认灰白背景」：和 DEFAULT 同款小印章 */
+        #themeSettingsPage .theme-wallpaper-preview span {
+            padding: 4px 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        /* 恢复默认青色：老网页那种带下划线的链接字 */
+        #themeSettingsPage .theme-reset-btn {
+            min-height: 30px;
+            margin-top: 8px;
+            color: var(--win-ink);
+            text-decoration: underline;
+            text-decoration-color: color-mix(in srgb, var(--theme-color) 60%, #9AA3AC);
+            text-underline-offset: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        #themeSettingsPage .theme-reset-btn:active {
+            color: var(--win-deep);
         }
 
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
@@ -10672,7 +11269,7 @@
                                 aria-label="输入自定义主题颜色">
                             <button class="theme-custom-color-btn ui-cyan-btn" id="applyThemeHexBtn" type="button">套用</button>
                         </div>
-                        <span class="theme-custom-color-hint">可以输入 HEX，也可以点左边圆形打开调色盘选择。</span>
+                        <span class="theme-custom-color-hint">可以输入 HEX，也可以点左边色块打开调色盘选择。</span>
                     </div>
 
                     <button class="theme-reset-btn" id="resetThemeColor" type="button">恢复默认青色</button>
