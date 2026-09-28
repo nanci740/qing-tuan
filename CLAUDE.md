@@ -1,0 +1,35 @@
+# 青团 · 小手机
+
+整个项目是单文件 `小手机弹窗.html`：CSS、HTML、JS 都在里面，约 1.2MB。改动时用精确的字符串替换，不要整份重写。
+
+## 协作流程
+
+- 改完先给预览（截图或可直接打开的页面），她点头后再开 PR 合进 main。不要未经确认就合并。
+- 她说「图片部分先保留不动」时，`<img>` 及其样式都不碰。
+- 她觉得乱，就整块撤掉，不要在原基础上减一点再试。
+
+## 视觉方向
+
+- 日系简约。主色 `#B5D9DC`，即 `--theme-color`。其余青色一律用 `color-mix` 从主题色调出来，换主题时要跟着变。
+- 开屏背景用暖米白 `#F9F9F7`，留白要足。
+- 文字用青灰色，不要用纯灰。
+
+## 设计原则
+
+参考 [impeccable](https://github.com/pbakaus/impeccable) 中 quieter、distill 和 craft-floor 的思路，只作参考：
+
+- 克制比堆砌难。每个元素都要有存在的理由，没有就删。
+- 一个页面只留一个主要的动态时刻。开屏的主角是蝴蝶落在「青」字上，其他动效都要退后，不要到处撒效果。
+- 不做手绘风 SVG、`feTurbulence` 颗粒或水彩、条纹背景、零散贴纸，这些已经试过，她都否了。
+- 用颜色少：一个主色加中性色。
+- 阴影要有偏移和柔和模糊，不要零偏移的彩色光晕。不需要层次时就不加阴影，开屏图标卡片目前就没有阴影。
+- 图标从真正的图标库里挑，线条粗细统一，不要用 emoji 或 Unicode 符号充当图标。需要时可以用 [better-icons](https://github.com/better-auth/better-icons) 检索：`npx better-icons search <关键词>`、`npx better-icons get <前缀:名字>`。
+
+## 开屏页注意事项
+
+- 蝴蝶的飞行路径和落点在 JS 里写死，见 `CONTROL_POINTS` 和 `BUTTERFLY_LANDED_POSE`，是相对 `.splash-layout` 的坐标。改动图标区高度、标题字号或位置时，要同步检查蝴蝶是否仍然落在「青」字左上角。
+- 开屏显示方式由 `localStorage` 的 `smallphone_splash_mode` 控制，有 always、daily、off 三种。预览时如果没出开屏，先检查这个值。
+
+## 预览
+
+用 Playwright 截图，Chromium 已预装。图标图片是外链 `files.catbox.moe`，环境里可能加载不到，截图时可以临时用占位图替代，但不要改源文件。
