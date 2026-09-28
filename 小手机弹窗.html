@@ -7235,6 +7235,138 @@
             margin-left: auto;
         }
 
+        /* ---------------- 美化设置 · 自定义颜色弹窗：古早调色对话框 ---------------- */
+        #themeSettingsPage #themeColorModal .theme-color-modal-backdrop {
+            background: rgba(60, 70, 76, 0.22) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card {
+            padding: 0 0 14px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px !important;
+            background: #FFFFFF;
+            box-shadow: 3px 3px 0 rgba(var(--theme-rgb), 0.38);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            overflow: hidden;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card > :not(.theme-color-modal-header) {
+            margin-left: 14px;
+            margin-right: 14px;
+        }
+
+        /* 标题栏：与「界面配色」窗口同一种深色，白字 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-header {
+            margin: 0 0 14px;
+            padding: 6px 6px 6px 12px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-title {
+            color: #FFFFFF;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+        /* 关闭钮：凸起的小方块 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-close {
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.16);
+            color: #FFFFFF;
+            font-size: 13px;
+            line-height: 15px;
+            box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        /* 预览区：凹进去的框，色块像一张贴上去的色卡 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview-wrap {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #F7F8F8;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview {
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+        /* 滑杆：凹陷的槽，方形凸起的滑块 */
+        #themeSettingsPage #themeColorModal .theme-color-range {
+            height: 12px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* HEX 输入框凹陷，三个按钮与页面上的按钮同一套斜面 */
+        #themeSettingsPage #themeColorModal .theme-color-modal-hex-input {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+            background: #FFFFFF !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:not(.primary),
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus {
+            background: #FFFFFF !important;
+            color: var(--ui-text-primary) !important;
+            -webkit-text-fill-color: var(--ui-text-primary) !important;
+        }
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            transform: translate(0.5px, 0.5px);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
