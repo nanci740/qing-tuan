@@ -342,16 +342,14 @@
             background: var(--theme-color);
         }
 
-        /* 逐字竖排，比 writing-mode 在各字体下都稳 */
+        /* 英文日期整行转 90° 竖排，和 Tap to begin 同一套字距 */
         .splash-date-day {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            writing-mode: vertical-rl;
+            font-size: 10px;
+            letter-spacing: 2.4px;
             line-height: 1;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--splash-ink);
-            opacity: 0.72;
+            white-space: nowrap;
+            color: var(--splash-soft);
         }
 
 
@@ -12126,23 +12124,10 @@
         function renderSplashDate() {
             const box = document.getElementById('splashDate');
             if (!box) return;
-            const digits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-            const toCn = (n) => {
-                if (n <= 10) return n === 10 ? '十' : digits[n];
-                const tens = Math.floor(n / 10);
-                const ones = n % 10;
-                const head = tens === 1 ? '十' : tens === 2 ? '廿' : '卅';
-                return ones === 0 ? (tens === 2 ? '二十' : tens === 3 ? '三十' : '十') : head + digits[ones];
-            };
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const now = new Date();
-            const stack = (el, text) => {
-                el.replaceChildren(...Array.from(text, (ch) => {
-                    const span = document.createElement('span');
-                    span.textContent = ch;
-                    return span;
-                }));
-            };
-            stack(box.querySelector('.splash-date-day'), `${toCn(now.getMonth() + 1)}月${toCn(now.getDate())}`);
+            box.querySelector('.splash-date-day').textContent = `${weekdays[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
         }
 
         function playSplashSequence() {
