@@ -6825,6 +6825,47 @@
             height: 20px;
         }
 
+        /* ---------------- 设置主页：去掉卡片，条目直接排在米白纸面上 ---------------- */
+        #settingsPage .settings-section .settings-item,
+        #settingsPage .settings-section-personal .settings-profile-card {
+            background: transparent;
+            border: 0 !important;
+            border-radius: 8px !important;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        #settingsPage .settings-section .settings-item:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
+            background: transparent;
+        }
+
+        #settingsPage .settings-section .settings-item:active,
+        #settingsPage .settings-section-personal .settings-profile-card:active {
+            background: var(--theme-light-14);
+        }
+
+        /* 同组条目之间的细线，从文字处起，右端对齐箭头 */
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 50px;
+            right: 4px;
+            background: #E6E8EA;
+        }
+
+        /* 个人信息：不再是卡片，作为页首，下方一条细线与列表分开 */
+        #settingsPage .settings-section-personal {
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 0.5px solid #E6E8EA;
+        }
+
+        #settingsPage .settings-profile-avatar {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
