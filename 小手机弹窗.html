@@ -6785,6 +6785,21 @@
         }
 
 
+        /* 设置主页图标：与聊天设置同一套样式，细边框、极淡主色底、主色线条 */
+        #settingsPage .settings-item-icon,
+        #settingsPage .settings-item:hover .settings-item-icon {
+            border: 0.5px solid rgba(var(--theme-rgb), 0.72);
+            border-radius: 5px !important;
+            background: rgba(var(--theme-rgb), 0.08);
+            color: var(--theme-color);
+        }
+
+        #settingsPage .settings-item-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 1.65;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
