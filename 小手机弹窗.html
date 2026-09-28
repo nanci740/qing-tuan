@@ -8538,6 +8538,972 @@
             color: color-mix(in srgb, var(--theme-color) 45%, #9AA3A9);
         }
 
+        /* ---------------- API 设置 / 语音与生图设置 · 古早表单对话框 ---------------- */
+        #apiSettingsPage,
+        #voiceImageSettingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+            background: #F9F9F7;
+        }
+
+        /* 顶栏：程序标题栏 + 地址栏 */
+        #apiSettingsPage .settings-header,
+        #voiceImageSettingsPage .settings-header {
+            background: var(--win-deep);
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #apiSettingsPage .settings-header h2,
+        #voiceImageSettingsPage .settings-header h2,
+        #apiSettingsPage .settings-header .back-btn,
+        #voiceImageSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+        #apiSettingsPage .settings-header h2::after,
+        #voiceImageSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        #apiSettingsPage .settings-header::after,
+        #voiceImageSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        #apiSettingsPage .retro-address-bar,
+        #voiceImageSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #apiSettingsPage .retro-address-label,
+        #voiceImageSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        #apiSettingsPage .retro-address-field,
+        #voiceImageSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #apiSettingsPage .retro-address-icon,
+        #voiceImageSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+        #apiSettingsPage .api-settings-content,
+        #voiceImageSettingsPage .vi-settings-content {
+            padding-top: 16px;
+        }
+
+        /* 窗口本体：整组是一扇窗，标题栏在顶上，下面的说明、按钮都收在窗里 */
+        #apiSettingsPage .api-settings-content > .api-setting-group,
+        #voiceImageSettingsPage .vi-settings-content > .vi-group {
+            position: relative;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        #apiSettingsPage .api-settings-content > .api-setting-group > :not(.api-setting-label),
+        #voiceImageSettingsPage .vi-settings-content > .vi-group > :not(.vi-label) {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+        #apiSettingsPage .api-setting-label,
+        #voiceImageSettingsPage .vi-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0 0 8px;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 3px 3px 0 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.2;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #apiSettingsPage .api-setting-label::after,
+        #voiceImageSettingsPage .vi-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 内容区去掉原卡片外框 */
+        #apiSettingsPage#apiSettingsPage .api-setting-card,
+        #apiSettingsPage#apiSettingsPage .api-status-card,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-card {
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-row,
+        #apiSettingsPage#apiSettingsPage .api-param-row,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-row {
+            border-bottom: 1px dashed var(--win-dash) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-row:last-child,
+        #apiSettingsPage#apiSettingsPage .api-param-row:last-child,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-row:last-child {
+            border-bottom: 0 !important;
+        }
+
+        /* 输入框凹陷 */
+        #apiSettingsPage#apiSettingsPage .api-row > .api-input,
+        #apiSettingsPage#apiSettingsPage .api-input-wrap,
+        #apiSettingsPage#apiSettingsPage .api-number-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-row > .vi-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-secret-wrap,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-model-picker,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-textarea {
+            box-sizing: border-box;
+            min-height: 30px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-row > .api-input,
+        #apiSettingsPage#apiSettingsPage .api-number-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-row > .vi-input {
+            padding: 6px 8px !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-textarea {
+            margin-top: 5px;
+            padding: 6px 8px !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-input-wrap,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-secret-wrap,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-model-picker {
+            gap: 0 !important;
+            padding: 2px 2px 2px 8px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-input-wrap .api-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-secret-wrap .vi-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-model-picker .vi-input {
+            padding: 4px 6px 4px 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* 输入框右侧贴一个凸起的小按钮：眼睛、拉取模型 */
+        #apiSettingsPage#apiSettingsPage .api-key-toggle,
+        #apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-eye,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-fetch-arrow {
+            flex: 0 0 24px !important;
+            width: 24px !important;
+            height: 24px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-key-toggle svg,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-eye svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        #apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn::before,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-fetch-arrow::before {
+            right: 50%;
+            margin-right: -3px;
+            border-color: currentColor !important;
+            transform: translateY(-70%) rotate(45deg) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-key-toggle:active,
+        #apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-eye:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-fetch-arrow:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+        /* 下拉选单：凹陷框，右边一个凸起的小三角按钮 */
+        #apiSettingsPage#apiSettingsPage .api-model-select-btn,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn {
+            box-sizing: border-box;
+            min-height: 30px;
+            padding: 6px 34px 6px 8px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-model-select-btn::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn::after {
+            content: '' !important;
+            position: absolute;
+            top: 2px !important;
+            right: 2px !important;
+            bottom: 2px;
+            width: 22px !important;
+            height: auto !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 1px;
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            transform: none !important;
+            box-sizing: border-box;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-model-select-btn::before,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn::before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 9px;
+            width: 8px;
+            height: 5px;
+            margin-top: -2px;
+            background: var(--win-ink);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%275%27%20viewBox%3D%270%200%208%205%27%3E%3Cpath%20d%3D%27M0%200h8L4%205z%27/%3E%3C/svg%3E") no-repeat center / 8px 5px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%275%27%20viewBox%3D%270%200%208%205%27%3E%3Cpath%20d%3D%27M0%200h8L4%205z%27/%3E%3C/svg%3E") no-repeat center / 8px 5px;
+        }
+
+        /* 开关：方槽方滑块 */
+        #apiSettingsPage#apiSettingsPage .api-toggle-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-switch {
+            width: 38px !important;
+            height: 20px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #EEF1F1 !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-toggle-input::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-switch::after {
+            top: 2px !important;
+            left: 2px !important;
+            width: 14px !important;
+            height: 14px !important;
+            box-sizing: border-box;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-toggle-input:checked,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-toggle-input:checked::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-switch:checked::after {
+            transform: translateX(18px) !important;
+        }
+
+        /* 按钮：凸起斜面；主按钮实心主色白字，次按钮白底 */
+        #apiSettingsPage#apiSettingsPage .api-action-btn,
+        #apiSettingsPage#apiSettingsPage .api-action-btn:focus,
+        #apiSettingsPage#apiSettingsPage .api-action-btn:focus-visible,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:focus,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            -webkit-text-fill-color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-action-btn.primary,
+        #apiSettingsPage#apiSettingsPage .api-action-btn.primary:focus,
+        #apiSettingsPage#apiSettingsPage .api-action-btn.primary:focus-visible,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary:focus,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary:focus-visible {
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-action-btn:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+        /* 提示文字：前面一个小 i，上面一条虚线 */
+        #apiSettingsPage#apiSettingsPage .api-hint,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-note {
+            position: relative;
+            margin-top: 8px;
+            padding: 8px 0 0 16px !important;
+            border-top: 1px dashed var(--win-dash) !important;
+            color: #98A2AE;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-hint::before,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-note::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 11px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-hint {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* API 1 使用状态：两位数的计数器格子，像老网页的 TODAY / TOTAL */
+        #apiSettingsPage#apiSettingsPage .api-stats-grid {
+            gap: 8px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip {
+            display: flex !important;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 4px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #F7F8F8 !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip strong {
+            min-width: 44px;
+            padding: 2px 6px;
+            border-radius: 1px;
+            background: var(--win-deep);
+            color: #FFFFFF !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-align: center;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip span {
+            color: var(--win-ink) !important;
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-last-request {
+            margin-top: 8px;
+            padding: 6px 0 0 !important;
+            border: 0 !important;
+            border-top: 1px dashed var(--win-dash) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-setting-card.api-fallback-collapsed > .api-row:first-child {
+            border-bottom: 0 !important;
+        }
+
+        /* API 2 连接设置：表单框，标题居中，下面双线 */
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(2) .api-setting-label {
+            justify-content: center;
+            border-bottom: 3px double var(--win-line);
+        }
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(2) .api-setting-label::after {
+            display: none;
+        }
+
+        /* API 3 备用连接：表单分组框，标题压在框线上 */
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) {
+            margin-top: 24px;
+            padding-top: 12px;
+            background: #FFFFFF;
+        }
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) .api-setting-label {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            transform: translateY(-50%);
+            margin: 0;
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
+            box-shadow: none;
+            font-weight: 500;
+        }
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) .api-setting-label::after {
+            display: none;
+        }
+
+        /* API 4 模型分配：标题栏右边一支箭头，像老网站的栏目条 */
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-setting-label::after {
+            flex-basis: 24px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2712%27%20viewBox%3D%270%200%2024%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M1%206h21M17%201.5%2022%206l-5%204.5%27/%3E%3C/svg%3E") no-repeat center / 24px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2712%27%20viewBox%3D%270%200%2024%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M1%206h21M17%201.5%2022%206l-5%204.5%27/%3E%3C/svg%3E") no-repeat center / 24px 12px;
+        }
+
+        /* API 5 连接状态：对话框，只有 ? 和 ×；状态前一个图标，等宽字；测试中走一条分格进度条 */
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(5) .api-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-card {
+            position: relative;
+            min-height: 0 !important;
+            padding-bottom: 4px !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-dot {
+            width: 13px !important;
+            height: 13px !important;
+            border-radius: 0 !important;
+            background: #A9B3B9 !important;
+            box-shadow: none !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-ok .api-status-dot {
+            background: var(--win-deep) !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-error .api-status-dot {
+            background: #B08A8A !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-desc {
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-badge {
+            padding: 2px 6px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: var(--win-bar) !important;
+            color: var(--win-ink) !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting {
+            padding-bottom: 20px !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2px;
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background:
+                repeating-linear-gradient(90deg, var(--theme-color) 0 7px, transparent 7px 9px) left 2px center / 0 6px no-repeat,
+                #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            animation: retroProgress 1.6s steps(8) infinite;
+        }
+
+        @keyframes retroProgress {
+            from { background-size: 0 6px, auto; }
+            to { background-size: calc(100% - 4px) 6px, auto; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting::after {
+                animation: none;
+                background-size: 50% 6px, auto;
+            }
+        }
+
+        /* API 6 模型参数：文件夹窗，标题前一个小文件夹 */
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(6) .api-setting-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-advanced-body {
+            border-top: 1px dashed var(--win-dash) !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-subsection-title {
+            color: var(--win-ink) !important;
+            letter-spacing: 1px;
+        }
+
+        /* 语音 / 生图 分页标签：像老网站顶上的一排栏目，选中的那页和下面连在一起 */
+        #voiceImageSettingsPage .retro-tabs {
+            display: flex;
+            gap: 3px;
+            padding: 8px 12px 0;
+            border-bottom: 1px solid var(--win-line);
+            background: #F9F9F7;
+        }
+
+        #voiceImageSettingsPage .retro-tab {
+            flex: 0 0 auto;
+            min-width: 72px;
+            margin-bottom: -1px;
+            padding: 5px 14px 4px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px 3px 0 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-family: var(--font-active);
+            font-size: 11px;
+            letter-spacing: 2px;
+            box-shadow: inset 1px 1px 0 var(--win-hi);
+            cursor: pointer;
+        }
+
+        #voiceImageSettingsPage .retro-tab.active {
+            padding-top: 7px;
+            margin-top: -2px;
+            border-bottom-color: #F9F9F7;
+            background: #F9F9F7;
+            font-weight: 600;
+        }
+
+        #voiceImageSettingsPage .vi-settings-content[data-tab="voice"] > .vi-group:nth-child(n+3),
+        #voiceImageSettingsPage .vi-settings-content[data-tab="image"] > .vi-group:nth-child(-n+2) {
+            display: none;
+        }
+
+        /* 服务开关（语音 1、生图 3）：浏览器小窗，左上三颗圆点，标题居中 */
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label,
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label {
+            justify-content: center;
+            position: relative;
+            background: #F6F7F7;
+            color: #8A949C;
+            font-weight: 500;
+        }
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label::after,
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label::after {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin: -5px 0 0;
+            width: 38px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1),
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) {
+            padding-bottom: 4px;
+        }
+
+        /* 生图提示设置：便签窗，右上只有一个关闭 */
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-label::after {
+            flex-basis: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-field,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-section {
+            border-bottom: 1px dashed var(--win-dash) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-add {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-list > * {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #F7F8F8 !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        /* 语速滑杆：凹槽加方形凸起滑块 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range {
+            height: 20px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-runnable-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-thumb {
+            width: 10px;
+            height: 18px;
+            margin-top: -7px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-track {
+            height: 6px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #F4F6F6;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-progress {
+            height: 6px;
+            border-radius: 1px;
+            background: var(--theme-color);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-thumb {
+            width: 10px;
+            height: 18px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range-value {
+            color: var(--win-ink) !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+        }
+
+        /* 试听：LO-FI 小播放器，播放键是凸起方块，进度是凹槽 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-preview {
+            margin-top: 10px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: var(--win-bar) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player {
+            height: 46px;
+            padding: 0 10px;
+            background: transparent;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play svg,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play .icon-play path {
+            fill: currentColor;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-time {
+            color: var(--win-ink) !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-runnable-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), #FFFFFF var(--progress, 0%), #FFFFFF 100%);
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-thumb {
+            width: 8px;
+            height: 14px;
+            margin-top: -4px;
+            border: 1px solid var(--win-line);
+            border-radius: 1px;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* 试听 / 测试生图按钮前一个小播放三角 */
+        #voiceImageSettingsPage#voiceImageSettingsPage #voiceTestBtn::before,
+        #voiceImageSettingsPage#voiceImageSettingsPage #imageTestBtn::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 6px;
+            vertical-align: 0;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M1.5%20.8%209%205l-7.5%204.2z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M1.5%20.8%209%205l-7.5%204.2z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-actions {
+            margin-top: 12px;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-status {
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+        }
+
+        /* ---------------- API / 语音与生图 弹窗：古早对话框 ---------------- */
+        #apiProviderModal, #apiModelModal, #viChoiceModal {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+            background: rgba(60, 70, 76, 0.22) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-sheet,
+        #apiModelModal#apiModelModal .api-model-sheet,
+        #viChoiceModal#viChoiceModal .vi-choice-sheet {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 4px !important;
+            background: #FFFFFF !important;
+            box-shadow: 3px 3px 0 rgba(var(--theme-rgb), 0.38) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* 标题栏：深色底白字 */
+        #apiProviderModal#apiProviderModal .api-model-sheet-head,
+        #apiModelModal#apiModelModal .api-model-sheet-head,
+        #viChoiceModal#viChoiceModal .vi-choice-head {
+            margin-bottom: 8px;
+            padding: 6px 6px 6px 12px !important;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-sheet-title,
+        #apiModelModal#apiModelModal .api-model-sheet-title,
+        #viChoiceModal#viChoiceModal .vi-choice-title {
+            color: #FFFFFF !important;
+            font-size: 11.5px !important;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+        /* 关闭和刷新：凸起的小方块 */
+        #apiProviderModal#apiProviderModal .api-model-close,
+        #apiModelModal#apiModelModal .api-model-close,
+        #viChoiceModal#viChoiceModal .vi-choice-close,
+        #apiModelModal#apiModelModal .api-model-refresh {
+            width: 20px !important;
+            height: 20px !important;
+            padding: 0 !important;
+            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            border-radius: 2px !important;
+            background: rgba(255, 255, 255, 0.16) !important;
+            color: #FFFFFF !important;
+            font-size: 14px !important;
+            line-height: 17px !important;
+            box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.12) !important;
+        }
+
+        #apiModelModal#apiModelModal .api-model-refresh svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-close:active,
+        #apiModelModal#apiModelModal .api-model-close:active,
+        #viChoiceModal#viChoiceModal .vi-choice-close:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12) !important;
+        }
+
+        /* 列表：行间虚线，勾选框是凹陷的小方格 */
+        #apiProviderModal#apiProviderModal .api-model-item,
+        #apiModelModal#apiModelModal .api-model-item,
+        #viChoiceModal#viChoiceModal .vi-choice-item {
+            border-bottom: 1px dashed var(--win-dash) !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-item:last-child,
+        #apiModelModal#apiModelModal .api-model-item:last-child,
+        #viChoiceModal#viChoiceModal .vi-choice-item:last-child {
+            border-bottom: 0 !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-check,
+        #apiModelModal#apiModelModal .api-model-check,
+        #viChoiceModal#viChoiceModal .vi-choice-check {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-item.selected .api-model-check,
+        #apiModelModal#apiModelModal .api-model-item.selected .api-model-check,
+        #viChoiceModal#viChoiceModal .vi-choice-item.selected .vi-choice-check {
+            background: var(--win-bar) !important;
+        }
+
+        #apiModelModal#apiModelModal .api-model-search-wrap {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        /* 底部按钮：同页面的凸起按钮 */
+        #apiProviderModal#apiProviderModal .api-model-actions,
+        #apiModelModal#apiModelModal .api-model-actions,
+        #viChoiceModal#viChoiceModal .vi-choice-actions {
+            border-top: 1px dashed var(--win-dash) !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-action,
+        #apiModelModal#apiModelModal .api-model-action,
+        #viChoiceModal#viChoiceModal .vi-btn,
+        #apiProviderModal#apiProviderModal .api-model-action:focus,
+        #apiModelModal#apiModelModal .api-model-action:focus,
+        #viChoiceModal#viChoiceModal .vi-btn:focus {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            -webkit-text-fill-color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-action.primary,
+        #apiModelModal#apiModelModal .api-model-action.primary,
+        #viChoiceModal#viChoiceModal .vi-btn.primary,
+        #apiProviderModal#apiProviderModal .api-model-action.primary:focus,
+        #apiModelModal#apiModelModal .api-model-action.primary:focus,
+        #viChoiceModal#viChoiceModal .vi-btn.primary:focus,
+        #apiProviderModal#apiProviderModal .api-model-action.primary:disabled,
+        #apiModelModal#apiModelModal .api-model-action.primary:disabled,
+        #viChoiceModal#viChoiceModal .vi-btn.primary:disabled {
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        #apiProviderModal#apiProviderModal .api-model-action:active,
+        #apiModelModal#apiModelModal .api-model-action:active,
+        #viChoiceModal#viChoiceModal .vi-btn:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
@@ -11658,8 +12624,16 @@
                 <h2>语音与生图设置</h2>
             </div>
         </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\语音与生图\</span>
+        </div>
+        <div class="retro-tabs" role="tablist" aria-label="语音与生图">
+            <button class="retro-tab active" type="button" role="tab" aria-selected="true" data-tab="voice">语音</button>
+            <button class="retro-tab" type="button" role="tab" aria-selected="false" data-tab="image">生图</button>
+        </div>
 
-        <div class="vi-settings-content">
+        <div class="vi-settings-content" data-tab="voice">
             <section class="vi-group">
                 <div class="vi-label">语音服务</div>
                 <div class="vi-card">
@@ -11973,6 +12947,10 @@
                 </button>
                 <h2>API 设置</h2>
             </div>
+        </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\API 设置\</span>
         </div>
 
         <div class="api-settings-content">
@@ -17534,6 +18512,26 @@ if (songDetails) {
 })();
 
 
+// ============ 语音与生图设置：语音 / 生图分页标签 ============
+(function initVoiceImageTabs() {
+    const page = document.getElementById('voiceImageSettingsPage');
+    const content = page?.querySelector('.vi-settings-content');
+    const tabs = page ? Array.from(page.querySelectorAll('.retro-tab')) : [];
+    if (!content || !tabs.length) return;
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => {
+                const on = t === tab;
+                t.classList.toggle('active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            content.dataset.tab = tab.dataset.tab;
+            content.scrollTop = 0;
+            content.querySelectorAll('textarea').forEach(el => el.dispatchEvent(new Event('input', { bubbles: true })));
+        });
+    });
+})();
+
 // ============ 语音与生图设置 ============
 (function initVoiceImageSettings() {
     const settingVoiceAi = document.getElementById('settingVoiceAi');
@@ -19944,6 +20942,7 @@ if (songDetails) {
     function setStatus(type, title, desc, badge) {
         if (!apiStatusCard) return;
         apiStatusCard.classList.remove('is-ok', 'is-error');
+        apiStatusCard.classList.toggle('is-waiting', badge === 'WAIT');
         if (type === 'ok') apiStatusCard.classList.add('is-ok');
         if (type === 'error') apiStatusCard.classList.add('is-error');
         if (apiStatusTitle) apiStatusTitle.textContent = title || '';
