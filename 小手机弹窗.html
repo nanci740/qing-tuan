@@ -3729,6 +3729,18 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* 提示条：古早小提示窗，白底细框、右下淡色投影，不再毛玻璃 */
+        #saveToast.save-toast {
+            padding: 7px 12px;
+            border: 1px solid color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            border-radius: 3px;
+            background: #FFFFFF;
+            color: var(--ui-text-primary);
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.85), 2px 2px 0 rgba(var(--theme-rgb), 0.4);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
 
         /* 主画面可编辑文字：不显示浏览器默认黄色/蓝色聚焦框 */
         #mainSubtitle[contenteditable="true"]:focus,
@@ -7365,6 +7377,123 @@
         #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active {
             box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
             transform: translate(0.5px, 0.5px);
+        }
+
+        /* ---------------- 美化设置 · 页面滑杆、DEFAULT 标签、弹窗主按钮 ---------------- */
+        /* 玻璃感强度：凹陷长槽，方形凸起滑块 */
+        #themeSettingsPage .theme-glass-range {
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: rgba(var(--theme-rgb), 0.32);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        #themeSettingsPage .theme-glass-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        #themeSettingsPage .theme-glass-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        /* 图片透明度：同一种长槽，已选部分填主色，其余是浅灰槽底 */
+        #themeSettingsPage #wallpaperOpacity {
+            height: 22px;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-runnable-track {
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            box-sizing: border-box;
+            background: linear-gradient(
+                to right,
+                var(--theme-color) 0%,
+                var(--theme-color) var(--wallpaper-fill),
+                #EEF1F2 var(--wallpaper-fill),
+                #EEF1F2 100%
+            );
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+            margin-top: -6px;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #EEF1F2;
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-progress {
+            height: 8px;
+            border-radius: 2px;
+            background: var(--theme-color);
+        }
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        /* DEFAULT 标签：像盖在纸上的小印章，细框、字距拉开 */
+        #themeSettingsPage .theme-font-badge {
+            padding: 3px 6px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        /* 弹窗里的青色按钮：和页面上的青色按钮一样，实心主色、白字 */
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
 
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
