@@ -6960,6 +6960,128 @@
             mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
         }
 
+        /* ---------------- 美化设置 · 古早小窗口：每组是一扇带标题栏的小窗，按钮凸起、输入框凹陷，颜色全部取自主题色 ---------------- */
+        #themeSettingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            background: #F9F9F7;
+        }
+
+        #themeSettingsPage .settings-header {
+            background: #F9F9F7;
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        /* 窗口本体 */
+        #themeSettingsPage .theme-setting-group {
+            margin-bottom: 16px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            overflow: hidden;
+        }
+
+        /* 标题栏：浅青底、深青字，右侧最小化 / 最大化 / 关闭三个小方框 */
+        #themeSettingsPage .theme-setting-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #themeSettingsPage .theme-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: 10px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 窗口内容区：去掉原卡片的边框和圆角 */
+        #themeSettingsPage .theme-setting-card {
+            border: 0;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+        /* 分隔线改成纸品上的虚线 */
+        #themeSettingsPage .theme-custom-color-panel {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* 按钮：凸起的斜面，按下去凹进去 */
+        #themeSettingsPage .theme-action-btn,
+        #themeSettingsPage .theme-text-btn,
+        #themeSettingsPage .theme-custom-color-btn,
+        #themeSettingsPage .theme-font-btn,
+        #themeSettingsPage .theme-font-url-btn,
+        #themeSettingsPage .theme-icon-bottom-btn,
+        #themeSettingsPage .ui-cyan-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #themeSettingsPage .theme-action-btn:active,
+        #themeSettingsPage .theme-text-btn:active,
+        #themeSettingsPage .theme-custom-color-btn:active,
+        #themeSettingsPage .theme-font-btn:active,
+        #themeSettingsPage .theme-font-url-btn:active,
+        #themeSettingsPage .theme-icon-bottom-btn:active,
+        #themeSettingsPage .ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* 输入框与选择框：凹陷 */
+        #themeSettingsPage .theme-custom-color-input,
+        #themeSettingsPage .theme-font-url-input,
+        #themeSettingsPage input[type="text"],
+        #themeSettingsPage textarea {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        /* 分段选择：外框凹陷，选中项凸起 */
+        #themeSettingsPage .theme-segmented {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #themeSettingsPage .theme-segment-btn {
+            border-radius: 2px !important;
+        }
+
+        #themeSettingsPage .theme-segment-btn.active {
+            border: 1px solid var(--win-line);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* 预览框和图标格子：细实线方框 */
+        #themeSettingsPage .theme-wallpaper-preview,
+        #themeSettingsPage .theme-icon-choice-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
