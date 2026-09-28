@@ -218,46 +218,6 @@
             to { opacity: 1; }
         }
 
-        /* 图标背后晕开的一小片水彩 */
-        .splash-wash {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 196px;
-            height: 168px;
-            transform: translate(-44%, -46%);
-            z-index: 0;
-            pointer-events: none;
-            overflow: visible;
-            opacity: 0;
-            animation: splashWashIn 1.8s ease 0.25s forwards;
-        }
-
-        @keyframes splashWashIn {
-            from { opacity: 0; transform: translate(-44%, -46%) scale(0.92); }
-            to { opacity: 1; transform: translate(-44%, -46%) scale(1); }
-        }
-
-        /* 斜贴在图标左上角的半透明纸胶带 */
-        .splash-tape {
-            position: absolute;
-            left: 34px;
-            top: 44px;
-            width: 58px;
-            height: 17px;
-            z-index: 3;
-            transform: rotate(-36deg);
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.12)),
-                rgba(var(--theme-rgb), 0.58);
-            /* 两端手撕的毛边 */
-            clip-path: polygon(2% 0, 98% 0, 100% 18%, 97% 34%, 100% 52%, 97% 70%, 100% 86%, 98% 100%,
-                               2% 100%, 0 84%, 3% 66%, 0 50%, 3% 32%, 0 16%);
-            box-shadow: 0 1px 2px rgba(75, 90, 98, 0.06);
-            opacity: 0;
-            animation: splashFadeIn 0.7s ease 0.75s forwards;
-        }
-
         .splash-app-icon {
             width: 96px;
             height: 96px;
@@ -538,8 +498,6 @@
 
         @media (prefers-reduced-motion: reduce) {
             .splash-icon-stage,
-            .splash-wash,
-            .splash-tape,
             .splash-text-block,
             .splash-entry-tip {
                 animation: none;
@@ -11112,20 +11070,6 @@
             </div>
 
             <div class="splash-icon-stage" aria-hidden="true">
-                <svg class="splash-wash" viewBox="0 0 196 168">
-                    <defs>
-                        <filter id="splashWashFilter" x="-20%" y="-20%" width="140%" height="140%">
-                            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.026" numOctaves="3" seed="7" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" result="warp" />
-                            <feGaussianBlur in="warp" stdDeviation="4" />
-                        </filter>
-                    </defs>
-                    <g filter="url(#splashWashFilter)">
-                        <ellipse cx="98" cy="86" rx="66" ry="52" style="fill: var(--theme-color); opacity: 0.34;" />
-                        <ellipse cx="118" cy="102" rx="40" ry="28" style="fill: var(--splash-teal); opacity: 0.16;" />
-                    </g>
-                </svg>
-                <span class="splash-tape"></span>
                 <div class="splash-app-icon">
                     <img class="splash-icon-image" src="https://files.catbox.moe/r1lc6y.png" alt="狐狸和小鸟图标">
                 </div>
