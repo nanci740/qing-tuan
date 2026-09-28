@@ -208,12 +208,10 @@
             to { opacity: 1; }
         }
 
+        /* 不再用卡片，插画直接落在米白底上；高度保持 96px，布局和蝴蝶落点不变 */
         .splash-app-icon {
-            width: 96px;
+            width: 190px;
             height: 96px;
-            border-radius: var(--ui-radius);
-            background: rgba(255, 255, 255, 0.88);
-            border: 1.5px solid rgba(255, 255, 255, 0.96);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -222,30 +220,13 @@
             z-index: 2;
             /* 图标单独下放 18px，收紧与「青团」的距离，蝴蝶落点不受影响 */
             transform: translateY(18px);
-            overflow: hidden;
-            isolation: isolate;
-            backdrop-filter: blur(6px) saturate(105%);
-            -webkit-backdrop-filter: blur(6px) saturate(105%);
-        }
-
-        .splash-app-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            border: 1px solid rgba(255, 255, 255, 0.62);
-            -webkit-mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 24%, transparent 82%);
-            mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 24%, transparent 82%);
-            pointer-events: none;
         }
 
         .splash-icon-image {
-            width: 110px;
-            height: 110px;
-            max-width: 110px;
-            max-height: 110px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 3px 7px rgba(62, 70, 81, 0.06));
+            object-position: center bottom;
             position: relative;
             z-index: 2;
         }
