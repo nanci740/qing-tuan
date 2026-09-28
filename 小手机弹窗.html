@@ -6896,6 +6896,70 @@
             #settingsPage.active .settings-section { animation: none; }
         }
 
+        /* ---------------- 设置主页 · 方案 3：条目去卡片，保留图标；个人信息为玻璃卡片 ---------------- */
+        #settingsPage .settings-section .settings-item,
+        #settingsPage .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-section .settings-item:last-child {
+            background: transparent;
+            border: 0 !important;
+            border-radius: 8px !important;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        #settingsPage .settings-section .settings-item:hover {
+            background: transparent;
+        }
+
+        #settingsPage .settings-section .settings-item:active {
+            background: var(--theme-light-14);
+        }
+
+        /* 组内细线从文字处起：2 内边距 + 31 图标 + 12 间距 */
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 45px;
+            right: 2px;
+        }
+
+        /* 个人信息：0.5px 边框 + 玻璃底，沿用主画面玻璃参数，美化设置里调玻璃时一起变 */
+        #settingsPage .settings-section-personal .settings-profile-card {
+            border: 0.5px solid #DDDDE2;
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+            backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+            -webkit-backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+            --glass-edge-highlight: rgba(255, 255, 255, var(--ui-glass-edge-highlight-alpha, 0.4));
+            --glass-edge-soft: rgba(132, 141, 152, var(--ui-glass-edge-soft-alpha, 0.14));
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::before,
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border: 1.4px solid transparent;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::before {
+            border-color: var(--glass-edge-highlight);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+            mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            border-color: var(--glass-edge-soft);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+            mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
