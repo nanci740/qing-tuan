@@ -7557,7 +7557,7 @@
             color: var(--win-deep);
         }
 
-        /* ---------------- 设置主页 · 古早小窗口风：每组一扇窗，各有来历 ---------------- */
+        /* ---------------- 设置主页 · Y2K 粉彩窗口：粗描边、实色投影、奶油底、.exe 标题，各窗一处小细节 ---------------- */
         #settingsPage {
             --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
@@ -7566,19 +7566,22 @@
             --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
             --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
             --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+            --y2k-ink: color-mix(in srgb, var(--theme-color) 28%, #3E4A51);
+            --y2k-cream: #FFFEFA;
+            --y2k-shadow: color-mix(in srgb, var(--theme-color) 80%, #FFFFFF);
         }
 
-        /* 窗口本体 */
+        /* 窗口本体：粗描边、圆角、右下实色投影 */
         #settingsPage .settings-content > .settings-section {
-            margin-bottom: 14px;
-            border: 1px solid var(--win-line);
-            border-radius: 4px;
-            background: #FFFFFF;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            margin-bottom: 18px;
+            border: 1.5px solid var(--y2k-ink);
+            border-radius: 8px;
+            background: var(--y2k-cream);
+            box-shadow: 3px 3px 0 var(--y2k-shadow);
             overflow: hidden;
         }
 
-        /* 标题栏 */
+        /* 标题栏：浅主色、粗底线，标题后面带 .exe，右边圆角窗口按钮 */
         #settingsPage .settings-content > .settings-section .settings-section-title {
             display: flex;
             align-items: center;
@@ -7586,25 +7589,33 @@
             gap: 10px;
             margin: 0;
             padding: 6px 8px 6px 10px;
-            border-bottom: 1px solid var(--win-line);
+            border: 0;
+            border-bottom: 1.5px solid var(--y2k-ink);
             background: var(--win-bar);
-            color: var(--win-ink);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            color: var(--y2k-ink);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: none;
         }
 
         #settingsPage .settings-content > .settings-section .settings-section-title::after {
             content: '';
-            flex: 0 0 46px;
-            height: 12px;
-            background: var(--win-line);
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            flex: 0 0 50px;
+            height: 14px;
+            background: var(--y2k-ink);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20width%3D%2750%27%20height%3D%2714%27%20viewBox%3D%270%200%2050%2014%27%3E%3Crect%20x%3D%270.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M4%209.5h6%27/%3E%3Crect%20x%3D%2718.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Crect%20x%3D%2722%27%20y%3D%274%27%20width%3D%276%27%20height%3D%276%27%20rx%3D%271%27/%3E%3Crect%20x%3D%2736.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M40%204l6%206M46%204l-6%206%27/%3E%3C/svg%3E") no-repeat center / 50px 14px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20width%3D%2750%27%20height%3D%2714%27%20viewBox%3D%270%200%2050%2014%27%3E%3Crect%20x%3D%270.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M4%209.5h6%27/%3E%3Crect%20x%3D%2718.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Crect%20x%3D%2722%27%20y%3D%274%27%20width%3D%276%27%20height%3D%276%27%20rx%3D%271%27/%3E%3Crect%20x%3D%2736.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M40%204l6%206M46%204l-6%206%27/%3E%3C/svg%3E") no-repeat center / 50px 14px;
         }
 
-        /* 窗口里的条目：去掉原来的边框，行与行之间一条虚线 */
+        #settingsPage .settings-content > .settings-section .retro-sec-text::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-weight: 500;
+            opacity: 0.55;
+        }
+
+        /* 条目行 */
         #settingsPage .settings-content > .settings-section .settings-item,
         #settingsPage .settings-content > .settings-section .settings-section-title + .settings-item,
         #settingsPage .settings-content > .settings-section .settings-item:last-child {
@@ -7620,160 +7631,180 @@
             right: 12px;
             height: 0;
             background: none;
-            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 55%, #C9D0D4);
         }
 
         #settingsPage .settings-content > .settings-section .settings-item:active {
             background: var(--win-bar);
         }
 
-        /* 条目图标：凸起的小方块 */
+        /* 图标：圆角小块，粗描边，底下一道实色投影 */
         #settingsPage .settings-content > .settings-section .settings-item-icon,
         #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
             width: 29px;
             height: 29px;
             flex: 0 0 29px;
-            border: 1px solid var(--win-line);
-            border-radius: 3px !important;
+            border: 1.5px solid var(--y2k-ink);
+            border-radius: 7px !important;
             background: #FFFFFF;
-            color: var(--win-deep);
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            color: var(--y2k-ink);
+            box-shadow: 1.5px 1.5px 0 var(--y2k-shadow);
         }
 
         #settingsPage .settings-content > .settings-section .settings-item-icon svg {
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
         }
 
         #settingsPage .settings-content > .settings-section .settings-item-action {
-            color: var(--win-line);
+            color: var(--y2k-ink);
         }
 
-        /* 1 个人信息：浏览器小窗，顶上一条三圆点标题栏 */
+        /* 个人信息：my_profile.exe，右上三颗圆点，头像放在带框的相片格里，箭头变成凸起小按钮 */
+        #settingsPage .settings-content > .settings-section.settings-section-personal {
+            position: relative;
+        }
+
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card {
             border: 0 !important;
             border-radius: 0 !important;
-            background: #FFFFFF;
+            background: var(--y2k-cream);
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            padding-top: 30px;
+            padding-top: 36px;
+            padding-bottom: 12px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
+            display: flex !important;
+            align-items: center;
+            content: 'my_profile.exe' !important;
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 26px;
+            padding-left: 10px;
+            border: 0;
+            border-bottom: 1.5px solid var(--y2k-ink);
+            border-radius: 0;
+            background: var(--win-bar);
+            color: var(--y2k-ink);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            -webkit-mask: none;
+            mask: none;
+            z-index: 2;
         }
 
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
             display: block !important;
             content: '' !important;
             position: absolute;
-            left: 10px;
-            top: 6px;
-            width: 32px;
-            height: 8px;
+            top: 8px;
+            right: 10px;
+            left: auto;
+            width: 38px;
+            height: 10px;
             border: 0;
             border-radius: 0;
             z-index: 3;
-            background: var(--theme-color);
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 32px 8px;
-        }
-
-        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
-            display: block !important;
-            content: '' !important;
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 20px;
-            border: 0;
-            border-bottom: 1px solid var(--win-line);
-            border-radius: 0;
-            background: #F6F7F7;
-            -webkit-mask: none;
-            mask: none;
-            z-index: 2;
+            background: var(--y2k-ink);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
         }
 
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
-            border: 1px solid var(--win-line);
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            border: 1.5px solid var(--y2k-ink);
+            border-radius: 10px;
+            box-shadow: 2px 2px 0 var(--y2k-shadow);
         }
 
-        /* 2 个性化内容：经典对话框，深色标题栏白字 */
-        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title {
-            background: var(--win-deep);
-            color: #FFFFFF;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar img {
+            border-radius: 8px;
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(2) .settings-section-title::after {
-            background: #FFFFFF;
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
+            width: 26px;
+            height: 26px;
+            border: 1.5px solid var(--y2k-ink);
+            border-radius: 7px;
+            background: var(--win-bar);
+            box-shadow: 1.5px 1.5px 0 var(--y2k-shadow);
         }
 
-        /* 3 智能连接与服务：古早 iPod 状态条 */
-        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title {
-            padding-top: 4px;
-            padding-bottom: 4px;
-            background: #F1F1EE;
-            color: #8E969C;
+        /* 01 个性化内容：标题下面一条菜单栏 */
+        #settingsPage .retro-menubar {
+            display: flex;
+            gap: 14px;
+            padding: 4px 12px 5px;
+            border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 55%, #C9D0D4);
+            color: var(--y2k-ink);
             font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 2.5px;
-            border-bottom-color: #E2E2DE;
-            box-shadow: none;
+            letter-spacing: 0.5px;
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(3) .settings-section-title::after {
-            flex-basis: 34px;
-            height: 10px;
-            background: #9AA3A9;
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        #settingsPage .retro-menubar span:first-letter {
+            text-decoration: underline;
+            text-underline-offset: 2px;
         }
 
-        /* 4 系统与存储：表单分组框，标题压在框线上 */
-        #settingsPage .settings-content > .settings-section:nth-child(4) {
-            position: relative;
-            overflow: visible;
-            margin-top: 22px;
-            box-shadow: none;
-        }
-
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
-            position: absolute;
-            top: 0;
-            left: 10px;
-            z-index: 1;
-            transform: translateY(-50%);
-            padding: 0 6px;
-            border: 0;
-            background: linear-gradient(#F9F9F7 50%, #FFFFFF 50%);
-            box-shadow: none;
-            font-weight: 500;
-        }
-
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title::after {
+        #settingsPage .settings-content > .settings-section.is-collapsed > .retro-menubar {
             display: none;
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title + .settings-item {
-            margin-top: 8px;
+        /* 02 智能连接与服务：底部状态栏，写着这一组有几个项目，右下角拖拽纹 */
+        #settingsPage .retro-win-status {
+            padding: 3px 22px 4px 10px;
+            border-top: 1.5px solid var(--y2k-ink);
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
+                var(--win-bar);
+            color: var(--y2k-ink);
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
         }
 
-        /* 5 关于：双层框对话框，右上只有 ? 和关闭 */
-        #settingsPage .settings-content > .settings-section:nth-child(5) {
-            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        /* 03 系统与存储：后面叠着两扇露出一角的窗口 */
+        #settingsPage .settings-content > .settings-section:nth-child(4) {
+            margin-top: 26px;
+            margin-right: 10px;
+            overflow: visible;
+            box-shadow:
+                3px 3px 0 var(--y2k-shadow),
+                5px -6px 0 -1.5px var(--y2k-cream),
+                5px -6px 0 0 var(--y2k-ink),
+                10px -12px 0 -1.5px var(--y2k-cream),
+                10px -12px 0 0 var(--y2k-ink);
         }
 
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title {
-            margin: 4px 4px 0;
-            border: 1px solid var(--win-line);
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
+            border-radius: 6.5px 6.5px 0 0;
         }
 
+        /* 04 关于：只有关闭键，图标变成大大的圆形 i，像系统信息对话框 */
         #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title::after {
-            flex-basis: 29px;
-            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
-            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            flex-basis: 14px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20width%3D%2714%27%20height%3D%2714%27%20viewBox%3D%270%200%2014%2014%27%3E%3Crect%20x%3D%270.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M4%204l6%206M10%204l-6%206%27/%3E%3C/svg%3E") no-repeat center / 14px 14px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20width%3D%2714%27%20height%3D%2714%27%20viewBox%3D%270%200%2014%2014%27%3E%3Crect%20x%3D%270.75%27%20y%3D%270.75%27%20width%3D%2712.5%27%20height%3D%2712.5%27%20rx%3D%273%27/%3E%3Cpath%20d%3D%27M4%204l6%206M10%204l-6%206%27/%3E%3C/svg%3E") no-repeat center / 14px 14px;
         }
 
         #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item {
-            margin: 0 4px 4px;
+            min-height: 58px;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+            width: 36px;
+            height: 36px;
+            flex-basis: 36px;
+            border-radius: 50% !important;
+            background: var(--win-bar);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.2;
         }
 
         /* ---------------- 设置主页 · 程序标题栏、地址栏、分组编号与折叠、底部状态栏 ---------------- */
@@ -13245,6 +13276,7 @@
                 num.className = 'retro-sec-no';
                 num.textContent = String(no).padStart(2, '0');
                 const text = document.createElement('span');
+                text.className = 'retro-sec-text';
                 text.textContent = title.textContent.trim();
                 head.append(toggle, num, text);
                 title.replaceChildren(head);
@@ -13258,6 +13290,28 @@
                 title.addEventListener('click', flip);
                 title.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
             });
+
+            const groups = page.querySelectorAll('.settings-content > .settings-section:not(.settings-section-personal)');
+            const menuHost = groups[0];
+            if (menuHost && !menuHost.querySelector('.retro-menubar')) {
+                const bar = document.createElement('div');
+                bar.className = 'retro-menubar';
+                bar.setAttribute('aria-hidden', 'true');
+                ['文件', '编辑', '查看', '帮助'].forEach((label) => {
+                    const item = document.createElement('span');
+                    item.textContent = label;
+                    bar.appendChild(item);
+                });
+                menuHost.querySelector(':scope > .settings-section-title')?.after(bar);
+            }
+            const statusHost = groups[1];
+            if (statusHost && !statusHost.querySelector('.retro-win-status')) {
+                const status = document.createElement('div');
+                status.className = 'retro-win-status';
+                status.setAttribute('aria-hidden', 'true');
+                status.textContent = `${statusHost.querySelectorAll(':scope > .settings-item').length} 个项目`;
+                statusHost.appendChild(status);
+            }
 
             const counter = document.getElementById('settingsVisitorCounter');
             if (counter) {
