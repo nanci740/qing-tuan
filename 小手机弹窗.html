@@ -6785,6 +6785,181 @@
         }
 
 
+        /* 设置主页图标：与聊天设置同一套样式，细边框、极淡主色底、主色线条 */
+        #settingsPage .settings-item-icon,
+        #settingsPage .settings-item:hover .settings-item-icon {
+            border: 0.5px solid rgba(var(--theme-rgb), 0.72);
+            border-radius: 5px !important;
+            background: rgba(var(--theme-rgb), 0.08);
+            color: var(--theme-color);
+            width: 31px;
+            height: 31px;
+            flex: 0 0 31px;
+        }
+
+        #settingsPage .settings-item-icon svg {
+            width: 17px;
+            height: 17px;
+            stroke-width: 1.65;
+        }
+
+        /* 方块缩小后，分隔线起点跟着对齐文字：12 内边距 + 31 方块 + 12 间距 */
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 55px;
+        }
+
+        /* ---------------- 设置主页 · minimalist-ui：暖白纸面、1px 极浅边框、标题带细线、分组依次浮现 ---------------- */
+        #settingsPage,
+        #settingsPage .settings-header {
+            background: #F9F9F7;
+        }
+
+        #settingsPage .settings-header {
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        #settingsPage .settings-content {
+            padding-top: 18px;
+        }
+
+        #settingsPage .settings-section {
+            margin-bottom: 8px;
+        }
+
+        #settingsPage .settings-section-personal {
+            margin-bottom: 12px;
+        }
+
+        /* 卡片边框统一为 1px #EAEAEA，比原来的灰更轻 */
+        #settingsPage .settings-section-personal .settings-profile-card {
+            border: 1px solid #EAEAEA;
+        }
+
+        #settingsPage .settings-section .settings-item {
+            border-left: 1px solid #EAEAEA;
+            border-right: 1px solid #EAEAEA;
+            min-height: 54px;
+        }
+
+        #settingsPage .settings-section .settings-section-title + .settings-item {
+            border-top: 1px solid #EAEAEA;
+        }
+
+        #settingsPage .settings-section .settings-item:last-child {
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            background: #EFEFEE;
+        }
+
+        /* 分组标题：去掉左侧色条，文字用深青，右边拉一条细线，与聊天设置的标题同一语言 */
+        #settingsPage .settings-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 0;
+            padding-left: 2px;
+            margin-bottom: 9px;
+            color: var(--theme-dark);
+            font-weight: 500;
+            letter-spacing: 1.5px;
+        }
+
+        #settingsPage .settings-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #EAEAEA;
+        }
+
+        #settingsPage .settings-item-action {
+            color: #B8BEC4;
+        }
+
+        /* 打开设置页时各分组依次浮现，间隔 60ms */
+        @keyframes settingsSectionIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        #settingsPage.active .settings-section {
+            animation: settingsSectionIn 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        #settingsPage.active .settings-section:nth-child(2) { animation-delay: 60ms; }
+        #settingsPage.active .settings-section:nth-child(3) { animation-delay: 120ms; }
+        #settingsPage.active .settings-section:nth-child(4) { animation-delay: 180ms; }
+        #settingsPage.active .settings-section:nth-child(5) { animation-delay: 240ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            #settingsPage.active .settings-section { animation: none; }
+        }
+
+        /* ---------------- 设置主页 · 方案 3：条目去卡片，保留图标；个人信息为玻璃卡片 ---------------- */
+        #settingsPage .settings-section .settings-item,
+        #settingsPage .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-section .settings-item:last-child {
+            background: transparent;
+            border: 0 !important;
+            border-radius: 8px !important;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        #settingsPage .settings-section .settings-item:hover {
+            background: transparent;
+        }
+
+        #settingsPage .settings-section .settings-item:active {
+            background: var(--theme-light-14);
+        }
+
+        /* 组内细线从文字处起：2 内边距 + 31 图标 + 12 间距 */
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 45px;
+            right: 2px;
+        }
+
+        /* 个人信息：0.5px 边框 + 玻璃底，沿用主画面玻璃参数，美化设置里调玻璃时一起变 */
+        #settingsPage .settings-section-personal .settings-profile-card {
+            border: 0.5px solid #DDDDE2;
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+            backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+            -webkit-backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+            --glass-edge-highlight: rgba(255, 255, 255, var(--ui-glass-edge-highlight-alpha, 0.4));
+            --glass-edge-soft: rgba(132, 141, 152, var(--ui-glass-edge-soft-alpha, 0.14));
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::before,
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border: 1.4px solid transparent;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::before {
+            border-color: var(--glass-edge-highlight);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+            mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+        }
+
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            border-color: var(--glass-edge-soft);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+            mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
@@ -9785,6 +9960,9 @@
                         <div class="settings-item-text">
                             <span class="settings-item-title">应用信息</span>
                         </div>
+                    </div>
+                    <div class="settings-item-action">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                 </div>
             </div>
