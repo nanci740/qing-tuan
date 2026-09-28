@@ -319,40 +319,6 @@
             animation: none;
         }
 
-        /* 右侧竖排日期，像书页边的页眉 */
-        .splash-date {
-            position: absolute;
-            top: 17vh;
-            right: 26px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            color: var(--splash-soft);
-            font-family: var(--font-active);
-            pointer-events: none;
-            opacity: 0;
-            animation: splashFadeIn 1.2s ease 0.45s forwards;
-        }
-
-        .splash-date::before {
-            content: '';
-            width: 1px;
-            height: 26px;
-            background: var(--theme-color);
-        }
-
-        /* 英文日期整行转 90° 竖排，和 Tap to begin 同一套字距 */
-        .splash-date-day {
-            writing-mode: vertical-rl;
-            font-size: 10px;
-            letter-spacing: 2.4px;
-            line-height: 1;
-            white-space: nowrap;
-            color: var(--splash-soft);
-        }
-
-
         .splash-entry-tip {
             position: absolute;
             left: 50%;
@@ -521,8 +487,7 @@
         @media (prefers-reduced-motion: reduce) {
             .splash-icon-stage,
             .splash-text-block,
-            .splash-entry-tip,
-            .splash-date {
+            .splash-entry-tip {
                 animation: none;
                 opacity: 1;
             }
@@ -11104,8 +11069,6 @@
             </div>
         </div>
 
-        <div class="splash-date" id="splashDate" aria-hidden="true"><span class="splash-date-day"></span></div>
-
         <div class="splash-entry-tip"><span class="tip-line"></span><span>Tap to begin</span><span class="tip-line"></span></div>
     </div>
 
@@ -12121,17 +12084,7 @@
             butterflyAnimId = requestAnimationFrame(tick);
         }
 
-        function renderSplashDate() {
-            const box = document.getElementById('splashDate');
-            if (!box) return;
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const now = new Date();
-            box.querySelector('.splash-date-day').textContent = `${weekdays[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
-        }
-
         function playSplashSequence() {
-            renderSplashDate();
             splashPhase = 'quiet';
             if (splashButterfly) splashButterfly.style.display = 'none';
             if (butterflyLandingEffects) butterflyLandingEffects.style.display = 'none';
