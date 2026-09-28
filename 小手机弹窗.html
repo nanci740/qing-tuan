@@ -7557,6 +7557,987 @@
             color: var(--win-deep);
         }
 
+        /* ---------------- 设置主页 · 窗口：边框圆角与美化设置一致（细线、4px、2px 淡投影、斜面），.exe 标题，各窗一处小细节 ---------------- */
+        #settingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+        }
+
+        /* 窗口本体：粗描边、圆角、右下实色投影 */
+        #settingsPage .settings-content > .settings-section {
+            margin-bottom: 18px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            overflow: hidden;
+        }
+
+        /* 标题栏：浅主色、粗底线，标题后面带 .exe，右边圆角窗口按钮 */
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: none;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-section-title::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-text::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-weight: 500;
+            opacity: 0.55;
+        }
+
+        /* 条目行 */
+        #settingsPage .settings-content > .settings-section .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-item:last-child {
+            min-height: 48px;
+            padding: 6px 12px 6px 10px;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item + .settings-item::before {
+            left: 51px;
+            right: 12px;
+            height: 0;
+            background: none;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item:active {
+            background: var(--win-bar);
+        }
+
+        /* 图标：圆角小块，粗描边，底下一道实色投影 */
+        #settingsPage .settings-content > .settings-section .settings-item-icon,
+        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+            width: 29px;
+            height: 29px;
+            flex: 0 0 29px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #FFFFFF;
+            color: var(--win-deep);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        #settingsPage .settings-content > .settings-section .settings-item-action {
+            color: var(--win-line);
+        }
+
+        /* 个人信息：my_profile.exe，右上三颗圆点，头像放在带框的相片格里，箭头变成凸起小按钮 */
+        #settingsPage .settings-content > .settings-section.settings-section-personal {
+            position: relative;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: #FFFFFF;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding-top: 36px;
+            padding-bottom: 12px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
+            display: flex !important;
+            align-items: center;
+            content: 'my_profile.exe' !important;
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 26px;
+            padding-left: 10px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            -webkit-mask: none;
+            mask: none;
+            z-index: 2;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            left: auto;
+            width: 38px;
+            height: 10px;
+            border: 0;
+            border-radius: 0;
+            z-index: 3;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar img {
+            border-radius: 3px;
+        }
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* 01 个性化内容：标题下面一条菜单栏 */
+        #settingsPage .retro-menubar {
+            display: flex;
+            gap: 14px;
+            padding: 4px 12px 5px;
+            border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        #settingsPage .retro-menubar span:first-letter {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        #settingsPage .settings-content > .settings-section.is-collapsed > .retro-menubar {
+            display: none;
+        }
+
+        /* 02 智能连接与服务：底部状态栏，写着这一组有几个项目，右下角拖拽纹 */
+        #settingsPage .retro-win-status {
+            padding: 3px 22px 4px 10px;
+            border-top: 1px solid var(--win-line);
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
+                var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 03 系统与存储：后面叠着两扇露出一角的窗口 */
+        #settingsPage .settings-content > .settings-section:nth-child(4) {
+            margin-top: 26px;
+            margin-right: 10px;
+            overflow: visible;
+            box-shadow:
+                2px 2px 0 rgba(var(--theme-rgb), 0.32),
+                5px -6px 0 -1px #FFFFFF,
+                5px -6px 0 0 var(--win-line),
+                10px -12px 0 -1px #FFFFFF,
+                10px -12px 0 0 var(--win-line);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* 04 关于：只有关闭键，图标变成大大的圆形 i，像系统信息对话框 */
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title::after {
+            flex-basis: 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item {
+            min-height: 58px;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+            width: 36px;
+            height: 36px;
+            flex-basis: 36px;
+            border-radius: 50% !important;
+            background: var(--win-bar);
+            color: var(--win-deep);
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.2;
+        }
+
+        /* ---------------- 设置主页 · 程序标题栏、地址栏、分组编号与折叠、底部状态栏 ---------------- */
+        /* 顶栏变成程序标题栏：深色底白字，右侧三个窗口小方块 */
+        #settingsPage .settings-header {
+            background: var(--win-deep);
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #settingsPage .settings-header h2,
+        #settingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+        #settingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        #settingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 地址栏：浅色条里一格凹陷输入框，写着当前路径 */
+        #settingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #settingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        #settingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+        }
+
+        #settingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+        #settingsPage .settings-content {
+            padding-top: 14px;
+        }
+
+        /* 分组标题：前面一个折叠三角和楼层编号，点标题栏可以收起 / 展开 */
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-head {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle {
+            flex: 0 0 8px;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            transition: transform 0.18s ease;
+        }
+
+        #settingsPage .settings-content > .settings-section .retro-sec-no {
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        #settingsPage .settings-content > .settings-section.is-collapsed .retro-sec-toggle {
+            transform: rotate(-90deg);
+        }
+
+        #settingsPage .settings-content > .settings-section.is-collapsed > .settings-item {
+            display: none;
+        }
+
+        #settingsPage .settings-content > .settings-section:nth-child(4).is-collapsed {
+            min-height: 18px;
+        }
+
+        /* 底部状态栏：左边版本号，右边访客计数，右下角拖拽纹 */
+        #settingsPage .retro-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 4px 18px 4px 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 3px bottom 3px / 9px 9px,
+                var(--win-bar);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            letter-spacing: 0.3px;
+        }
+
+        #settingsPage .retro-counter {
+            display: inline-block;
+            margin-left: 4px;
+            padding: 1px 4px;
+            border-radius: 1px;
+            background: var(--win-deep);
+            color: #FFFFFF;
+            letter-spacing: 1.5px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* ---------------- 美化设置 · 顶栏程序标题栏与地址栏（与设置主页一致） ---------------- */
+        #themeSettingsPage .settings-header {
+            background: var(--win-deep);
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #themeSettingsPage .settings-header h2,
+        #themeSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+        #themeSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        #themeSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        #themeSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #themeSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        #themeSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #themeSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+        /* ---------------- 应用信息弹窗：古早信息对话框 ---------------- */
+        #aboutAppModal {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+        }
+
+        #aboutAppModal .theme-color-modal-backdrop {
+            background: rgba(60, 70, 76, 0.22) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #aboutAppModal .theme-color-modal-card {
+            padding: 0 0 14px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 4px !important;
+            background: #FFFFFF !important;
+            box-shadow: 3px 3px 0 rgba(var(--theme-rgb), 0.38) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        #aboutAppModal .about-win-header {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding: 6px 6px 6px 12px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+        #aboutAppModal .about-win-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.16);
+            color: #FFFFFF;
+            cursor: pointer;
+            box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #aboutAppModal .about-win-close:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        /* 名字上方一个圆形 i，像系统信息对话框 */
+        #aboutAppModal .about-app-content {
+            padding: 0 16px 4px;
+        }
+
+        #aboutAppModal .about-app-content::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto 8px;
+            background: var(--win-deep);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-5M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 30px 30px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-5M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 30px 30px;
+        }
+
+        #aboutAppModal .about-app-version {
+            display: inline-block;
+            padding: 2px 7px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        #aboutAppModal .about-disclaimer-title {
+            padding-top: 14px;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            color: var(--win-ink);
+            letter-spacing: 1px;
+        }
+
+        #aboutAppModal .about-copyright {
+            padding-top: 10px;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* ---------------- 音乐设置 · 古早小窗口：播放列表窗、iPod 屏、属性对话框 ---------------- */
+        #musicSettingsPage {
+            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
+            --win-ink: color-mix(in srgb, var(--theme-color) 35%, #4B5A62);
+            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
+            background: #F9F9F7;
+        }
+
+        /* 顶栏：程序标题栏「音乐设置.exe」，下接地址栏 */
+        #musicSettingsPage .settings-header {
+            background: var(--win-deep);
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        #musicSettingsPage .settings-header h2,
+        #musicSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+        #musicSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        #musicSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        #musicSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #musicSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        #musicSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #musicSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+        #musicSettingsPage .music-settings-content {
+            padding-top: 16px;
+        }
+
+        /* 窗口本体 */
+        #musicSettingsPage .music-settings-content > .music-setting-group {
+            margin-bottom: 16px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32);
+            overflow: hidden;
+        }
+
+        /* 标题栏 */
+        #musicSettingsPage .music-settings-content > .music-setting-group .music-setting-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.2;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+        #musicSettingsPage .music-settings-content > .music-setting-group .music-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+        /* 内容区：去掉原卡片外框 */
+        #musicSettingsPage .music-settings-content .music-setting-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* 1 音乐来源：播放列表窗，浅色标题栏，标题前一个主题色音符 */
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(1) .music-setting-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M9%2018V5l12-2v13%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718%27%20r%3D%273%27/%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2716%27%20r%3D%273%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M9%2018V5l12-2v13%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718%27%20r%3D%273%27/%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2716%27%20r%3D%273%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+        /* 播放列表：一格一格的列表框，当前曲目浅主色底 */
+        #musicSettingsPage .music-playlist {
+            gap: 0;
+            margin-top: 12px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            overflow: hidden;
+        }
+
+        #musicSettingsPage .music-playlist:empty {
+            display: none;
+        }
+
+        #musicSettingsPage .music-settings-content .music-track-item,
+        #musicSettingsPage .music-settings-content .music-track-item.active {
+            border: 0 !important;
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+        #musicSettingsPage .music-settings-content .music-track-item:last-child {
+            border-bottom: 0 !important;
+        }
+
+        #musicSettingsPage .music-settings-content .music-track-item.active {
+            background: color-mix(in srgb, var(--theme-color) 16%, #FFFFFF) !important;
+        }
+
+        #musicSettingsPage .music-settings-content .music-track-thumb {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+        }
+
+        #musicSettingsPage .music-settings-content .music-track-badge {
+            padding: 0 4px !important;
+            font-size: 8px !important;
+            line-height: 1.5 !important;
+            letter-spacing: 0.5px !important;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        #musicSettingsPage .music-note {
+            padding-top: 8px;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+        /* 2 播放设置：古早 iPod 屏幕，细灰条，左边均衡器小竖条，右边播放三角和电池 */
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label {
+            justify-content: center;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: #F1F1EE;
+            color: #8E969C;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: #E2E2DE;
+            box-shadow: none;
+        }
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label::before {
+            content: '';
+            flex: 0 0 34px;
+            height: 10px;
+            margin-right: auto;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2710%27%20viewBox%3D%270%200%2014%2010%27%3E%3Crect%20x%3D%270%27%20y%3D%274%27%20width%3D%272%27%20height%3D%276%27/%3E%3Crect%20x%3D%274%27%20y%3D%271%27%20width%3D%272%27%20height%3D%279%27/%3E%3Crect%20x%3D%278%27%20y%3D%275%27%20width%3D%272%27%20height%3D%275%27/%3E%3Crect%20x%3D%2712%27%20y%3D%272%27%20width%3D%272%27%20height%3D%278%27/%3E%3C/svg%3E") no-repeat left center / 14px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2710%27%20viewBox%3D%270%200%2014%2010%27%3E%3Crect%20x%3D%270%27%20y%3D%274%27%20width%3D%272%27%20height%3D%276%27/%3E%3Crect%20x%3D%274%27%20y%3D%271%27%20width%3D%272%27%20height%3D%279%27/%3E%3Crect%20x%3D%278%27%20y%3D%275%27%20width%3D%272%27%20height%3D%275%27/%3E%3Crect%20x%3D%2712%27%20y%3D%272%27%20width%3D%272%27%20height%3D%278%27/%3E%3C/svg%3E") no-repeat left center / 14px 10px;
+        }
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: #9AA3A9;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+        #musicSettingsPage .music-settings-content .music-row {
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+        }
+
+        #musicSettingsPage .music-settings-content .music-row:last-child {
+            border-bottom: 0 !important;
+        }
+
+        /* 播放模式：凹槽里三颗按键，选中的凸起 */
+        #musicSettingsPage .music-mode-segment {
+            border: 1px solid var(--win-line);
+            border-radius: 3px;
+            background: #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #musicSettingsPage .music-mode-btn {
+            border: 1px solid transparent;
+            border-radius: 2px !important;
+        }
+
+        #musicSettingsPage .music-mode-btn.active {
+            border-color: var(--win-line);
+            color: var(--win-ink);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        /* 开关：凹陷的方槽，方形凸起滑块 */
+        #musicSettingsPage .music-switch {
+            width: 38px;
+            height: 20px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px;
+            background: #EEF1F1;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+        #musicSettingsPage .music-switch::after {
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+            box-sizing: border-box;
+        }
+
+        #musicSettingsPage .music-switch.on {
+            background: var(--theme-color);
+        }
+
+        #musicSettingsPage .music-switch.on::after {
+            transform: translateX(18px);
+        }
+
+        /* 3 音乐信息：属性对话框，右上只有「?」和关闭，底部状态栏带拖拽纹 */
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-card {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 16px;
+            border-top: 1px solid var(--win-line);
+            background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px, var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            pointer-events: none;
+        }
+
+        #musicSettingsPage .music-settings-content .music-editor-target {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: var(--win-bar) !important;
+            color: var(--win-ink);
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.45);
+        }
+
+        /* 封面：像一张贴上去的相片 */
+        #musicSettingsPage .music-settings-content .music-cover-preview {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #F7F8F8;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+        /* 输入框凹陷 */
+        #musicSettingsPage .music-settings-content .music-url-input,
+        #musicSettingsPage .music-settings-content .music-meta-input {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+        }
+
+        /* 按钮：凸起斜面，按下凹陷；主按钮实心主色白字，次按钮白底 */
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:focus,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary),
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible {
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:focus,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:focus-visible {
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            -webkit-text-fill-color: var(--win-ink) !important;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:active,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:active {
+            border-color: var(--win-line) !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            transform: translate(0.5px, 0.5px);
+        }
+
+        /* 歌单行内操作：替换和删除是凸起小方块，图标与文字同色；拖拽纹淡一些 */
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-actions {
+            gap: 6px;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete {
+            width: 26px !important;
+            min-width: 26px !important;
+            height: 26px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit:active,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete:active {
+            transform: translate(0.5px, 0.5px);
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit svg,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-drag {
+            width: 18px;
+            color: color-mix(in srgb, var(--theme-color) 45%, #9AA3A9);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
@@ -10420,6 +11401,10 @@
                 <h2>设置</h2>
             </div>
         </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\</span>
+        </div>
         <div class="settings-content">
             <!-- 个人信息独立卡片 -->
             <div class="settings-section settings-section-personal">
@@ -10563,6 +11548,10 @@
                     </div>
                 </div>
             </div>
+            <div class="retro-status-bar" aria-hidden="true">
+                <span>青团机 v0.1.0</span>
+                <span class="retro-visitor">you are visitor No.<span class="retro-counter" id="settingsVisitorCounter">000001</span></span>
+            </div>
         </div>
     </div>
 
@@ -10571,6 +11560,10 @@
     <div class="theme-color-modal" id="aboutAppModal" aria-hidden="true">
         <div class="theme-color-modal-backdrop" id="aboutAppModalBackdrop"></div>
         <div class="theme-color-modal-card about-modal-card" role="dialog" aria-modal="true" aria-label="青团机应用信息">
+            <div class="about-win-header">
+                <span>about.exe</span>
+                <button class="about-win-close" id="aboutAppModalClose" type="button" aria-label="关闭应用信息"><svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>
+            </div>
             <div class="about-app-content">
                 <div class="about-app-name">青团机</div>
                 <div class="about-app-version">版本 v0.1.0</div>
@@ -11210,6 +12203,10 @@
                 <h2>美化设置</h2>
             </div>
         </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\美化设置\</span>
+        </div>
 
         <div class="theme-settings-content">
             <section class="theme-setting-group">
@@ -11453,6 +12450,10 @@
                 <h2>音乐设置</h2>
             </div>
         </div>
+        <div class="retro-address-bar" aria-hidden="true">
+            <span class="retro-address-label">地址</span>
+            <span class="retro-address-field"><span class="retro-address-icon"></span>C:\青团\设置\音乐设置\</span>
+        </div>
         <div class="music-settings-content">
             <section class="music-setting-group">
                 <div class="music-setting-label">音乐来源</div>
@@ -11467,7 +12468,7 @@
                     </div>
                     <input id="musicFileInput" type="file" accept="audio/*" multiple hidden>
                     <div class="music-playlist" id="musicPlaylist"></div>
-                    <span class="music-note">最多保存 3 首音乐。点右侧循环图标可以选择新的音乐文件替换音乐；音乐可拖动调整顺序。</span>
+                    <span class="music-note">最多保存 3 首音乐。点右侧文件夹图标可以选择新的音乐文件替换音乐；音乐可拖动调整顺序。</span>
                 </div>
             </section>
 
@@ -12850,6 +13851,82 @@
         const ticketDumplings = document.getElementById('ticketDumplings');
         const splashIconImage = document.querySelector('.splash-icon-image');
         if (ticketDumplings && splashIconImage) ticketDumplings.src = splashIconImage.getAttribute('src');
+
+        // 设置主页：给分组标题加折叠三角和楼层编号，点标题栏收起 / 展开；访客计数每次打开小手机加一
+        (function initRetroSettingsHome() {
+            const page = document.getElementById('settingsPage');
+            if (!page) return;
+            let no = 0;
+            page.querySelectorAll('.settings-content > .settings-section').forEach((section) => {
+                const title = section.querySelector(':scope > .settings-section-title');
+                if (!title || title.querySelector('.retro-sec-head')) return;
+                no += 1;
+                const head = document.createElement('span');
+                head.className = 'retro-sec-head';
+                const toggle = document.createElement('span');
+                toggle.className = 'retro-sec-toggle';
+                const num = document.createElement('span');
+                num.className = 'retro-sec-no';
+                num.textContent = String(no).padStart(2, '0');
+                const text = document.createElement('span');
+                text.className = 'retro-sec-text';
+                text.textContent = title.textContent.trim();
+                head.append(toggle, num, text);
+                title.replaceChildren(head);
+                title.setAttribute('role', 'button');
+                title.setAttribute('tabindex', '0');
+                title.setAttribute('aria-expanded', 'true');
+                const key = String(no);
+                const saved = (() => { try { return JSON.parse(localStorage.getItem('qingtuan_settings_collapsed') || '[]'); } catch (err) { return []; } })();
+                if (saved.includes(key)) {
+                    section.classList.add('is-collapsed');
+                    title.setAttribute('aria-expanded', 'false');
+                }
+                const flip = () => {
+                    const collapsed = section.classList.toggle('is-collapsed');
+                    title.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                    try {
+                        const list = new Set(JSON.parse(localStorage.getItem('qingtuan_settings_collapsed') || '[]'));
+                        if (collapsed) list.add(key); else list.delete(key);
+                        localStorage.setItem('qingtuan_settings_collapsed', JSON.stringify([...list]));
+                    } catch (err) {}
+                };
+                title.addEventListener('click', flip);
+                title.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+            });
+
+            const groups = page.querySelectorAll('.settings-content > .settings-section:not(.settings-section-personal)');
+            const menuHost = groups[0];
+            if (menuHost && !menuHost.querySelector('.retro-menubar')) {
+                const bar = document.createElement('div');
+                bar.className = 'retro-menubar';
+                bar.setAttribute('aria-hidden', 'true');
+                ['文件', '编辑', '查看', '帮助'].forEach((label) => {
+                    const item = document.createElement('span');
+                    item.textContent = label;
+                    bar.appendChild(item);
+                });
+                menuHost.querySelector(':scope > .settings-section-title')?.after(bar);
+            }
+            const statusHost = groups[1];
+            if (statusHost && !statusHost.querySelector('.retro-win-status')) {
+                const status = document.createElement('div');
+                status.className = 'retro-win-status';
+                status.setAttribute('aria-hidden', 'true');
+                status.textContent = `${statusHost.querySelectorAll(':scope > .settings-item').length} 个项目`;
+                statusHost.appendChild(status);
+            }
+
+            const counter = document.getElementById('settingsVisitorCounter');
+            if (counter) {
+                let visits = 1;
+                try {
+                    visits = (parseInt(localStorage.getItem('qingtuan_visitor_count'), 10) || 0) + 1;
+                    localStorage.setItem('qingtuan_visitor_count', String(visits));
+                } catch (err) {}
+                counter.textContent = String(visits).padStart(6, '0');
+            }
+        })();
 
         function playSplashSequence() {
             splashPhase = 'quiet';
@@ -16150,6 +17227,7 @@ if (songDetails) {
 
     entry.addEventListener('click', openModal);
     backdrop?.addEventListener('click', closeModal);
+    document.getElementById('aboutAppModalClose')?.addEventListener('click', closeModal);
     document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && modal.classList.contains('active')) closeModal();
     });
@@ -19985,9 +21063,9 @@ if (songDetails) {
                     <div class="music-track-sub">${track.type === 'file' ? '本地音乐' : '链接音乐'} · 第 ${index + 1} 首</div>
                 </div>
                 <div class="music-track-actions">
-                    <div class="music-track-drag" aria-hidden="true" title="拖动排序">⋮⋮</div>
+                    <div class="music-track-drag" aria-hidden="true" title="拖动排序"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
                     <button class="music-track-edit" type="button" aria-label="更改音乐" title="更改音乐">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-cw"><path d="M4 10a8 8 0 1 1 8 8H4"/><path d="m8 22-4-4 4-4"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-open"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
                     </button>
                     <button class="music-track-delete" type="button" aria-label="删除音乐" title="删除音乐">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
