@@ -7025,25 +7025,25 @@
         }
 
         /* 按钮：凸起的斜面，按下去凹进去 */
-        #themeSettingsPage .theme-action-btn,
-        #themeSettingsPage .theme-text-btn,
-        #themeSettingsPage .theme-custom-color-btn,
-        #themeSettingsPage .theme-font-btn,
-        #themeSettingsPage .theme-font-url-btn,
-        #themeSettingsPage .theme-icon-bottom-btn,
-        #themeSettingsPage .ui-cyan-btn {
+        #themeSettingsPage .theme-settings-content .theme-action-btn,
+        #themeSettingsPage .theme-settings-content .theme-text-btn,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn {
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
             box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
         }
 
-        #themeSettingsPage .theme-action-btn:active,
-        #themeSettingsPage .theme-text-btn:active,
-        #themeSettingsPage .theme-custom-color-btn:active,
-        #themeSettingsPage .theme-font-btn:active,
-        #themeSettingsPage .theme-font-url-btn:active,
-        #themeSettingsPage .theme-icon-bottom-btn:active,
-        #themeSettingsPage .ui-cyan-btn:active {
+        #themeSettingsPage .theme-settings-content .theme-action-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-text-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:active,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn:active {
             box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
             transform: translate(0.5px, 0.5px);
         }
@@ -7085,6 +7085,8 @@
         /* ---------------- 美化设置 · 七扇窗各有来历 ---------------- */
         #themeSettingsPage {
             --win-deep: color-mix(in srgb, var(--theme-color) 58%, #4E6A72);
+            /* 按主题色本身加深，色相和饱和度不变：青还是青，粉还是粉，不会混成灰紫 */
+            --win-deep: oklch(from var(--theme-color) calc(l - 0.16) calc(c * 1.1) h);
         }
 
         /* 1 界面配色：经典对话框，深青标题栏白字 */
