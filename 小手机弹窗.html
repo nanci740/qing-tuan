@@ -3837,6 +3837,10 @@
         #musicSettingsPage:not(.active) { display: none !important; }
         #musicSettingsPage.active { display: flex !important; }
 
+        /* MCP 设置页原来少了这两条，打开时会淡入上滑，和其他设置页不一样；补上后同样直接出现 */
+        #mcpSettingsPage:not(.active) { display: none !important; }
+        #mcpSettingsPage.active { display: flex !important; }
+
         .music-settings-content {
             flex: 1;
             width: 100%;
