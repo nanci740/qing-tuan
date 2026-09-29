@@ -9301,6 +9301,29 @@
             box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
         }
 
+        /* 按下凹进去；播放中的播放键、静音时的音量键保持按下的样子 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player.is-playing .vi-audio-play,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted {
+            background: color-mix(in srgb, var(--theme-color) 14%, #F4F6F6) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, rgba(75, 90, 98, 0.35)), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active {
+            transform: translate(0.5px, 0.5px);
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted svg {
+            opacity: 0.45;
+        }
+
+        /* 剧情与画面上方原有一条实线，和角色提示下的虚线叠在一起，去掉 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-scene-field {
+            border-top: 0 !important;
+        }
+
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play svg,
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume svg {
             width: 14px;
