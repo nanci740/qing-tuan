@@ -10280,6 +10280,56 @@
             font-family: 'SF Mono', Menlo, Consolas, monospace;
         }
 
+        /* MCP 连接类型：和 API、语音页的下拉一样，凹陷框右边一个凸起小三角方块；点开是古早选择弹窗 */
+        #mcpServiceModal#mcpServiceModal .mcp-select-btn {
+            position: relative;
+            display: block;
+            width: 100%;
+            min-height: 37px;
+            padding: 8px 34px 8px 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            color: var(--ui-text-primary);
+            font-family: var(--font-active);
+            font-size: 10.5px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        #mcpServiceModal#mcpServiceModal .mcp-select-btn::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            bottom: 2px;
+            width: 24px;
+            box-sizing: border-box;
+            border: 1px solid var(--win-line);
+            border-radius: 1px;
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+        #mcpServiceModal#mcpServiceModal .mcp-select-btn::before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 10px;
+            width: 8px;
+            height: 5px;
+            margin-top: -2px;
+            background: var(--win-ink);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%275%27%20viewBox%3D%270%200%208%205%27%3E%3Cpath%20d%3D%27M0%200h8L4%205z%27/%3E%3C/svg%3E") no-repeat center / 8px 5px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%275%27%20viewBox%3D%270%200%208%205%27%3E%3Cpath%20d%3D%27M0%200h8L4%205z%27/%3E%3C/svg%3E") no-repeat center / 8px 5px;
+        }
+
+        #mcpServiceModal#mcpServiceModal .mcp-select-btn:active::after {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi);
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
@@ -13671,7 +13721,8 @@
                 </label>
                 <label class="mcp-field">
                     <span class="mcp-field-label">连接类型</span>
-                    <select class="mcp-select" id="mcpTransportSelect">
+                    <button class="mcp-select-btn" id="mcpTransportBtn" type="button">Streamable HTTP</button>
+                    <select class="mcp-select" id="mcpTransportSelect" hidden>
                         <option value="streamable-http">Streamable HTTP</option>
                         <option value="sse">SSE（兼容旧服务）</option>
                     </select>
@@ -19972,6 +20023,9 @@ if (songDetails) {
         refs.modal.setAttribute('aria-hidden', 'false');
     }
 
+    // 其他页面（如 MCP 编辑弹窗）也用这个古早选择弹窗，不用系统自带的下拉
+    window.qtOpenChoice = openDynamicChoice;
+
     function closeChoice() {
         refs.modal.classList.remove('open');
         refs.modal.setAttribute('aria-hidden', 'true');
@@ -20725,6 +20779,25 @@ if (songDetails) {
     const mcpGenerateDescBtn = document.getElementById('mcpGenerateDescBtn');
     const mcpUrlInput = document.getElementById('mcpUrlInput');
     const mcpTransportSelect = document.getElementById('mcpTransportSelect');
+    const mcpTransportBtn = document.getElementById('mcpTransportBtn');
+
+    // 连接类型：按钮显示当前选项，点开用古早选择弹窗，选完写回隐藏的 select
+    function syncTransportBtn() {
+        if (!mcpTransportBtn || !mcpTransportSelect) return;
+        const opt = mcpTransportSelect.options[mcpTransportSelect.selectedIndex];
+        mcpTransportBtn.textContent = opt ? opt.textContent : '';
+    }
+    mcpTransportSelect?.addEventListener('change', syncTransportBtn);
+    mcpTransportBtn?.addEventListener('click', () => {
+        if (!mcpTransportSelect) return;
+        const options = Array.from(mcpTransportSelect.options).map(o => ({ value: o.value, label: o.textContent }));
+        if (typeof window.qtOpenChoice === 'function') {
+            window.qtOpenChoice(mcpTransportSelect, '选择连接类型', options, mcpTransportSelect.value);
+        } else {
+            mcpTransportSelect.hidden = false;
+            mcpTransportSelect.focus();
+        }
+    });
     const mcpTokenInput = document.getElementById('mcpTokenInput');
     const mcpHeaderList = document.getElementById('mcpHeaderList');
     const mcpAddHeaderBtn = document.getElementById('mcpAddHeaderBtn');
@@ -20989,6 +21062,7 @@ if (songDetails) {
         if (mcpDescriptionInput) mcpDescriptionInput.value = service?.description || '';
         if (mcpUrlInput) mcpUrlInput.value = service?.url || '';
         if (mcpTransportSelect) mcpTransportSelect.value = service?.transport || 'streamable-http';
+        syncTransportBtn();
         if (mcpTokenInput) mcpTokenInput.value = service?.token || '';
         if (mcpHeaderList) mcpHeaderList.innerHTML = '';
         (service?.headers || []).forEach(h => addHeaderRow(h.key, h.value));
