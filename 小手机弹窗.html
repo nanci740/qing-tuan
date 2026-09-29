@@ -9569,12 +9569,24 @@
             display: flex !important;
             flex-direction: column;
             margin-top: 12px !important;
-            padding: 24px 16px 12px !important;
+            padding: 36px 19px 22px !important;
             border: 1px solid var(--win-line) !important;
             border-radius: 2px !important;
             background: #FFFFFF !important;
-            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px var(--win-line) !important;
-            overflow: hidden;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32) !important;
+            overflow: visible;
+        }
+
+        /* 里层框线：左右上隔 5px，下面隔 9px，像老式对话框和相纸，下边更厚一点 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 9px;
+            border: 1px solid var(--win-line);
+            pointer-events: none;
         }
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview:not(.show) {
@@ -9584,8 +9596,9 @@
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::before {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 8px;
+            z-index: 1;
+            top: 12px;
+            left: 12px;
             width: 9px;
             height: 9px;
             border: 1px solid var(--win-line);
@@ -9598,13 +9611,43 @@
             display: contents;
         }
 
+        /* 图片像一张放在桌面上的照片：细框加右下 2px 硬投影；上方一行窗口名，像 System 7 的看图窗 */
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
             order: 1;
+            position: relative;
+            overflow: visible !important;
             padding: 0;
             border: 1px solid var(--win-line) !important;
             border-radius: 0 !important;
             background: #F4F6F6 !important;
-            box-shadow: none !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.32) !important;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::before {
+            content: 'preview.bmp';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -25px;
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            letter-spacing: 1px;
+            line-height: 16px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        /* 窗口名下一条细线横贯里层框，隔出标题栏 */
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::after {
+            content: '';
+            position: absolute;
+            left: -14px;
+            right: -14px;
+            top: -9px;
+            height: 1px;
+            background: var(--win-line);
+            pointer-events: none;
         }
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview img {
