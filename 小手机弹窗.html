@@ -9562,17 +9562,18 @@
             border-radius: 0 !important;
         }
 
-        /* 生图结果：不再套外框，直接落在窗里，像 PoolOS 关于窗里的横幅图。照 Poolside TV 的放映窗，图片正上方贴一条深色细条，左边等宽字写模型（像文件名），右边「重新生成」像 Next File；
-           图下一行加粗的描述，像商品格下的品名 */
+        /* 生图结果：一扇 PoolOS 关于窗那样的小窗。双线窗框、左上角一个装饰小方块；
+           图片四周留白，下面模型名居中、底下一条细实线，再下面描述靠左，「重新生成」是右下角的下划线链接字 */
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview {
+            position: relative;
             display: flex !important;
             flex-direction: column;
             margin-top: 12px !important;
-            padding: 0 !important;
-            border: 0 !important;
-            border-radius: 0 !important;
-            background: transparent !important;
-            box-shadow: none !important;
+            padding: 24px 16px 12px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px var(--win-line) !important;
             overflow: hidden;
         }
 
@@ -9580,27 +9581,28 @@
             display: none !important;
         }
 
-        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta {
-            display: contents;
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 9px;
+            height: 9px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            pointer-events: none;
         }
 
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta,
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta-top {
-            order: 0;
-            gap: 10px;
-            margin: 0 !important;
-            padding: 4px 8px;
-            border: 1px solid var(--win-line);
-            border-bottom: 0;
-            border-radius: 2px 2px 0 0;
-            background: var(--win-deep);
+            display: contents;
         }
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
             order: 1;
             padding: 0;
             border: 1px solid var(--win-line) !important;
-            border-top: 0 !important;
-            border-radius: 0 0 2px 2px !important;
+            border-radius: 0 !important;
             background: #F4F6F6 !important;
             box-shadow: none !important;
         }
@@ -9609,42 +9611,51 @@
             border-radius: 0 !important;
         }
 
-        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc {
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-model {
             order: 2;
-            padding: 9px 2px 0;
-            text-align: center;
+            margin-top: 10px;
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--win-line);
             color: var(--win-ink) !important;
-            font-size: 12px !important;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10.5px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px !important;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc {
+            order: 3;
+            padding: 8px 0 0;
+            color: var(--win-ink) !important;
+            font-size: 11px !important;
+            line-height: 1.6;
+            text-align: left;
         }
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc:empty {
             display: none;
         }
 
-        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-model {
-            overflow: hidden;
-            color: #FFFFFF !important;
-            font-family: 'SF Mono', Menlo, Consolas, monospace;
-            font-size: 9.5px !important;
-            font-weight: 500 !important;
-            letter-spacing: 0.3px !important;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn {
+            order: 4;
+            align-self: flex-end;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 1px 0 !important;
+            margin-top: 8px;
+            padding: 2px 0 !important;
             border: 0 !important;
             border-radius: 0 !important;
             background: transparent !important;
-            color: #FFFFFF !important;
-            font-size: 9.5px !important;
+            color: var(--win-ink) !important;
+            font-size: 10px !important;
             letter-spacing: 0.5px;
+            text-decoration: underline;
+            text-underline-offset: 2px;
             box-shadow: none !important;
         }
 
