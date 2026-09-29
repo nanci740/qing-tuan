@@ -9504,6 +9504,31 @@
             box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
         }
 
+        /* 提示前一行不再画虚线，免得和提示上方的虚线叠成两条 */
+        #apiSettingsPage#apiSettingsPage .api-row:has(+ .api-hint) {
+            border-bottom: 0 !important;
+        }
+
+        /* 圆角收口：窗口 4px，窗内的输入、列表、行一律直角，虚线不带弧度 */
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group {
+            border-radius: 4px !important;
+        }
+
+        #apiSettingsPage#apiSettingsPage .api-input-wrap .api-input,
+        #apiSettingsPage#apiSettingsPage .api-fallback-box,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-secret-wrap .vi-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-model-picker .vi-input,
+        #apiProviderModal#apiProviderModal .api-model-list,
+        #apiProviderModal#apiProviderModal .api-model-item,
+        #apiModelModal#apiModelModal .api-model-list,
+        #apiModelModal#apiModelModal .api-model-item,
+        #viChoiceModal#viChoiceModal .vi-choice-list,
+        #viChoiceModal#viChoiceModal .vi-choice-item,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player {
+            border-radius: 0 !important;
+        }
+
         /* 美化页面统一轻微圆角：8px；原本圆形控件保持圆形 */
         .theme-setting-card,
         .theme-text-btn,
