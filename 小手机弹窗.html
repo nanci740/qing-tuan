@@ -9562,15 +9562,16 @@
             border-radius: 0 !important;
         }
 
-        /* 生图结果：照 Poolside TV 的放映窗。图片正上方贴一条深色细条，左边等宽字写模型（像文件名），右边「重新生成」像 Next File；
+        /* 生图结果：不再套外框，直接落在窗里，像 PoolOS 关于窗里的横幅图。照 Poolside TV 的放映窗，图片正上方贴一条深色细条，左边等宽字写模型（像文件名），右边「重新生成」像 Next File；
            图下一行加粗的描述，像商品格下的品名 */
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview {
             display: flex !important;
             flex-direction: column;
-            padding: 10px !important;
-            border: 1px solid var(--win-line) !important;
-            border-radius: 3px !important;
-            background: #FFFFFF !important;
+            margin-top: 12px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
             box-shadow: none !important;
             overflow: hidden;
         }
@@ -9596,11 +9597,12 @@
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
             order: 1;
-            padding: 4px;
+            padding: 0;
             border: 1px solid var(--win-line) !important;
+            border-top: 0 !important;
             border-radius: 0 0 2px 2px !important;
             background: #F4F6F6 !important;
-            box-shadow: inset 1px 1px 0 var(--win-lo) !important;
+            box-shadow: none !important;
         }
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview img {
@@ -9610,6 +9612,7 @@
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc {
             order: 2;
             padding: 9px 2px 0;
+            text-align: center;
             color: var(--win-ink) !important;
             font-size: 12px !important;
             font-weight: 600;
