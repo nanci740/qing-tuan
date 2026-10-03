@@ -20777,9 +20777,8 @@ body{--wk-src:var(--theme-color)}
             background: none !important;
             border: 0 !important;
             box-shadow: none !important;
-            /* 时间：深青灰（比 --cr-title 再深一截） */
-            color: oklch(from var(--theme-color) calc(l - 0.3) calc(c * 0.7) h) !important;
-            -webkit-text-fill-color: oklch(from var(--theme-color) calc(l - 0.3) calc(c * 0.7) h) !important;
+            color: var(--cr-title) !important; /* 时间：深青灰，跟顶栏「与 XX 聊天中」同色 */
+            -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 9.5px !important;
         }
         #chatAppPage#chatAppPage #chatRoomView .chat-date-divider::before,
@@ -20901,8 +20900,8 @@ body{--wk-src:var(--theme-color)}
             padding: 0 12px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 3px !important;
-            /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度再提一点：上半截淡、下半截 --cr-send */
-            --cr-send: oklch(from var(--cr-head) l calc(c * 1.3) h);
+            /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度提两成：上半截淡、下半截 --cr-send */
+            --cr-send: oklch(from var(--cr-head) l calc(c * 1.2) h);
             background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
             box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 color-mix(in srgb, var(--cr-btn-tint) 85%, transparent) !important;
             color: #FFFFFF !important;
@@ -21114,7 +21113,7 @@ body{--wk-src:var(--theme-color)}
             padding: 4px 6px 5px;
             font-size: 10.5px;
             font-weight: 600;
-            color: oklch(from var(--theme-color) calc(l - 0.1) calc(c * 0.6) h); /* 名字：浅青灰 */
+            color: var(--cr-line); /* 名字：浅青灰，跟 Chat 列表搜索框提示字同色 */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
