@@ -20957,6 +20957,12 @@ body{--wk-src:var(--theme-color)}
             text-overflow: ellipsis;
             font-size: 12.5px !important;
         }
+        /* 顶栏字：跟 Chat 列表顶栏「Chat」同一套白色描边 + 右下叠一层白 + 淡主题青 */
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-title {
+            text-shadow:
+                -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
+                2px 2px 0 #FFFFFF, 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+        }
         #chatAppPage#chatAppPage #chatRoomView .chat-room-title::before { content: '与 '; font-weight: 400; }
         #chatAppPage#chatAppPage #chatRoomView .chat-room-title::after { content: ' 聊天中'; font-weight: 400; font-size: 11px; }
 
@@ -21088,7 +21094,10 @@ body{--wk-src:var(--theme-color)}
             gap: 4px;
             height: 22px;
             padding: 0 6px;
-            background: linear-gradient(180deg, #FFFFFF 0%, var(--cr-face) 100%);
+            /* 跟世界书白色按钮同一套正面高光：上半截纯白、下半截淡青，两层内斜面 */
+            background: var(--cr-btn-face);
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
+                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent);
             border-bottom: 1px solid var(--cr-line);
             font-size: 10px;
             font-weight: 600;
@@ -37118,7 +37127,7 @@ const INITIAL_DOSSIER = {`;
         const sender = row.classList.contains('is-user') ? '我' : peer;
         const ms = Number(row.dataset.sentAt);
         const d = Number.isFinite(ms) && ms > 0 ? new Date(ms) : null;
-        const time = d ? ` ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` : '';
+        const time = d ? `\u00A0\u00A0\u00A0${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` : '';
         if (row.dataset.sender !== sender) row.dataset.sender = sender;
         if (row.dataset.time !== time) row.dataset.time = time;
     };
