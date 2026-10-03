@@ -37108,7 +37108,7 @@ const INITIAL_DOSSIER = {`;
 </script>
 
 <script>
-/* 聊天室（QQ2006 风）：帮每则讯息标上「发送者」和「(时:分:秒)」，CSS 的「名字 (时间)」那一行就读这两个属性 */
+/* 聊天室（QQ2006 风）：帮每则讯息标上「发送者」和「时:分:秒」，CSS 的「名字 时间」那一行就读这两个属性 */
 (() => {
     const list = document.getElementById('chatMessageList');
     if (!list) return;
@@ -37118,7 +37118,7 @@ const INITIAL_DOSSIER = {`;
         const sender = row.classList.contains('is-user') ? '我' : peer;
         const ms = Number(row.dataset.sentAt);
         const d = Number.isFinite(ms) && ms > 0 ? new Date(ms) : null;
-        const time = d ? ` (${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())})` : '';
+        const time = d ? ` ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` : '';
         if (row.dataset.sender !== sender) row.dataset.sender = sender;
         if (row.dataset.time !== time) row.dataset.time = time;
     };
