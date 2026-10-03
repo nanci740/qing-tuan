@@ -20784,12 +20784,12 @@ body{--wk-src:var(--theme-color)}
         #chatAppPage#chatAppPage #chatRoomView .chat-date-divider::before,
         #chatAppPage#chatAppPage #chatRoomView .chat-date-divider::after { content: none; }
         #chatAppPage#chatAppPage #chatRoomView .chat-date-divider { justify-content: center; } /* 只留中间的时间，不要两边虚线 */
-        /* 时间垫一块淡青小底 */
+        /* 时间套一圈细框：跟工具列图示同一个青（--cr-peer） */
         #chatAppPage#chatAppPage #chatRoomView .chat-date-divider {
             width: fit-content;
             margin: 6px auto 8px !important;
             padding: 1px 8px !important;
-            background: var(--cr-face) !important;
+            border: 1px solid var(--cr-peer) !important;
             border-radius: 2px !important;
         }
 
