@@ -20676,8 +20676,9 @@ body{--wk-src:var(--theme-color)}
                 2px 2px 0 color-mix(in srgb, var(--cr-btn-tint) 85%, transparent);
             --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
             /* 名字颜色：对方 = 深一点的青；自己 = 偏绿的灰青（像 QQ 一蓝一绿） */
-            --cr-peer: var(--theme-color); /* 先用主题色本身（#DDF2F4）看看 */
-            --cr-self: var(--theme-color);
+            /* 名字、工具列图示、边栏小三角：跟资料卡「保存」钮同一个青（--cr-head） */
+            --cr-peer: var(--cr-head);
+            --cr-self: var(--cr-head);
             background: var(--cr-bg) !important;
         }
 
@@ -20899,10 +20900,8 @@ body{--wk-src:var(--theme-color)}
             padding: 0 12px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 3px !important;
-            /* 跟聊天室顶栏同一种渐层：浅青在上、青在下，上半截亮面慢慢淡掉 */
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
-                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+            /* 跟资料卡「保存」钮（.cc-primary）同一个青：上半截淡、下半截 --cr-head */
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
             box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 color-mix(in srgb, var(--cr-btn-tint) 85%, transparent) !important;
             color: #FFFFFF !important;
         }
