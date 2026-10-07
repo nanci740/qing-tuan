@@ -1,76 +1,53 @@
-    function openChatAssetDb(): Promise<IDBDatabase> {
-        return new Promise<IDBDatabase>((resolve, reject) => {
-            if (!window.indexedDB) return reject(new Error('当前环境不支持图片存储'));
-            const request = indexedDB.open('smallphone_chat_assets_v1', 2);
-            request.onupgradeneeded = () => {
-                const db = request.result;
-                if (!db.objectStoreNames.contains('wallpapers')) db.createObjectStore('wallpapers');
-                if (!db.objectStoreNames.contains('fonts')) db.createObjectStore('fonts');
-            };
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error || new Error('图片存储开启失败'));
+// Keep the existing database and keys so previously saved chat assets remain readable.
+function openChatAssetDb(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+        if (!window.indexedDB) return reject(new Error('当前环境不支持聊天资源存储'));
+        const request = indexedDB.open('smallphone_chat_assets_v1', 2);
+        request.onupgradeneeded = () => {
+            for (const name of ['wallpapers', 'fonts']) {
+                if (!request.result.objectStoreNames.contains(name)) request.result.createObjectStore(name);
+            }
+        };
+        let blocked = false;
+        request.onsuccess = () => {if (blocked) request.result.close(); else resolve(request.result);};
+        request.onerror = () => reject(request.error || new Error('聊天资源存储开启失败'));
+        request.onblocked = () => {blocked = true;reject(new Error('请关闭其他青团机页面后重试'));};
+    });
+}
+async function chatAssetTransaction<T>(stores: string[], mode: IDBTransactionMode, action: (tx: IDBTransaction, result: (value: T) => void) => void): Promise<T> {
+    const db = await openChatAssetDb();
+    try {
+        return await new Promise<T>((resolve, reject) => {
+            const tx = db.transaction(stores, mode);
+            let value: T;
+            tx.oncomplete = () => resolve(value);
+            tx.onerror = tx.onabort = () => reject(tx.error || new Error('聊天资源操作失败，请重试'));
+            try { action(tx, result => { value = result; }); }
+            catch (error) { tx.abort(); reject(error); }
         });
-    }
-    export async function writeChatWallpaper(key: string, file: Blob) {
-        const db = await openChatAssetDb();
-        await new Promise<void>((resolve, reject) => {
-            const tx = db.transaction('wallpapers', 'readwrite');
-            tx.objectStore('wallpapers').put(file, key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error || new Error('壁纸保存失败'));
-        });
-        db.close();
-    }
-    export async function readChatWallpaper(key: string): Promise<Blob | null> {
-        const db = await openChatAssetDb();
-        const value = await new Promise<Blob | null>((resolve, reject) => {
-            const request = db.transaction('wallpapers', 'readonly').objectStore('wallpapers').get(key);
-            request.onsuccess = () => resolve(request.result || null);
-            request.onerror = () => reject(request.error || new Error('壁纸读取失败'));
-        });
-        db.close();
-        return value;
-    }
-    export async function deleteChatWallpaper(key: string) {
-        const db = await openChatAssetDb();
-        await new Promise<void>((resolve, reject) => {
-            const tx = db.transaction('wallpapers', 'readwrite');
-            tx.objectStore('wallpapers').delete(key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error || new Error('壁纸移除失败'));
-        });
-        db.close();
-    }
-    export async function writeChatFont(key: string, file: Blob) {
-        const db = await openChatAssetDb();
-        await new Promise<void>((resolve, reject) => {
-            const tx = db.transaction('fonts', 'readwrite');
-            tx.objectStore('fonts').put(file, key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error || new Error('字体保存失败'));
-        });
-        db.close();
-    }
-    export async function readChatFont(key: string): Promise<Blob | null> {
-        const db = await openChatAssetDb();
-        const value = await new Promise<Blob | null>((resolve, reject) => {
-            const request = db.transaction('fonts', 'readonly').objectStore('fonts').get(key);
-            request.onsuccess = () => resolve(request.result || null);
-            request.onerror = () => reject(request.error || new Error('字体读取失败'));
-        });
-        db.close();
-        return value;
-    }
-    export async function deleteChatFont(key: string) {
-        const db = await openChatAssetDb();
-        await new Promise<void>((resolve, reject) => {
-            const tx = db.transaction('fonts', 'readwrite');
-            tx.objectStore('fonts').delete(key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error || new Error('字体移除失败'));
-        });
-        db.close();
-    }
+    } finally { db.close(); }
+}
+export function updateChatAssets(key: string, assets: {wallpaper?: Blob | null; font?: Blob | null}) {
+    return chatAssetTransaction<void>(['wallpapers', 'fonts'], 'readwrite', tx => {
+        for (const [property, store] of [['wallpaper', 'wallpapers'], ['font', 'fonts']] as const) {
+            if (assets[property] === undefined) continue;
+            if (assets[property] === null) tx.objectStore(store).delete(key);
+            else tx.objectStore(store).put(assets[property], key);
+        }
+    });
+}
+function readChatAsset(store: string, key: string): Promise<Blob | null> {
+    return chatAssetTransaction([store], 'readonly', (tx, result) => {
+        const request = tx.objectStore(store).get(key);
+        request.onsuccess = () => result(request.result || null);
+    });
+}
+export const writeChatWallpaper = (key: string, file: Blob) => updateChatAssets(key, {wallpaper: file});
+export const readChatWallpaper = (key: string) => readChatAsset('wallpapers', key);
+export const deleteChatWallpaper = (key: string) => updateChatAssets(key, {wallpaper: null});
+export const writeChatFont = (key: string, file: Blob) => updateChatAssets(key, {font: file});
+export const readChatFont = (key: string) => readChatAsset('fonts', key);
+export const deleteChatFont = (key: string) => updateChatAssets(key, {font: null});
     export function scopeChatBubbleCss(source: string) {
         const css = String(source || '').trim();
         if (!css) return '';
