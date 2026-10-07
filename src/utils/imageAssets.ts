@@ -4,8 +4,8 @@ const PREFIX = 'qt-image:';
 const images = new Map<string, string>();
 const references = new Map<string, string>();
 const slots = new Map<string, string>();
-const imageKeys = ['smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`)];
-const recordKeys = ['smallphone_dossier_records_v1', 'smallphone_chat_characters_v1'];
+const imageKeys = ['personal_profile_polaroid_photo', ...['chatMemoryStar','chatMemoryPolaroid','chatMemoryMoon','chatMemoryExtra'].map(id => `smallphone_chat_memory_photo_v1_${id}`), 'smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`)];
+const recordKeys = ['smallphone_dossier_records_v1', 'smallphone_chat_characters_v1', 'smallphone_world_books_v1'];
 function legacy(key: string) { try { return localStorage.getItem(key) || ''; } catch { return ''; } }
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -76,6 +76,9 @@ async function commitImageSlots(values: Record<string, string>) {
 export function decodePhotoRecords<T extends {photoUrl?: string}>(records: T[]): T[] { return records.map(record => ({...record, photoUrl: record.photoUrl ? resolveImage(record.photoUrl) : record.photoUrl})); }
 export function encodePhotoRecords<T extends {photoUrl?: string}>(records: T[]): T[] { return records.map(record => ({...record, photoUrl: record.photoUrl ? imageReference(record.photoUrl) : record.photoUrl})); }
 export async function preparePhotoRecords(records: {photoUrl?: string}[]) { for (const record of records) if (record.photoUrl) await storeImage(record.photoUrl); }
+export function decodeCoverRecords<T extends {cover?: string}>(records: T[]): T[] { return records.map(record => ({...record, cover: record.cover ? resolveImage(record.cover) : record.cover})); }
+export function encodeCoverRecords<T extends {cover?: string}>(records: T[]): T[] { return records.map(record => ({...record, cover: record.cover ? imageReference(record.cover) : record.cover})); }
+export async function prepareCoverRecords(records: {cover?: string}[]) { for (const record of records) if (record.cover) await storeImage(record.cover); }
 /** 渲染前恢复图片并迁移旧资料；任一步失败都保留旧资料。 */
 export async function initializeImageAssets() {
   let error: unknown;
@@ -104,8 +107,9 @@ export async function initializeImageAssets() {
     for (const key of recordKeys) {
       const original=legacy(key); if(!original)continue;
       const records=JSON.parse(original); if(!Array.isArray(records))continue;
-      await preparePhotoRecords(records);
-      const payload=JSON.stringify(encodePhotoRecords(records));
+      const world = key === 'smallphone_world_books_v1';
+      if (world) await prepareCoverRecords(records); else await preparePhotoRecords(records);
+      const payload=JSON.stringify(world ? encodeCoverRecords(records) : encodePhotoRecords(records));
       // 防止迁移期间覆盖另一个页面的新修改。
       if(legacy(key)===original) localStorage.setItem(key,payload);
     }

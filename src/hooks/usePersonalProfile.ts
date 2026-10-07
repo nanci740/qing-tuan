@@ -1,3 +1,5 @@
+import { prepareImage, readImageSlot, saveImageSlots } from '../utils/imageAssets';
+import { showToast } from '../utils/toast';
 import { useSettingsNavigation } from './useSettingsNavigation';
 import { useEffect, useRef, useState } from 'react';
 export const PROFILE_TEXT_KEYS = ['personal_profile_name', 'personal_profile_birthday', 'personal_profile_mbti', 'personal_profile_location', 'personal_profile_mood', 'personal_profile_today_text', 'personal_profile_special', 'personal_profile_love_1', 'personal_profile_love_2', 'personal_profile_love_3', 'personal_profile_love_4', 'personal_profile_dislike_1', 'personal_profile_dislike_2', 'personal_profile_dislike_3'];
@@ -12,7 +14,7 @@ function readTodayText() {
 export function usePersonalProfile() {
   const { registerDestination } = useSettingsNavigation();
   const [open, setOpen] = useState(false);
-  const [photo, setPhoto] = useState(() => readProfileText('personal_profile_polaroid_photo'));
+  const [photo, setPhoto] = useState(() => readImageSlot('personal_profile_polaroid_photo'));
   const [mood, setMood] = useState(() => readProfileText('personal_profile_mood'));
   // 旧版两个栏位共用 mood；只在新栏位尚未保存时沿用已有内容。
   const [todayText, setTodayText] = useState(readTodayText);
@@ -43,23 +45,13 @@ export function usePersonalProfile() {
   function changeTodayText(value: string) { setTodayText(value); saveText('personal_profile_today_text', value); }
   function changeMood(value: string) { setMood(value); saveText('personal_profile_mood', value); }
   function choosePhoto() { if (fileRef.current) { fileRef.current.value = ''; fileRef.current.click(); } }
-  function changePhoto(file?: File) {
-    if (!file?.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const image = new Image();
-      image.onload = () => {
-        const canvas = document.createElement('canvas');
-        const scale = Math.min(1, 700 / Math.max(image.width, image.height));
-        canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
-        const ctx = canvas.getContext('2d'); if (!ctx) return;
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        const data = canvas.toDataURL('image/jpeg', 0.86); setPhoto(data);
-        try { localStorage.setItem('personal_profile_polaroid_photo', data); } catch (err) { console.warn('个人信息拍立得照片保存失败:', err); }
-      };
-      image.src = String(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const savingPhoto=useRef(false);
+  async function changePhoto(file?: File) {
+    if (!file || savingPhoto.current) return;
+    savingPhoto.current=true;
+    try { const data=await prepareImage(file,700,.86);await saveImageSlots({'personal_profile_polaroid_photo':data});setPhoto(data);showToast('照片已保存'); }
+    catch { showToast('照片保存失败，请检查图片或浏览器存储空间'); }
+    finally { savingPhoto.current=false; }
   }
   function nextLine(index: number) { if (lines.current[index + 1]) focusTimers.current.push(setTimeout(() => lines.current[index + 1]?.focus(), 0)); }
   return { open, close: () => setOpen(false), photo, mood, todayText, counter, fileRef, lines, nextLine, changeTodayText, changeMood, choosePhoto, changePhoto };
