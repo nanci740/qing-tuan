@@ -1,53 +1,34 @@
 export const CUSTOM_FONT_FAMILY = 'SmallPhoneCustomFont';
 const CUSTOM_FONT_DB = 'smallphone_custom_font_db', CUSTOM_FONT_STORE = 'font_store', CUSTOM_FONT_RECORD = 'active_font';
-    function openFontDb(): Promise<IDBDatabase> {
-        return new Promise((resolve, reject) => {
-            if (!('indexedDB' in window)) {
-                reject(new Error('当前浏览器不支持本地字体储存'));
-                return;
-            }
-            const request = indexedDB.open(CUSTOM_FONT_DB, 1);
-            request.onupgradeneeded = () => {
-                const db = request.result;
-                if (!db.objectStoreNames.contains(CUSTOM_FONT_STORE)) {
-                    db.createObjectStore(CUSTOM_FONT_STORE);
-                }
-            };
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error || new Error('字体储存打开失败'));
-        });
-    }
-
-    export async function saveLocalFontRecord(file: File): Promise<void> {
-        const db = await openFontDb();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(CUSTOM_FONT_STORE, 'readwrite');
-            tx.objectStore(CUSTOM_FONT_STORE).put({ blob: file, name: file.name, type: file.type }, CUSTOM_FONT_RECORD);
-            tx.oncomplete = () => { db.close(); resolve(); };
-            tx.onerror = () => { db.close(); reject(tx.error || new Error('字体储存失败')); };
-        });
-    }
-
-    export async function readLocalFontRecord(): Promise<{ blob: Blob; name: string; type: string } | null> {
-        const db = await openFontDb();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(CUSTOM_FONT_STORE, 'readonly');
-            const req = tx.objectStore(CUSTOM_FONT_STORE).get(CUSTOM_FONT_RECORD);
-            req.onsuccess = () => { const value = req.result || null; db.close(); resolve(value); };
-            req.onerror = () => { db.close(); reject(req.error || new Error('字体读取失败')); };
-        });
-    }
-
-    export async function clearLocalFontRecord() {
-        try {
-            const db = await openFontDb();
-            await new Promise<Event>((resolve, reject) => {
-                const tx = db.transaction(CUSTOM_FONT_STORE, 'readwrite');
-                tx.objectStore(CUSTOM_FONT_STORE).delete(CUSTOM_FONT_RECORD);
-                tx.oncomplete = resolve;
-                tx.onerror = () => reject(tx.error);
-            });
-            db.close();
-        } catch (err) {}
-    }
-
+export interface LocalFontRecord {blob: Blob; name: string; type: string;}
+function openFontDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) return reject(new Error('当前浏览器不支持本地字体存储'));
+    const request = indexedDB.open(CUSTOM_FONT_DB, 1);
+    let blocked = false;
+    request.onupgradeneeded = () => {if (!request.result.objectStoreNames.contains(CUSTOM_FONT_STORE)) request.result.createObjectStore(CUSTOM_FONT_STORE);};
+    request.onsuccess = () => {if (blocked) request.result.close();else resolve(request.result);};
+    request.onerror = () => reject(request.error || new Error('字体存储打开失败'));
+    request.onblocked = () => {blocked = true;reject(new Error('请关闭其他青团机页面后重试'));};
+  });
+}
+async function fontTransaction<T>(mode: IDBTransactionMode, action: (store: IDBObjectStore, result: (value: T) => void) => void): Promise<T> {
+  const db = await openFontDb();
+  try {
+    return await new Promise<T>((resolve, reject) => {
+      const tx = db.transaction(CUSTOM_FONT_STORE, mode);let value: T;
+      tx.oncomplete = () => resolve(value);
+      tx.onerror = tx.onabort = () => reject(tx.error || new Error('字体存储操作失败，请重试'));
+      try {action(tx.objectStore(CUSTOM_FONT_STORE), next => {value = next;});}
+      catch (error) {try {tx.abort();} catch {} reject(error);}
+    });
+  } finally {db.close();}
+}
+export function writeLocalFontRecord(record: LocalFontRecord | null): Promise<void> {
+  return fontTransaction('readwrite', store => {if (record) store.put(record, CUSTOM_FONT_RECORD);else store.delete(CUSTOM_FONT_RECORD);});
+}
+export const saveLocalFontRecord = (file: File) => writeLocalFontRecord({blob: file, name: file.name, type: file.type});
+export function readLocalFontRecord(): Promise<LocalFontRecord | null> {
+  return fontTransaction('readonly', (store, result) => {const request = store.get(CUSTOM_FONT_RECORD);request.onsuccess = () => result(request.result || null);});
+}
+export const clearLocalFontRecord = () => writeLocalFontRecord(null);

@@ -14,4 +14,4 @@ export function loadMcpState(): McpState {
   try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') return { enabled: saved.enabled === true, services: Array.isArray(saved.services) ? saved.services.map(normalizeMcpService) : [] }; } catch { /* 原存档回退。 */ }
   return { enabled: false, services: [] };
 }
-export function saveMcpState(state: McpState) { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 与原静默保存行为一致。 */ } }
+export function saveMcpState(state: McpState) { localStorage.setItem(KEY, JSON.stringify(state)); }

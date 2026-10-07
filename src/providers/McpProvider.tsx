@@ -30,14 +30,13 @@ function useMcpState() {
   const [toolsId, setToolsId] = useState<string | null>(null);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [toolPanel, setToolPanel] = useState<{ title: string; tools: McpTool[] } | null>(null);
-  const save = useCallback((next: McpState) => { current.current = next; setState(next); saveMcpState(next); }, []);
+  const save = useCallback((next: McpState) => {try{saveMcpState(next);current.current=next;setState(next);return true;}catch{showToast('MCP 设置保存失败，请重试');return false;}}, []);
   const changeService = useCallback((service: McpService) => {
-    save({ ...current.current, services: current.current.services.map(old => old.id === service.id ? service : old) });
+    return save({ ...current.current, services: current.current.services.map(old => old.id === service.id ? service : old) });
   }, [save]);
   const closeModal = useCallback(() => { if (document.activeElement instanceof HTMLElement && modalRef.current?.contains(document.activeElement)) document.activeElement.blur(); setModalOpen(false); setEditingId(null); setStatus({ message: '', type: '' }); }, []);
   const closeTools = useCallback(() => { if (document.activeElement instanceof HTMLElement && toolsRef.current?.contains(document.activeElement)) document.activeElement.blur(); setToolsOpen(false); setToolsId(null); }, []);
   useEffect(() => {
-    saveMcpState(current.current);
     const enter = () => { const next = loadMcpState(); current.current = next; setState(next); setPageOpen(true); };
     const unregister = registerDestination('settingMcp', enter);
     const close = () => setPageOpen(false);
@@ -63,12 +62,13 @@ function useMcpState() {
   function saveService() {
     const service = readModalService();
     try { validate(service); } catch (err) { setStatus({ message: errorMessage(err, ''), type: 'error' }); return; }
-    if (editingId) changeService(service); else save({ ...current.current, services: [...current.current.services, service] });
+    const ok=editingId?changeService(service):save({ ...current.current, services: [...current.current.services, service] });
+    if(!ok){setStatus({message:'MCP 设置保存失败，请重试',type:'error'});return;}
     closeModal(); showToast('MCP 服务已保存');
   }
   function deleteService() {
     if (!editingId) return;
-    save({ ...current.current, services: current.current.services.filter(s => s.id !== editingId) });
+    if(!save({ ...current.current, services: current.current.services.filter(s => s.id !== editingId) }))return;
     closeModal(); showToast('MCP 服务已删除');
   }
   async function testService() {
@@ -78,7 +78,7 @@ function useMcpState() {
       setStatus({ message: '正在连接并读取工具…', type: '' });
       const tools = await fetchServiceTools(service);
       const next: McpService = { ...service, tools: mergeMcpTools(service, tools), status: 'online', statusText: tools.length ? `连接正常 · ${tools.length} 个工具` : '连接正常 · 暂无工具', lastChecked: new Date().toISOString() };
-      if (editingId) changeService(next);
+      if(editingId&&!changeService(next)){setStatus({message:'连接正常，但设置保存失败，请重试',type:'error'});return;}
       setStatus({ message: next.statusText, type: 'ok' });
     } catch (err) { setStatus({ message: errorMessage(err, '连接失败'), type: 'error' }); }
     finally { setTesting(false); }
@@ -102,14 +102,14 @@ function useMcpState() {
   function toggleTool(index: number, enabled: boolean) {
     const service = current.current.services.find(s => s.id === toolsId); if (!service) return;
     const tools = service.tools.map((tool, i) => i === index ? { ...tool, enabled } : tool);
-    changeService({ ...service, tools }); setToolPanel(panel => panel ? { ...panel, tools } : panel);
+    if(!changeService({ ...service, tools }))return; setToolPanel(panel => panel ? { ...panel, tools } : panel);
   }
   async function refreshTools() {
     const service = current.current.services.find(s => s.id === toolsId); if (!service) return;
     setRefreshing(true);
     try {
       const raw = await fetchServiceTools(service), tools = mergeMcpTools(service, raw);
-      changeService({ ...service, tools, status: 'online', statusText: raw.length ? `连接正常 · ${raw.length} 个工具` : '连接正常 · 暂无工具', lastChecked: new Date().toISOString() });
+      if(!changeService({ ...service, tools, status: 'online', statusText: raw.length ? `连接正常 · ${raw.length} 个工具` : '连接正常 · 暂无工具', lastChecked: new Date().toISOString() }))return;
       setToolsRevision(revision => revision + 1); setToolPanel(panel => panel ? { ...panel, tools } : panel); showToast(`已刷新 ${raw.length} 个工具`);
     } catch (err) { changeService({ ...service, status: 'error', statusText: '连接失败' }); showToast(errorMessage(err, '刷新工具失败')); }
     finally { setRefreshing(false); }

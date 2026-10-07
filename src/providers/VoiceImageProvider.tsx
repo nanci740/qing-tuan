@@ -1,3 +1,4 @@
+import {writeSettingsBatch} from '../utils/settingsPersistence';
 import { flushSync } from 'react-dom';
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -31,8 +32,17 @@ function useVoiceImageState(){
  function provider(kind:'voice'|'image',value:string){if(kind==='voice'){const result=applyVoiceProviderPreset(voice,value,true);setVoice(result.next);setVoiceMeta(result.meta);}else{const result=applyImageProviderPreset(image,value,true);setImage(result.next);setImageMeta(result.meta);}}
  function openChoice(kind:'voice'|'image',key:'provider'|'format'|'size'|'quality',type:string,title:string){const config=kind==='voice'?voice:image;const selected=String(config[key as keyof typeof config]||'');choice.openChoice({title,options:choiceMaps[type]||[],selected,confirm:value=>{if(key==='provider')provider(kind,value);else if(kind==='voice')setVoiceField('format',value);else if(key==='size'||key==='quality')setImageField(key,value);}});}
  function setKindStatus(kind:'voice'|'image',message='',type=''){setStatus(current=>({...current,[kind]:{message,type}}));}
- function save(kind:'voice'|'image',notify=true){saved.current={...saved.current,[kind]:kind==='voice'?readVoice():readImage()};try{localStorage.setItem('smallphone_voice_image_settings_v1',JSON.stringify(saved.current));setKindStatus(kind);if(notify)showToast(kind==='voice'?'语音设置已保存':'生图设置已保存');return true;}catch{if(notify)setKindStatus(kind,'保存失败','error');return false;}}
- function toggleEnabled(kind:'voice'|'image',value:boolean){const next=kind==='voice'?{...voice,enabled:value}:{...image,enabled:value};if(kind==='voice')setVoice(next as VoiceConfig);else setImage(next as ImageConfig);saved.current={...saved.current,[kind]:kind==='voice'?cleanVoice(next as VoiceConfig):cleanImage(next as ImageConfig)};try{localStorage.setItem('smallphone_voice_image_settings_v1',JSON.stringify(saved.current));}catch{}}
+ function commit(kind:'voice'|'image',config:VoiceConfig|ImageConfig){
+  const next={...saved.current,[kind]:config};
+  try{writeSettingsBatch({'smallphone_voice_image_settings_v1':JSON.stringify(next)});saved.current=next;setKindStatus(kind);return true;}
+  catch(error){setKindStatus(kind,error instanceof Error?error.message:'保存失败','error');return false;}
+ }
+ function save(kind:'voice'|'image',notify=true){const ok=commit(kind,kind==='voice'?readVoice():readImage());if(ok&&notify)showToast(kind==='voice'?'语音设置已保存':'生图设置已保存');return ok;}
+ function toggleEnabled(kind:'voice'|'image',value:boolean){
+  const next=kind==='voice'?cleanVoice({...voice,enabled:value}):cleanImage({...image,enabled:value});
+  if(!commit(kind,next))return;
+  if(kind==='voice')setVoice(next as VoiceConfig);else setImage(next as ImageConfig);
+ }
  async function fetchModels(kind:'voice'|'image'){setFetching(current=>({...current,[kind]:true}));const config=kind==='voice'?voice:image;try{let models:string[],message:string;if(kind==='image'&&config.provider==='novelai'){models=IMAGE_MODEL_PRESETS.novelai||[];message=`已载入 ${models.length} 个 NAI 模型`;}else{const base=config.baseUrl.trim(),key=config.apiKey.trim();if(!base||!key)throw Error('请先填写正确的 API 地址和 Key');const fetched=await(config.provider==='gemini'?fetchGeminiModels(base,key):fetchOpenAICompatibleModels(base,key));models=filterFetchedModels(fetched,kind,config.provider);if(!models.length)throw Error(kind==='voice'?'没有拉取到可用语音模型':'没有拉取到可用图片模型');message=`已获取 ${models.length} 个可用模型`;}setKindStatus(kind,message,'ok');choice.openChoice({title:kind==='voice'?'选择语音模型':'选择图片模型',options:normalizeModelOptions(models),selected:config.model,confirm:value=>kind==='voice'?setVoiceField('model',value):setImageField('model',value)});}catch(error){showToast(error instanceof Error?error.message:'获取模型失败');setKindStatus(kind);}finally{setFetching(current=>({...current,[kind]:false}));if(kind==='voice')setVoiceMeta(current=>({...current,fetchDisabled:false}));}}
  function syncAudio(){const audio=audioRef.current;if(!audio)return;const current=Number.isFinite(audio.currentTime)?audio.currentTime:0,duration=Number.isFinite(audio.duration)?audio.duration:0;setAudioState({current,duration,progress:duration>0?Math.round(current/duration*1000):0,playing:!audio.paused&&!audio.ended,muted:audio.muted||audio.volume===0});}
  async function attachAudio(blob:Blob){if(audioUrl.current.startsWith('blob:'))URL.revokeObjectURL(audioUrl.current);audioUrl.current=URL.createObjectURL(blob);flushSync(()=>setAudioSrc(audioUrl.current));const audio=audioRef.current;if(!audio)return;audio.load();syncAudio();try{await audio.play();}catch{}syncAudio();}
