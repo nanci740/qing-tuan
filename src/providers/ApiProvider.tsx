@@ -83,9 +83,8 @@ function useApiState() {
     else updateForm({ ...formRef.current, fallbackProvider: value, ...(preset.baseUrl ? { fallbackBaseUrl: preset.baseUrl } : {}) });
   }
   function changeFallback(enabled: boolean) {
-    field('fallbackEnabled', enabled);
     // 备用 API 开关单独即时保存；不需要再额外按“保存设置”
-    try { let stored; try { stored = JSON.parse(localStorage.getItem(API_STORAGE_KEY) || '{}') || {}; } catch { stored = {}; } stored.fallbackEnabled = !!enabled; stored.updatedAt = Date.now(); localStorage.setItem(API_STORAGE_KEY,JSON.stringify(stored)); } catch { showToast('备用 API 开关保存失败'); }
+    try { let stored; try { stored = JSON.parse(localStorage.getItem(API_STORAGE_KEY) || '{}') || {}; } catch { stored = {}; } stored.fallbackEnabled = !!enabled; stored.updatedAt = Date.now(); localStorage.setItem(API_STORAGE_KEY,JSON.stringify(stored)); field('fallbackEnabled', enabled); } catch { showToast('备用 API 开关保存失败'); }
   }
   function openProvider(target: 'provider' | 'fallbackProvider') { setProviderPicker(previous => ({ open: true, target, title: target === 'provider' ? '选择接口类型' : '选择备用接口类型', selected: formRef.current[target] || 'openai-compatible', revision: previous.revision+1 })); }
   function openModels(models: string[], target: ModelTarget, title: string) {

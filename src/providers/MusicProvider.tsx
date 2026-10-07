@@ -1,8 +1,9 @@
+import {writeSettingsBatch} from '../utils/settingsPersistence';
 import { useHomeTexts } from './HomeTextsProvider';
 import { createContext, useCallback, useContext, useLayoutEffect, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties, PointerEvent, ReactNode } from 'react';
 import type { MusicMode, MusicTrack } from '../types/music';
-import { AUTO_KEY, CURRENT_KEY, MODE_KEY, PLAYLIST_KEY, SHOW_NOTES_KEY, compressMusicCover, createTrackId, deleteMusicBlob, getMusicBlob, loadMusicState, putMusicBlob, readMusicBool, saveMusicBool, saveMusicValue } from '../utils/musicStorage';
+import { AUTO_KEY, CURRENT_KEY, MODE_KEY, PLAYLIST_KEY, SHOW_NOTES_KEY, compressMusicCover, createTrackId, deleteMusicBlob, getMusicBlob, loadMusicState, putMusicBlob, readMusicBool, saveMusicValue } from '../utils/musicStorage';
 import { showToast } from '../utils/toast';
 import { useSettingsNavigation } from './SettingsNavigationProvider';
 interface DragState { sourceId: string; track: MusicTrack; index: number; current: boolean; editing: boolean; startY: number; offsetY: number; moved: boolean; style: CSSProperties; indices: Map<string, number> }
@@ -39,11 +40,18 @@ function useMusicState() {
       if (autoplay) try { await audio.current?.play(); } catch {}
     } catch { showToast('音乐载入失败'); }
   }
-  function renameTrack(title: string) {
-    const track = currentTrack(); if (!track) return; const finalTitle = (title || '').trim() || 'Fortune arrives';
-    const next = { ...track, title: finalTitle }; update({ playlist: live.current.playlist.map(t=>t.id === track.id ? next : t) }); savePlaylist();
-    setText('songTitle',finalTitle); if (track.id === live.current.editingId) refreshMetaForm(); renderPlaylist();
+  function renameStorage(title: string): Record<string,string> {
+    const track=currentTrack();if(!track)return {};
+    return {[PLAYLIST_KEY]:JSON.stringify(live.current.playlist.map(t=>t.id===track.id?{...t,title:(title||'').trim()||'Fortune arrives'}:t))};
   }
+  function renameTrack(title: string, persist=true) {
+    const track=currentTrack();if(!track)return true;
+    const finalTitle=(title||'').trim()||'Fortune arrives';
+    if(persist)try{writeSettingsBatch({...renameStorage(finalTitle),player_song_title:finalTitle});}catch(error){showToast((error as Error).message);return false;}
+    update({playlist:live.current.playlist.map(t=>t.id===track.id?{...t,title:finalTitle}:t)});
+    setText('songTitle',finalTitle);if(track.id===live.current.editingId)refreshMetaForm();renderPlaylist();return true;
+  }
+  function saveFlag(key:string,value:string,apply:()=>void){try{writeSettingsBatch({[key]:value});apply();}catch(error){showToast((error as Error).message);}}
   useLayoutEffect(() => {
     const unregister = registerDestination('settingMusic',()=>{ setPageOpen(true); renderPlaylist(); refreshMetaForm(); setShowNotes(readMusicBool(SHOW_NOTES_KEY,true)); });
     const close = () => setPageOpen(false), rename = (event: Event) => renameTrack((event as CustomEvent<string>).detail);
@@ -106,7 +114,11 @@ function useMusicState() {
   }
   function saveMeta() {
     const track=editingTrack() || live.current.playlist[0]; if (!track) { showToast('请添加音乐'); return; }
-    const next={...track,title:title.trim() || 'Fortune arrives',coverData:pendingCover.current!==null ? pendingCover.current || '' : track.coverData}; pendingCover.current=null; update({playlist:live.current.playlist.map(t=>t.id===track.id ? next : t)}); savePlaylist(); if (track.id===live.current.currentId) applyMeta(next); renderPlaylist(); refreshMetaForm(); showToast('音乐信息已保存');
+    const next={...track,title:title.trim() || 'Fortune arrives',coverData:pendingCover.current!==null ? pendingCover.current || '' : track.coverData};
+    const playlist=live.current.playlist.map(t=>t.id===track.id ? next : t);
+    try{writeSettingsBatch({[PLAYLIST_KEY]:JSON.stringify(playlist),...(track.id===live.current.currentId?{player_song_title:next.title}:{})});}
+    catch(error){showToast((error as Error).message);return;}
+    pendingCover.current=null;update({playlist});if(track.id===live.current.currentId)applyMeta(next);renderPlaylist();refreshMetaForm();showToast('音乐信息已保存');
   }
   async function onCover(event: ChangeEvent<HTMLInputElement>) { const file=event.currentTarget.files?.[0]; if (!file) return; try { pendingCover.current=await compressMusicCover(file); refreshMetaForm(); } catch(error) { showToast(error instanceof Error ? error.message || '封面处理失败' : '封面处理失败'); } }
   async function moveTrack(delta: number) { const {playlist,currentId,mode}=live.current; if (!playlist.length) return; let index=playlist.findIndex(t=>t.id===currentId); if(index<0)index=0; if(mode==='random') return loadTrack(playlist[Math.floor(Math.random()*playlist.length)],true); return loadTrack(playlist[(index+delta+playlist.length)%playlist.length],true); }
@@ -115,8 +127,8 @@ function useMusicState() {
   function seek(clientX: number, container: HTMLDivElement | null) { const media=audio.current; if (!media?.src || !Number.isFinite(media.duration) || !container)return; const rect=container.getBoundingClientRect(); media.currentTime=Math.max(0,Math.min(media.duration,((clientX-rect.left)/rect.width)*media.duration)); }
   return { ...state, displayMode, playlist: view.playlist, currentId: view.currentId, editingId: view.editingId, audio, pageRef, pageOpen, closePage:()=>{ if(document.activeElement instanceof HTMLElement && pageRef.current?.contains(document.activeElement))document.activeElement.blur(); setPageOpen(false); }, fileInput, coverInput, rowRefs, revision, drag, beginSort, urlBoxRef, urlOpen, toggleUrl:()=>setUrlOpen(v=>!v), url, setUrl, addUrl, onFiles, chooseFiles,
     title, setTitle, editorTitle, coverPreview, miniCover, saveMeta, onCover, chooseCover:()=>{ if(coverInput.current) { coverInput.current.value=''; coverInput.current.click(); } }, removeCover:()=>{ pendingCover.current=''; refreshMetaForm(); },
-    autoPlay, toggleAuto:()=>setAutoPlay(value=>{saveMusicBool(AUTO_KEY,!value);return !value;}), showNotes, toggleNotes:()=>setShowNotes(value=>{saveMusicBool(SHOW_NOTES_KEY,!value);return !value;}), setMode:(mode:MusicMode)=>{setDisplayMode(mode);update({mode});saveMusicValue(MODE_KEY,mode);},
-    selectTrack:(track:MusicTrack)=>{void loadTrack(track,false);showToast('已切换音乐');},deleteTrack,renameTrack,moveTrack,onEnded,togglePlay,seek };
+    autoPlay, toggleAuto:()=>saveFlag(AUTO_KEY,autoPlay?'0':'1',()=>setAutoPlay(!autoPlay)), showNotes, toggleNotes:()=>saveFlag(SHOW_NOTES_KEY,showNotes?'0':'1',()=>setShowNotes(!showNotes)), setMode:(mode:MusicMode)=>saveFlag(MODE_KEY,mode,()=>{setDisplayMode(mode);update({mode});}),
+    selectTrack:(track:MusicTrack)=>{void loadTrack(track,false);showToast('已切换音乐');},deleteTrack,renameTrack,renameStorage,moveTrack,onEnded,togglePlay,seek };
 }
 const Context=createContext<ReturnType<typeof useMusicState> | null>(null);
 export function MusicProvider({children}:{children:ReactNode}) { const state=useMusicState();return <Context.Provider value={state}>{children}</Context.Provider>; }

@@ -88,53 +88,43 @@ export function Appearance() {
               <div className="theme-swatches" aria-label="柔和主题色">
                 {"\n                            "}
                 <PressedButton type="button" data-color="#B5D9DC" aria-label="柔青色" data-qt-token="inline-000" className={'theme-swatch' + (appearance.color === '#B5D9DC' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#B5D9DC');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#B5D9DC')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#EBC0CA" aria-label="柔粉色" data-qt-token="inline-001" className={'theme-swatch' + (appearance.color === '#EBC0CA' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#EBC0CA');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#EBC0CA')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#CAC1E1" aria-label="浅紫色" data-qt-token="inline-002" className={'theme-swatch' + (appearance.color === '#CAC1E1' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#CAC1E1');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#CAC1E1')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#BED6C2" aria-label="鼠尾草绿" data-qt-token="inline-003" className={'theme-swatch' + (appearance.color === '#BED6C2' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#BED6C2');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#BED6C2')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#E5D1AF" aria-label="柔金色" data-qt-token="inline-004" className={'theme-swatch' + (appearance.color === '#E5D1AF' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#E5D1AF');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#E5D1AF')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#86AEB9" aria-label="雾蓝色" data-qt-token="inline-005" className={'theme-swatch' + (appearance.color === '#86AEB9' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#86AEB9');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#86AEB9')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#D7A6C1" aria-label="灰莓粉" data-qt-token="inline-006" className={'theme-swatch' + (appearance.color === '#D7A6C1' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#D7A6C1');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#D7A6C1')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#AEBBD1" aria-label="云灰蓝" data-qt-token="inline-007" className={'theme-swatch' + (appearance.color === '#AEBBD1' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#AEBBD1');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#AEBBD1')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#AEC394" aria-label="抹茶灰绿" data-qt-token="inline-008" className={'theme-swatch' + (appearance.color === '#AEC394' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#AEC394');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#AEC394')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#C89F68" aria-label="燕麦棕" data-qt-token="inline-009" className={'theme-swatch' + (appearance.color === '#C89F68' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#C89F68');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#C89F68')) showToast('主题颜色已保存');
               }} />
                 {"\n                        "}
               </div>
@@ -150,53 +140,43 @@ export function Appearance() {
               <div className="theme-swatches" aria-label="浅色主题色">
                 {"\n                            "}
                 <PressedButton type="button" data-color="#CDE7EC" aria-label="浅雾青" data-qt-token="inline-010" className={'theme-swatch' + (appearance.color === '#CDE7EC' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#CDE7EC');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#CDE7EC')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#F2CBD5" aria-label="樱花浅粉" data-qt-token="inline-011" className={'theme-swatch' + (appearance.color === '#F2CBD5' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#F2CBD5');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#F2CBD5')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#DED5F1" aria-label="奶油浅紫" data-qt-token="inline-012" className={'theme-swatch' + (appearance.color === '#DED5F1' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#DED5F1');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#DED5F1')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#D7E7D2" aria-label="浅芽绿" data-qt-token="inline-013" className={'theme-swatch' + (appearance.color === '#D7E7D2' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#D7E7D2');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#D7E7D2')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#F0DFC3" aria-label="奶油浅杏" data-qt-token="inline-014" className={'theme-swatch' + (appearance.color === '#F0DFC3' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#F0DFC3');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#F0DFC3')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#DDF2F4" aria-label="淡青色" data-qt-token="inline-015" className={'theme-swatch' + (appearance.color === '#DDF2F4' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#DDF2F4');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#DDF2F4')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#F3DCE5" aria-label="浅玫瑰" data-qt-token="inline-016" className={'theme-swatch' + (appearance.color === '#F3DCE5' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#F3DCE5');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#F3DCE5')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#E9E1F4" aria-label="浅薰衣草" data-qt-token="inline-017" className={'theme-swatch' + (appearance.color === '#E9E1F4' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#E9E1F4');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#E9E1F4')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#DFEAD8" aria-label="浅鼠尾草" data-qt-token="inline-018" className={'theme-swatch' + (appearance.color === '#DFEAD8' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#DFEAD8');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#DFEAD8')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#F2E8D8" aria-label="浅燕麦" data-qt-token="inline-019" className={'theme-swatch' + (appearance.color === '#F2E8D8' ? ' active' : '')} onClick={() => {
-                appearance.applyColor('#F2E8D8');
-                showToast('主题颜色已保存');
+                if (appearance.applyColor('#F2E8D8')) showToast('主题颜色已保存');
               }} />
                 {"\n                        "}
               </div>
@@ -235,8 +215,7 @@ export function Appearance() {
             </div>
             {"\n\n                    "}
             <PressedButton className="theme-reset-btn" id="resetThemeColor" type="button" onClick={() => {
-            appearance.applyColor('#DDF2F4');
-            showToast('已恢复默认青色');
+            if (appearance.applyColor('#DDF2F4')) showToast('已恢复默认青色');
           }}>
               {"恢复默认青色"}
             </PressedButton>

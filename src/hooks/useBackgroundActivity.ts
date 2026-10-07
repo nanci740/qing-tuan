@@ -63,8 +63,9 @@ export function useBackgroundActivity() {
   const resumeRef = useRef<() => void>(() => {});
 
   const save = useCallback((next: BackgroundSettings) => {
-    current.current = next; setSettings(next);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* 与原存储回退一致。 */ }
+    try {localStorage.setItem(STORAGE_KEY, JSON.stringify(next));}
+    catch {setSettings({...current.current});showToast('后台活动设置保存失败，请重试');return false;}
+    current.current = next;setSettings(next);return true;
   }, []);
   const startKeepAlive = useCallback(async (feedback = false) => {
     if (!current.current.enabled) return false;
@@ -144,7 +145,9 @@ export function useBackgroundActivity() {
     };
   }, [startKeepAlive, stopKeepAlive, applyWakeLock, applyRuntime, notifyReply, registerDestination]);
 
+  const changeVersions=useRef<Partial<Record<keyof BackgroundSettings,number>>>({});
   async function change(key: keyof BackgroundSettings, value: boolean) {
+    const revision=(changeVersions.current[key]||0)+1;changeVersions.current[key]=revision;
     // 异步权限弹窗期间也先保留用户刚勾选的状态。
     setSettings({ ...current.current, [key]: value });
     if (key === 'replyNotification' && value) {
@@ -155,8 +158,9 @@ export function useBackgroundActivity() {
         if (permission !== 'granted') { value = false; showToast('需要允许通知权限，才能开启回复通知'); }
       }
     }
+    if(changeVersions.current[key]!==revision)return;
     if (key === 'screenAwake' && value && !('wakeLock' in navigator)) { value = false; showToast('当前浏览器不支持屏幕常亮'); }
-    save({ ...current.current, [key]: value });
+    if (!save({ ...current.current, [key]: value })) return;
     if (key === 'enabled') await applyRuntime(true);
     if (key === 'replyNotification') {
       if (value) showToast('回复通知已开启');
