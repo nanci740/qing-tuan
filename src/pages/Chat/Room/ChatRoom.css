@@ -2172,3 +2172,23 @@
 /* @qingtuan-order:004316 */
 
         #chatAppPage#chatAppPage #chatRoomView.is-hidden .cr-side { display: none; }
+
+
+        /* 加载历史消息是独立文字按钮，不沿用日期标签的框。 */
+        #chatAppPage#chatAppPage #chatRoomView [data-chat-load-more] {
+            display: block !important;
+            width: fit-content;
+            margin: 8px auto !important;
+            padding: 6px 12px !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            font-family: inherit;
+            font-size: 9.5px !important;
+            line-height: 1.4 !important;
+            color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            text-align: center !important;
+            cursor: pointer;
+        }

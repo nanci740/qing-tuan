@@ -977,7 +977,8 @@
         
             display: block;
             margin-top: 3px;
-            color: #3A3D48;
+            color: var(--tx-title) !important;
+            -webkit-text-fill-color: var(--tx-title) !important;
             font-size: 10px;
             line-height: 1.4;
         }
