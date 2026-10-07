@@ -1,3 +1,4 @@
+import { storeImage } from '../utils/imageAssets';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { CharacterDossier, CharacterEditorBridge, CharacterEditorSnapshot } from '../types/characterDossier';
 import { compressCharacterAvatar } from '../utils/characterAvatar';
@@ -22,8 +23,9 @@ export function useCharacterAvatar() {
     if (!file || !file.type.startsWith('image/')) return;
     try {
       const photoUrl = await compressCharacterAvatar(file);
+      await storeImage(photoUrl);
       bridge?.patch({ photoUrl, photoPositionX: 50, photoPositionY: 50 });
-    } catch { showToast('头像读取失败，请换一张图片'); }
+    } catch { showToast('头像保存失败，请检查图片或浏览器存储空间'); }
   }
   return { bridge, record, rendered, input, bindTools, upload };
 }

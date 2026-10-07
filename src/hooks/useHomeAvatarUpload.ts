@@ -1,32 +1,20 @@
 import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
 import { useRef, useState } from 'react';
-function read(key: string) { try { return localStorage.getItem(key) || ''; } catch { return ''; } }
+import { prepareImage, readImageSlot, saveImageSlots } from '../utils/imageAssets';
+import { showToast } from '../utils/toast';
 export function useHomeAvatarUpload(key: string) {
-  const input = useRef<HTMLInputElement>(null);
-  const [localSrc, setLocalSrc] = useState(() => read(key));
+  const input = useRef<HTMLInputElement>(null), busy=useRef(false);
+  const [localSrc, setLocalSrc] = useState(() => readImageSlot(key));
   const profile=useProfileAvatar();
   const src=key==='avatar_star_custom'?profile.star:localSrc;
   const setSrc=key==='avatar_star_custom'?profile.setStar:setLocalSrc;
   function choose() { if (input.current) { input.current.value = ''; input.current.click(); } }
-  function upload(file?: File) {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const image = new Image();
-        image.onload = () => {
-          const canvas = document.createElement('canvas');
-          const scale = Math.min(1, 400 / Math.max(image.width, image.height));
-          canvas.width = Math.round(image.width * scale); canvas.height = Math.round(image.height * scale);
-          const context = canvas.getContext('2d'); if (!context) return;
-          context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.9); setSrc(compressed);
-          try { localStorage.setItem(key, compressed); } catch { /* 原存储回退。 */ }
-        };
-        image.src = String(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  async function upload(file?: File) {
+    if (!file || busy.current) return;
+    busy.current=true;
+    try { const data=await prepareImage(file,400,.9);await saveImageSlots({[key]:data});setSrc(data);showToast('头像已保存'); }
+    catch { showToast('头像保存失败，请检查图片或浏览器存储空间'); }
+    finally { busy.current=false;if(document.activeElement instanceof HTMLElement)document.activeElement.blur(); }
   }
   return { input, src, choose, upload };
 }

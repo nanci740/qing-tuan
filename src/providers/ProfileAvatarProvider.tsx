@@ -1,8 +1,9 @@
+import { readImageSlot } from '../utils/imageAssets';
 import {createContext,useContext,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {readSettingsAvatar} from '../utils/settingsStorage';
 import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
-function readStar(){try{return localStorage.getItem('avatar_star_custom')||'';}catch{return '';}}
+function readStar(){try{return readImageSlot('avatar_star_custom')||'';}catch{return '';}}
 function useAvatarState(){
  const [avatar,setAvatar]=useState(readSettingsAvatar),[avatarMissing,setAvatarMissing]=useState(true),[star,setStar]=useState(readStar),[restoreRevision,setRestoreRevision]=useState(0);
  const current=useRef({avatar,avatarMissing,star});current.current={avatar,avatarMissing,star};

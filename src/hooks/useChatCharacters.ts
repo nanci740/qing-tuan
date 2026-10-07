@@ -1,3 +1,4 @@
+import { storeImage, imageReference } from '../utils/imageAssets';
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { CharacterDossier } from '../types/characterDossier';
 import type { ChatCharacter, ChatCharacterRoomServices, ChatCharacterStoreBridge } from '../types/chatCharacters';
@@ -26,7 +27,8 @@ export function useChatCharacters() {
     const existing = existingIndex >= 0 ? data.current[existingIndex] : null;
     let photoUrl = record.photoUrl || '';
     try {
-      photoUrl = await shrinkChatCharacterAvatar(photoUrl);
+      if (imageReference(photoUrl) === photoUrl && !photoUrl.startsWith('data:image/gif') && !photoUrl.startsWith('data:image/svg+xml')) photoUrl = await shrinkChatCharacterAvatar(photoUrl);
+      await storeImage(photoUrl);
     } catch {
       showToast('头像读取失败，请重新上传');
       return false;

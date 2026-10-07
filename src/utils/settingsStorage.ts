@@ -1,3 +1,4 @@
+import { readImageSlot } from './imageAssets';
 export const SETTINGS_AVATAR_KEY = 'smallphone_settings_profile_avatar_v1';
 export function readCollapsedSettings(): string[] {
   try { return JSON.parse(localStorage.getItem('qingtuan_settings_collapsed') || '[]'); }
@@ -19,6 +20,6 @@ export function nextVisitorCount(): string {
   return String(visits).padStart(6, '0');
 }
 export function readSettingsAvatar(): string {
-  try { return localStorage.getItem(SETTINGS_AVATAR_KEY) || localStorage.getItem('avatar_star_custom') || ''; }
+  try { return readImageSlot(SETTINGS_AVATAR_KEY) || readImageSlot('avatar_star_custom') || ''; }
   catch { return ''; }
 }
