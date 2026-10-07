@@ -97,7 +97,7 @@ function initChatApplication(){
     let replyEngine!:ChatReplyEngineApi;
     window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
-    function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageList.scrollTop=messageList.scrollHeight;return pending;}
+    function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
     window.dispatchEvent(new CustomEvent<{accept(api:ChatIdentityApi):void}>('qingtuan:chat-identity-connect',{detail:{accept:api=>{chatIdentity=api;bridge.smallphoneSyncRoomIdentity=api.room;}}}));
     // 设置数据由 TypeScript 读取 / 保存，React 控件通过类型化接口协作。
@@ -111,12 +111,12 @@ function initChatApplication(){
             hasMessages: () => !messageList || Boolean(messageList.querySelector('.chat-message-row')),
             clearMessages: () => messageNodes.clear(),
             chatName: () => refs.get<HTMLElement>('chatRoomName')?.textContent || '',
-            readMessages: () => messageList?.innerHTML || '',
+            readMessages: () => messageNodes.html(),
             replaceMessages: html => messageNodes.replace(html),
             finishImport() {
                 messageList.querySelectorAll<HTMLElement>('.chat-voice-control').forEach(pill => bridge.bindChatVoiceBubble?.(pill));
                 refreshChatBubbleGroups(messageList); syncChatReadReceipts(messageList);
-                messageList.scrollTop = messageList.scrollHeight;
+                messageNodes.scrollLatest();
             },
             appendOpening(opening) {
                 // 消息模型、开场判断与重新开场流程由 React 管理。
@@ -124,7 +124,7 @@ function initChatApplication(){
                 messageNodes.finishPeer(pending.row, { reply: opening, sentAt: Date.now() });
                 ensureChatMessageId(pending.row);
                 refreshChatBubbleGroups(messageList);
-                messageList.scrollTop = messageList.scrollHeight;
+                messageNodes.scrollLatest();
             }
         },
         accept(api) { preferenceBridge = api; }
@@ -163,7 +163,7 @@ function initChatApplication(){
             selection:row=>beginSelection(messageNodes.resolve(row)),forward:row=>forwardRows([row]),
             transcribe:row=>transcribeVoiceRow(messageNodes.resolve(row)),translate:row=>translateMessageRow(messageNodes.resolve(row)),toggleTranscript:toggleTranscriptResult,
             sharedConfirm:()=>!!bridge.smallphoneShowChatConfirm,
-            remove(rows,fromSelection){messageNodes.remove(rows.map(row=>messageNodes.resolve(row)).filter(row=>row.isConnected));if(fromSelection)clearSelection();refreshChatBubbleGroups(messageList);refreshPinBar();},
+            remove(rows,fromSelection){messageNodes.remove(rows.map(row=>messageNodes.resolve(row)));if(fromSelection)clearSelection();refreshChatBubbleGroups(messageList);refreshPinBar();},
             edit:(row,updated,before,changed)=>messageNodes.edit(row,updated,before,changed),
             recall:(row,data)=>messageNodes.recall(row,data.content,'你撤回了一条消息','user',data.sentAt,data.seen),
             finishRecall(){refreshChatBubbleGroups(messageList);refreshPinBar();}
@@ -172,10 +172,10 @@ function initChatApplication(){
     state.current.preferences = loadChatPreferences();
     let messageSelection!:MessageSelectionApi;
     window.dispatchEvent(new CustomEvent<{services:MessageSelectionServices;accept(api:MessageSelectionApi):void}>('qingtuan:message-selection-connect',{detail:{
-        services:{list:messageList,allRows:()=>Array.from(messageList?.querySelectorAll<HTMLElement>('.chat-message-row')||[]),
+        services:{list:messageList,allRows:()=>messageNodes.rows().filter(row=>row.classList.contains('chat-message-row')),
             selected:row=>row.classList.contains('is-selected'),
             setSelected:(row,value)=>messageNodes.toggle(row,'is-selected',value),
-            clearSelected:()=>messageList?.querySelectorAll<HTMLElement>('.is-selected').forEach(row=>messageNodes.toggle(row,'is-selected',false)),
+            clearSelected:()=>messageNodes.rows().filter(row=>row.classList.contains('is-selected')).forEach(row=>messageNodes.toggle(row,'is-selected',false)),
             refreshGroups:()=>refreshChatBubbleGroups(messageList),notice:showChatNotice},
         accept:api=>{messageSelection=api;}
     }}));
@@ -226,7 +226,7 @@ function initChatApplication(){
                 requestAnimationFrame(() => {
                     refreshChatBubbleGroups(messageList);
                     refreshPinBar();
-                    if (messageList) messageList.scrollTop = messageList.scrollHeight;
+                    if (messageList) messageNodes.scrollLatest();
                 });
             },
             syncIdentity: syncChatIdentity,
@@ -299,7 +299,7 @@ function initChatApplication(){
         clearPendingQuote();
         resizeComposer();
         roomTools.closeQuick();
-        messageList.scrollTop = messageList.scrollHeight;
+        messageNodes.scrollLatest(true);
         // 你发的语音：开了「语音自动转文字」、也有语音 API 就自动转
         if (sendingVoice && state.current.preferences.voiceAutoText) {
             const voiceService = readSavedVoiceService();
@@ -392,10 +392,10 @@ function initChatApplication(){
         services:{
             syncSlots(){ messageNodes.pins(); return []; },
             clearSlot:()=>{},canOwnSlot:()=>false,
-            latest(){const all=messageList?.querySelectorAll<HTMLElement>('.chat-message-row[data-pinned="true"]');return all?.length?all[all.length-1]:null;},
+            latest(){return messageNodes.pinned();},
             quote:getQuoteText,
             highlight:(row,enabled)=>messageNodes.toggle(row,'is-quote-target',enabled),
-            scroll:row=>row.scrollIntoView({behavior:'smooth',block:'center'})
+            scroll:row=>{messageNodes.scrollTo(row);}
         },accept(api){chatPins=api;}
     }}));
     function refreshPinBar(){chatPins.refresh();}
@@ -623,11 +623,10 @@ initChatApplication();
         if (!chatMessageList || history.current.restoring || !history.current.activeKey) return;
 
         // 聊天记录不重复存储角色/用户头像的 Base64（多条消息会撑满 localStorage）。
-        const historyCopy = chatMessageList.cloneNode(true) as HTMLDivElement;
-        historyCopy.querySelectorAll('.chat-message-mini-avatar').forEach(img => img.removeAttribute('src'));
-        historyCopy.querySelectorAll('.chat-unread-divider, .chat-date-divider').forEach(divider => divider.remove());
-        const html = historyCopy.innerHTML;
-        const currentCount = chatMessageList.querySelectorAll('.chat-bubble').length;
+        const html = messages.storedHtml();
+        const currentCount = messages.count();
+        // 布局测量或相同标签不会重复写入整份记录。
+        if (history.current.histories[history.current.activeKey] === html) return;
         const previousCount = Number(history.current.counts[history.current.activeKey] || 0);
 
         history.current.histories[history.current.activeKey] = html;
@@ -646,7 +645,7 @@ initChatApplication();
     bridge.smallphoneRecallStoredMessage = (detail = {reply:''}) => {
         const key = String(detail.chatKey || '');
         if (!key || !detail.messageId) return false;
-        const html = bridge.smallphoneMessages.recallHtml(key === history.current.activeKey ? chatMessageList.innerHTML : (history.current.histories[key] || ''), detail);
+        const html = bridge.smallphoneMessages.recallHtml(key === history.current.activeKey ? messages.html() : (history.current.histories[key] || ''), detail);
         if (html === null) return false;
         if (key === history.current.activeKey) bridge.smallphoneMessages.replace(html);
         history.current.histories[key] = html;
@@ -680,7 +679,7 @@ initChatApplication();
         const {targetKey,text,items,sourceChatName,mode}=event.detail||{};
         if(!targetKey||!text)return;
         const record = mode === 'record' && Array.isArray(items) && items.length ? forwardRecords.create(items,sourceChatName) : null;
-        history.current.histories[targetKey] = bridge.smallphoneMessages.forwardHtml(targetKey===history.current.activeKey?chatMessageList.innerHTML:(history.current.histories[targetKey]||emptyChatHistory),text,items,sourceChatName,mode,record);
+        history.current.histories[targetKey] = bridge.smallphoneMessages.forwardHtml(targetKey===history.current.activeKey?messages.html():(history.current.histories[targetKey]||emptyChatHistory),text,items,sourceChatName,mode,record);
         history.current.times[targetKey]=Date.now();saveChatLastTimes();saveChatHistories();updateThreadPreview(targetKey);
         if(targetKey===history.current.activeKey)restoreHistory(targetKey);
     });
