@@ -1,0 +1,1 @@
+Synthetic font generated for migration validation. Simple rectangle glyphs; no third-party font content. Only loaded by regression tests.
