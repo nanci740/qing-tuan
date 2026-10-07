@@ -1,4 +1,4 @@
-import {OriginalElement} from './components/shared/OriginalElement';
+import {ProfileAvatarProvider} from './providers/ProfileAvatarProvider';
 import {ChatControllers} from './pages/Chat/ChatControllers';
 import {ChatMemoryProvider} from './providers/ChatMemoryProvider';
 import {ChatIdentityProvider} from './providers/ChatIdentityProvider';
@@ -12,8 +12,6 @@ import {ChatReplyTriggersProvider} from './providers/ChatReplyTriggersProvider';
 import {ChatComposerProvider} from './providers/ChatComposerProvider';
 import {ChatSelectionProvider} from './providers/ChatSelectionProvider';
 import {ChatForwardRecords} from './pages/Chat/Room/ChatForwardRecords';
-import {ChatRecordDetail} from './pages/Chat/Room/ChatRecordDetail';
-import {ChatSelectionToolbar} from './pages/Chat/Room/ChatSelectionToolbar';
 import {ChatForwardPicker} from './pages/Chat/Room/ChatForwardPicker';
 import {ChatPinsProvider} from './providers/ChatPinsProvider';
 import {ChatPinnedIndicators} from './pages/Chat/Room/ChatPins';
@@ -28,7 +26,6 @@ import { ChatCharacterStore } from './pages/Chat/List/ChatCharacterStore';
 import { ChatCharacterActions } from './pages/Chat/List/ChatCharacterActions';
 import { ChatConfirmation } from './components/shared/ChatConfirmation';
 import { CharacterArchive } from './pages/Chat/Characters/CharacterArchive';
-import { ChatSidebar } from './pages/Chat/Room/ChatSidebar';
 import { ChatMyPresenceMenu } from './pages/Chat/Room/ChatMyPresenceMenu';
 import { ChatSidebarProvider } from './providers/ChatSidebarProvider';
 import { WorldProvider } from './providers/WorldProvider';
@@ -64,7 +61,7 @@ import { WorldPickerModal } from "./components/shared/WorldPickerModal";
 
 export function App() {
   return (
-    <ChatMemoryProvider><NativeRefsProvider><SettingsNavigationProvider><ChatNavigationProvider><ChatPreferencesProvider><ChatMessageOperationsProvider><ChatSelectionProvider><ChatComposerProvider><ChatReplyTriggersProvider><ChatMessagesProvider><ChatVoiceProvider><ChatReplyEngineProvider><ChatRoomToolsProvider><ChatIdentityProvider><ChatPinsProvider><ChatPinnedIndicators /><ChatClipboardFallback /><ChatBubbleStyle /><ChatDataDownload /><ChoiceProvider><ApiProvider><McpProvider><HomeTextsProvider><MusicProvider><AppearanceProvider><VoiceImageProvider><WorldProvider><ChatSidebarProvider><BootProvider>
+    <ProfileAvatarProvider><ChatMemoryProvider><NativeRefsProvider><SettingsNavigationProvider><ChatNavigationProvider><ChatPreferencesProvider><ChatMessageOperationsProvider><ChatSelectionProvider><ChatComposerProvider><ChatReplyTriggersProvider><ChatMessagesProvider><ChatVoiceProvider><ChatReplyEngineProvider><ChatRoomToolsProvider><ChatIdentityProvider><ChatPinsProvider><ChatPinnedIndicators /><ChatClipboardFallback /><ChatBubbleStyle /><ChatDataDownload /><ChoiceProvider><ApiProvider><McpProvider><HomeTextsProvider><MusicProvider><AppearanceProvider><VoiceImageProvider><WorldProvider><ChatSidebarProvider><BootProvider>
       {"\n    "}
       <OriginalComment text={" 设置页面 "} />
       {"\n    "}
@@ -133,7 +130,7 @@ export function App() {
       
       {"\n"}
       
-      <OriginalElement tag="template" attributes={[{name:"id",value:"chatHistoryMount"}]} />
+      <ChatCharacterActions /><ReplyNotification /><ChatForwardPicker /><CharacterArchive />
       {"\n\n\n    "}
       <WorldPickerModal /><WorldConfirmation />
       {"\n\n"}
@@ -149,8 +146,8 @@ export function App() {
       {"\n\n"}
       
       {"\n\n"}
-      <ChatReplyParser /><ChatForwardRecords /><ChatRecordDetail /><ChatSelectionToolbar /><ChatForwardPicker /><ReplyNotification /><ChatCharacterStore /><CharacterArchive /><ChatCharacterActions /><ChatConfirmation /><ChatSidebar /><ChatMyPresenceMenu /><ChatControllers />
+      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatMyPresenceMenu /><ChatControllers />
       {"\n\n\n"}
-    </BootProvider></ChatSidebarProvider></WorldProvider></VoiceImageProvider></AppearanceProvider></MusicProvider></HomeTextsProvider></McpProvider></ApiProvider></ChoiceProvider></ChatPinsProvider></ChatIdentityProvider></ChatRoomToolsProvider></ChatReplyEngineProvider></ChatVoiceProvider></ChatMessagesProvider></ChatReplyTriggersProvider></ChatComposerProvider></ChatSelectionProvider></ChatMessageOperationsProvider></ChatPreferencesProvider></ChatNavigationProvider></SettingsNavigationProvider></NativeRefsProvider></ChatMemoryProvider>
+    </BootProvider></ChatSidebarProvider></WorldProvider></VoiceImageProvider></AppearanceProvider></MusicProvider></HomeTextsProvider></McpProvider></ApiProvider></ChoiceProvider></ChatPinsProvider></ChatIdentityProvider></ChatRoomToolsProvider></ChatReplyEngineProvider></ChatVoiceProvider></ChatMessagesProvider></ChatReplyTriggersProvider></ChatComposerProvider></ChatSelectionProvider></ChatMessageOperationsProvider></ChatPreferencesProvider></ChatNavigationProvider></SettingsNavigationProvider></NativeRefsProvider></ChatMemoryProvider></ProfileAvatarProvider>
   );
 }

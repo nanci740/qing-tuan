@@ -8,8 +8,7 @@ export interface ForwardTarget {
     time: string;
 }
 export interface ForwardPickerServices {
-    anchor: Comment;
-    targets(): ForwardTarget[];
+      targets(): ForwardTarget[];
 }
 export interface ForwardPickerApi {
     open(payload: ForwardPayload): void;

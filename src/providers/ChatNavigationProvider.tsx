@@ -1,4 +1,4 @@
-import { createContext, useContext, useLayoutEffect, useRef } from 'react';
+import { createContext, useContext, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -23,14 +23,16 @@ export interface ChatNavigationApi {
   register(key: ChatSurfaceKey, handle: ChatSurfaceHandle | null): void;
 }
 interface NavigationConnect { services: ChatNavigationServices; accept(api: ChatNavigationApi): void; }
+const RoomRevision=createContext(0);
 const Context = createContext<ChatNavigationApi | null>(null);
 export function ChatNavigationProvider({ children }: { children: ReactNode }) {
+  const [roomRevision,setRoomRevision]=useState(0);
   const services = useRef<ChatNavigationServices | null>(null);
   const surfaces = useRef(new Map<ChatSurfaceKey, ChatSurfaceHandle>());
   const api = useRef<ChatNavigationApi | null>(null);
   if (!api.current) {
     const toggle = (key: ChatSurfaceKey, token: string, enabled: boolean, hidden?: boolean) => {
-      flushSync(() => surfaces.current.get(key)?.toggle(token, enabled, hidden));
+      flushSync(() => {surfaces.current.get(key)?.toggle(token, enabled, hidden);if(key==='room')setRoomRevision(value=>value+1);});
     };
     const closeSettings = () => toggle('settings', 'active', false, true);
     const showList = () => {
@@ -88,10 +90,12 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
     window.addEventListener('qingtuan:chat-navigation-connect', connect);
     return () => { window.removeEventListener('qingtuan:chat-navigation-connect', connect); services.current = null; };
   }, []);
-  return <Context.Provider value={api.current}>{children}</Context.Provider>;
+  return <Context.Provider value={api.current}><RoomRevision.Provider value={roomRevision}>{children}</RoomRevision.Provider></Context.Provider>;
 }
 export function useChatNavigation() {
   const api = useContext(Context);
   if (!api) throw new Error('ChatNavigationProvider is required');
   return api;
 }
+
+export function useChatRoomRevision(){return useContext(RoomRevision);}

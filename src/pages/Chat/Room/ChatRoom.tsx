@@ -1,3 +1,6 @@
+import {ChatSidebar} from './ChatSidebar';
+import {ChatSelectionToolbar} from './ChatSelectionToolbar';
+import {ChatRecordDetail} from './ChatRecordDetail';
 import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/ChatIdentityField';
 import {ChatRoomMoreButton,ChatActionToggle,ChatQuickActions,ChatRoomTools} from './ChatRoomTools';
 import {ChatRoomStatus} from './ChatRoomStatus';
@@ -9,16 +12,14 @@ import {ChatQuotePreview} from './ChatMessageOperations';
 import { ChatWallpaperMessageList } from '../Settings/ChatAppearanceControls';
 import { ChatNavigationSurface } from '../../../components/shared/ChatNavigationSurface';
 import { useChatNavigation } from '../../../providers/ChatNavigationProvider';
-import { useChatSidebarSources } from '../../../providers/ChatSidebarProvider';
 import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
 import { OriginalElement } from "../../../components/shared/OriginalElement";
 
-/** 原页面的静态结构；所有页面保持挂载，由原脚本切换显示状态。 */
+/** 原页面的静态结构；所有页面保持挂载，由 React 控制显示状态。 */
 export function ChatRoom() {
-  const sources = useChatSidebarSources();
   const navigation = useChatNavigation();
   return (
-    <ChatNavigationSurface surface="room" tag="div" id="chatRoomView" className="chat-view chat-room-view is-hidden" elementRef={element=>{sources.room.current=element;}}>
+    <ChatNavigationSurface surface="room" tag="div" id="chatRoomView" className="chat-view chat-room-view is-hidden">
       {"\n        "}
       <OriginalElement tag="header" attributes={[{"name":"class","value":"chat-room-header"}]}>
         {"\n            "}
@@ -30,12 +31,12 @@ export function ChatRoom() {
           {"\n            "}
         </OriginalElement>
         {"\n            "}
-        <ChatIdentityField tag="img" elementRef={element=>{sources.peerAvatar.current=element as HTMLImageElement|null;}} attributes={[{"name":"class","value":"chat-room-avatar"},{"name":"id","value":"chatRoomAvatar"},{"name":"alt","value":"角色头像"},{"name":"src","value":DEFAULT_AVATAR}]} />
+        <ChatIdentityField tag="img" attributes={[{"name":"class","value":"chat-room-avatar"},{"name":"id","value":"chatRoomAvatar"},{"name":"alt","value":"角色头像"},{"name":"src","value":DEFAULT_AVATAR}]} />
         
         {"\n            "}
         <OriginalElement tag="div" attributes={[]}>
           {"\n                "}
-          <ChatIdentityField tag="div" elementRef={element=>{sources.peerName.current=element as HTMLElement|null;}} attributes={[{"name":"class","value":"chat-room-title"},{"name":"id","value":"chatRoomName"}]}>
+          <ChatIdentityField tag="div" attributes={[{"name":"class","value":"chat-room-title"},{"name":"id","value":"chatRoomName"}]}>
             {"聊天"}
           </ChatIdentityField>
           {"\n                "}
@@ -171,6 +172,6 @@ export function ChatRoom() {
         </OriginalElement>
       </OriginalElement>
       {"\n    "}
-    <ChatRoomTools /></ChatNavigationSurface>
+    <ChatSelectionToolbar /><ChatRoomTools /><ChatRecordDetail /><ChatSidebar /></ChatNavigationSurface>
   );
 }

@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import type { ReplyDetail, ReplyNotificationBridge, ReplyNotificationServices } from '../types/replyNotification';
 import { DEFAULT_AVATAR } from '../utils/defaultAvatar';
+import { chatReplyPreview } from '../utils/chatReplyParser';
 const UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
 function loadUnread() {
   try {
@@ -65,7 +66,7 @@ export function useReplyNotification() {
       setContent({
         avatar: String(detail.avatar || character.photoUrl || DEFAULT_AVATAR),
         name: String(detail.title || String(character.name == null ? '' : character.name).trim() || '新消息'),
-        body: String(detail.body || '收到一条新回复').replace(/\s+/g, ' ')
+        body: chatReplyPreview(detail.body || '收到一条新回复').replace(/\s+/g, ' ')
       });
       setReset(false);
     });
@@ -132,8 +133,6 @@ export function useReplyNotification() {
   }, []);
   useLayoutEffect(() => {
     if (!services || !element.current || mounted.current) return;
-    services.anchor.parentNode!.insertBefore(element.current, services.anchor);
-    services.anchor.remove();
     mounted.current = true;
     if (pending.current) {
       const detail = pending.current;

@@ -9,7 +9,6 @@ export interface ReplyDetail {
   [field: string]: unknown;
 }
 export interface ReplyNotificationServices {
-  anchor: Comment;
   find: (key: unknown) => ChatCharacter | undefined;
   open: (key: unknown) => unknown;
   updateThread: (key: string) => void;

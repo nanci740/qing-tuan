@@ -1,8 +1,12 @@
+import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
 import { useRef, useState } from 'react';
 function read(key: string) { try { return localStorage.getItem(key) || ''; } catch { return ''; } }
 export function useHomeAvatarUpload(key: string) {
   const input = useRef<HTMLInputElement>(null);
-  const [src, setSrc] = useState(() => read(key));
+  const [localSrc, setLocalSrc] = useState(() => read(key));
+  const profile=useProfileAvatar();
+  const src=key==='avatar_star_custom'?profile.star:localSrc;
+  const setSrc=key==='avatar_star_custom'?profile.setStar:setLocalSrc;
   function choose() { if (input.current) { input.current.value = ''; input.current.click(); } }
   function upload(file?: File) {
     if (file) {

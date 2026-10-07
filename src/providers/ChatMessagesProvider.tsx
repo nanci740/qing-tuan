@@ -27,12 +27,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   const listeners = useRef(new Set<()=>void>());
   const queued = useRef(false), ready = useRef(false);
   const identity = () => sources.current?.identity() ?? { peer: '聊天', peerAvatar: DEFAULT_AVATAR, userAvatar: DEFAULT_AVATAR };
-  const clone = () => {
-    const result = structuredClone(current.current);
-    // 外部兼容接口曾允许写 dataset / 临时高亮；在明确操作边界读取这些属性，主消息数据仍由状态管理。
-    for (const node of model.elements(result, () => true)) { const element = refs.current.get(node.key); if (element) node.attrs = model.nodeAttributes(element); }
-    return result;
-  };
+  const clone = () => structuredClone(current.current);
   function render(next: MessageNode[], sync = true) { current.current = next; const apply=()=>setNodes(next); if(sync && ready.current)flushSync(apply);else apply(); }
   function childSignature(nodes:MessageNode[]):string {return JSON.stringify(nodes.map(node=>node.kind==='element'?[node.key,node.tag,childSignature(node.children)]:[node.key,node.kind,node.text]));}
   function requestLayout(next:MessageNode[], row?:MessageElement, align=false, selection=false) {
@@ -56,7 +51,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   function normalized(next:MessageNode[]) { const result=model.normalizeMessages(next,identity(),factory,bubble=>resized.current.add(bubble.key));requestLayout(result,undefined,true,true);return result; }
   function register(node:MessageElement,element:Element|null) {if(element){refs.current.set(node.key,element);keys.current.set(element,node.key);}else refs.current.delete(node.key);}
   function target<T extends HTMLElement=HTMLElement>(node:MessageElement|undefined):T {const result=node&&refs.current.get(node.key);if(!(result instanceof HTMLElement))throw Error('消息节点尚未挂载');return result as T;}
-  function updateRow(row:HTMLElement,action:(node:MessageElement,next:MessageNode[])=>void,notify=true) {if(!keys.current.has(row)&&listRef.current?.contains(row))apiRef.current!.importForeign(listRef.current);mutate(next=>{const node=getNode(next,row);if(node)action(node,next);},notify);}
+  function updateRow(row:HTMLElement,action:(node:MessageElement,next:MessageNode[])=>void,notify=true) {mutate(next=>{const node=getNode(next,row);if(node)action(node,next);},notify);}
   function geometry(next:MessageNode[], reference:ReadonlyMap<number,Element>=refs.current, selectionParent:HTMLElement|null=listRef.current, modes?:ReadonlyMap<number,{shape:boolean;align:boolean;selection:boolean}>):boolean {
     let changed=false;
     const assign=(node:MessageElement,name:string,value:string)=>{if(model.attr(node,name)!==value){model.setAttr(node,name,value);changed=true;}};
@@ -97,7 +92,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     date(container){if(container!==listRef.current){container.innerHTML=model.serializeMessageNodes(model.dateDividers(model.readMessageNodes(container,factory),factory));return;}mutate(next=>model.dateDividers(next,factory));},
     read(row,value){updateRow(row,node=>{if(model.hasClass(node,'is-user')){model.setAttr(node,'data-read',String(value));model.toggleClass(node,'is-read',value);}});apiRef.current!.receipts();},
     playing(pill,value){updateRow(pill,node=>{model.toggleClass(node,'is-playing',value);model.setAttr(node,'aria-label',value?'暂停语音消息':'播放语音消息');},false);},
-    click(event){if(listRef.current)apiRef.current!.importForeign(listRef.current);const el=event.target;if(!(el instanceof Element))return;if(!sources.current?.canInteract()){event.preventDefault();return;}
+    click(event){const el=event.target;if(!(el instanceof Element))return;if(!sources.current?.canInteract()){event.preventDefault();return;}
       const quote=el.closest<HTMLElement>('.chat-quoted-message');if(quote){event.preventDefault();const id=quote.dataset.quoteTarget;const row=id?Array.from(refs.current.values()).find(n=>n instanceof HTMLElement&&n.classList.contains('chat-message-row')&&n.dataset.messageId===id):null;
         if(!(row instanceof HTMLElement)){sources.current?.notice('原消息已不存在');return;}row.scrollIntoView({behavior:'smooth',block:'center'});apiRef.current!.toggle(row,'is-quote-target',false);void row.offsetWidth;apiRef.current!.toggle(row,'is-quote-target',true);const timer=setTimeout(()=>{apiRef.current!.toggle(row,'is-quote-target',false);timers.current.delete(timer);},1300);timers.current.add(timer);return;}
       const transcript=el.closest<HTMLElement>('.chat-voice-text-result');if(transcript){event.preventDefault();const row=transcript.closest<HTMLElement>('.chat-message-row');if(row&&!transcript.classList.contains('is-collapsed'))apiRef.current!.toggleTranscript(row);return;}
@@ -138,15 +133,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       mutate(next=>{next=model.removeKeys(next,new Set(model.elements(next,node=>model.hasClass(node,'chat-unread-divider')).map(node=>node.key)));const rows=model.elements(next,row=>model.hasClass(row,'chat-message-row')&&model.hasClass(row,'is-chat')&&model.attr(row,'data-recalled')!=='true'&&model.attr(row,'data-ai-pending')!=='true');first=rows[Math.max(0,rows.length-n)];if(first){marker=factory.element('div',{class:'chat-unread-divider',role:'separator'},[factory.text('以下为新消息')]);model.insertBeforeKey(next,first.key,marker);}return next;});return marker&&first?{divider:target(marker),firstUnread:target(first)}:null;
     },
     repair(){let repaired=false;mutate(next=>{repaired=model.repairStructuredMessages(next,factory);});return repaired;},
-    importForeign(container){if(container!==listRef.current)return;
-      const foreign=Array.from(container.childNodes).filter(node=>node instanceof Element&&!keys.current.has(node));
-      if(foreign.length){const next=model.readMessageNodes(container,factory,keys.current);foreign.forEach(node=>node.parentNode?.removeChild(node));publish(next);return;}
-      const next=clone();if(JSON.stringify(next)===JSON.stringify(current.current))return;
-      const historyAttributes=['data-favorite','data-pinned','data-message-id','data-quote-target','data-read','data-sent-at','data-edited'];
-      const changed=model.elements(next,()=>true).some(node=>{const old=model.elements(current.current,n=>n.key===node.key)[0];return old&&historyAttributes.some(name=>model.attr(old,name)!==model.attr(node,name));});
-      publish(next,changed);
-    },
-    bindVoice(pill){const key=keys.current.get(pill);if(key===undefined){if(listRef.current)apiRef.current!.importForeign(listRef.current);return;}if(boundVoices.current.has(key))return;boundVoices.current.add(key);updateRow(pill,node=>{const wave=model.findClass(node,'chat-voice-wave');if(wave&&wave.children.filter(n=>n.kind==='element').length!==6)wave.children=Array.from({length:6},()=>factory.element('span'));model.toggleClass(node,'is-playing',false);model.setAttr(node,'aria-label','播放语音消息');},false);},
+    bindVoice(pill){const key=keys.current.get(pill);if(key===undefined)return;if(boundVoices.current.has(key))return;boundVoices.current.add(key);updateRow(pill,node=>{const wave=model.findClass(node,'chat-voice-wave');if(wave&&wave.children.filter(n=>n.kind==='element').length!==6)wave.children=Array.from({length:6},()=>factory.element('span'));model.toggleClass(node,'is-playing',false);model.setAttr(node,'aria-label','播放语音消息');},false);},
     forwardHtml(html,text,items,source,mode,record){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);next.push(model.forwardNode(text,items,source,mode,record,isolated));return model.serializeMessageNodes(next);},
     backgroundHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);if(!detail.recalled)for(const row of model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user'))){model.toggleClass(row,'is-read',true);model.setAttr(row,'data-read','true');}next.push(model.backgroundNode(detail,isolated));return model.serializeMessageNodes(next);},
     recallHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);const row=model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.attr(n,'data-message-id')===detail.messageId)[0];if(!row)return null;model.replaceKey(next,row.key,model.recallNode(detail,isolated));return model.serializeMessageNodes(next);},

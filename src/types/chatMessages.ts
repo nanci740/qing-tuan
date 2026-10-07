@@ -26,7 +26,7 @@ export interface MessageNodesApi {
   result(row: HTMLElement, className: string, text: string): void; translation(row: HTMLElement, text: string): void; toggleTranscript(row: HTMLElement): boolean;
   markRead(row?: HTMLElement | null, all?: boolean): void; identity(): void;
   unread(count: number): {divider:HTMLElement;firstUnread:HTMLElement} | null; repair(): boolean;
-  importForeign(container: HTMLElement): void; bindVoice(pill: HTMLElement): void;
+  bindVoice(pill: HTMLElement): void;
   forwardHtml(html: string, text: string, items: unknown, source: unknown, mode: unknown, record: unknown): string;
   backgroundHtml(html: string, detail: PeerMessageDetail): string;
   recallHtml(html: string, detail: PeerMessageDetail & {messageId?: string}): string | null;

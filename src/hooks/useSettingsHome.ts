@@ -1,21 +1,15 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { ChangeEvent, MouseEvent } from 'react';
-import { nextVisitorCount, readSettingsAvatar, SETTINGS_AVATAR_KEY } from '../utils/settingsStorage';
+import { nextVisitorCount, SETTINGS_AVATAR_KEY } from '../utils/settingsStorage';
+
+import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
 
 /** 设置首页的计数、头像和文件选择由 React 管理；保留旧存档键与压缩参数。 */
 export function useSettingsHome() {
   const [visitorCount] = useState(nextVisitorCount);
-  const [avatar, setAvatar] = useState(readSettingsAvatar);
-  const [avatarMissing, setAvatarMissing] = useState(true);
-  const pendingRestoreSync = useRef(Boolean(avatar));
-  useLayoutEffect(() => {
-    // 旧 HTML 的解析器可在后续脚本前派发图片 load；React 同步挂载后，
-    // 初次恢复图片需要在状态提交后同步尚未迁移的头像消费者。
-    if (!avatarMissing && pendingRestoreSync.current) {
-      pendingRestoreSync.current = false;
-      window.smallphoneRefreshChatSide?.();
-    }
-  }, [avatarMissing]);
+  const {avatar,setAvatar,avatarMissing,setAvatarMissing,restoreSidebar}=useProfileAvatar();
+  const pendingRestoreSync=useRef(Boolean(avatar));
+  useLayoutEffect(()=>{if(!avatarMissing&&pendingRestoreSync.current){pendingRestoreSync.current=false;restoreSidebar();}},[avatarMissing]);
   const avatarInput = useRef<HTMLInputElement>(null);
   const avatarButton = useRef<HTMLButtonElement | null>(null);
   function chooseAvatar(event: MouseEvent<HTMLButtonElement>) {

@@ -4,9 +4,9 @@ import type { SettingsPageEntries } from './utils/settingsPageBridge';
 
 declare global {
   interface Window {
-    qtSettingsPageEntries?: SettingsPageEntries;
     smallphoneRefreshChatSide?: () => void;
     smallphoneGetMyPresence?: () => string;
+    qtSettingsPageEntries?: SettingsPageEntries;
     smallphoneGetChatPresence?: (key?:string) => {online:string;status:string};
     smallphoneGetActiveChatKey?: () => string;
   }

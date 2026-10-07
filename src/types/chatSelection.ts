@@ -1,6 +1,6 @@
 export type SelectionTool = 'cancel' | 'search' | 'forward' | 'copy' | 'favorite' | 'delete';
 export interface ChatSelectionServices {
- host:HTMLElement;headerAnchor:Comment;toolbarAnchor:Comment;
+ host:HTMLElement;
  rows():HTMLElement[];clear():void;search():void;
  quote(row:HTMLElement):string;favorite(row:HTMLElement):boolean;setFavorite(row:HTMLElement,value:boolean):void;
  copy(text:string):Promise<void>;forward(rows:HTMLElement[]):void;remove(rows:HTMLElement[]):Promise<void>;

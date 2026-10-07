@@ -17,7 +17,7 @@ export function useChatForwardPicker() {
   const [services, setServices] = useState<ForwardPickerServices | null>(null);
   const service = useRef<ForwardPickerServices | null>(null);
   const element = useRef<HTMLDivElement>(null), input = useRef<HTMLInputElement>(null);
-  const mounted = useRef(false), payload = useRef<ForwardPayload>(null);
+  const payload = useRef<ForwardPayload>(null);
   const [open, setOpen] = useState(false), [multi, setMulti] = useState(false);
   const mode = useRef(false);
   const [selected, setSelected] = useState(new Set<string>());
@@ -100,12 +100,6 @@ export function useChatForwardPicker() {
     window.addEventListener('qingtuan:forward-picker-connect', connect);
     return () => window.removeEventListener('qingtuan:forward-picker-connect', connect);
   }, []);
-  useLayoutEffect(() => {
-    if (!services || !element.current || mounted.current) return;
-    services.anchor.parentNode!.insertBefore(element.current, services.anchor);
-    services.anchor.remove();
-    mounted.current = true;
-  }, [services]);
   return {
     generation, rendered, services, element, input, open, multi, selected, list, recent,
     close, toggleMode, search, pick,

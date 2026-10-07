@@ -1,3 +1,5 @@
+import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
+import {readMyPresence} from '../utils/chatPresence';
 import {useWorld} from '../providers/WorldProvider';
 import {useEffect,useRef} from 'react';
 import {useNativeRefs} from '../providers/NativeRefsProvider';
@@ -64,7 +66,7 @@ interface ChatPublicApi {
  smallphoneOpenCharacterCard(id?:unknown):void;
 }
 function serviceError(error:unknown){if(error instanceof Error&&error.name==='AbortError')return '已取消';return String(error instanceof Error?error.message:'请求失败').slice(0,150);}
-export function useChatControllers(messages:MessageNodesApi){const refs=useNativeRefs()!,navigation=useChatNavigation(),settingsNavigation=useSettingsNavigation(),world=useWorld();const otherPages=useRef({settingsNavigation,world});otherPages.current={settingsNavigation,world};const history=useRef<{activeKey:string;restoring:boolean;histories:Record<string,string>;times:Record<string,number>;counts:Record<string,number>}>({activeKey:'',restoring:false,histories:{},times:{},counts:{}});const state=useRef({preferences:readPreferences('no-character'),suppressVoiceUntil:0});
+export function useChatControllers(messages:MessageNodesApi){const refs=useNativeRefs()!,navigation=useChatNavigation(),settingsNavigation=useSettingsNavigation(),world=useWorld(),profileAvatar=useProfileAvatar();const otherPages=useRef({settingsNavigation,world});otherPages.current={settingsNavigation,world};const history=useRef<{activeKey:string;restoring:boolean;histories:Record<string,string>;times:Record<string,number>;counts:Record<string,number>}>({activeKey:'',restoring:false,histories:{},times:{},counts:{}});const state=useRef({preferences:readPreferences('no-character'),suppressVoiceUntil:0});
 useEffect(()=>{const bridge=window as unknown as Window&ChatPublicApi;const dispose:(()=>void)[]=[];function listen<T=unknown>(target:EventTarget,name:string,handler:(event:CustomEvent<T>)=>void){const listener=(event:Event)=>handler(event as CustomEvent<T>);target.addEventListener(name,listener);dispose.push(()=>target.removeEventListener(name,listener));}function frame(action:FrameRequestCallback){const id=requestAnimationFrame(action);dispose.push(()=>cancelAnimationFrame(id));}function later(action:()=>void,delay:number){const id=window.setTimeout(action,delay);dispose.push(()=>window.clearTimeout(id));}
 const original=new Map<string,unknown>();for(const key of Object.keys(bridge).filter(key=>/^(smallphone|refreshChat|syncChat|setChat|bindChat|applyChat)/.test(key)))original.set(key,Reflect.get(bridge,key));
 function initChatApplication(){
@@ -93,7 +95,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,myPresence:()=>bridge.smallphoneGetMyPresence?.()||'在线',refreshSide:()=>bridge.smallphoneRefreshChatSide?.(),refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageList.scrollTop=messageList.scrollHeight;return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -168,10 +170,6 @@ function initChatApplication(){
         },accept(api){messageOperations=api;}
     }}));
     state.current.preferences = loadChatPreferences();
-    const selectionHeaderAnchor = document.createComment('chat-selection-header-mount');
-    const selectionToolbarAnchor = document.createComment('chat-selection-toolbar-mount');
-    roomView.insertBefore(selectionHeaderAnchor,roomView.querySelector('.chat-room-more-backdrop'));
-    roomView.insertBefore(selectionToolbarAnchor,roomView.querySelector('.chat-room-more-backdrop'));
     let messageSelection!:MessageSelectionApi;
     window.dispatchEvent(new CustomEvent<{services:MessageSelectionServices;accept(api:MessageSelectionApi):void}>('qingtuan:message-selection-connect',{detail:{
         services:{list:messageList,allRows:()=>Array.from(messageList?.querySelectorAll<HTMLElement>('.chat-message-row')||[]),
@@ -182,7 +180,7 @@ function initChatApplication(){
         accept:api=>{messageSelection=api;}
     }}));
     window.dispatchEvent(new CustomEvent<{services:ChatSelectionServices}>('qingtuan:selection-toolbar-connect',{detail:{
-        services:{host:roomView,headerAnchor:selectionHeaderAnchor,toolbarAnchor:selectionToolbarAnchor,
+        services:{host:roomView,
             rows:()=>messageSelection.rows(),clear:clearSelection,search:openChatHistorySearch,
             quote:getQuoteText,favorite:row=>row.dataset.favorite==='true',
             setFavorite:(row,value)=>messageNodes.setData(row,{favorite:value}),
@@ -248,17 +246,9 @@ function initChatApplication(){
     function resizeComposer(){composer.resize();}
 
     function getCurrentUserAvatarSrc() {
-        const settingsAvatar = refs.get<HTMLImageElement>('settingsProfileAvatarImg')?.currentSrc
-            || refs.get<HTMLImageElement>('settingsProfileAvatarImg')?.src;
-        if (settingsAvatar) return settingsAvatar;
-        try {
-            return localStorage.getItem('smallphone_settings_profile_avatar_v1')
-                || localStorage.getItem('avatar_star_custom')
-                || DEFAULT_AVATAR;
-        } catch (err) {
-            return DEFAULT_AVATAR;
-        }
+        return profileAvatar.api.messageAvatar();
     }
+
     function ensureChatMessageId(row:HTMLElement) { return messageNodes.id(row); }
     function refreshChatBubbleGroups(container:HTMLElement|null = messageList) { messageNodes.refresh(container); }
     function refreshChatDateDividers(container:HTMLElement) { messageNodes.date(container); }
@@ -267,7 +257,7 @@ function initChatApplication(){
         const row = target?.classList?.contains('chat-message-row') ? target : target?.closest<HTMLElement>('.chat-message-row');
         if (row) messageNodes.read(row, Boolean(isRead));
     }
-    bridge.refreshChatBubbleGroups = container => { if (container) messageNodes.importForeign(container); messageNodes.refresh(container); };
+    bridge.refreshChatBubbleGroups = container => messageNodes.refresh(container);
     bridge.refreshChatDateDividers = refreshChatDateDividers;
     bridge.syncChatReadReceipts = syncChatReadReceipts;
     bridge.setChatMessageRead = setChatMessageRead;
@@ -432,19 +422,12 @@ function initChatApplication(){
     resizeComposer();
     refreshChatBubbleGroups(messageList);
     syncChatReadReceipts(messageList);
-return ()=>{selectionHeaderAnchor.remove();selectionToolbarAnchor.remove();};
+
 }
-const disposeApp=initChatApplication();
+initChatApplication();
     const ACTIVE_KEY = 'smallphone_chat_active_character_v1';
     const CHAT_HISTORY_KEY = 'smallphone_chat_histories_v1';
     const CHAT_TIME_KEY = 'smallphone_chat_last_times_v1';
-
-    // React 操作菜单在原 body 位置挂载；聊天仅保留数据提交服务。
-    const characterActionsAnchor = document.createComment('chat-character-actions-mount');
-    document.body.insertBefore(characterActionsAnchor,refs.get('chatHistoryMount'));
-
-    const replyNotificationAnchor = document.createComment('chat-reply-notification-mount');
-    document.body.insertBefore(replyNotificationAnchor,refs.get('chatHistoryMount'));
 
     // React 持有角色清单；剩余聊天模块仅从此同步接口读取。
     let characterStore!:ChatCharacterStoreBridge;
@@ -473,7 +456,7 @@ const disposeApp=initChatApplication();
 
     let replyBridge!:ReplyNotificationBridge;
     window.dispatchEvent(new CustomEvent<ReplyNotificationServices&{accept(api:ReplyNotificationBridge):void}>('qingtuan:reply-notification-connect', { detail: {
-        accept: bridge => { replyBridge = bridge; }, anchor: replyNotificationAnchor,
+        accept: bridge => { replyBridge = bridge; },
         find: key => characterStore.read().find(item => item.archiveId === key),
         open: key => bridge.smallphoneOpenCharacterChat?.(key),
         updateThread: updateThreadPreview
@@ -483,20 +466,13 @@ const disposeApp=initChatApplication();
     window.dispatchEvent(new CustomEvent<{accept(api:ForwardRecordsApi):void}>('qingtuan:forward-records-connect',{detail:{accept:api=>{forwardRecords=api;}}}));
 
     const roomViewHost = refs.get<HTMLElement>('chatRoomView')!;
-    const recordDetailAnchor = document.createComment('chat-record-detail-mount');
-    roomViewHost?.appendChild(recordDetailAnchor);
     let recordDetail!:{close():void};
     window.dispatchEvent(new CustomEvent<RecordDetailServices>('qingtuan:record-detail-connect',{detail:{
-        host:roomViewHost,anchor:recordDetailAnchor,
+        host:roomViewHost,
         read:id=>forwardRecords.read(id),
         // 头像：我 = 资料卡头像；对方 = 来源角色的照片（找不到就用预设）
         avatars(record){
-        const selfAvatar = (() => {
-            const img = refs.get<HTMLImageElement>('settingsProfileAvatarImg');
-            if (img && img.src && !img.classList.contains('avatar-missing')) return img.currentSrc || img.src;
-            try { return localStorage.getItem('avatar_star_custom') || DEFAULT_AVATAR || ''; }
-            catch (error) { return DEFAULT_AVATAR || ''; }
-        })();
+        const selfAvatar = profileAvatar.api.sidebarAvatar();
         const sourceName = record.sourceName || String(record.title || '').replace(/^你与/, '').replace(/的聊天记录$/, '');
         const peer = (typeof characterStore.read() !== 'undefined' ? characterStore.read() : []).find(c => String(c.name || c.nickname || '').trim() === sourceName);
         const peerAvatar = peer?.photoUrl || DEFAULT_AVATAR || '';
@@ -504,8 +480,6 @@ const disposeApp=initChatApplication();
         },accept:api=>{recordDetail=api;}
     }}));
 
-    const forwardPickerAnchor = document.createComment('chat-forward-picker-mount');
-    document.body.insertBefore(forwardPickerAnchor,refs.get('chatHistoryMount'));
     function getForwardTargetsData() {
         return characterStore.read().map(character => ({
             key: character.archiveId,
@@ -517,7 +491,7 @@ const disposeApp=initChatApplication();
         }));
     }
     let forwardPicker!:ForwardPickerApi;
-    window.dispatchEvent(new CustomEvent<ForwardPickerServices&{accept(api:ForwardPickerApi):void}>('qingtuan:forward-picker-connect',{detail:{anchor:forwardPickerAnchor,targets:getForwardTargetsData,accept:api=>{forwardPicker=api;}}}));
+    window.dispatchEvent(new CustomEvent<ForwardPickerServices&{accept(api:ForwardPickerApi):void}>('qingtuan:forward-picker-connect',{detail:{targets:getForwardTargetsData,accept:api=>{forwardPicker=api;}}}));
     bridge.smallphoneCloseForwardPicker = () => forwardPicker.close();
     bridge.smallphoneOpenForwardPicker = payload => forwardPicker.open(payload);
     Object.entries(history.current.histories).forEach(([key, html]) => {
@@ -815,7 +789,6 @@ const disposeApp=initChatApplication();
     bridge.smallphoneShowChatConfirm = showChatConfirm;
 
     window.dispatchEvent(new CustomEvent<ChatCharacterActionsServices>('qingtuan:chat-character-actions-services', { detail: {
-        anchor: characterActionsAnchor,
         read: characterStore.readFlags,
         patch: (id, fields) => characterStore.patch(id, fields),
         remove: id => characterStore.removeFromList(id)
@@ -878,10 +851,8 @@ const disposeApp=initChatApplication();
         saveHistories: saveChatHistories, finishRemoval: finishCharacterRemoval, confirm: showChatConfirm });
 
     // 类型化聊天服务接口：档案、角色清单、存储、弹窗与会话由 React 控制器协作。
-    const characterArchiveAnchor = document.createComment('character-archive-mount');
-    document.body.insertBefore(characterArchiveAnchor,refs.get('chatHistoryMount'));refs.get('chatHistoryMount')?.remove();
     window.dispatchEvent(new CustomEvent<CharacterChatServices>('qingtuan:character-chat-services', { detail: {
-        anchor: characterArchiveAnchor, saveToChat: characterStore.saveArchive, removeFromChat: characterStore.removeByDossier,
+        saveToChat: characterStore.saveArchive, removeFromChat: characterStore.removeByDossier,
         confirm: showChatConfirm, syncIdentity: () => bridge.smallphoneSyncChatSettingsIdentity?.()
     } }));
     function openCharacterCard(targetDossierId?:unknown) { window.dispatchEvent(new CustomEvent('qingtuan:character-dialog-open', { detail: targetDossierId })); }
@@ -918,7 +889,7 @@ const disposeApp=initChatApplication();
     bridge.smallphoneGetActiveCharacterPrompt = () => buildCharacterPrompt(bridge.smallphoneGetActiveCharacterProfile());
 
 listen<unknown>(window,'qingtuan:open-notice-chat',event=>{const opened=event.detail&&bridge.smallphoneOpenCharacterChat?.(event.detail);if(!opened)bridge.smallphoneOpenChatApp?.();});
-dispose.push(()=>{characterActionsAnchor.remove();replyNotificationAnchor.remove();recordDetailAnchor.remove();forwardPickerAnchor.remove();characterArchiveAnchor.remove();});
 
-return ()=>{disposeApp?.();dispose.forEach(action=>action());for(const key of Object.keys(bridge).filter(key=>/^(smallphone|refreshChat|syncChat|setChat|bindChat|applyChat)/.test(key))){if(original.has(key))Reflect.set(bridge,key,original.get(key));else Reflect.deleteProperty(bridge,key);}};
+
+return ()=>{dispose.forEach(action=>action());for(const key of Object.keys(bridge).filter(key=>/^(smallphone|refreshChat|syncChat|setChat|bindChat|applyChat)/.test(key))){if(original.has(key))Reflect.set(bridge,key,original.get(key));else Reflect.deleteProperty(bridge,key);}};
 },[messages,navigation,refs]);}

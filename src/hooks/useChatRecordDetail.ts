@@ -7,7 +7,7 @@ export function useChatRecordDetail() {
   const [services, setServices] = useState<RecordDetailServices | null>(null);
   const service = useRef<RecordDetailServices | null>(null);
   const [view, setView] = useState<RecordDetailView>({ open: false, title: '', subtitle: '', rows: [], generation: 0 });
-  const element = useRef<HTMLDivElement>(null), mounted = useRef(false), ready = useRef(false);
+  const element = useRef<HTMLDivElement>(null), ready = useRef(false);
   function close() {
     const update = () => setView(previous => ({ ...previous, open: false }));
     if (ready.current) flushSync(update); else update();
@@ -40,11 +40,5 @@ export function useChatRecordDetail() {
       window.removeEventListener('qingtuan:record-detail-open', open);
     };
   }, []);
-  useLayoutEffect(() => {
-    if (!services || !element.current || mounted.current) return;
-    services.host.insertBefore(element.current, services.anchor);
-    services.anchor.remove();
-    mounted.current = true;
-  }, [services]);
   return { services, element, view, close };
 }

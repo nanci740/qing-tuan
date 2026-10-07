@@ -65,7 +65,6 @@ export interface CharacterEditorSnapshot {
 
 /** 聊天主体尚未迁移，档案保存后的清单同步及共享确认暂经此接口。 */
 export interface CharacterChatServices {
-  anchor: Comment;
   saveToChat: (record: CharacterDossier) => Promise<boolean>;
   removeFromChat: (id: CharacterDossier['id']) => void;
   confirm: (options: { title: string; message: string; confirmText: string; danger: boolean }) => Promise<boolean>;

@@ -7,12 +7,16 @@ import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {voiceLength} from '../utils/chatMessageNodes';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
-export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[]):string;myPresence():string;refreshSide():void;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
-export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;presence(key:unknown):{online:string;status:string};status(text:string):void;}
+export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[]):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
+export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;}
+const CHAT_PRESENCE_KEY = 'smallphone_chat_presence_v1';
+const PRESENCE_STATES = ['在线', '忙碌', '离开', '隐身'];
 export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
  const services=useRef<ChatReplyEngineServices|null>(null);
  const pending=useRef(new Set<string>()),timers=useRef(new Set<ReturnType<typeof setTimeout>>());
  const preferences=useRef<ChatPreferences|null>(null);
+ const [presenceMap,setPresenceMap]=useState<Record<string,{online:string;status:string}>>(readChatPresenceMap);
+ const presenceRef=useRef(presenceMap);
  const [status,setStatus]=useState({text:'陪着你',resting:undefined as string|undefined,typing:undefined as string|undefined,key:undefined as string|undefined});
  const statusRef=useRef(status);
  const update=(patch:Partial<typeof status>)=>{statusRef.current={...statusRef.current,...patch};flushSync(()=>setStatus(statusRef.current));};
@@ -106,19 +110,17 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         return pending;
     }
     // 在线 / 状态：每个角色一笔，AI 回复时想改才改
-    const CHAT_PRESENCE_KEY = 'smallphone_chat_presence_v1';
-    const PRESENCE_STATES = ['在线', '忙碌', '离开', '隐身'];
     function readChatPresenceMap() {
         try { const map = JSON.parse(localStorage.getItem(CHAT_PRESENCE_KEY) || '{}'); return map && typeof map === 'object' ? map : {}; }
         catch (error) { return {}; }
     }
     function getChatPresence(chatKey:unknown) {
-        const saved = readChatPresenceMap()[String(chatKey || '')] || {};
+        const saved = presenceRef.current[String(chatKey || '')] || {};
         return { online: PRESENCE_STATES.includes(saved.online) ? saved.online : '在线', status: String(saved.status || '').slice(0, 30) };
     }
     function setChatPresence(chatKey:unknown, update:object) {
         if (!chatKey || !update || typeof update !== 'object') return;
-        const map = readChatPresenceMap();
+        const map = {...presenceRef.current};
         const current = getChatPresence(chatKey);
         const next = { ...current };
         const fields=update as {online?:unknown;status?:unknown};
@@ -126,7 +128,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (typeof fields.status === 'string') next.status = fields.status.trim().slice(0, 30);
         map[String(chatKey)] = next;
         try { localStorage.setItem(CHAT_PRESENCE_KEY, JSON.stringify(map)); } catch (error) {}
-        services.current?.refreshSide();
+        presenceRef.current=map;setPresenceMap(map);
     }
     
     // 对方撤回自己的讯息：讯息换成「XX撤回了一条消息」提示，原文存在提示上（给 AI 读，画面上看不到）
@@ -365,7 +367,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
     }
 
  const apiRef=useRef<ChatReplyEngineApi|null>(null);
- if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},presence:getChatPresence,status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
+ if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},reloadPresence(){const map=readChatPresenceMap();presenceRef.current=map;setPresenceMap(map);},presence:getChatPresence,status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
  useEffect(()=>()=>{timers.current.forEach(clearTimeout);},[]);
- return {services,api:apiRef.current,status};
+ return {services,api:apiRef.current,status,presenceMap};
 }

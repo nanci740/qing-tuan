@@ -7,7 +7,6 @@ export interface ChatCharacterActionSelection {
   y?: number;
 }
 export interface ChatCharacterActionsServices {
-  anchor: Comment;
   read: (id: string) => {
     pinned: boolean;
     favorite: boolean;

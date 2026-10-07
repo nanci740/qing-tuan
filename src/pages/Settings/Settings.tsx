@@ -1,6 +1,5 @@
 import { PressedDiv } from '../../components/shared/PressedDiv';
 import { PressedButton } from '../../components/shared/PressedButton';
-import { useChatSidebarSources } from '../../providers/ChatSidebarProvider';
 import { OriginalComment } from '../../components/shared/OriginalComment';
 import { PixelArt } from '../../components/shared/PixelArt';
 import { SettingsSection } from './SettingsSection';
@@ -10,7 +9,6 @@ import { useSettingsHome } from '../../hooks/useSettingsHome';
 import { useSettingsNavigation } from '../../hooks/useSettingsNavigation';
 /** React 管理本页事件与状态；原 DOM 层级、选择器和样式保持不变。 */
 export function Settings() {
-  const sidebarSources = useChatSidebarSources();
   const navigation = useSettingsNavigation();
   const home = useSettingsHome();
   return <div className={navigation.settingsOpen ? "settings-page active" : "settings-page"} id="settingsPage">
@@ -72,7 +70,7 @@ export function Settings() {
               {"\n                        "}
               <PressedButton className="settings-profile-avatar" id="settingsProfileAvatarBtn" onClick={home.chooseAvatar} type="button" aria-label="更换个人头像" data-title="点击更换头像">
                 {"\n                            "}
-                <img ref={sidebarSources.selfAvatar} id="settingsProfileAvatarImg" className={home.avatarMissing ? "avatar-missing" : ""} src={home.avatar || undefined} onLoad={home.avatarLoaded} onError={home.avatarFailed} alt="" />
+                <img id="settingsProfileAvatarImg" className={home.avatarMissing ? "avatar-missing" : ""} src={home.avatar || undefined} onLoad={home.avatarLoaded} onError={home.avatarFailed} alt="" />
                 {"\n                        "}
               </PressedButton>
               {"\n                        "}

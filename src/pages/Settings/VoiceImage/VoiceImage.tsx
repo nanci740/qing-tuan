@@ -165,6 +165,26 @@ export function VoiceImage() {
             </div>
             {"\n                    "}
             <div className="vi-row">
+              <span className="vi-row-label">转写类型</span>
+              <select className="vi-input" value={vi.voice.transcriptionProvider || ''} onChange={event => vi.setVoiceField('transcriptionProvider', event.currentTarget.value)}>
+                <option value="">沿用语音连接</option>
+                <option value="openai-compatible">OpenAI 兼容转写</option>
+                <option value="gemini">Gemini 音频理解</option>
+              </select>
+            </div>
+            <div className="vi-row">
+              <span className="vi-row-label">转写地址</span>
+              <input className="vi-input" type="url" placeholder="可选：转写服务地址" value={vi.voice.transcriptionBaseUrl || ''} onChange={event => vi.setVoiceField('transcriptionBaseUrl', event.currentTarget.value)} />
+            </div>
+            <div className="vi-row">
+              <span className="vi-row-label">转写 Key</span>
+              <input className="vi-input" type="password" autoComplete="off" placeholder="可选：独立转写 Key" value={vi.voice.transcriptionApiKey || ''} onChange={event => vi.setVoiceField('transcriptionApiKey', event.currentTarget.value)} />
+            </div>
+            <div className="vi-row">
+              <span className="vi-row-label">转写模型</span>
+              <input className="vi-input" placeholder="服务支持的转写模型（非 TTS 模型）" value={vi.voice.transcriptionModel || ''} onChange={event => vi.setVoiceField('transcriptionModel', event.currentTarget.value)} />
+            </div>
+            <div className="vi-row">
               {"\n                        "}
               <span className="vi-row-label">
                 {"音色"}

@@ -6,7 +6,6 @@ export function useChatSelectionToolbar(){
  const service=useRef<ChatSelectionServices|null>(null);
  const {view}=useChatSelection();
  const header=useRef<HTMLDivElement>(null),toolbar=useRef<HTMLDivElement>(null);
- const mounted=useRef(false);
  useLayoutEffect(()=>{
   const connect=(event:Event)=>{
    const detail=(event as CustomEvent<{services:ChatSelectionServices}>).detail;
@@ -15,12 +14,6 @@ export function useChatSelectionToolbar(){
   window.addEventListener('qingtuan:selection-toolbar-connect',connect);
   return()=>window.removeEventListener('qingtuan:selection-toolbar-connect',connect);
  },[]);
- useLayoutEffect(()=>{
-  if(!services||!header.current||!toolbar.current||mounted.current)return;
-  services.host.insertBefore(header.current,services.headerAnchor);services.headerAnchor.remove();
-  services.host.insertBefore(toolbar.current,services.toolbarAnchor);services.toolbarAnchor.remove();
-  mounted.current=true;
- },[services]);
  async function action(tool:SelectionTool){
   const api=service.current;if(!api)return;
   if(tool==='cancel'){api.clear();return;}

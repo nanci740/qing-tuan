@@ -222,9 +222,6 @@ export function useCharacterArchive() {
   }, []);
   useLayoutEffect(() => {
     if (!services || !overlay.current || !titlebar.current || !banner.current || !body.current || !footer.current || mounted.current) return;
-    // 保留原档案在 body 中的位置；旧聊天只提供一次性定位注记，不创建档案 DOM。
-    services.anchor.parentNode!.insertBefore(overlay.current, services.anchor);
-    services.anchor.remove();
     const bridge: CharacterEditorBridge = {
       overlay: overlay.current,
       titlebar: titlebar.current,

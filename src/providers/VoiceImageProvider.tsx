@@ -7,7 +7,7 @@ import { useChoice } from './ChoiceProvider';
 import { choiceMaps, IMAGE_MODEL_PRESETS, normalizeImageCharacters, normalizeModelOptions, filterFetchedModels, fetchGeminiModels, fetchOpenAICompatibleModels, synthesizeSpeech, testImage, loadVoiceImageSettings } from '../utils/voiceImageServices';
 import { applyVoiceProviderPreset, applyImageProviderPreset } from '../utils/voiceImagePresets';
 import { showToast } from '../utils/toast';
-function cleanVoice(value:VoiceConfig):VoiceConfig{return {...value,baseUrl:value.baseUrl.trim().replace(/\/+$/,''),apiKey:value.apiKey.trim(),model:value.model.trim(),voice:value.voice.trim(),format:value.format||'mp3',speed:Number(value.speed)||1};}
+function cleanVoice(value:VoiceConfig):VoiceConfig{return {...value,transcriptionProvider:value.transcriptionProvider||'',transcriptionBaseUrl:value.transcriptionBaseUrl?.trim().replace(/\/+$/,'')||'',transcriptionApiKey:value.transcriptionApiKey?.trim()||'',transcriptionModel:value.transcriptionModel?.trim()||'',baseUrl:value.baseUrl.trim().replace(/\/+$/,''),apiKey:value.apiKey.trim(),model:value.model.trim(),voice:value.voice.trim(),format:value.format||'mp3',speed:Number(value.speed)||1};}
 function cleanImage(value:ImageConfig):ImageConfig{return {...value,baseUrl:value.baseUrl.trim().replace(/\/+$/,''),apiKey:value.apiKey.trim(),model:value.model.trim(),size:value.size||'1024x1024',quality:value.quality||'auto',prompt:value.prompt.trim(),artistTags:value.artistTags.trim(),negativePrompt:value.negativePrompt.trim(),characters:normalizeImageCharacters(value.characters)};}
 function useVoiceImageState(){
  const navigation=useSettingsNavigation(),choice=useChoice();

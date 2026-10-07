@@ -1,5 +1,9 @@
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
+import {transcriptionConnection,recordingExtension,transcriptionError} from '../utils/voiceTranscription';
+import {performChatRequest} from '../utils/apiClient';
+import {getSavedConfig} from '../utils/apiStorage';
+import {extractChatAiReply} from '../utils/chatReplyParser';
 import type {MessageNodesApi,MessageVoice} from '../types/chatMessages';
 export interface ChatVoiceServices {send():void;resize():void;text(row:HTMLElement):string;input():void;}
 export interface ChatVoiceApi {translateText(source:string):Promise<string>;voiceConfig():{baseUrl?:string;apiKey?:string;model?:string;provider?:string};recording():boolean;draft():MessageVoice|null;reset():void;cancel():void;toggle():Promise<void>;play(pill:HTMLElement):void;transcribe(row:HTMLElement,options?:{showResult?:boolean}):Promise<string>;translate(row:HTMLElement):Promise<string>;prepare(text:string):Promise<MessageVoice|null>;wav(row:HTMLElement):Promise<string>;}
@@ -83,29 +87,23 @@ export function useChatVoice(messages:MessageNodesApi){
             return row.dataset.voiceTranscript;
         }
         const config = readSavedVoiceService();
-        const endpoint = String(config.baseUrl || '').trim().replace(/\/+$/, '');
-        if (!config.apiKey || !endpoint) {
-            throw new Error('请先在「语音与生图设置」保存语音 API 地址和 Key');
-        }
+        const connection = transcriptionConnection(config);
         const requestEpoch = ++media.current.voiceTextEpoch;
         media.current.voiceTextAbort?.abort();
         media.current.voiceTextAbort = new AbortController();
-        if (config.provider === 'gemini') {
-            const base = endpoint.replace(/\/openai$/i, '');
-            const savedModel = String(config.model || '').replace(/^models\//, '');
-            const model = !savedModel || /tts/i.test(savedModel) ? 'gemini-2.5-flash' : savedModel;
+        if (connection.provider === 'gemini') {
             const wavBase64 = await chatVoiceRowToWavBase64(row);
             if (!wavBase64) throw new Error('这个浏览器没办法转换录音');
-            const res = await fetch(base + '/models/' + model + ':generateContent', {
+            const res = await fetch(connection.endpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': config.apiKey },
+                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': connection.apiKey },
                 body: JSON.stringify({ contents: [{ parts: [
                     { text: '请把这段语音逐字转写成文字。只输出转写内容，不要加任何说明、引号或标点以外的符号。' },
                     { inline_data: { mime_type: 'audio/wav', data: wavBase64 } }
                 ] }] }),
                 signal: media.current.voiceTextAbort.signal
             });
-            if (!res.ok) throw new Error('语音识别失败（HTTP ' + res.status + '）');
+            if (!res.ok) throw await transcriptionError(res);
             const data = await res.json();
             if (requestEpoch !== media.current.voiceTextEpoch) return '';
             const text = (data?.candidates?.[0]?.content?.parts || []).map((part:{text?:string}) => part?.text || '').join('').trim();
@@ -115,15 +113,15 @@ export function useChatVoice(messages:MessageNodesApi){
             return text;
         }
         const blob = await audioBlobFromRow(row);
-        const ext = blob.type.includes('mp4') ? 'm4a' : blob.type.includes('ogg') ? 'ogg' : 'webm';
+        const ext = recordingExtension(blob.type);
         const form = new FormData();
         form.append('file', blob, 'recording.' + ext);
-        form.append('model', 'gpt-4o-mini-transcribe');
-        const res = await fetch(endpoint + '/audio/transcriptions', {
-            method: 'POST', headers: {'Authorization': 'Bearer ' + config.apiKey},
+        form.append('model', connection.model);
+        const res = await fetch(connection.endpoint, {
+            method: 'POST', headers: {'Authorization': 'Bearer ' + connection.apiKey},
             body: form, signal: media.current.voiceTextAbort.signal
         });
-        if (!res.ok) throw new Error('语音识别失败（HTTP ' + res.status + '）');
+        if (!res.ok) throw await transcriptionError(res);
         const data = await res.json();
         if (requestEpoch !== media.current.voiceTextEpoch) return '';
         const text = data?.text?.trim();
@@ -140,26 +138,19 @@ export function useChatVoice(messages:MessageNodesApi){
     }
     async function translateText(source:string,row?:HTMLElement){
         if (!source) throw new Error('这条消息没有可翻译的文字');
-        const config = readSavedTextService();
-        const endpoint = String(config.baseUrl || '').trim().replace(/\/+$/, '');
-        const model = config.featureModels?.chat || config.model;
-        if (!config.apiKey || !endpoint || !model) {
+        const config = getSavedConfig();
+        const model = config?.featureModels?.chat || config?.model;
+        if (!config?.apiKey || !config.baseUrl || !model) {
             throw new Error('请先在 API 设置保存地址、Key 和聊天模型');
         }
         const requestEpoch = ++media.current.voiceTextEpoch;
-        media.current.voiceTextAbort?.abort(); media.current.voiceTextAbort = new AbortController();
-        const res = await fetch(endpoint + '/chat/completions', {
-            method: 'POST',
-            headers: {'Authorization': 'Bearer ' + config.apiKey, 'Content-Type': 'application/json'},
-            body: JSON.stringify({model, stream:false, temperature:0.2,
-                messages:[{role:'system',content:'Translate the user text into Simplified Chinese (zh-CN). Return only the translation without commentary.'},
-                          {role:'user',content:source}]}),
-            signal: media.current.voiceTextAbort.signal
-        });
-        if (!res.ok) throw new Error('翻译失败（HTTP ' + res.status + '）');
-        const data = await res.json();
+        media.current.voiceTextAbort?.abort();
+        const data = await performChatRequest([
+            {role:'system',content:'Translate the user text into Simplified Chinese (zh-CN). Return only the translation without commentary.'},
+            {role:'user',content:source}
+        ], {...config, model, stream:false, temperature:0.2});
         if (requestEpoch !== media.current.voiceTextEpoch) return '';
-        const translated = data?.choices?.[0]?.message?.content?.trim();
+        const translated = extractChatAiReply(data);
         if (!translated || Array.isArray(translated)) throw new Error('接口没有返回译文');
         if(row){messages.setData(row,{simplifiedTranslation:translated});messages.translation(row, translated);}
         return translated;
@@ -238,11 +229,6 @@ export function useChatVoice(messages:MessageNodesApi){
         try { return JSON.parse(localStorage.getItem('smallphone_voice_image_settings_v1') || '{}')?.voice || {}; }
         catch (_) { return {}; }
     }
-    function readSavedTextService() {
-        try { return JSON.parse(localStorage.getItem('smallphone_api_settings_v1') || '{}') || {}; }
-        catch (_) { return {}; }
-    }
-
     function pauseOtherChatVoiceBubbles(currentAudio:HTMLAudioElement) {
         messages.audioElements().forEach(audio => {
             if (audio !== currentAudio) {

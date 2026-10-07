@@ -6,7 +6,7 @@ export function useChatCharacterActions() {
   const api = useRef<ChatCharacterActionsServices | null>(null);
   const overlay = useRef<HTMLDivElement>(null),
     sheet = useRef<HTMLDivElement>(null);
-  const mounted = useRef(false),
+  const
     selectedId = useRef('');
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState<ChatCharacterActionSelection>({
@@ -61,12 +61,6 @@ export function useChatCharacterActions() {
       window.removeEventListener('qingtuan:chat-character-actions-open', show);
     };
   }, []);
-  useLayoutEffect(() => {
-    if (!services || !overlay.current || mounted.current) return;
-    services.anchor.parentNode!.insertBefore(overlay.current, services.anchor);
-    services.anchor.remove();
-    mounted.current = true;
-  }, [services]);
   useLayoutEffect(() => {
     if (!open || !overlay.current || !sheet.current) return;
     // 像微信那样：选单出现在手指按的位置；下面不够就往上开、靠右就往左开（小手机画面可能整体缩放，先换算回来）。

@@ -1,4 +1,3 @@
-import { createPortal } from 'react-dom';
 import { useCharacterArchive } from '../../../hooks/useCharacterArchive';
 import { CharacterDialogControls } from './CharacterDialogControls';
 import { CharacterRecordMenu } from './CharacterRecordMenu';
@@ -17,7 +16,7 @@ export function CharacterArchive() {
     footer,
     captureClick
   } = useCharacterArchive();
-  return services ? createPortal(<div className="cc-overlay" id="characterCard" hidden={!visible} aria-hidden={!visible} ref={overlay} onClickCapture={captureClick}>
+  return services ? (<div className="cc-overlay" id="characterCard" hidden={!visible} aria-hidden={!visible} ref={overlay} onClickCapture={captureClick}>
     {'\n        '}<div className="cc-win" role="dialog" aria-modal="true" aria-label="查看资料">
       {'\n            '}<div className="cc-titlebar" ref={titlebar} />
       {'\n            '}<div className="cc-banner" ref={banner} />
@@ -25,5 +24,5 @@ export function CharacterArchive() {
       {'\n            '}<div className="cc-footer" ref={footer} />
       {'\n        '}</div>
     <CharacterPngTools /><CharacterEditor /><CharacterBanner /><CharacterRecordMenu /><CharacterDialogControls />
-  </div>, document.body) : null;
+  </div>) : null;
 }

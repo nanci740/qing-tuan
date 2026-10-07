@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { chatReplyPreview } from '../utils/chatReplyParser';
 interface Notice { chatKey: string; title: string; body: string; avatar: string; time: number }
 interface Character { archiveId: string; name?: string; photoUrl?: string }
 const KEY = 'qt_home_notice_v1', CHAR_KEY = 'smallphone_chat_characters_v1', UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
-function loadLast(): Notice | null { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } }
+function loadLast(): Notice | null { try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); return saved ? {...saved, body: chatReplyPreview(saved.body)} : null; } catch { return null; } }
 function loadCharacter(last: Notice | null): Character | null {
   if (!last?.chatKey) return null;
   try { const list: Character[] = JSON.parse(localStorage.getItem(CHAR_KEY) || '[]'); return Array.isArray(list) ? list.find(c => c && c.archiveId === last.chatKey) || null : null; } catch { return null; }
@@ -26,7 +27,7 @@ export function useHomeNotice() {
     function refreshText() { setUnread(unreadTotal()); setTime(lastRef.current ? ago(lastRef.current.time) : ''); }
     function reply(event: Event) {
       const d = (event as CustomEvent<Partial<Notice>>).detail || {};
-      const next: Notice = { chatKey: String(d.chatKey || ''), title: String(d.title || ''), body: String(d.body || '').replace(/\s+/g, ' ').trim(), avatar: typeof d.avatar === 'string' && d.avatar.length < 2048 ? d.avatar : '', time: Date.now() };
+      const next: Notice = { chatKey: String(d.chatKey || ''), title: String(d.title || ''), body: chatReplyPreview(d.body).replace(/\s+/g, ' ').trim(), avatar: typeof d.avatar === 'string' && d.avatar.length < 2048 ? d.avatar : '', time: Date.now() };
       try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* 原存储回退。 */ }
       lastRef.current = next; setLast(next); setCharacter(loadCharacter(next)); setImageFailed(false); refreshText();
     }

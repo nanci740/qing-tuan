@@ -103,27 +103,50 @@ function extractLooseChatAiReplies(raw: unknown): Envelope | null {
             break;
         }
     }
-    if (end < 0) return null;
-    const arrayText = text.slice(start, end + 1);
+    // 回覆達到 token 上限時可能缺少結尾；只恢復完整項目，不猜測被截斷的正文。
+    const arrayText = text.slice(start, end < 0 ? undefined : end + 1);
     let replies: unknown = [];
     try {
         replies = JSON.parse(arrayText);
     } catch (err) {
         const recovered: unknown[] = [];
-        // 最後一道保護：逐個讀取雙引號字串，避免把整包 JSON 顯示給使用者。
-        const decode = (raw: string): string => { try { return JSON.parse('"' + raw + '"'); } catch (decodeError) { return raw.replace(/\\n/g, '\n'); } };
-        // 新格式：每则是 {"text":"…","quote_id":"…"}，先照这个读
-        const objectPattern = /"text"\s*:\s*"((?:\\.|[^"\\])*)"(?:\s*,\s*"quote_id"\s*:\s*"([^"]*)")?(?:\s*,\s*"recall"\s*:\s*(true|false))?/g;
-        let match;
-        while ((match = objectPattern.exec(arrayText))) recovered.push({ text: decode(match[1]), quote_id: match[2] || '', recall: match[3] === 'true' });
-        if (!recovered.length) {
-            const stringPattern = /"((?:\\.|[^"\\])*)"/g;
-            while ((match = stringPattern.exec(arrayText))) recovered.push(decode(match[1]));
+        // 配對每個完整物件，保留 voice、recall、引用等屬性。
+        // 不把 JSON 屬性名稱誤當成回覆，也不恢復未結束的字串。
+        let cursor = 1;
+        while (cursor < arrayText.length) {
+            while (/[\s,]/.test(arrayText[cursor] || '') && cursor < arrayText.length) cursor++;
+            const begin = cursor;
+            const objectItem = arrayText[cursor] === '{';
+            if (!objectItem && arrayText[cursor] !== '"') break;
+            let nesting = 0, quoted = false, escaped = false, complete = false;
+            for (; cursor < arrayText.length; cursor++) {
+                const char = arrayText[cursor];
+                if (quoted) {
+                    if (escaped) escaped = false;
+                    else if (char === '\\') escaped = true;
+                    else if (char === '"') {
+                        quoted = false;
+                        if (!objectItem) { cursor++; complete = true; break; }
+                    }
+                } else if (char === '"') quoted = true;
+                else if (char === '{' || char === '[') nesting++;
+                else if ((char === '}' || char === ']') && --nesting === 0) {
+                    cursor++; complete = true; break;
+                }
+            }
+            if (!complete) break;
+            const itemText = arrayText.slice(begin, cursor);
+            try { recovered.push(JSON.parse(itemText)); }
+            catch {
+                // 完整物件中只有未跳脫的換行時，由既有解析器處理。
+                const item = objectItem ? parseChatAiJsonEnvelope(itemText) : null;
+                if (item) recovered.push(item);
+            }
         }
         replies = recovered;
     }
     replies = Array.isArray(replies)
-        ? replies.filter(item => item && (typeof item === 'object' ? String(fields(item).text || fields(item).content || '').trim() : String(item).trim()))
+        ? replies.filter(item => item && (typeof item === 'object' ? String(fields(item).text || fields(item).content || fields(item).message || '').trim() : String(item).trim()))
         : [];
     if (!(replies as unknown[]).length) return null;
     const quoteMatch = text.match(/["']quote_id["']\s*:\s*["']([^"']*)["']/i);
@@ -307,4 +330,11 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
         quote: parsed.quote || '',
         quoteTargetId: parsed.quoteTargetId || ''
     };
+}
+
+// 舊版通知快取也可能含 JSON；統一用聊天解析器清理顯示文字。
+export function chatReplyPreview(raw: unknown): string {
+    const text = String(raw || '').trim();
+    return /["'](?:replies|reply|quote_id)["']\s*:/.test(text)
+        ? parseChatAiSegmentedReply(text).segments.join(' ') : text;
 }
