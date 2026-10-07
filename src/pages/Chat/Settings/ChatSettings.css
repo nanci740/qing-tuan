@@ -233,7 +233,6 @@
 
 /* @qingtuan-order:002667 */
 
-.chat-setting-input:focus,.chat-setting-select:focus {border-color:rgba(var(--theme-rgb),.92);}
 
 /* @qingtuan-order:002668 */
 
@@ -277,7 +276,6 @@
 
 /* @qingtuan-order:002681 */
 
-.chat-setting-textarea:focus,.chat-setting-code:focus {border-color:rgba(var(--theme-rgb),.92);}
 
 /* @qingtuan-order:002682 */
 
@@ -686,7 +684,6 @@
 
 /* @qingtuan-order:003779 */
 
-        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-select, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input):focus { border-color: var(--cs-head) !important; }
 
 /* @qingtuan-order:003780 */
 
