@@ -79,3 +79,10 @@ export function saveChatPreferences(key: string, preferences: ChatPreferences): 
     localStorage.setItem(CHAT_PREFERENCES_BY_CHAT_KEY, JSON.stringify(store));
   } catch { /* 与原版一致：不改变提示或抛出异常。 */ }
 }
+
+/** Asset controls require a confirmed metadata write before reporting success. */
+export function saveChatPreferencesOrThrow(key: string, preferences: ChatPreferences): void {
+  const parsed: unknown = JSON.parse(localStorage.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}');
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('聊天设置数据无法保存');
+  localStorage.setItem(CHAT_PREFERENCES_BY_CHAT_KEY, JSON.stringify({...parsed, [key]: {...preferences}}));
+}
