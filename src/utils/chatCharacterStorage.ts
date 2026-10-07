@@ -1,16 +1,17 @@
+import { decodePhotoRecords, encodePhotoRecords } from './imageAssets';
 import type { ChatCharacter } from '../types/chatCharacters';
 const CHAT_CHARACTERS_KEY = 'smallphone_chat_characters_v1';
 export function readChatCharacters(): ChatCharacter[] {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(CHAT_CHARACTERS_KEY) || '[]');
-    return Array.isArray(saved) ? saved as ChatCharacter[] : [];
+    return Array.isArray(saved) ? decodePhotoRecords(saved as ChatCharacter[]) : [];
   } catch {
     return [];
   }
 }
 export function writeChatCharacters(records: ChatCharacter[]) {
   try {
-    const payload = JSON.stringify(records);
+    const payload = JSON.stringify(encodePhotoRecords(records));
     localStorage.setItem(CHAT_CHARACTERS_KEY, payload);
     return localStorage.getItem(CHAT_CHARACTERS_KEY) === payload;
   } catch {

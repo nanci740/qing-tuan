@@ -1,3 +1,4 @@
+import { preparePhotoRecords } from '../utils/imageAssets';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import type { MouseEvent } from 'react';
@@ -130,6 +131,7 @@ export function useCharacterArchive() {
       showToast('请先填写角色名字');
       return;
     }
+    try { await preparePhotoRecords([record]); } catch { showToast('头像保存失败，请检查浏览器存储空间'); return; }
     Object.assign(record, {
       name: displayName,
       isStamped: true,

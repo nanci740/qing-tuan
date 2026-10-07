@@ -1,3 +1,5 @@
+import { prepareImage, saveImageSlots } from '../utils/imageAssets';
+import { showToast } from '../utils/toast';
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { ChangeEvent, MouseEvent } from 'react';
 import { nextVisitorCount, SETTINGS_AVATAR_KEY } from '../utils/settingsStorage';
@@ -20,35 +22,14 @@ export function useSettingsHome() {
     avatarInput.current.click();
     requestAnimationFrame(() => avatarButton.current?.blur());
   }
-  function changeAvatar(event: ChangeEvent<HTMLInputElement>) {
+  const savingAvatar=useRef(false);
+  async function changeAvatar(event: ChangeEvent<HTMLInputElement>) {
     event.stopPropagation();
-    const file = event.currentTarget.files?.[0];
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const image = new Image();
-      image.onload = () => {
-        const maxSize = 320;
-        const scale = Math.min(1, maxSize / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
-        canvas.height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        let dataUrl = '';
-        try {
-          dataUrl = canvas.toDataURL('image/webp', .86);
-          if (!dataUrl.startsWith('data:image/webp')) dataUrl = canvas.toDataURL('image/jpeg', .86);
-        } catch { dataUrl = canvas.toDataURL('image/jpeg', .86); }
-        setAvatar(dataUrl);
-        try { localStorage.setItem(SETTINGS_AVATAR_KEY, dataUrl); } catch { /* 与原行为一致。 */ }
-        avatarButton.current?.blur();
-        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-      };
-      image.src = String(reader.result);
-    };
-    reader.readAsDataURL(file);
+    const file=event.currentTarget.files?.[0];if(!file||savingAvatar.current)return;
+    event.currentTarget.value='';savingAvatar.current=true;
+    try {const data=await prepareImage(file,320,.86);await saveImageSlots({[SETTINGS_AVATAR_KEY]:data});setAvatar(data);showToast('头像已保存');}
+    catch {showToast('头像保存失败，请检查图片或浏览器存储空间');}
+    finally {savingAvatar.current=false;avatarButton.current?.blur();if(document.activeElement instanceof HTMLElement)document.activeElement.blur();}
   }
   return { visitorCount, avatar, avatarMissing, avatarInput, chooseAvatar, changeAvatar,
     avatarLoaded: () => setAvatarMissing(false), avatarFailed: () => setAvatarMissing(true) };

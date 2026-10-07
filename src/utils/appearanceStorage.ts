@@ -1,52 +1,5 @@
 export const CUSTOM_FONT_FAMILY = 'SmallPhoneCustomFont';
 const CUSTOM_FONT_DB = 'smallphone_custom_font_db', CUSTOM_FONT_STORE = 'font_store', CUSTOM_FONT_RECORD = 'active_font';
-    export function compressWallpaper(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onerror = () => reject(new Error('图片读取失败'));
-            reader.onload = () => {
-                const image = new Image();
-                image.onerror = () => reject(new Error('图片格式不支持'));
-                image.onload = () => {
-                    const maxSide = 1440;
-                    const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
-                    const canvas = document.createElement('canvas');
-                    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-                    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-                    const context = canvas.getContext('2d')!;
-                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.84));
-                };
-                image.src = String(reader.result);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    export function compressCustomIcon(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onerror = () => reject(new Error('图片读取失败'));
-            reader.onload = () => {
-                const image = new Image();
-                image.onerror = () => reject(new Error('图片格式不支持'));
-                image.onload = () => {
-                    const maxSide = 256;
-                    const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
-                    const canvas = document.createElement('canvas');
-                    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-                    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-                    const context = canvas.getContext('2d')!;
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/png'));
-                };
-                image.src = String(reader.result);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
     function openFontDb(): Promise<IDBDatabase> {
         return new Promise((resolve, reject) => {
             if (!('indexedDB' in window)) {

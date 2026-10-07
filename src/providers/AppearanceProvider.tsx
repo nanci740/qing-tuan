@@ -1,3 +1,4 @@
+import { readImageSlot, saveImageSlots, prepareImage } from '../utils/imageAssets';
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ChangeEvent, ReactNode } from 'react';
 import { useSettingsNavigation } from './SettingsNavigationProvider';
@@ -5,17 +6,17 @@ import { defaultHomeTexts, homeTextStorageKeys, useHomeTexts } from './HomeTexts
 import type { HomeTextId, HomeTextValues } from './HomeTextsProvider';
 import { useMusic } from './MusicProvider';
 import { DEFAULT_THEME_COLOR, normalizeThemeColor, themeColorToRgb, themeFrameRgb, hexToHsv, hsvToHex } from '../utils/appearanceColors';
-import { compressWallpaper, compressCustomIcon, CUSTOM_FONT_FAMILY, saveLocalFontRecord, readLocalFontRecord, clearLocalFontRecord } from '../utils/appearanceStorage';
+import { CUSTOM_FONT_FAMILY, saveLocalFontRecord, readLocalFontRecord, clearLocalFontRecord } from '../utils/appearanceStorage';
 import { showToast } from '../utils/toast';
 export const iconConfigs = {app:[{key:'ledger',label:'Ledger'},{key:'memos',label:'Memos'},{key:'world',label:'World'},{key:'memories',label:'Memories'}],dock:[{key:'home',label:'Home'},{key:'chat',label:'Chat'},{key:'diary',label:'Diary'},{key:'space',label:'Space'},{key:'settings',label:'Settings'}]};
 export type IconKind = keyof typeof iconConfigs;
 type Icons = Record<IconKind,Record<string,string>>;
 function read(key:string,fallback=''){try{return localStorage.getItem(key)||fallback;}catch{return fallback;}}
 function write(key:string,value:string){try{localStorage.setItem(key,value);}catch{}}
-function readIcons():Icons{return Object.fromEntries(Object.entries(iconConfigs).map(([kind,items])=>[kind,Object.fromEntries(items.map(({key})=>[key,read(`smallphone_${kind}_icon_${key}`)]))])) as Icons;}
+function readIcons():Icons{return Object.fromEntries(Object.entries(iconConfigs).map(([kind,items])=>[kind,Object.fromEntries(items.map(({key})=>[key,readImageSlot(`smallphone_${kind}_icon_${key}`)]))])) as Icons;}
 function initialAppearance(){let color=DEFAULT_THEME_COLOR,wallpaper='',opacity=100;try{color=localStorage.getItem('smallphone_theme_color')||color;
  // 旧的淡青 #C0D6D8 已换成新的淡青 #DDF2F4，之前存的旧值自动换成新色。
- if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;localStorage.setItem('smallphone_theme_color',color);}wallpaper=localStorage.getItem('smallphone_main_wallpaper')||'';opacity=Number(localStorage.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
+ if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;localStorage.setItem('smallphone_theme_color',color);}wallpaper=readImageSlot('smallphone_main_wallpaper');opacity=Number(localStorage.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
  let glass=50;try{const value=Number(localStorage.getItem('smallphone_glass_strength'));if(Number.isFinite(value))glass=value;}catch{}
  const splash=read('smallphone_splash_mode','always');return{color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
 function useAppearanceState(){
@@ -55,13 +56,15 @@ function useAppearanceState(){
  if(safe==='daily')localStorage.removeItem('smallphone_splash_last_shown');}catch{}}
  function setOpacity(value:number){const safe=Math.min(100,Math.max(20,Number.isFinite(value)?value:100));opacityRef.current=safe;setOpacityState(safe);write('smallphone_wallpaper_opacity',String(safe));}
  const veil=Math.max(0,Math.min(.8,1-opacity/100)).toFixed(2),wallpaperLayers=wallpaper?`linear-gradient(rgba(250, 249, 246, ${veil}), rgba(250, 249, 246, ${veil})), url("${wallpaper}")`:'';
- async function onWallpaper(event:ChangeEvent<HTMLInputElement>){const input=event.currentTarget,file=input.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){showToast('请选择图片文件');input.value='';return;}showToast('正在处理图片…');try{const data=await compressWallpaper(file);setWallpaper(data);try{localStorage.setItem('smallphone_main_wallpaper',data);localStorage.setItem('smallphone_wallpaper_opacity',String(opacityRef.current));showToast('主画面背景已保存');}catch{showToast('图片已应用，但储存空间不足');}}catch(error){showToast(error instanceof Error?error.message:'图片处理失败');}input.value='';}
- function removeWallpaper(){setWallpaper('');try{localStorage.removeItem('smallphone_main_wallpaper');}catch{}if(wallpaperInput.current)wallpaperInput.current.value='';showToast('已恢复默认背景');}
+ const wallpaperRevision=useRef(0);
+ async function onWallpaper(event:ChangeEvent<HTMLInputElement>){const input=event.currentTarget,file=input.files?.[0];if(!file)return;input.value='';const revision=++wallpaperRevision.current;showToast('正在保存图片…');try{const data=await prepareImage(file,1440,.84);if(revision!==wallpaperRevision.current)return;await saveImageSlots({'smallphone_main_wallpaper':data});if(revision!==wallpaperRevision.current)return;setWallpaper(data);showToast('主画面背景已保存');}catch(error){showToast(error instanceof Error?error.message:'图片保存失败');}}
+ async function removeWallpaper(){++wallpaperRevision.current;try{await saveImageSlots({'smallphone_main_wallpaper':''});setWallpaper('');if(wallpaperInput.current)wallpaperInput.current.value='';showToast('已恢复默认背景');}catch{showToast('背景移除失败，请重试');}}
  function saveTexts(values=texts){const next=Object.fromEntries(Object.entries(values).map(([id,value])=>[id,value.trim()||defaultHomeTexts[id as HomeTextId]])) as HomeTextValues;setTexts(next);Object.entries(next).forEach(([key,value])=>{const id=key as HomeTextId;home.setText(id,value);write(homeTextStorageKeys[id],value);if(id==='songTitle')music.renameTrack(value);});showToast('主画面文字已保存');}
  function chooseIcon(kind:IconKind,key:string){pendingIcon.current={kind,key};if(iconInput.current){iconInput.current.value='';iconInput.current.click();}}
- async function onIcon(event:ChangeEvent<HTMLInputElement>){const input=event.currentTarget,file=input.files?.[0],target=pendingIcon.current;pendingIcon.current=null;if(!file||!target)return;if(!file.type.startsWith('image/')){input.value='';return;}try{const data=await compressCustomIcon(file);setIconDrafts(values=>({...values,[target.kind]:{...values[target.kind],[target.key]:data}}));}catch{}input.value='';}
+ async function onIcon(event:ChangeEvent<HTMLInputElement>){const input=event.currentTarget,file=input.files?.[0],target=pendingIcon.current;pendingIcon.current=null;if(!file||!target)return;if(!file.type.startsWith('image/')){input.value='';return;}try{const data=await prepareImage(file,256);setIconDrafts(values=>({...values,[target.kind]:{...values[target.kind],[target.key]:data}}));}catch{showToast('图标读取失败，请换一张图片');}input.value='';}
  function resetIcons(){setIconDrafts({app:Object.fromEntries(iconConfigs.app.map(item=>[item.key,''])),dock:Object.fromEntries(iconConfigs.dock.map(item=>[item.key,'']))});}
- function saveIcons(){try{for(const kind of ['app','dock'] as const)for(const {key} of iconConfigs[kind]){const data=(iconDrafts[kind][key]||'').trim(),storageKey=`smallphone_${kind}_icon_${key}`;if(data)localStorage.setItem(storageKey,data);else localStorage.removeItem(storageKey);setIcons(values=>({...values,[kind]:{...values[kind],[key]:data}}));}showToast('已保存');}catch{showToast('保存失败');}}
+ const savingIcons=useRef(false);
+ async function saveIcons(){if(savingIcons.current)return;savingIcons.current=true;const draft={app:{...iconDrafts.app},dock:{...iconDrafts.dock}};try{const values:Record<string,string>={};for(const kind of ['app','dock'] as const)for(const {key} of iconConfigs[kind])values[`smallphone_${kind}_icon_${key}`]=(draft[kind][key]||'').trim();await saveImageSlots(values);setIcons(draft);showToast('已保存');}catch(error){showToast(error instanceof Error?error.message:'图标保存失败');}finally{savingIcons.current=false;}}
  function deactivateFont(){setFont({name:'默认字体',source:'霞鹜圆体 / Georgia',badge:'DEFAULT',active:false});setFontUrl('');}
  async function loadBlob(blob:Blob,name:string){const face=new FontFace(CUSTOM_FONT_FAMILY,await blob.arrayBuffer());await face.load();document.fonts.add(face);setFont({name:name||'本地字体',source:`本地文件 · ${name||'Font file'}`,badge:'CUSTOM',active:true});}
  async function loadUrl(raw:string,displayName=''){const parsed=new URL(raw,window.location.href);if(!/^https?:$/.test(parsed.protocol))throw Error('请输入 http 或 https 字体直链');const face=new FontFace(CUSTOM_FONT_FAMILY,`url("${parsed.href.replace(/"/g,'%22')}")`);await face.load();document.fonts.add(face);const name=displayName||decodeURIComponent(parsed.pathname.split('/').pop()||parsed.hostname)||'网络字体';setFont({name,source:`网络直链 · ${parsed.hostname}`,badge:'CUSTOM',active:true});return{href:parsed.href,name};}
