@@ -1,0 +1,1171 @@
+/* @qingtuan-order:001610 */
+
+
+        .chat-list-view {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+/* @qingtuan-order:001611 */
+
+
+        .chat-list-view::-webkit-scrollbar { display: none; }
+
+/* @qingtuan-order:001613 */
+
+
+        .chat-app-header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 62px;
+            padding: 10px 4px 8px;
+        }
+
+/* @qingtuan-order:001614 */
+
+
+        .chat-app-title {
+            color: var(--ui-text-primary);
+            font-size: 23px;
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: .02em;
+        }
+
+/* @qingtuan-order:001746 */
+
+        .chat-app-back { left: -2px; }
+
+/* @qingtuan-order:001750 */
+
+
+        .chat-filter-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            gap: 18px;
+            margin: 2px 18px 12px;
+        }
+
+/* @qingtuan-order:001751 */
+
+
+        .chat-filter-tab {
+            width: 58px;
+            min-height: 24px;
+            justify-self: center;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: #69717B;
+            font: inherit;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001752 */
+
+
+        .chat-filter-tab.active {
+            color: #FFFFFF;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:001753 */
+
+
+        .chat-memory-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0 8px 7px;
+        }
+
+/* @qingtuan-order:001754 */
+
+
+        .chat-memory-title {
+            color: var(--ui-text-primary);
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: .04em;
+        }
+
+/* @qingtuan-order:001755 */
+
+
+        .chat-memory-subtitle {
+            color: #A8AFB6;
+            font-size: 8px;
+            letter-spacing: .05em;
+        }
+
+/* @qingtuan-order:001756 */
+
+
+        .chat-memory-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            min-height: 0;
+            padding: 8px 3px 0;
+        }
+
+/* @qingtuan-order:001757 */
+
+
+        .chat-memory-photo-wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            aspect-ratio: .92;
+            background: #FFFFFF;
+            border: .5px solid rgba(255, 255, 255, .95);
+            border-radius: 0;
+            filter: drop-shadow(0 5px 8px rgba(83, 94, 105, .08));
+        }
+
+/* @qingtuan-order:001758 */
+
+
+        .chat-memory-stack {
+            position: relative;
+            z-index: 2;
+            width: auto;
+            min-width: 0;
+            flex: 0 0 24%;
+            aspect-ratio: .92;
+            transform: translateY(3px);
+            margin-right: 12px;
+        }
+
+/* @qingtuan-order:001759 */
+
+
+        .chat-memory-paper {
+            position: absolute;
+            z-index: 1;
+            inset: 3px -2px -2px 4px;
+            border: 0;
+            background: #FFFFFF;
+            transform: rotate(5deg);
+            transform-origin: center;
+            filter: drop-shadow(0 4px 7px rgba(83, 94, 105, .07));
+        }
+
+/* @qingtuan-order:001760 */
+
+
+        .chat-memory-stack .chat-memory-photo-wrap {
+            position: absolute;
+            z-index: 2;
+            inset: 0;
+            transform: rotate(-3deg);
+            transform-origin: center;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001761 */
+
+
+        .chat-memory-strip > .chat-memory-photo-wrap {
+            width: auto;
+            min-width: 0;
+            flex: 0 0 21%;
+            margin-left: 1px;
+        }
+
+/* @qingtuan-order:001762 */
+
+
+        .chat-memory-strip > .chat-memory-photo-wrap:nth-child(2) { transform: rotate(-4deg) translateY(5px); }
+
+/* @qingtuan-order:001763 */
+
+        .chat-memory-strip > .chat-memory-photo-wrap:nth-child(3) { margin-left: -5px; transform: rotate(6deg) translateY(5px); }
+
+/* @qingtuan-order:001764 */
+
+        .chat-memory-strip > .chat-memory-photo-wrap:nth-child(4) { margin-left: -5px; transform: rotate(-5deg) translateY(5px); }
+
+/* @qingtuan-order:001765 */
+
+
+        /* Empty MEMORY polaroids are clickable placeholders rather than broken-image icons. */
+
+/* @qingtuan-order:001766 */
+
+        .chat-memory-photo-wrap { cursor: pointer; 
+            padding: 4px 4px 11px;
+        }
+
+/* @qingtuan-order:001767 */
+
+        .chat-memory-photo-wrap:focus-visible { outline: 1px solid var(--theme-color); outline-offset: 3px; }
+
+/* @qingtuan-order:001768 */
+
+        .chat-memory-photo-wrap:not(.has-photo)::after {
+            content: '+';
+            position: absolute;
+            left: 50%;
+            top: 43%;
+            transform: translate(-50%, -50%);
+            font-size: 23px;
+            font-weight: 300;
+            line-height: 1;
+            color: #9AA3AC;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001769 */
+
+        .chat-memory-photo-wrap:not(.has-photo) .chat-memory-photo { display: none; }
+
+/* @qingtuan-order:001770 */
+
+
+        .chat-memory-photo {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 0;
+            opacity: .72;
+            filter: saturate(.58) contrast(.9) brightness(1.08);
+        }
+
+/* @qingtuan-order:001771 */
+
+
+        .chat-conversation-panel {
+            margin-top: 24px;
+            padding: 2px 8px;
+            border: 0;
+            border-radius: var(--ui-radius);
+            background: rgba(255, 255, 255, .72);
+        }
+
+/* @qingtuan-order:001772 */
+
+
+        .chat-conversation-panel .chat-thread-card {
+            grid-template-columns: 38px minmax(0, 1fr) auto;
+            gap: 7px;
+            padding: 9px 6px;
+            border: 0;
+            border-radius: var(--ui-radius);
+            background: transparent;
+        }
+
+/* @qingtuan-order:001773 */
+
+
+        .chat-conversation-panel .chat-avatar {
+            border: 0;
+            outline: 0;
+            border-radius: 6px;
+        }
+
+/* @qingtuan-order:001774 */
+
+
+        .chat-conversation-panel .chat-avatar-wrap {
+            width: 38px;
+            height: 38px;
+        }
+
+/* @qingtuan-order:001775 */
+
+
+        .chat-conversation-panel .chat-thread-name {
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:001776 */
+
+
+        .chat-conversation-panel .chat-thread-name-row {
+            transform: translateY(2px);
+        }
+
+/* @qingtuan-order:001777 */
+
+
+        .chat-conversation-panel .chat-thread-pin {
+            padding: 1px 3px;
+            font-size: 6.5px;
+        }
+
+/* @qingtuan-order:001778 */
+
+
+        .chat-conversation-panel .chat-thread-preview {
+            font-size: 8.3px;
+        }
+
+/* @qingtuan-order:001779 */
+
+
+        .chat-conversation-panel .chat-thread-copy {
+            width: calc(100% + 18px);
+        }
+
+/* @qingtuan-order:001780 */
+
+
+        .chat-conversation-panel .chat-thread-meta {
+            min-width: 26px;
+            position: relative;
+            z-index: 2;
+        }
+
+/* @qingtuan-order:001781 */
+
+
+        .chat-conversation-panel .chat-thread-time {
+            font-size: 6.5px;
+            transform: translateY(2px);
+        }
+
+/* @qingtuan-order:001782 */
+
+
+        .chat-conversation-panel .chat-unread-dot {
+            min-width: 12px;
+            height: 12px;
+            font-size: 6.5px;
+        }
+
+/* @qingtuan-order:001783 */
+
+
+        .chat-conversation-panel .chat-online-dot {
+            right: -2px;
+            bottom: -2px;
+            width: 8px;
+            height: 8px;
+        }
+
+/* @qingtuan-order:001785 */
+
+
+        .chat-filter-empty {
+            padding: 31px 12px;
+            color: #A7AEB6;
+            font-size: 10px;
+            text-align: center;
+        }
+
+/* @qingtuan-order:001786 */
+
+
+        .chat-list-view {
+            padding-bottom: 68px;
+        }
+
+/* @qingtuan-order:001787 */
+
+
+        .chat-subnav {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            z-index: 3;
+            width: min(100%, 458px);
+            min-height: 62px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 7px 12px max(7px, env(safe-area-inset-bottom));
+            border-top: .5px solid rgba(218, 220, 224, .82);
+            background: rgba(250, 250, 250, .94);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+            transform: translateX(-50%);
+        }
+
+/* @qingtuan-order:001788 */
+
+
+        .chat-subnav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border: 0;
+            background: transparent;
+            color: #89919A;
+            font: inherit;
+            font-size: 8px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001789 */
+
+
+        .chat-subnav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:001790 */
+
+
+        .chat-subnav-item.active {
+            color: var(--theme-color);
+        }
+
+/* @qingtuan-order:001908 */
+
+
+/* ---------------- Chat 首页 · 古早升级：柔和银白的 Y2K 信箱程序（参考 Orbit Mail）——珠链顶栏、凸起方钮、
+   memory.exe 个人主页小窗、凹槽分段钮、一张张凸起的信件卡、工作列分页；颜色全部跟随主题色 ---------------- */
+
+/* @qingtuan-order:001909 */
+
+#chatListView{
+  /* 主力青：跟设置页标题栏同一个颜色，线条、标题栏、图标都用它；更深的 --win-ink 只给文字 */
+  /* 左右留白放在会卷动的列表里，顶栏才能用负边距贴满两侧 */
+  padding-left:14px;padding-right:14px;
+}
+
+/* @qingtuan-order:001911 */
+
+/* 列表是会卷动的直排 flex，内容多时子项不要被压扁 */
+
+/* @qingtuan-order:001912 */
+
+#chatListView > *{flex-shrink:0}
+
+/* @qingtuan-order:001913 */
+
+#chatListView > .chat-app-header{order:0}
+
+/* @qingtuan-order:001914 */
+
+#chatListView > .chat-memory-block{order:1}
+
+/* @qingtuan-order:001915 */
+
+#chatListView > .chat-search{order:2}
+
+/* @qingtuan-order:001916 */
+
+#chatListView > .chat-filter-tabs{order:3}
+
+/* @qingtuan-order:001917 */
+
+#chatListView > .chat-conversation-panel{order:4}
+
+/* @qingtuan-order:001918 */
+
+
+/* 顶栏：银白渐层，最上面一串珠链（菱形 + 小点），左右是凸起方钮，标题置中前面一颗 ✧ */
+
+/* @qingtuan-order:001919 */
+
+#chatListView .chat-app-header{
+  min-height:52px;margin:0 -14px;padding:6px 12px;
+  border-bottom:1px solid var(--win-line);
+}
+
+/* @qingtuan-order:001920 */
+
+#chatListView .chat-app-title{color:var(--win-ink);font-size:17px;font-weight:600;letter-spacing:1px;line-height:1}
+
+/* @qingtuan-order:001921 */
+
+#chatListView .chat-app-back,
+#chatListView .chat-app-add{
+  top:12px;width:34px;height:28px;
+  border:1px solid var(--win-line);border-radius:4px;
+  color:var(--chat-teal);
+  box-shadow:var(--chat-raised);
+}
+
+/* @qingtuan-order:001922 */
+
+#chatListView .chat-app-back{left:12px}
+
+/* @qingtuan-order:001923 */
+
+#chatListView .chat-app-add{right:12px}
+
+/* @qingtuan-order:001924 */
+
+#chatListView .chat-app-back svg,
+#chatListView .chat-app-add svg{width:15px;height:15px;stroke-width:2}
+
+/* @qingtuan-order:001925 */
+
+#chatListView .chat-app-back:active,
+#chatListView .chat-app-add:active{box-shadow:var(--chat-sunken)}
+
+/* @qingtuan-order:001926 */
+
+
+/* memory.exe：个人主页小窗——渐层标题栏 + 窗口钮、一排选单字、凹进去的相片区、底下一行小字 */
+
+/* @qingtuan-order:001927 */
+
+#chatListView .chat-memory-block{margin:14px 0 0;padding:0 0 22px;
+  border:1px solid var(--win-line);border-radius:4px;background:var(--win-face);
+}
+
+/* @qingtuan-order:001928 */
+
+#chatListView .chat-memory-head{
+  margin:3px 3px 0;padding:4px 6px 4px 8px;gap:6px;
+  /* 深青（设置页标题栏同色）往很淡的主题色渐变；右边变浅，窗口钮改用深青才看得到 */
+}
+
+/* @qingtuan-order:001929 */
+
+#chatListView .chat-memory-head::after{
+  content:'';margin-left:auto;flex:0 0 46px;height:12px;background:var(--chat-teal);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+}
+
+/* @qingtuan-order:001930 */
+
+#chatListView .chat-memory-title{color:#FFFFFF;font-size:11px;font-weight:600;letter-spacing:.5px}
+
+/* @qingtuan-order:001931 */
+
+#chatListView .chat-memory-subtitle{color:var(--win-ink);font-size:9.5px;letter-spacing:.3px}
+
+/* @qingtuan-order:001932 */
+
+#chatListView .chat-memory-subtitle::before{content:'— '}
+
+/* @qingtuan-order:001933 */
+
+/* 选单字那一行 */
+
+/* @qingtuan-order:001934 */
+
+#chatListView .chat-memory-block::before{
+  content:'File   Edit   View   Favorites   Help';display:block;white-space:pre;
+  margin:0 3px;padding:3px 8px;border-bottom:1px solid var(--win-dash);
+  color:var(--win-ink);font-size:8.5px;letter-spacing:.3px;opacity:.85;
+  order:0;
+}
+
+/* @qingtuan-order:001935 */
+
+#chatListView .chat-memory-block{display:flex;flex-direction:column;
+            position:relative;
+            overflow:hidden;
+            box-shadow:var(--chat-raised);
+        }
+
+/* @qingtuan-order:001936 */
+
+
+/* 相片区：凹进去的白框，里面一张张拍立得 */
+
+/* @qingtuan-order:001937 */
+
+
+/* 不要拍立得：只留第一格照片，撑满整个白框，点一下放照片；另外三格先藏起来（程序和存过的照片都还在） */
+
+/* @qingtuan-order:001938 */
+
+#chatListView .chat-memory-strip{display:block;height:150px;padding:0;cursor:pointer;overflow:hidden;
+            margin:6px 6px 0;
+            border:1px solid var(--win-line);
+            border-radius:2px;
+            background:#FFFFFF;
+            box-shadow:var(--chat-sunken);
+        }
+
+/* @qingtuan-order:001939 */
+
+#chatListView .chat-memory-strip > .chat-memory-photo-wrap,
+#chatListView .chat-memory-paper{display:none}
+
+/* @qingtuan-order:001940 */
+
+#chatListView .chat-memory-stack{width:100%;height:100%;margin:0;transform:none}
+
+/* @qingtuan-order:001941 */
+
+#chatListView .chat-memory-stack .chat-memory-photo-wrap{
+  inset:0;width:auto;aspect-ratio:auto;padding:0;border:0;background:transparent;transform:none;filter:none;box-shadow:none;
+}
+
+/* @qingtuan-order:001942 */
+
+#chatListView .chat-memory-photo{opacity:1;filter:none}
+
+/* @qingtuan-order:001943 */
+
+#chatListView .chat-memory-photo-wrap:not(.has-photo)::after{
+  content:'＋  点击添加照片';top:50%;white-space:pre;padding:3px 10px;background:#FFFFFF;
+  color:var(--win-line);font-size:11px;letter-spacing:1px;font-weight:400;
+}
+
+/* @qingtuan-order:001944 */
+
+#chatListView .chat-memory-photo-wrap:not(.has-photo){
+  /* 两层错开的点点各往内挪 3.5px：原本有一排圆心刚好落在框的上缘，只露出半颗，看起来像一条虚线 */
+  background:
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 42%,transparent) 0 1.6px,transparent 2.1px) 3.5px 3.5px / 14px 14px,
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 42%,transparent) 0 1.6px,transparent 2.1px) 10.5px 10.5px / 14px 14px!important;
+}
+
+/* @qingtuan-order:001945 */
+
+/* 底下一行小字 */
+
+/* @qingtuan-order:001946 */
+
+#chatListView .chat-memory-block::after{
+  content:'✧ tap the frame to add or change a photo · saved on this phone only';
+  position:absolute;left:10px;right:10px;bottom:5px;
+  color:var(--win-ink);font-size:8.5px;letter-spacing:.3px;opacity:.8;
+}
+
+/* @qingtuan-order:001947 */
+
+
+/* 搜索框：凹进去的长条，前面一个放大镜 */
+
+/* @qingtuan-order:001948 */
+
+#chatListView .chat-search{
+  position:relative;display:block;margin:14px 0 0;
+}
+
+/* @qingtuan-order:001949 */
+
+#chatListView .chat-search-icon{
+  position:absolute;left:10px;top:50%;width:12px;height:12px;margin-top:-6px;background:var(--chat-teal);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2012%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%273.6%27/%3E%3Cpath%20d%3D%27M7.6%207.6L11%2011%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2012%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%273.6%27/%3E%3Cpath%20d%3D%27M7.6%207.6L11%2011%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+}
+
+/* @qingtuan-order:001950 */
+
+#chatListView .chat-search-input{
+  width:100%;box-sizing:border-box;height:32px;padding:0 10px 0 30px;
+  border:1px solid var(--win-line);border-radius:3px;background:#FFFFFF;outline:0;
+  box-shadow:var(--chat-sunken);
+  color:var(--win-ink);font:inherit;font-size:11px;
+  -webkit-appearance:none;appearance:none;
+}
+
+/* @qingtuan-order:001951 */
+
+#chatListView .chat-search-input::placeholder{color:#A3ABB3}
+
+/* @qingtuan-order:001952 */
+
+/* 搜索框点进去外框不变（古早风输入框没有聚焦变色） */
+
+/* @qingtuan-order:001953 */
+
+#chatListView .chat-search-input::-webkit-search-cancel-button{-webkit-appearance:none}
+
+/* @qingtuan-order:001954 */
+
+
+/* All / Chats / Group：一整条凹槽里的分段钮，选中那段凸起来 */
+
+/* @qingtuan-order:001955 */
+
+#chatListView .chat-filter-tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  margin:10px 0 0;padding:3px;
+  border:1px solid var(--win-line);border-radius:4px;background:var(--win-face);
+  box-shadow:var(--chat-sunken);
+}
+
+/* @qingtuan-order:001956 */
+
+#chatListView .chat-filter-tab{letter-spacing:1px;
+
+position:relative;
+            width:auto;
+            min-height:28px;
+            justify-self:stretch;
+            border:1px solid transparent;
+            border-radius:3px;
+            background:transparent;
+            color:var(--win-ink);
+            font-size:10.5px;
+            opacity:.75;
+        }
+
+/* @qingtuan-order:001957 */
+
+#chatListView .chat-filter-tab + .chat-filter-tab::before{content:'';position:absolute;left:-1px;top:25%;bottom:25%;width:1px;background:var(--win-dash)}
+
+/* @qingtuan-order:001958 */
+
+#chatListView .chat-filter-tab.active::before,
+#chatListView .chat-filter-tab.active + .chat-filter-tab::before{display:none}
+
+/* @qingtuan-order:001959 */
+
+#chatListView .chat-filter-tab.active{
+  border-color:var(--win-line);color:var(--win-ink);font-weight:600;opacity:1;
+  box-shadow:var(--chat-raised);
+}
+
+/* @qingtuan-order:001960 */
+
+
+/* 聊天列表：一张张凸起的信件卡 */
+
+/* @qingtuan-order:001961 */
+
+#chatListView .chat-conversation-panel{margin-top:12px;padding:0;border:0;border-radius:0;background:transparent}
+
+/* @qingtuan-order:001963 */
+
+#chatListView .chat-conversation-panel .chat-thread-card{gap:10px;
+  padding:9px 10px;
+  border:1px solid var(--win-line);border-radius:4px;
+  background:var(--chat-silver);
+  box-shadow:var(--chat-raised);
+}
+
+/* @qingtuan-order:001964 */
+
+#chatListView .chat-thread-card.is-search-miss{display:none}
+
+/* @qingtuan-order:001965 */
+
+#chatListView .chat-conversation-panel .chat-thread-card:active,
+#chatListView .chat-thread-card.is-long-pressing{transform:translate(.5px,.5px);box-shadow:var(--chat-sunken)!important;background:var(--win-face)!important}
+
+/* @qingtuan-order:001966 */
+
+/* 头像：凸起小相框，里面一张照片 */
+
+/* @qingtuan-order:001967 */
+
+#chatListView .chat-conversation-panel .chat-avatar-wrap{width:44px;height:44px}
+
+/* @qingtuan-order:001968 */
+
+#chatListView .chat-conversation-panel .chat-avatar{
+  box-sizing:border-box;padding:3px;border:1px solid var(--win-line);border-radius:3px;background:#FFFFFF;
+  box-shadow:inset -1px -1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:001969 */
+
+#chatListView .chat-conversation-panel .chat-avatar[src*="spDefaultAvatar"]{background:var(--theme-color) content-box!important}
+
+/* @qingtuan-order:001970 */
+
+/* 在线灯：一颗小圆珠 */
+
+/* @qingtuan-order:001971 */
+
+#chatListView .chat-conversation-panel .chat-online-dot{
+  right:-2px;bottom:-2px;width:10px;height:10px;border:2px solid #FFFFFF;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#FFFFFF 0 1px,var(--theme-color) 2px);
+  box-shadow:0 0 0 1px var(--win-line);
+}
+
+/* @qingtuan-order:001972 */
+
+#chatListView .chat-conversation-panel .chat-thread-name{color:var(--win-ink);font-size:12px;letter-spacing:.3px}
+
+/* @qingtuan-order:001973 */
+
+#chatListView .chat-conversation-panel .chat-thread-preview{color:#9AA3AD;font-size:9.5px;margin-top:1px}
+
+/* @qingtuan-order:001974 */
+
+#chatListView .chat-conversation-panel .chat-thread-pin{
+  background:#FFFFFF;
+}
+
+/* @qingtuan-order:001975 */
+
+#chatListView .chat-conversation-panel .chat-thread-time{color:var(--win-ink);opacity:.75;font-size:9px;letter-spacing:.3px}
+
+/* @qingtuan-order:001976 */
+
+#chatListView .chat-conversation-panel .chat-unread-dot{
+  min-width:16px;height:16px;padding:0 4px;border:1px solid #FFFFFF;border-radius:999px;
+  color:#FFFFFF;font-size:8px;font-weight:600;
+}
+
+/* @qingtuan-order:001977 */
+
+#chatListView .chat-filter-empty{
+  padding:22px 12px;border:1px dashed var(--win-line);border-radius:4px;background:var(--win-face);
+  color:#9AA3AD;font-size:10.5px;
+}
+
+/* @qingtuan-order:001978 */
+
+
+/* 底部导航：银白工作列，四格分开，选中那格是白色凸起的分页 */
+
+/* @qingtuan-order:001979 */
+
+#chatListView .chat-subnav{
+  min-height:56px;gap:0;padding:0 0 env(safe-area-inset-bottom);
+  border-top:1px solid var(--win-line);
+  box-shadow:inset 0 1px 0 #FFFFFF;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+
+/* @qingtuan-order:001980 */
+
+#chatListView .chat-subnav-item{
+  gap:4px;border:0;border-radius:0;color:var(--win-ink);font-size:9px;letter-spacing:.5px;opacity:.7;
+}
+
+/* @qingtuan-order:001981 */
+
+#chatListView .chat-subnav-item + .chat-subnav-item{box-shadow:-1px 0 0 var(--win-dash)}
+
+/* @qingtuan-order:001982 */
+
+#chatListView .chat-subnav-item svg{width:19px;height:19px;stroke-width:1.6;color:var(--chat-teal)}
+
+/* @qingtuan-order:001983 */
+
+#chatListView .chat-subnav-item.active{background:#FFFFFF;font-weight:600;
+  box-shadow:-1px 0 0 var(--win-line),1px 0 0 var(--win-line);
+}
+
+/* @qingtuan-order:001984 */
+
+#chatListView .chat-subnav-item.active svg{color:var(--wk-accent)}
+
+/* @qingtuan-order:001985 */
+
+
+/* ---- Chat 首页细节：未读卡、列表收尾 ---- */
+
+/* @qingtuan-order:001986 */
+
+/* 有未读：预览那句字变深，一眼看得出有新消息 */
+
+/* @qingtuan-order:001987 */
+
+#chatListView .chat-thread-card:has(.chat-unread-dot:not([hidden])) .chat-thread-preview{color:var(--win-ink)}
+
+/* @qingtuan-order:001992 */
+
+
+/* ---- 高光加强：像古早银白介面——立体边加粗成两层（左上亮白、右下暗边），按钮上半部一层亮面反光 ---- */
+
+/* @qingtuan-order:001993 */
+
+#chatListView{
+  /* 亮面：上半截白、下半截转成淡主题色，像塑胶按钮的反光 */
+}
+
+/* @qingtuan-order:001994 */
+
+
+#chatListView .chat-app-back,
+#chatListView .chat-app-add,
+#chatListView .chat-filter-tab.active{background:var(--chat-gloss)}
+
+/* @qingtuan-order:001995 */
+
+#chatListView .chat-conversation-panel .chat-thread-card{
+  background:#FFFFFF;
+
+            grid-template-columns:44px minmax(0,1fr) auto;
+        }
+
+/* @qingtuan-order:001996 */
+
+#chatListView .chat-subnav-item.active{background:linear-gradient(#FFFFFF, #FFFFFF 60%, var(--win-face));
+            margin-top:-1px;
+            border-top:2px solid var(--chat-teal);
+            opacity:1;
+        }
+
+/* @qingtuan-order:001997 */
+
+/* memory 标题栏：渐层上面再叠一条亮面 */
+
+/* @qingtuan-order:001998 */
+
+#chatListView .chat-memory-head{
+  background:
+    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.08) 50%, transparent 52%),
+    linear-gradient(90deg,var(--chat-teal) 15%,color-mix(in srgb,var(--theme-color) 35%,#FFFFFF));
+
+            order:-1;
+        }
+
+/* @qingtuan-order:001999 */
+
+
+/* ---- 微调：顶栏下缘线淡一点；底部工作列上缘线加粗到 2px ---- */
+
+/* @qingtuan-order:002000 */
+
+#chatListView .chat-app-header{border-bottom-color:color-mix(in srgb, var(--chat-teal) 55%, #FFFFFF)}
+
+/* @qingtuan-order:002001 */
+
+#chatListView .chat-subnav{border-top-width:2px}
+
+/* @qingtuan-order:002002 */
+
+/* 亮面下半截的颜色收淡：反光分界还在，但下半截不要那么深 */
+
+/* @qingtuan-order:002003 */
+
+#chatListView .chat-app-header{
+  background:linear-gradient(#FFFFFF 0%, #FFFFFF 40%, color-mix(in srgb, var(--theme-color) 14%, #F3F5F6) 100%);
+
+            box-shadow:inset 0 1px 0 #FFFFFF, inset 0 -2px 0 rgba(255,255,255,.7);
+        }
+
+/* @qingtuan-order:002004 */
+
+
+/* 置顶小签：深青往主题色渐变的亮面小钮，白字，前面一个小图钉 */
+
+/* @qingtuan-order:002005 */
+
+#chatListView .chat-conversation-panel .chat-thread-pin{
+  display:inline-flex;align-items:center;gap:2px;
+  padding:1px 5px 1px 3px;border:1px solid var(--chat-teal);border-radius:3px;
+  color:#FFFFFF;font-size:7.5px;font-weight:600;letter-spacing:.5px;line-height:1.3;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.5),1px 1px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002006 */
+
+#chatListView .chat-conversation-panel .chat-thread-pin::before{
+  content:'';width:8px;height:8px;background:#FFFFFF;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M3%200h4v1H6.5v3l1.5%201.5V6H5.5v4h-1V6H2v-.5L3.5%204V1H3z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M3%200h4v1H6.5v3l1.5%201.5V6H5.5v4h-1V6H2v-.5L3.5%204V1H3z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+}
+
+/* @qingtuan-order:002007 */
+
+
+/* 空白提示（没有角色 / 没有群聊 / 搜索找不到）：跟聊天卡同款的凸起卡，上面一格凸起图示，下面粗体标题 + 浅色提示 */
+
+/* @qingtuan-order:002008 */
+
+#chatListView .chat-filter-empty:not([hidden]){
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:18px 12px 16px;
+  border:1px solid var(--win-line);border-radius:4px;
+  /* 卡片用纯白底，只让中间的图示格有光泽，免得渐变叠渐变 */
+  background:#FFFFFF;
+  box-shadow:var(--chat-raised);
+}
+
+/* @qingtuan-order:002009 */
+
+/* 图示格：一格凸起的亮面小方格，里面放像素图示 */
+
+/* @qingtuan-order:002010 */
+
+#chatListView .chat-empty-icon{
+  display:grid;place-items:center;width:40px;height:40px;margin-bottom:6px;box-sizing:border-box;
+  border:1px solid var(--win-line);border-radius:4px;background:var(--chat-gloss);box-shadow:var(--chat-raised);
+}
+
+/* @qingtuan-order:002011 */
+
+#chatListView .chat-empty-icon svg.px-icon{width:24px;height:24px}
+
+/* @qingtuan-order:002012 */
+
+#chatListView .chat-filter-empty b{color:var(--win-ink);font-size:11.5px;font-weight:600;letter-spacing:.5px}
+
+/* @qingtuan-order:002013 */
+
+#chatListView .chat-filter-empty > span:not(.chat-empty-icon){color:#9AA3AD;font-size:9.5px;letter-spacing:.3px}
+
+/* @qingtuan-order:002014 */
+
+
+/* 像素图标（跟主画面同一套格子画）：描边用主画面同款的 --win-deep，填色主题色，高光白；底部导航 21.333px = 16 格的 4/3 倍 */
+
+/* @qingtuan-order:002015 */
+
+#chatListView svg.px-icon{display:block;}
+
+/* @qingtuan-order:002016 */
+
+#chatListView svg.px-icon .px-x{fill:var(--win-deep)}
+
+/* @qingtuan-order:002017 */
+
+#chatListView svg.px-icon .px-o{fill:var(--theme-color)}
+
+/* @qingtuan-order:002018 */
+
+#chatListView svg.px-icon .px-w{fill:#FFFFFF}
+
+/* @qingtuan-order:002020 */
+
+#chatListView .chat-subnav-item svg.px-icon{width:21.333px;height:21.333px;fill:initial;color:inherit}
+
+/* @qingtuan-order:002021 */
+
+/* 亮面下半截再淡一点（All 选中钮、工作列） */
+
+/* @qingtuan-order:002022 */
+
+#chatListView .chat-subnav{
+  background:linear-gradient(#FFFFFF 0%, rgba(255,255,255,.96) 45%, color-mix(in srgb, var(--theme-color) 7%, #F6F8F8) 55%, color-mix(in srgb, var(--theme-color) 4%, #FAFBFB) 100%);
+}
+
+/* @qingtuan-order:003835 */
+
+        #chatAppPage#chatAppPage #chatListView {
+            background-color: var(--ch-bg) !important;
+        }
+
+/* @qingtuan-order:003836 */
+
+        #chatAppPage#chatAppPage .chat-memory-subtitle { color: var(--ch-title) !important; }
+
+/* @qingtuan-order:003837 */
+ /* 压在标题列渐变上，用深青灰才看得清 */
+
+/* @qingtuan-order:003838 */
+
+        /* Chat 列表的像素图标描边：跟主画面图标同一套 */
+
+/* @qingtuan-order:003839 */
+
+        #chatAppPage#chatAppPage #chatListView svg.px-icon .px-x { fill: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h); }
+
+/* @qingtuan-order:003841 */
+
+        /* Chat 列表的白色按钮（返回、＋、All 分页）：跟世界书白色按钮同一套正面高光、斜面和阴影 */
+
+/* @qingtuan-order:003842 */
+
+        #chatAppPage#chatAppPage :is(.chat-app-back, .chat-app-add, .chat-filter-tab.active, .chat-empty-icon) {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--ch-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--ch-btn-tint) 30%, #FFFFFF) 100%) !important;
+            border: 1px solid var(--ch-line) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--ch-line) 70%, transparent),
+                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--ch-btn-tint) 45%, transparent),
+                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:003843 */
+
+        #chatAppPage#chatAppPage :is(.chat-app-back, .chat-app-add):active{;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--ch-line) 55%, transparent), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+        }
+
+/* @qingtuan-order:003844 */
+
+        /* 返回、＋ 的图示：跟顶栏「Chat」字同色 */
+
+/* @qingtuan-order:003845 */
+
+        #chatAppPage#chatAppPage :is(.chat-app-back, .chat-app-add) { color: var(--ch-title) !important; }
+
+/* @qingtuan-order:003846 */
+
+        /* snapshot.jpg 标题列：左边深色那段彩度提高一点，灰调降一点 */
+
+/* @qingtuan-order:003847 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-memory-head {
+            background:
+                linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.08) 50%, transparent 52%),
+                linear-gradient(90deg, oklch(from var(--ch-block) calc(l + 0.015) calc(c * 1.3) h) 8%, color-mix(in srgb, var(--theme-color) 50%, #FFFFFF) 82%, color-mix(in srgb, var(--theme-color) 35%, #FFFFFF) 100%) !important;
+        }
+
+/* @qingtuan-order:003848 */
+
+        /* 顶栏「Chat」字：跟世界书顶栏标题同一套白色描边 + 右下叠一层白 + 淡主题青 */
+
+/* @qingtuan-order:003849 */
+
+        /* 顶栏背景：像 iOS 6 导航栏——浅青在上、青在下的直向渐层；上半截的亮面往下慢慢淡掉，中间没有硬边（模糊大一点） */
+
+/* @qingtuan-order:003850 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-app-header {
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.3) !important;
+        }
+
+/* @qingtuan-order:003851 */
+
+        /* 底栏：跟世界书白色按钮同一套正面高光（下半截淡青，不带灰） */
+
+/* @qingtuan-order:003852 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-subnav {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--ch-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--ch-btn-tint) 30%, #FFFFFF) 100%) !important;
+        }
+
+/* @qingtuan-order:003853 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-subnav-item.active {
+            background: linear-gradient(#FFFFFF, #FFFFFF 60%, color-mix(in srgb, var(--ch-btn-tint) 30%, #FFFFFF)) !important;
+        }
+
+/* @qingtuan-order:003861 */
+
+
+        /* Chat 列表：搜索框提示字、空状态的说明 → 淡青灰 */
+
+/* @qingtuan-order:003862 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-search-input::placeholder { color: var(--ch-line) !important; -webkit-text-fill-color: var(--ch-line) !important; opacity: 1; }
+
+/* @qingtuan-order:003863 */
+
+        #chatAppPage#chatAppPage #chatListView .chat-filter-empty > span:not(.chat-empty-icon) { color: var(--ch-line) !important; -webkit-text-fill-color: var(--ch-line) !important; }
+
+/* @qingtuan-order:004007 */
+
+
+        /* Chat 列表的「置顶」标签、「特别关注」爱心：样式不动，只把颜色换成音乐设置「当前」标签那个青 */
+
+/* @qingtuan-order:004008 */
+
+        #chatListView#chatListView .chat-conversation-panel .chat-thread-pin {
+            border-color: var(--pin-c) !important;
+            background:
+                linear-gradient(rgba(255,255,255,.45), rgba(255,255,255,.1) 50%, transparent 52%),
+                var(--pin-c) !important; /* 不要左右渐层，整片同一个青；上半截亮面保留 */
+        }
+
+/* @qingtuan-order:004009 */
+
+        /* 未读数字圆点：跟置顶标签同一个青（--pin-c），白字白边不变 */
+
+/* @qingtuan-order:004010 */
+
+        #chatListView#chatListView .chat-conversation-panel .chat-unread-dot {
+            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            box-shadow: 0 0 0 1px oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+        }
+
+/* @qingtuan-order:004011 */
+
+        #chatListView#chatListView .chat-thread-favorite {
+            color: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+        }

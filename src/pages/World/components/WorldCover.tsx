@@ -1,0 +1,4 @@
+import { useWorld } from '../../../providers/WorldProvider';
+import type { WorldBook,WorldBookDraft } from '../../../types/world';
+// 书的封面：有自选封面就放图片，没有就用预设封面（主题色格子布纹 + 像素小书 + 书名）。
+export function WorldCover({book}:{book:WorldBook|WorldBookDraft}){const world=useWorld(),index=world.books.findIndex(value=>value.id===book.id);return typeof book.cover==='string'&&book.cover.startsWith('data:image/')?<img className="world-cover-img" src={book.cover} alt=""/>:<span className="world-cover-default" aria-hidden="true"><span className="world-cover-book"/><span className="world-cover-label"><span className="world-cover-title">{book.name||'未命名世界书'}</span><span className="world-cover-cells"><span>{`No.${String(index>=0?index+1:world.books.length+1).padStart(2,'0')}`}</span><span>{`${(book.entries||[]).length} 条目`}</span></span></span></span>;}

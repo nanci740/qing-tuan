@@ -1,0 +1,2210 @@
+/* @qingtuan-order:001802 */
+
+
+/* World：与美化和 API 设置共用主题色与灰白配色。 */
+
+/* @qingtuan-order:001803 */
+
+.world-page{
+  /* 与设置页共用的深灰、浅灰和可切换主题色 */
+  position:fixed;inset:0;z-index:2100;display:none;
+  background:#F9F9F9;color:var(--world-ink);
+  overflow-y:auto;overscroll-behavior:contain;
+}
+
+/* @qingtuan-order:001804 */
+
+.world-shell{width:min(100%,430px);min-height:100%;margin:auto;padding:0 22px 50px}
+
+/* @qingtuan-order:001805 */
+
+.world-top{position:sticky;top:0;z-index:5;margin:0 -22px;padding:8px 16px;display:grid;grid-template-columns:28px 1fr 28px;align-items:center;background:#F9F9F9;border-bottom:.5px solid var(--world-line)}
+
+/* @qingtuan-order:001806 */
+
+.world-icon-btn{width:28px;height:28px;border:0;background:transparent;color:var(--world-ink);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:none;transition:all .2s ease}
+
+/* @qingtuan-order:001807 */
+
+.world-icon-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* @qingtuan-order:001808 */
+
+#worldTopAction svg{width:21px;height:21px;stroke-width:1.9}
+
+/* @qingtuan-order:001809 */
+
+.world-main-title{font-size:15px;font-weight:600;letter-spacing:.5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* @qingtuan-order:001843 */
+
+.world-page .world-advanced summary::after{content:'';width:7px;height:7px;flex:none;display:inline-block;border-right:1.6px solid var(--world-subtle) !important;border-bottom:1.6px solid var(--world-subtle) !important;transform:rotate(45deg) translateY(-1px);transform-origin:center;transition:transform .2s ease,border-color .2s ease;margin-right:2px}
+
+/* @qingtuan-order:001877 */
+
+/* 世界书首页：右上角轻磨砂操作菜单，不使用阴影。 */
+
+/* @qingtuan-order:001878 */
+
+.world-action-menu{
+  position:absolute;right:15px;top:calc(100% - 1px);width:156px;z-index:12;
+  padding:5px 9px;background:rgba(255,255,255,.72);
+  border:.5px solid rgba(255,255,255,.76);border-radius:var(--ui-radius);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:none!important;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(-4px);transition:opacity .16s ease,transform .16s ease,visibility .16s;
+}
+
+/* @qingtuan-order:001879 */
+
+.world-action-menu.open{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
+
+/* @qingtuan-order:001880 */
+
+.world-action-menu-item{
+  width:100%;min-height:39px;display:flex;align-items:center;gap:10px;
+  padding:8px 5px;border:0;border-bottom:.5px solid rgba(133,143,153,.15);
+  border-radius:0;background:transparent;box-shadow:none!important;
+  color:var(--world-ink);font:inherit;font-size:11px;text-align:left;cursor:pointer;
+}
+
+/* @qingtuan-order:001881 */
+
+.world-action-menu-item:last-child{border-bottom:0}
+
+/* @qingtuan-order:001882 */
+
+.world-action-menu-item svg{width:15px;height:15px;flex:none;fill:none;stroke:var(--world-muted);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* @qingtuan-order:001895 */
+
+.world-page.open{display:block;animation:worldIn .22s ease-out both}
+
+/* @qingtuan-order:001907 */
+
+
+.world-page .world-toggle:focus-visible,.world-page .world-range:focus-visible{
+  outline:2px solid var(--world-accent-line);outline-offset:3px
+}
+
+/* @qingtuan-order:002023 */
+
+
+/* ---------------- World 世界书 · 古早升级：98 年代说明文件程序 + Y2K 个人网页（波点、花边、活页本孔、栏目标签）。
+   颜色只用三种：线条 --win-line、文字 --win-ink、填色主题色；深青只留给很小的点缀，全部跟随主题色 ---------------- */
+
+/* @qingtuan-order:002024 */
+
+.world-page{
+  /* 波点：两层错开的小圆点 */
+}
+
+/* @qingtuan-order:002025 */
+
+.world-page .world-shell{padding:0 16px 40px}
+
+/* @qingtuan-order:002026 */
+
+
+/* 顶栏：跟设置页同一款程序标题栏（主题深色底白字、.exe、右边 _ □ × 窗口钮），＋ 放在窗口钮左边；下面一条地址栏 */
+
+/* @qingtuan-order:002027 */
+
+.world-page .world-top{
+  margin:0 -16px;
+}
+
+/* @qingtuan-order:002028 */
+
+.world-page .world-top::after{
+  content:'';grid-row:1;grid-column:4;width:46px;height:12px;background:#FFFFFF;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+}
+
+/* @qingtuan-order:002029 */
+
+/* ＋：标题栏上的小方钮，白细框半透明，按下凹进去 */
+
+/* @qingtuan-order:002030 */
+
+
+.world-page #worldTopAction[aria-expanded="true"]{background:rgba(255,255,255,.26);}
+
+/* @qingtuan-order:002031 */
+
+.world-page #worldTopAction:active{;box-shadow:inset 1px 1px 0 rgba(0,0,0,.14),inset -1px -1px 0 rgba(255,255,255,.3)}
+
+/* @qingtuan-order:002032 */
+
+
+.world-page .world-address{
+  grid-column:1 / -1;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* @qingtuan-order:002033 */
+
+.world-page .world-address-label{flex:none;color:var(--win-ink);font-size:10px;letter-spacing:1px}
+
+/* @qingtuan-order:002034 */
+
+.world-page .world-address-field{
+  min-width:0;align-items:center;gap:6px;
+  border-radius:2px;
+}
+
+/* @qingtuan-order:002035 */
+
+
+.world-page .world-address-icon{
+  flex:0 0 13px;height:10px;background:var(--theme-color);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+}
+
+/* @qingtuan-order:002036 */
+
+
+/* 右上角下拉菜单：古早右键菜单，白底细框、硬投影，按下整行变主题色 */
+
+/* @qingtuan-order:002037 */
+
+.world-page .world-action-menu{
+  -webkit-backdrop-filter:none;
+}
+
+/* @qingtuan-order:002038 */
+
+
+/* 开头横幅：波点底的欢迎小窗，下缘挂一圈花边，标题两侧闪闪星星，说明后面一个闪烁光标 */
+
+/* @qingtuan-order:002039 */
+
+.world-page .world-intro{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+
+/* @qingtuan-order:002040 */
+
+.world-page .world-small{
+  display:inline-block;
+  border-radius:1px;
+}
+
+/* @qingtuan-order:002041 */
+
+.world-page .world-intro h2{
+  padding:0 6px;
+  font-size:24px;letter-spacing:2px;
+}
+
+/* @qingtuan-order:002042 */
+
+.world-page .world-intro p{
+  display:inline-block;
+  font-size:11px;
+}
+
+/* @qingtuan-order:002043 */
+
+.world-page .world-intro p::before{content:'> ';color:var(--wk-accent)}
+
+/* @qingtuan-order:002044 */
+
+.world-page .world-intro p::after{content:'_';margin-left:1px;color:var(--wk-accent);animation:worldCaret 1s steps(1) infinite}
+
+/* @qingtuan-order:002046 */
+
+@media (prefers-reduced-motion: reduce){.world-page .world-intro p::after{animation:none}}
+
+/* @qingtuan-order:002047 */
+
+
+/* 分组标题：像资料夹上方凸出的栏目标签，数量放进右边的计数小格 */
+
+/* @qingtuan-order:002048 */
+
+
+/* 卡片：活页本的一页，左边一排装订孔 + 一条主题色边线，细框 + 右下硬投影 */
+
+/* @qingtuan-order:002049 */
+
+.world-page .world-paper{
+  padding:12px 12px 12px 30px;margin:0 0 12px;
+  border:1px solid var(--win-line);border-radius:4px;
+  background:
+    radial-gradient(circle,var(--world-page-bg) 0 3.2px,var(--win-line) 3.3px 4.2px,transparent 4.3px) 6px 4px / 10px 20px no-repeat space,
+    linear-gradient(color-mix(in srgb,var(--theme-color) 55%,transparent),color-mix(in srgb,var(--theme-color) 55%,transparent)) 21px 0 / 1px 100% no-repeat,
+    #FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002050 */
+
+.world-page .world-paper::before{display:none}
+
+/* @qingtuan-order:002051 */
+
+/* 条目卡：同样的活页纸 */
+
+/* @qingtuan-order:002052 */
+
+.world-page .world-entry-card{
+  background:
+    radial-gradient(circle,var(--world-page-bg) 0 3.2px,var(--win-line) 3.3px 4.2px,transparent 4.3px) 6px 4px / 10px 20px no-repeat space,
+    linear-gradient(color-mix(in srgb,var(--theme-color) 55%,transparent),color-mix(in srgb,var(--theme-color) 55%,transparent)) 21px 0 / 1px 100% no-repeat,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002053 */
+
+
+/* 书本图标：白色凸起图示格，里面一本主题色像素小书 */
+
+/* @qingtuan-order:002054 */
+
+.world-page .world-book-icon{
+  width:44px;height:44px;border:1px solid var(--win-line);border-radius:2px;
+  background:#FFFFFF;
+  box-shadow:inset 1px 1px 0 var(--win-hi),inset -1px -1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:002055 */
+
+.world-page .world-book-icon::after{display:none}
+
+/* @qingtuan-order:002056 */
+
+.world-page .world-book-icon svg{display:none}
+
+/* @qingtuan-order:002057 */
+
+.world-page .world-book-icon::before{
+  content:'';width:22px;height:26px;
+  background:
+    linear-gradient(var(--win-line),var(--win-line)) 4px 0 / 2px 24px no-repeat,
+    linear-gradient(var(--win-line),var(--win-line)) 2px 24px / 20px 2px no-repeat,
+    linear-gradient(#FFFFFF,#FFFFFF) 9px 7px / 10px 2px no-repeat,
+    linear-gradient(#FFFFFF,#FFFFFF) 9px 11px / 7px 2px no-repeat,
+    linear-gradient(var(--theme-color),var(--theme-color)) 0 0 / 22px 24px no-repeat;
+}
+
+/* @qingtuan-order:002058 */
+
+
+/* 开关：方槽方滑块（跟 API 设置一样） */
+
+/* @qingtuan-order:002059 */
+
+.world-page .world-toggle{
+  width:38px;height:20px;border:1px solid var(--win-line);border-radius:3px;
+  background:#EEF1F1;box-shadow:inset 1px 1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:002060 */
+
+.world-page .world-toggle::after{
+  left:2px;width:14px;height:14px;box-sizing:border-box;
+  border:1px solid var(--win-line);border-radius:2px;background:#FFFFFF;
+  box-shadow:inset -1px -1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:002061 */
+
+.world-page .world-toggle:checked{background:var(--theme-color);border-color:var(--win-line)}
+
+/* @qingtuan-order:002062 */
+
+.world-page .world-toggle:checked::after{left:20px}
+
+/* @qingtuan-order:002063 */
+
+
+/* 文字栏位：凹陷输入框 */
+
+/* @qingtuan-order:002064 */
+
+.world-page .world-label{font-size:11.5px;letter-spacing:.5px}
+
+/* @qingtuan-order:002071 */
+
+
+/* 搜索与筛选：搜索框前面一个放大镜；筛选做成一排栏目分页，选中的那页跟下面连在一起 */
+
+/* @qingtuan-order:002072 */
+
+.world-page .world-entry-search{padding-left:28px;font-size:11.5px}
+
+/* @qingtuan-order:002073 */
+
+.world-page .world-entry-search-wrap::before{
+  content:'';position:absolute;left:9px;top:50%;width:12px;height:12px;margin-top:-6px;z-index:1;
+  background:var(--win-ink);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2012%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%273.6%27/%3E%3Cpath%20d%3D%27M7.6%207.6L11%2011%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2012%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%273.6%27/%3E%3Cpath%20d%3D%27M7.6%207.6L11%2011%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+}
+
+/* @qingtuan-order:002074 */
+
+.world-page .world-entry-clear{color:var(--win-ink)}
+
+/* @qingtuan-order:002075 */
+
+.world-page .world-sort-hint{font-size:9.5px}
+
+/* @qingtuan-order:002076 */
+
+.world-page .world-sort-hint::before{content:'i';display:inline-grid;place-items:center;width:11px;height:11px;margin-right:5px;background:var(--theme-color);color:#FFFFFF;font-size:8px;font-style:italic;font-weight:700;}
+
+/* @qingtuan-order:002077 */
+
+.world-page .world-entry-filter{
+  background:var(--win-bar);
+}
+
+/* @qingtuan-order:002078 */
+
+
+/* 条目卡：标签改成方角小贴纸，复制钮做成凸起小方钮 */
+
+/* @qingtuan-order:002079 */
+
+.world-page .world-entry-title{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--win-ink);padding-right:28px}
+
+/* @qingtuan-order:002080 */
+
+.world-page .world-entry-preview{font-size:10.5px;line-height:20px;max-height:40px}
+
+/* @qingtuan-order:002081 */
+
+.world-page .world-chip{
+  border:1px solid var(--win-line);border-radius:1px;background:#FFFFFF;
+  font-size:9.5px;padding:2px 6px;letter-spacing:.5px;
+  box-shadow:1px 1px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002082 */
+
+.world-page .world-chip:first-child{background:var(--win-bar)}
+
+/* @qingtuan-order:002083 */
+
+.world-page .world-entry-copy{
+  top:8px;right:8px;width:22px;height:22px;
+  border:1px solid var(--win-line);border-radius:2px;background:#FFFFFF;color:var(--win-ink);
+  box-shadow:inset 1px 1px 0 var(--win-hi),inset -1px -1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:002084 */
+
+.world-page .world-entry-copy svg{width:12px;height:12px}
+
+/* @qingtuan-order:002085 */
+
+.world-page .world-entry-copy:active{box-shadow:inset 1px 1px 0 var(--win-lo),inset -1px -1px 0 var(--win-hi)}
+
+/* @qingtuan-order:002086 */
+
+.world-page .world-entry-card.world-sort-active{border-style:dashed}
+
+/* @qingtuan-order:002088 */
+
+
+/* 编辑画面的表单卡：不要装订孔，免得跟输入框挤在一起 */
+
+/* @qingtuan-order:002089 */
+
+
+/* 高级设置：文件夹式折叠，左边 [+] / [−] 小方框 */
+
+/* @qingtuan-order:002090 */
+
+.world-page .world-advanced summary{
+  justify-content:flex-start;gap:8px;padding:9px 10px;
+  background:var(--win-bar);font-size:11.5px;
+}
+
+/* @qingtuan-order:002091 */
+
+.world-page .world-advanced summary::before{
+  flex:none;display:grid;place-items:center;
+  line-height:1;
+}
+
+/* @qingtuan-order:002092 */
+
+.world-page .world-advanced summary::after{margin-left:auto}
+
+/* @qingtuan-order:002093 */
+
+.world-page .world-advanced-body{border-top:0}
+
+/* @qingtuan-order:002094 */
+
+.world-page .world-advanced-group h4{letter-spacing:1px}
+
+/* @qingtuan-order:002095 */
+
+
+/* 拉条：方形滑块、凹槽 */
+
+/* @qingtuan-order:002096 */
+
+.world-page .world-range::-webkit-slider-runnable-track{height:6px;border:1px solid var(--win-line);border-radius:1px;background:#EEF1F1;box-shadow:inset 1px 1px 0 var(--win-lo)}
+
+/* @qingtuan-order:002097 */
+
+.world-page .world-range::-webkit-slider-thumb{width:12px;height:18px;margin-top:-7px;border:1px solid var(--win-line);border-radius:1px;background:var(--win-bar);box-shadow:inset 1px 1px 0 var(--win-hi),inset -1px -1px 0 var(--win-lo)}
+
+/* @qingtuan-order:002098 */
+
+.world-page .world-range::-moz-range-track{height:6px;border:1px solid var(--win-line);border-radius:1px;background:#EEF1F1}
+
+/* @qingtuan-order:002099 */
+
+.world-page .world-range::-moz-range-progress{height:6px;border-radius:1px;background:var(--theme-color)}
+
+/* @qingtuan-order:002100 */
+
+.world-page .world-range::-moz-range-thumb{width:12px;height:18px;border:1px solid var(--win-line);border-radius:1px;background:var(--win-bar)}
+
+/* @qingtuan-order:002101 */
+
+
+/* 按钮：凸起斜面；主按钮实心主题色白字，删除保留淡红 */
+
+/* @qingtuan-order:002102 */
+
+.world-page .world-action:active{box-shadow:inset 1px 1px 0 var(--win-lo),inset -1px -1px 0 var(--win-hi)}
+
+/* @qingtuan-order:002103 */
+
+
+/* 空白提示：波点底虚线框 + 一个小文件夹 */
+
+/* @qingtuan-order:002104 */
+
+.world-page .world-empty-note{border:1px dashed var(--win-line);background:var(--world-dots),#FFFFFF;color:#98A2AE;font-size:11px;line-height:1.7}
+
+/* @qingtuan-order:002105 */
+
+.world-page .world-empty-note::before{
+  content:'';display:block;width:22px;height:17px;margin:0 auto 8px;background:var(--theme-color);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / contain;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+/* @qingtuan-order:002128 */
+
+
+/* ---- 细节：书签丝带、条目编号小签、表单卡标题栏、横幅角落小星星 ---- */
+
+/* @qingtuan-order:002129 */
+
+/* 启用中的世界书：卡片上缘垂一条主题色书签丝带 */
+
+/* @qingtuan-order:002130 */
+
+.world-page .world-paper:has([data-toggle-book]){position:relative}
+
+/* @qingtuan-order:002131 */
+
+.world-page .world-paper:has([data-toggle-book]:checked)::after{
+  content:'';position:absolute;top:-1px;right:62px;width:10px;height:16px;
+  background:var(--theme-color);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%);
+}
+
+/* @qingtuan-order:002132 */
+
+/* 条目编号：方角小签 No.01 */
+
+/* @qingtuan-order:002133 */
+
+.world-page .world-entry-no{
+  flex:none;padding:1px 5px;border:1px solid var(--win-line);border-radius:1px;background:var(--win-bar);
+  font-size:9.5px;font-weight:500;letter-spacing:.5px;
+  box-shadow:1px 1px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002134 */
+
+.world-page .world-entry-card:has([data-entry-toggle]:not(:checked)) .world-entry-no{background:#FFFFFF}
+
+/* @qingtuan-order:002135 */
+
+.world-page .world-entry-card:has([data-entry-toggle]:not(:checked)) .world-book-open{opacity:.55}
+
+/* @qingtuan-order:002136 */
+
+/* 编辑画面的表单卡：顶上一条小窗标题栏 */
+
+/* @qingtuan-order:002137 */
+
+.world-page .world-paper:has(.world-field)::before{
+  inset:auto;
+}
+
+/* @qingtuan-order:002138 */
+
+/* 横幅四角的小像素星星（两颗），像个人网页贴的闪亮小图 */
+
+/* @qingtuan-order:002139 */
+
+
+/* 有 ＋ 钮的画面（首页、书里）不放 _ □ × 窗口钮，＋ 靠最右；编辑画面没有 ＋ 才显示窗口钮 */
+
+/* @qingtuan-order:002140 */
+
+
+/* 档案状态卡：不跟条目卡一样用活页纸，改成一张档案标签——双层框（里面一圈虚线） */
+
+/* @qingtuan-order:002141 */
+
+.world-page .world-paper:has(#worldBookEnabled){
+  background:var(--world-dots),#FFFFFF;
+}
+
+/* @qingtuan-order:002142 */
+
+.world-page .world-paper:has(#worldBookEnabled) > *{position:relative}
+
+/* @qingtuan-order:002143 */
+
+.world-page .world-paper:has(#worldBookEnabled) .world-row{
+  border-radius:1px;
+}
+
+/* @qingtuan-order:002156 */
+
+
+/* 配色收淡：线条、外框、按钮都改用设置页标题栏那个青色（跟 Chat 一样），更深的 --win-ink 只给文字 */
+
+/* @qingtuan-order:002157 */
+
+
+/* ================= 世界书 · 个人网页横幅顶栏：波点横幅 + 艺术字大标题 + 跑马灯（取代设置页同款深色标题栏） ================= */
+
+/* @qingtuan-order:002158 */
+
+.world-page .world-top{column-gap:8px;
+  padding:0 12px;
+  background:
+    radial-gradient(circle,#FFFFFF 0 1.7px,transparent 2.2px) 0 0 / 14px 14px,
+    radial-gradient(circle,#FFFFFF 0 1.7px,transparent 2.2px) 7px 7px / 14px 14px,
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 45%,#FFFFFF),color-mix(in srgb,var(--theme-color) 70%,#FFFFFF));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+}
+
+/* @qingtuan-order:002159 */
+
+.world-page .world-top::after{display:none!important}
+
+/* @qingtuan-order:002160 */
+
+/* 大标题：白边 + 右下错位阴影的古早艺术字，两边一颗星 */
+
+/* @qingtuan-order:002161 */
+
+.world-page .world-main-title{
+  justify-self:center;max-width:100%;
+  font-size:18px;font-weight:700;letter-spacing:2px;text-align:center;
+  text-shadow:
+    -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
+    2px 2px 0 #FFFFFF, 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002162 */
+
+.world-page .world-main-title::before,
+.world-page .world-main-title::after{
+  content:'✧';margin:0 6px;font-size:12px;font-weight:400;opacity:1;letter-spacing:0;vertical-align:2px;
+  color:#FFFFFF;text-shadow:1px 1px 0 var(--win-line);
+}
+
+/* @qingtuan-order:002163 */
+
+/* 两端按钮：白底细框 + 一点硬投影的小方钮 */
+
+/* @qingtuan-order:002164 */
+
+.world-page .world-icon-btn,
+.world-page #worldTopAction{
+  width:28px;height:26px;
+  border:1px solid var(--win-line);border-radius:3px;background:#FFFFFF;
+}
+
+/* @qingtuan-order:002165 */
+
+
+.world-page .world-icon-btn svg{width:15px;height:15px}
+
+/* @qingtuan-order:002166 */
+
+.world-page #worldTopAction svg{
+    stroke-width:2;
+    width:13px;
+    height:13px;
+}
+
+/* @qingtuan-order:002167 */
+
+/* 地址栏 → 跑马灯：白底一条，文字慢慢往左滚，路径照样跟着画面变 */
+
+/* @qingtuan-order:002168 */
+
+.world-page .world-address{overflow:hidden;
+  background:#FFFFFF;
+}
+
+/* @qingtuan-order:002169 */
+
+.world-page .world-address-label,
+.world-page .world-address-icon{display:none}
+
+/* @qingtuan-order:002170 */
+
+.world-page .world-address-field{padding:0 0 0 100%;overflow:visible;letter-spacing:1px;
+  animation:worldMarquee 16s linear infinite;
+}
+
+/* @qingtuan-order:002171 */
+
+.world-page .world-address-field > span:last-child{
+    text-overflow:ellipsis;
+    overflow:visible;
+}
+
+/* @qingtuan-order:002172 */
+
+.world-page .world-address-field::before{content:'★ welcome to my world ★ 现在位置 → ';}
+
+/* @qingtuan-order:002173 */
+
+.world-page .world-address-field::after{content:' ★ 收藏那些尚未说完的故事 ★';}
+
+/* @qingtuan-order:002175 */
+
+@media (prefers-reduced-motion: reduce){.world-page .world-address-field{animation:none;padding-left:12px}}
+
+/* @qingtuan-order:002176 */
+
+/* 菜单从 ＋ 下面出来 */
+
+/* @qingtuan-order:002177 */
+
+.world-page .world-action-menu{top:42px;right:12px}
+
+/* @qingtuan-order:002178 */
+
+/* 跑马灯底色：主题色往白色的横向渐变（像古早个人网页横幅下面那条日期栏），上下各一条细线 */
+
+/* @qingtuan-order:002179 */
+
+.world-page .world-address-field{color:var(--win-ink)}
+
+/* @qingtuan-order:002180 */
+
+.world-page .world-address-field::before,
+.world-page .world-address-field::after{color:var(--win-ink);opacity:.75}
+
+/* @qingtuan-order:002181 */
+
+/* 跑马灯拿掉：只留一条上下渐变的细色带（主题色 → 白），不放文字和位置 */
+
+/* @qingtuan-order:002182 */
+
+
+.world-page .world-address-field{display:none;
+            flex:none;
+            height:auto;
+            border:0;
+            background:transparent;
+            box-shadow:none;
+            font-size:10px;
+            white-space:nowrap;
+        }
+
+/* @qingtuan-order:002183 */
+
+/* 色带改成上白下青、宽一点；上下各一条 1px 青色分割线，线的内侧各贴一条 0.5px 白线 */
+
+/* @qingtuan-order:002184 */
+
+.world-page .world-top{border-bottom:0;
+            grid-template-columns:28px 1fr 28px!important;
+            grid-template-rows:54px auto;
+        }
+
+/* @qingtuan-order:002185 */
+
+.world-page .world-address{
+  border-top:1px solid var(--win-line);border-bottom:1px solid var(--win-line);
+
+/* 色带改回上青下白；上下分割线 0.8px；标题字改用设置页顶栏那个青色（不要太深） */
+
+  border-top-width:0.8px;border-bottom-width:0.8px;
+}
+
+/* @qingtuan-order:002186 */
+
+/* 色带的青色改成跟波点横幅下缘同一个颜色（主题色 70% + 白），接得比较顺；两端按钮图示改成跟标题同一个青色 */
+
+/* @qingtuan-order:002187 */
+
+
+.world-page .world-icon-btn,.world-page #worldTopAction{color:var(--world-teal,var(--win-line))}
+
+/* @qingtuan-order:002188 */
+
+/* 色带上下分割线改成主题色（比设置页顶栏青浅一阶），不会比色带深太多 */
+
+/* @qingtuan-order:002189 */
+
+.world-page .world-address{border-top-color:var(--theme-color);border-bottom-color:var(--theme-color);
+            background:linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 70%,#FFFFFF) 0%,#FFFFFF 100%);
+        ;
+            height:14px;
+            box-sizing:border-box;
+            box-shadow:inset 0 0.5px 0 #FFFFFF,inset 0 -0.5px 0 #FFFFFF;
+        ;
+            margin:0 -12px;
+        ;
+            padding:0;
+        }
+
+/* @qingtuan-order:002190 */
+
+.world-page #worldTopAction[aria-expanded="true"]{
+  color:var(--world-teal,var(--win-line));
+}
+
+/* @qingtuan-order:002191 */
+
+/* 按下 / 菜单打开时：往右下沉、投影消失，底色换成实心淡青（不再透出波点），图示维持标题同色 */
+
+/* @qingtuan-order:002192 */
+
+.world-page .world-icon-btn:active,.world-page #worldBack:active,.world-page #worldTopAction:active{box-shadow:none;;
+}
+
+/* @qingtuan-order:002193 */
+
+/* ＋ 菜单：图示改成顶栏同一个青色，文字维持深青（11px 小字要看得清楚）；按下那行整行主题色时图示跟着变白 */
+
+/* @qingtuan-order:002194 */
+
+.world-page .world-action-menu-item:hover svg,
+.world-page .world-action-menu-item:active svg{stroke:#FFFFFF}
+
+/* @qingtuan-order:002195 */
+
+/* ＋ 菜单文字也改成顶栏同一个青色 */
+
+/* @qingtuan-order:002196 */
+
+
+/* ================= 世界书 · 开头横幅改成古早个人网页的「欢迎框」：白底细青框、左上压一个「♡ welcome」小标签、
+   标题下一条爱心分隔线；下缘花边保留，拿掉波点（让顶栏的波点当主角），文字改顶栏青 ================= */
+
+/* @qingtuan-order:002197 */
+
+.world-page .world-intro{
+  margin:24px 0 26px!important;
+  overflow:visible;
+}
+
+/* @qingtuan-order:002198 */
+
+/* 左上角压在框线上的小标签（原本这里画的是像素星星，改掉） */
+
+/* @qingtuan-order:002199 */
+
+.world-page .world-intro::before{
+  background:#FFFFFF;-webkit-mask:none;mask:none;
+  color:var(--world-teal,var(--win-line));font-size:10px;letter-spacing:1.5px;line-height:1.5;
+}
+
+/* @qingtuan-order:002200 */
+
+.world-page .world-small{
+  padding:0;border:0;background:transparent;box-shadow:none;
+  color:var(--world-teal,var(--win-line));font-size:9px;letter-spacing:2px;
+}
+
+/* @qingtuan-order:002201 */
+
+.world-page .world-intro h2{
+  display:block;margin:8px 0 2px;
+  text-shadow:none;
+}
+
+/* @qingtuan-order:002202 */
+
+/* 标题下一条小爱心分隔线 */
+
+/* @qingtuan-order:002203 */
+
+.world-page .world-intro h2::after{
+  content:'· · · ♡ · · ·';display:block;margin-top:4px;
+  color:var(--wk-accent);font-size:10px;font-weight:400;letter-spacing:3px;text-shadow:none;
+}
+
+/* @qingtuan-order:002204 */
+
+.world-page .world-intro p{padding:0;background:transparent;color:var(--world-teal,var(--win-line))}
+
+/* @qingtuan-order:002205 */
+
+
+/* 欢迎框加装饰：框里一圈主题色细虚线、右下角一个小颜文字（蝴蝶结试过，用户不要） */
+
+/* @qingtuan-order:002206 */
+
+.world-page .world-small::before,
+.world-page .world-small::after{content:none}
+
+/* @qingtuan-order:002207 */
+
+.world-page .world-intro h2::before{
+  content:'(*^▽^*)';position:absolute;
+  font-size:9px;font-weight:400;letter-spacing:0;text-shadow:none;
+}
+
+/* @qingtuan-order:002208 */
+
+/* 欢迎框底色：格子布纹（gingham）——横、直两层半透明主题色条纹交叉，重叠处深一格；颜色跟主题色走 */
+
+/* @qingtuan-order:002209 */
+
+/* 花边也接上格子布纹：每个半圆里填同样的格子，外圈青色描边；遮罩只留半圆形 */
+
+/* @qingtuan-order:002210 */
+
+.world-page .world-intro::after{
+  -webkit-mask:radial-gradient(circle at 50% 0,#000 0 5.6px,transparent 5.7px) -1px 0 / 12px 9px repeat-x;
+  mask:radial-gradient(circle at 50% 0,#000 0 5.6px,transparent 5.7px) -1px 0 / 12px 9px repeat-x;
+}
+
+/* @qingtuan-order:002211 */
+
+/* 格子对齐：欢迎框和花边都用 10×10 的格子砖，欢迎框的砖从底边往上排，花边从顶边（= 欢迎框底边）往下排，
+   花边整体比框内左移 1px（贴着外框），所以横向补 1px；这样格子会连续接下去 */
+
+/* @qingtuan-order:002212 */
+
+.world-page .world-intro{
+  background:
+    linear-gradient(90deg,color-mix(in srgb,var(--theme-color) 22%,transparent) 0 5px,transparent 5px) 0 100% / 10px 10px,
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 22%,transparent) 0 5px,transparent 5px) 0 100% / 10px 10px,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002213 */
+
+
+/* ================= 世界书 · 欢迎框下面：分区标题、筛选、档案状态卡（跟个人网页横幅、欢迎框同一套；标题字改顶栏青） ================= */
+
+/* @qingtuan-order:002214 */
+
+/* 分区标题：♡ 标题 ·······（虚线拉到最右）······· [ 2 BOOKS ] 胶囊；拿掉资料夹书签 */
+
+/* @qingtuan-order:002215 */
+
+.world-page .world-section-head{
+  position:relative;align-items:center;margin:22px 0 12px;padding:0;border-bottom:0;
+}
+
+/* @qingtuan-order:002216 */
+
+.world-page .world-section-head::before{
+  content:'';position:absolute;left:0;right:0;top:50%;
+}
+
+/* @qingtuan-order:002217 */
+
+.world-page .world-section-head b{
+  position:relative;top:auto;z-index:1;align-items:center;
+  padding:0 8px 0 0;border:0;border-radius:0;background:var(--world-page-bg);
+  font-size:14px;
+}
+
+/* @qingtuan-order:002218 */
+
+.world-page .world-section-head small{
+  position:relative;z-index:1;margin:0 0 0 auto;
+  background:#FFFFFF;
+  color:var(--world-teal,var(--win-line));font-weight:400;
+}
+
+/* @qingtuan-order:002219 */
+
+/* 筛选：一排圆角小胶囊，选中的填满主题色、白字；拿掉资料夹分页 */
+
+/* @qingtuan-order:002220 */
+
+.world-page .world-entry-filters{gap:6px;padding:0;border-bottom:0}
+
+/* @qingtuan-order:002221 */
+
+.world-page .world-entry-filter,
+.world-page .world-entry-filter.is-active{
+  margin:0;padding:4px 13px;
+  border:1px solid var(--world-teal,var(--win-line));background:#FFFFFF;
+  color:var(--world-teal,var(--win-line));font-size:10.5px;letter-spacing:1px;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002222 */
+
+.world-page .world-entry-filter.is-active{font-weight:600}
+
+/* @qingtuan-order:002223 */
+
+/* 世界书筛选是在选择，不是按钮：按下不要有效果 */
+
+/* @qingtuan-order:002224 */
+
+/* 档案状态卡：拿掉波点（顶栏已经有波点），白底保留虚线双框 */
+
+/* @qingtuan-order:002225 */
+
+/* 空白提示也拿掉波点 */
+
+/* @qingtuan-order:002226 */
+
+.world-page .world-empty-note{background:#FFFFFF;color:var(--world-teal,var(--win-line))}
+
+/* @qingtuan-order:002227 */
+
+/* 欢迎框底部留高一点，右下颜文字不跟长副标题挤在同一行 */
+
+/* @qingtuan-order:002228 */
+
+
+/* ================= 欢迎框四周都是花边（像野餐布垫子 / 蕾丝杯垫），拿掉「♡ welcome」标签 =================
+   做法：框本身透明；::before 是青色的花边外形（描边那一圈），::after 往内缩 1px 填格子布纹，两层都用同一种「四边半圆」遮罩 */
+
+/* @qingtuan-order:002229 */
+
+.world-page .world-intro{
+  isolation:isolate;
+  padding:22px 18px 28px;
+  border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+
+/* @qingtuan-order:002230 */
+
+.world-page .world-intro::before,
+.world-page .world-intro::after{
+  content:'';position:absolute;z-index:-1;pointer-events:none;
+  width:auto;height:auto;padding:0;border:0;border-radius:0;
+}
+
+/* @qingtuan-order:002231 */
+
+.world-page .world-intro::before{inset:0;}
+
+/* @qingtuan-order:002232 */
+
+.world-page .world-intro::after{
+  background:
+    linear-gradient(90deg,color-mix(in srgb,var(--theme-color) 22%,transparent) 0 5px,transparent 5px) 0 0 / 10px 10px,
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 22%,transparent) 0 5px,transparent 5px) 0 0 / 10px 10px,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002233 */
+
+.world-page .world-intro h2::before{bottom:14px;right:18px}
+
+/* @qingtuan-order:002234 */
+
+/* 花边描边整圈一样粗：格子那层跟外层用同一组半圆中心（不内缩），半圆半径小 1px、中间方块每边多缩 1px */
+
+/* @qingtuan-order:002235 */
+
+.world-page .world-intro::after{inset:0;}
+
+/* @qingtuan-order:002236 */
+
+/* 欢迎框减线：拿掉内层虚线框；花边描边改主题色（跟格子同色系）；格子层中间方块跟外层一样大，半圆之间不再露出小凹角 */
+
+/* @qingtuan-order:002237 */
+
+/* 花边弧度收小：半圆改成扁一点的半椭圆（宽 12、凸出 4px）；内层虚线框加回来 */
+
+/* @qingtuan-order:002238 */
+
+.world-page .world-intro{
+  outline:1px dashed color-mix(in srgb,var(--theme-color) 80%,transparent);outline-offset:-10px;
+}
+
+/* @qingtuan-order:002239 */
+
+.world-page .world-intro::before{-webkit-mask:var(--sc-mask);mask:var(--sc-mask)}
+
+/* @qingtuan-order:002240 */
+
+.world-page .world-intro::after{-webkit-mask:var(--sc-mask-in);mask:var(--sc-mask-in)}
+
+/* @qingtuan-order:002241 */
+
+
+/* ================= 世界书 · 书本列表改成 Y2K 古早网页风：装饰文字标题、方框卡片 + 硬投影 + 顶部渐变细带、☆ 书名、ON / OFF 文字开关 ================= */
+
+/* @qingtuan-order:002242 */
+
+/* 分区标题：.｡.:* ♡ 世界档案 ♡ *:.｡.  ·  ·  ·  ·  ( 2 books ) */
+
+/* @qingtuan-order:002243 */
+
+.world-page .world-section-head::before{
+  border-top:0;height:3px;margin-top:-1.5px;
+}
+
+/* @qingtuan-order:002244 */
+
+.world-page .world-section-head b{gap:4px;letter-spacing:1.5px;
+            display:flex;
+        }
+
+/* @qingtuan-order:002245 */
+
+.world-page .world-section-head b::before{content:'.｡.:* ♡';color:var(--wk-accent);font-size:10px;letter-spacing:0;font-weight:400}
+
+/* @qingtuan-order:002246 */
+
+.world-page .world-section-head b::after{content:'♡ *:.｡.';color:var(--wk-accent);font-size:10px;letter-spacing:0;font-weight:400}
+
+/* @qingtuan-order:002247 */
+
+.world-page .world-section-head small{
+  padding:0 0 0 6px;border:0;border-radius:0;background:var(--world-page-bg);box-shadow:none;
+  font-size:10px;letter-spacing:.5px;text-transform:lowercase;
+
+            transform:none;
+        }
+
+/* @qingtuan-order:002248 */
+
+.world-page .world-section-head small::before{content:'( '}
+
+/* @qingtuan-order:002249 */
+
+.world-page .world-section-head small::after{content:' )'}
+
+/* @qingtuan-order:002250 */
+
+
+/* 书本卡片：拿掉装订孔和边线，方框 + 右下硬投影 + 顶上一条主题色渐变细带 */
+
+/* @qingtuan-order:002251 */
+
+.world-page .world-paper:has([data-toggle-book]){
+  padding:16px 12px 12px;border:1px solid var(--world-teal,var(--win-line));border-radius:2px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 70%,#FFFFFF),#FFFFFF) 0 0 / 100% 5px no-repeat,#FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002252 */
+
+.world-page .world-paper:has([data-toggle-book])::after{display:none}
+
+/* @qingtuan-order:002253 */
+
+/* 书本图示框改虚线框 */
+
+/* @qingtuan-order:002254 */
+
+.world-page .world-paper:has([data-toggle-book]) .world-book-icon{
+  border:1px dashed var(--world-teal,var(--win-line));border-radius:0;box-shadow:none;background:#FFFFFF;
+}
+
+/* @qingtuan-order:002255 */
+
+/* 书名前的 ☆ / ★ 拿掉 */
+
+/* @qingtuan-order:002256 */
+
+
+/* ON / OFF 文字开关：方框里一块小方钮写着 OFF，打开后滑到右边变成 ON、底色主题色 */
+
+/* @qingtuan-order:002257 */
+
+.world-page [data-toggle-book].world-toggle::after{
+  content:'OFF';left:2px;place-items:center;
+  background:var(--win-face);
+  color:var(--world-teal,var(--win-line));font-weight:700;letter-spacing:.5px;line-height:1;
+}
+
+/* @qingtuan-order:002258 */
+
+.world-page [data-toggle-book].world-toggle:checked{background:var(--theme-color);border-color:var(--world-teal,var(--win-line))}
+
+/* @qingtuan-order:002259 */
+
+.world-page [data-toggle-book].world-toggle:checked::after{content:'ON';left:18px;background:#FFFFFF}
+
+/* @qingtuan-order:002260 */
+
+/* 书本卡片顶部细带加深：主题色往下淡出，高 7px */
+
+/* @qingtuan-order:002261 */
+
+.world-page .world-paper:has([data-toggle-book]){
+  background:linear-gradient(180deg,var(--theme-color),color-mix(in srgb,var(--theme-color) 25%,#FFFFFF)) 0 0 / 100% 7px no-repeat,#FFFFFF;
+  padding-top:18px;
+}
+
+/* @qingtuan-order:002262 */
+
+
+/* ================= 世界书 · 书架：一排三本，直式封面 + 书名 + 条目数；ON/OFF 开关压在封面右上角 ================= */
+
+/* @qingtuan-order:002263 */
+
+.world-page .world-shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px;margin-top:4px}
+
+/* @qingtuan-order:002264 */
+
+.world-page .world-shelf-item{position:relative;min-width:0}
+
+/* @qingtuan-order:002265 */
+
+.world-page .world-shelf-open{
+  width:100%;display:flex;flex-direction:column;gap:3px;padding:0;
+  border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;
+}
+
+/* @qingtuan-order:002266 */
+
+/* 封面：3:4 直式，细青框 + 右下硬投影，按下去往右下沉 */
+
+/* @qingtuan-order:002267 */
+
+.world-page .world-shelf-cover,
+.world-page .world-cover-thumb{
+  position:relative;display:block;width:100%;aspect-ratio:3 / 4;overflow:hidden;
+  border:1px solid var(--world-teal,var(--win-line));border-radius:2px;background:#FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002268 */
+
+/* 书本 / 封面缩图不是按钮：按下不要往右下移 */
+
+/* @qingtuan-order:002269 */
+
+.world-page .world-cover-img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* @qingtuan-order:002270 */
+
+/* 预设封面：格子布纹底、顶上一条主题色渐变带、中间一本像素小书、下面一块白色书名签 */
+
+/* @qingtuan-order:002271 */
+
+.world-page .world-cover-default{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+}
+
+/* @qingtuan-order:002272 */
+
+.world-page .world-cover-book{
+  width:30px;height:34px;flex:none;
+  background:
+    linear-gradient(var(--world-teal,var(--win-line)),var(--world-teal,var(--win-line))) 5px 0 / 3px 31px no-repeat,
+    linear-gradient(#FFFFFF,#FFFFFF) 12px 9px / 13px 3px no-repeat,
+    linear-gradient(#FFFFFF,#FFFFFF) 12px 15px / 9px 3px no-repeat,
+    linear-gradient(var(--world-teal,var(--win-line)),var(--world-teal,var(--win-line))) 3px 31px / 26px 3px no-repeat,
+    linear-gradient(var(--theme-color),var(--theme-color)) 0 0 / 29px 31px no-repeat;
+  filter:drop-shadow(1px 1px 0 #FFFFFF);
+}
+
+/* @qingtuan-order:002273 */
+
+.world-page .world-cover-title{
+  max-width:100%;
+  font-weight:700;line-height:1.35;text-align:center;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all;
+}
+
+/* @qingtuan-order:002274 */
+
+/* 书名、条目数 */
+
+/* @qingtuan-order:002275 */
+
+.world-page .world-shelf-name{
+  margin-top:6px;color:var(--world-teal,var(--win-line));font-size:11.5px;font-weight:700;letter-spacing:.3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* @qingtuan-order:002276 */
+
+/* 书架书名前的 ☆ / ★ 拿掉 */
+
+/* @qingtuan-order:002277 */
+
+.world-page .world-shelf-name::before,
+.world-page .world-shelf-item:has(.world-shelf-toggle:checked) .world-shelf-name::before{content:none}
+
+/* @qingtuan-order:002278 */
+
+.world-page .world-shelf-meta{font-size:9px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* @qingtuan-order:002279 */
+
+/* 关掉的书：封面淡一点 */
+
+/* @qingtuan-order:002280 */
+
+.world-page .world-shelf-item:has(.world-shelf-toggle:not(:checked)) .world-shelf-cover{opacity:.6}
+
+/* @qingtuan-order:002281 */
+
+/* ON/OFF 开关压在封面右上角，缩小一点 */
+
+/* @qingtuan-order:002282 */
+
+
+.world-page .world-shelf-toggle.world-toggle:checked::after{left:15px}
+
+/* @qingtuan-order:002283 */
+
+
+/* 编辑世界书：封面栏——左边小封面（点了换图），右边两颗按钮和说明 */
+
+/* @qingtuan-order:002284 */
+
+.world-page .world-cover-pick{display:flex;align-items:flex-start;gap:12px}
+
+/* @qingtuan-order:002285 */
+
+.world-page .world-cover-thumb{flex:0 0 78px;width:78px;padding:0;cursor:pointer}
+
+/* @qingtuan-order:002286 */
+
+/* 书本 / 封面缩图不是按钮：按下不要往右下移 */
+
+/* @qingtuan-order:002287 */
+
+.world-page .world-cover-actions{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0}
+
+/* @qingtuan-order:002288 */
+
+.world-page .world-cover-btn{
+  padding:4px 12px;border:1px solid var(--world-teal,var(--win-line));background:#FFFFFF;
+  font:inherit;font-size:10.5px;letter-spacing:1px;cursor:pointer;
+}
+
+/* @qingtuan-order:002289 */
+
+.world-page .world-cover-btn[hidden]{display:none}
+
+/* @qingtuan-order:002290 */
+
+.world-page .world-cover-btn:active{box-shadow:none}
+
+/* @qingtuan-order:002291 */
+
+/* 预设封面拿掉顶部渐变带；欢迎框底色改白（花边描边保留）；书本开关从封面右上角移到书名下面 */
+
+/* @qingtuan-order:002292 */
+
+.world-page .world-intro::after{background:#FFFFFF}
+
+/* @qingtuan-order:002293 */
+
+.world-page .world-shelf-toggle.world-toggle{position:relative;top:auto;right:auto;display:block;margin-top:6px;
+            z-index:2;
+        }
+
+/* @qingtuan-order:002294 */
+
+/* 预设封面底改成波点；书本开关改回跟设置页（API 设置）一样的方槽方滑块，不写 ON/OFF */
+
+/* @qingtuan-order:002295 */
+
+.world-page [data-toggle-book].world-toggle,
+.world-page .world-shelf-toggle.world-toggle{
+  width:38px;height:20px;border:1px solid var(--win-line);border-radius:3px;
+  background:#EEF1F1;box-shadow:inset 1px 1px 0 var(--win-lo);
+}
+
+/* @qingtuan-order:002296 */
+
+.world-page [data-toggle-book].world-toggle::after,
+.world-page .world-shelf-toggle.world-toggle::after{
+  content:'';display:block;left:2px;width:14px;height:14px;box-sizing:border-box;
+  border:1px solid var(--win-line);border-radius:2px;background:#FFFFFF;
+  box-shadow:inset -1px -1px 0 var(--win-lo);font-size:0;
+}
+
+/* @qingtuan-order:002297 */
+
+.world-page [data-toggle-book].world-toggle:checked,
+.world-page .world-shelf-toggle.world-toggle:checked{background:var(--theme-color);border-color:var(--win-line)}
+
+/* @qingtuan-order:002298 */
+
+.world-page [data-toggle-book].world-toggle:checked::after,
+.world-page .world-shelf-toggle.world-toggle:checked::after{content:'';left:20px;background:#FFFFFF}
+
+/* @qingtuan-order:002299 */
+
+
+/* 预设封面改成文具店笔记本：整面浅主题色底 + 白色大波点、左边一条书脊、中上方一张白色圆角名字贴纸（下面两行填写格线）；拿掉像素小书 */
+
+/* @qingtuan-order:002300 */
+
+.world-page .world-cover-default{padding:20% 9% 0 17%;
+  background:
+    radial-gradient(circle,#FFFFFF 0 2.2px,transparent 2.7px) 0 0 / 14px 14px,
+    radial-gradient(circle,#FFFFFF 0 2.2px,transparent 2.7px) 7px 7px / 14px 14px,
+    color-mix(in srgb,var(--theme-color) 42%,#FFFFFF);
+}
+
+/* @qingtuan-order:002301 */
+
+/* 书脊：左边一条深一点的主题色，靠内侧一道白色细光 */
+
+/* @qingtuan-order:002302 */
+
+.world-page .world-cover-default::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:10%;
+  background:color-mix(in srgb,var(--theme-color) 70%,#FFFFFF);
+  box-shadow:inset -2px 0 0 rgba(255,255,255,.55),1px 0 0 color-mix(in srgb,var(--theme-color) 35%,transparent);
+}
+
+/* @qingtuan-order:002303 */
+
+.world-page .world-cover-book{display:none}
+
+/* @qingtuan-order:002304 */
+
+/* 名字贴纸：白底圆角，里面一圈主题色细线；书名在上，下面一条横线 + 两格 */
+
+/* @qingtuan-order:002305 */
+
+.world-page .world-cover-title{
+  width:100%;box-sizing:border-box;padding:6px 5px 21px;
+  border:0;border-radius:4px;
+  background:
+    linear-gradient(var(--theme-color),var(--theme-color)) center calc(100% - 13px) / calc(100% - 8px) 1px no-repeat,
+    linear-gradient(var(--theme-color),var(--theme-color)) 50% calc(100% - 4px) / 1px 9px no-repeat,
+    #FFFFFF;
+  box-shadow:inset 0 0 0 2px #FFFFFF,inset 0 0 0 3px var(--theme-color),1px 1px 0 rgba(var(--theme-rgb), 0.3);
+  color:var(--world-teal,var(--win-line));font-size:10.5px;letter-spacing:.5px;
+}
+
+/* @qingtuan-order:002306 */
+
+.world-page .world-cover-default{padding-top:27%;
+            justify-content:flex-start;
+            gap:0;
+        }
+
+/* @qingtuan-order:002307 */
+
+/* 名字贴纸拆成「书名 + 下面两格（No.01 ｜ 3 条目）」：贴纸外框移到 .world-cover-label，格线用真的边框画 */
+
+/* @qingtuan-order:002308 */
+
+.world-page .world-cover-label{
+  display:flex;flex-direction:column;width:100%;box-sizing:border-box;
+  border-radius:4px;background:#FFFFFF;
+  box-shadow:inset 0 0 0 2px #FFFFFF,inset 0 0 0 3px var(--theme-color),1px 1px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002309 */
+
+.world-page .world-cover-label .world-cover-title{
+  width:auto;padding:6px 5px 4px;border:0;border-radius:0;background:none;box-shadow:none;
+  color:var(--world-teal,var(--win-line));font-size:10.5px;letter-spacing:.5px;
+}
+
+/* @qingtuan-order:002310 */
+
+.world-page .world-cover-cells{
+  display:grid;grid-template-columns:1fr 1fr;margin:0 4px 4px;border-top:1px solid var(--theme-color);
+}
+
+/* @qingtuan-order:002311 */
+
+.world-page .world-cover-cells span{
+  padding:2px 0 1px;text-align:center;white-space:nowrap;overflow:hidden;
+  color:var(--world-teal,var(--win-line));font-size:7.5px;letter-spacing:.3px;opacity:.85;
+}
+
+/* @qingtuan-order:002312 */
+
+.world-page .world-cover-cells span + span{border-left:1px solid var(--theme-color)}
+
+/* @qingtuan-order:002313 */
+
+
+/* ================= 世界书 · 表单、按钮、档案状态卡、高级设置、弹窗统一成个人网页风（白底细青框 + 硬投影 + 胶囊按钮 + ♡ 装饰标题） ================= */
+
+/* @qingtuan-order:002314 */
+
+
+/* 有自选封面的书：不加边框，直接显示图片，保留硬投影 */
+
+/* @qingtuan-order:002315 */
+
+.world-page .world-shelf-cover:has(.world-cover-img){border:0}
+
+/* @qingtuan-order:002316 */
+
+
+/* 表单卡：拿掉「✎ edit.txt」程序标题栏，改成「.｡.:* ♡ 填写资料 ♡ *:.｡.」装饰标题 + 一排主题色小点 */
+
+/* @qingtuan-order:002317 */
+
+.world-page .world-paper:has(.world-field){
+  padding:12px 14px 14px;border:1px solid var(--wt);border-radius:2px;background:#FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002318 */
+
+.world-page .world-paper:has(.world-field)::before{
+  display:block;position:static;
+  border:0;border-radius:0;box-shadow:none;text-align:center;
+  font-family:inherit;
+}
+
+/* @qingtuan-order:002319 */
+
+.world-page .world-paper:has(.world-field)::after{display:none}
+
+/* @qingtuan-order:002326 */
+
+
+/* 底部按钮：圆角胶囊 + 右下硬投影；保存实心主题色白字，删除淡红 */
+
+/* @qingtuan-order:002327 */
+
+.world-page .world-action{
+  border:1px solid var(--wt);background:#FFFFFF;
+  color:var(--wt);-webkit-text-fill-color:var(--wt);font-size:11.5px;letter-spacing:1.5px;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002328 */
+
+.world-page .world-action:not(.secondary):not(.danger){border-color:var(--theme-color);}
+
+/* @qingtuan-order:002329 */
+
+.world-page .world-action.danger{border-color:#D9BDBB;}
+
+/* @qingtuan-order:002330 */
+
+.world-page .world-action:active{box-shadow:none}
+
+/* @qingtuan-order:002331 */
+
+
+/* 档案状态卡：拿掉虚线双框和内框，跟表单卡同款；里面的编辑按钮也是胶囊 */
+
+/* @qingtuan-order:002332 */
+
+.world-page .world-paper:has(#worldBookEnabled){
+  border:1px solid var(--wt);border-radius:2px;background:#FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002333 */
+
+.world-page .world-paper:has(#worldBookEnabled) .world-row{margin:0 0 12px;padding:0;border:0;background:transparent}
+
+/* @qingtuan-order:002334 */
+
+.world-page #worldEditBook{width:100%;padding:8px}
+
+/* @qingtuan-order:002335 */
+
+
+/* 高级设置：白底细青框 + 硬投影，标题前一个 ♡（展开变 ♥），右边小三角；展开后标题下一排小点 */
+
+/* @qingtuan-order:002336 */
+
+.world-page .world-advanced{
+  border:1px solid var(--wt);border-radius:2px;background:#FFFFFF;box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002337 */
+
+.world-page .world-advanced summary{background:#FFFFFF;box-shadow:none;color:var(--wt);letter-spacing:1px}
+
+/* @qingtuan-order:002338 */
+
+.world-page .world-advanced summary::before{
+  content:'♡';width:auto;height:auto;border:0;background:none;color:var(--wk-accent);font-size:12px;font-family:inherit;
+}
+
+/* @qingtuan-order:002339 */
+
+.world-page .world-advanced[open] summary::before{content:'♥'}
+
+/* @qingtuan-order:002340 */
+
+.world-page .world-advanced summary::after{border-color:var(--wt)!important}
+
+/* @qingtuan-order:002341 */
+
+.world-page .world-advanced[open] summary{
+  border-bottom:0;
+  background:radial-gradient(circle,var(--theme-color) 0 1.2px,transparent 1.6px) 0 100% / 7px 3px repeat-x,#FFFFFF;
+}
+
+/* @qingtuan-order:002342 */
+
+.world-page .world-advanced-group h4{color:var(--wt);border-bottom:1px dashed var(--theme-color)}
+
+/* @qingtuan-order:002343 */
+
+.world-page .world-advanced-group h4::before{content:'✦ ';color:var(--wk-accent)}
+
+/* @qingtuan-order:002344 */
+
+
+/* 空白提示：细青虚线框 */
+
+/* @qingtuan-order:002345 */
+
+.world-page .world-empty-note{border:1px dashed var(--wt);border-radius:2px}
+
+/* @qingtuan-order:002363 */
+
+.world-page .world-action.secondary{background:#FFFFFF;border-color:var(--wt);}
+
+/* @qingtuan-order:002364 */
+
+
+/* ================= 世界书 · 圆角改回方角 + 条目卡、档案状态卡改成古早网页「留言框」（顶上一条波点标题列） ================= */
+
+/* @qingtuan-order:002365 */
+
+/* 圆角改回方角：按钮 3px、筛选 / 输入框 / 小按钮 2px */
+
+/* @qingtuan-order:002366 */
+
+.world-page .world-action{border-radius:3px}
+
+/* @qingtuan-order:002367 */
+
+.world-page .world-entry-filter,
+.world-page .world-entry-filter.is-active,
+.world-page .world-cover-btn{border-radius:2px}
+
+/* @qingtuan-order:002371 */
+
+
+/* 留言框共用的标题列底：浅主题色 + 白色波点，下缘一条细青线 */
+
+/* @qingtuan-order:002372 */
+
+
+/* 条目卡：拿掉装订孔；顶上 32px 标题列写「No.01 标题」，复制钮在标题列右上；内容、标签在下面，开关在右下 */
+
+/* @qingtuan-order:002373 */
+
+.world-page .world-entry-card{
+  position:relative;padding:0 12px 11px;
+  border:1px solid var(--wt);border-radius:2px;background:#FFFFFF;
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002374 */
+
+.world-page .world-entry-card::before{
+  content:'';display:block;position:absolute;left:0;right:0;top:0;height:32px;z-index:0;
+  background:var(--world-box-band);border:0;border-bottom:1px solid var(--wt);border-radius:0;
+}
+
+/* @qingtuan-order:002375 */
+
+.world-page .world-entry-card .world-row{position:relative;z-index:1;align-items:flex-end}
+
+/* @qingtuan-order:002376 */
+
+.world-page .world-entry-card .world-entry-title{
+  height:33px;margin:0 0 9px;padding:0 34px 0 0;
+  color:var(--wt);text-shadow:-1px -1px 0 #FFF,1px -1px 0 #FFF,-1px 1px 0 #FFF,1px 1px 0 #FFF;
+}
+
+/* @qingtuan-order:002377 */
+
+.world-page .world-entry-card .world-entry-no{background:#FFFFFF;text-shadow:none}
+
+/* @qingtuan-order:002378 */
+
+.world-page .world-entry-card .world-entry-copy{
+  top:5px;right:8px;z-index:2;width:24px;height:22px;
+  border:1px solid var(--wt);border-radius:3px;background:#FFFFFF;color:var(--wt);
+  box-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+}
+
+/* @qingtuan-order:002379 */
+
+.world-page .world-entry-card .world-entry-copy:active{box-shadow:none}
+
+/* @qingtuan-order:002380 */
+
+.world-page .world-entry-card .world-entry-controls{padding-bottom:1px}
+
+/* @qingtuan-order:002381 */
+
+
+/* 档案状态卡：顶上一条波点标题列写「♡ status ♡」，下面开关和编辑按钮 */
+
+/* @qingtuan-order:002382 */
+
+.world-page .world-paper:has(#worldBookEnabled){position:relative;}
+
+/* @qingtuan-order:002383 */
+
+.world-page .world-paper:has(#worldBookEnabled)::before{
+  position:absolute;
+  border-radius:0;
+  text-align:center;
+  pointer-events:none;
+}
+
+/* @qingtuan-order:002384 */
+
+
+/* ================= 拆开撞款：波点标题列只留给条目卡；档案状态卡改左侧直立标签，弹窗标题列改横向渐变 ================= */
+
+/* @qingtuan-order:002385 */
+
+/* 档案状态卡：左边一条主题色侧标签，直着写 STATUS；右边是开关和编辑按钮 */
+
+/* @qingtuan-order:002386 */
+
+.world-page .world-paper:has(#worldBookEnabled){padding:14px 14px 14px 44px}
+
+/* @qingtuan-order:002387 */
+
+.world-page .world-paper:has(#worldBookEnabled)::before{
+  content:'STATUS';inset:0 auto 0 0;width:30px;height:auto;line-height:1;
+  display:flex;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  border:0;border-right:1px solid var(--wt);
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 2px,transparent 2px 6px),
+    var(--theme-color);
+  color:#FFFFFF;font-size:9.5px;font-weight:700;letter-spacing:3px;
+  text-shadow:1px 1px 0 color-mix(in srgb,var(--theme-color) 90%,transparent);
+}
+
+/* @qingtuan-order:002395 */
+
+
+/* ================= 世界书 · 填写资料表单改成古早留言板签名表单（guestbook）的样子 ================= */
+
+/* @qingtuan-order:002396 */
+
+/* 顶部：格子布纹标题带「✎ 填写资料 ✎」（格子目前别处没用，不撞款） */
+
+/* @qingtuan-order:002397 */
+
+.world-page .world-paper:has(.world-field){padding-top:0;overflow:hidden}
+
+/* @qingtuan-order:002398 */
+
+.world-page .world-paper:has(.world-field)::before{
+  content:'✎ 填写资料 ✎';margin:0 -14px 16px;padding:9px 0 8px;
+  border-bottom:1px solid var(--wt);
+  font-size:11.5px;font-weight:700;letter-spacing:3px;
+  text-shadow:-1px -1px 0 #FFF,1px -1px 0 #FFF,-1px 1px 0 #FFF,1px 1px 0 #FFF,0 0 3px #FFF;
+}
+
+/* @qingtuan-order:002399 */
+
+/* 栏位标签：♡ 标签 : */
+
+/* @qingtuan-order:002400 */
+
+.world-page .world-paper:has(.world-field) .world-field > .world-label::before{color:var(--wk-accent);font-weight:400}
+
+/* @qingtuan-order:002401 */
+
+.world-page .world-paper:has(.world-field) .world-field > .world-label::after{content:' :';color:var(--wk-accent)}
+
+/* @qingtuan-order:002404 */
+
+/* 世界书输入框点进去不要变（外框色、光晕、虚线变实线、底色都拿掉） */
+
+/* @qingtuan-order:002405 */
+
+/* 设定内容大框：横格线信纸 */
+
+/* @qingtuan-order:002406 */
+
+.world-page .world-paper:has(.world-field) .world-textarea{
+  border:1px dashed var(--wt);padding:2px 10px;line-height:26px;
+  background:repeating-linear-gradient(transparent 0 25px,color-mix(in srgb,var(--theme-color) 45%,transparent) 25px 26px) local,#FFFFFF;
+}
+
+/* @qingtuan-order:002407 */
+
+/* 世界书输入框点进去不要变（外框色、光晕、虚线变实线、底色都拿掉） */
+
+/* @qingtuan-order:002408 */
+
+/* 提示小字前面一个 ※ */
+
+/* @qingtuan-order:002409 */
+
+.world-page .world-paper:has(.world-field) .world-hint::before{content:'※ ';color:var(--wk-accent)}
+
+/* @qingtuan-order:002410 */
+
+/* 启用开关那一行：放进虚线小框 */
+
+/* @qingtuan-order:002411 */
+
+.world-page .world-paper:has(.world-field) > label.world-row{
+  margin-top:4px;padding:9px 10px!important;border:1px dashed var(--theme-color);border-radius:2px;
+  background:color-mix(in srgb,var(--theme-color) 6%,#FFFFFF);
+}
+
+/* @qingtuan-order:002412 */
+
+.world-page .world-paper:has(.world-field) > label.world-row .world-label::before{content:'♡ ';color:var(--wk-accent);font-weight:400}
+
+/* @qingtuan-order:002413 */
+
+/* 高级设置里的栏位也套同一套留言板样式 */
+
+/* @qingtuan-order:002414 */
+
+.world-page .world-advanced .world-field > .world-label::before{color:var(--wk-accent);font-weight:400}
+
+/* @qingtuan-order:002415 */
+
+.world-page .world-advanced .world-field > .world-label::after{content:' :';color:var(--wk-accent)}
+
+/* @qingtuan-order:002417 */
+
+/* 世界书输入框点进去不要变（外框色、光晕、虚线变实线、底色都拿掉） */
+
+/* @qingtuan-order:002418 */
+
+.world-page .world-advanced .world-hint::before{content:'※ ';color:var(--wk-accent)}
+
+/* @qingtuan-order:002419 */
+
+.world-page .world-advanced label.world-row{
+  margin-top:4px;padding:9px 10px!important;border:1px dashed var(--theme-color);border-radius:2px;
+  background:color-mix(in srgb,var(--theme-color) 6%,#FFFFFF);
+}
+
+/* @qingtuan-order:002420 */
+
+.world-page .world-advanced label.world-row .world-label::before{color:var(--wk-accent);font-weight:400}
+
+/* @qingtuan-order:002437 */
+
+/* 空白提示背景改青色波点；弹窗 × 钮缩小；世界书的保存按钮（保存世界书、保存条目）跟弹窗「确定」同款 */
+
+/* @qingtuan-order:002438 */
+
+.world-page .world-empty-note{
+  background:
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 0 0 / 12px 12px,
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 6px 6px / 12px 12px,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002440 */
+
+.world-page .world-action:not(.secondary):not(.danger){
+  padding:0 8px;
+  border-radius:3px;
+  color:#FFFFFF;-webkit-text-fill-color:#FFFFFF;font-size:11.5px;letter-spacing:1px;
+}
+
+/* @qingtuan-order:002441 */
+
+.world-page .world-action:not(.secondary):not(.danger):active{box-shadow:none}
+
+/* @qingtuan-order:002442 */
+
+/* 空白提示：文字后面垫一圈淡淡的白底（中间一块柔和白光，盖在波点上） */
+
+/* @qingtuan-order:002443 */
+
+.world-page .world-empty-note{
+  background:
+    radial-gradient(ellipse 62% 42% at 50% 62%,rgba(255,255,255,.92) 0 55%,rgba(255,255,255,0) 100%),
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 0 0 / 12px 12px,
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 6px 6px / 12px 12px,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002444 */
+
+/* 栏位标签前的 ♡ 全部拿掉（冒号保留） */
+
+/* @qingtuan-order:002445 */
+
+.world-page .world-paper:has(.world-field) .world-field > .world-label::before,
+.world-page .world-paper:has(.world-field) > label.world-row .world-label::before,
+.world-page .world-advanced .world-field > .world-label::before,
+.world-page .world-advanced label.world-row .world-label::before{content:none}
+
+/* @qingtuan-order:002448 */
+
+/* 还在用深青的：条目编号签、小标签文字 → 改顶栏青 */
+
+/* @qingtuan-order:002449 */
+
+.world-page .world-entry-no,
+.world-page .world-chip{color:var(--wt)}
+
+/* @qingtuan-order:002450 */
+
+/* 空白提示的白底再淡一点 */
+
+/* @qingtuan-order:002451 */
+
+.world-page .world-empty-note{
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 62%,rgba(255,255,255,.7) 0 45%,rgba(255,255,255,0) 100%),
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 0 0 / 12px 12px,
+    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 50%,transparent) 0 1.6px,transparent 2.1px) 6px 6px / 12px 12px,
+    #FFFFFF;
+}
+
+/* @qingtuan-order:002460 */
+
+
+/* 按钮正面加亮面反光（跟 Chat 同一套：上半截亮、中间一道分界、下半截颜色）
+   主题色按钮：上半截淡主题色反光、下半截维持主题色；白色按钮：上半截白、下半截淡淡的青色；删除：淡红版 */
+
+/* @qingtuan-order:002461 */
+
+/* 按下：反光消失，变成平的淡色 */
+
+/* @qingtuan-order:002462 */
+
+/* 反光分界再柔一点点：过渡从 46%→52% 放宽到 43%→56% */
+
+/* @qingtuan-order:002463 */
+
+
+/* ===== 按钮再整理：保存跟其他按钮一样高；所有按钮按下效果一致；反光再淡；顶栏返回 / ＋、弹窗 × 也加亮面和淡青阴影 ===== */
+
+/* @qingtuan-order:002464 */
+
+.world-page .world-action,
+.world-page .world-action:not(.secondary):not(.danger){height:36px;min-height:36px}
+
+/* @qingtuan-order:002470 */
+
+
+/* 选单打开时 ＋ 不要一直凹着：跟聊天室 ··· 一样维持凸起，只有按下那一下才凹 */
+
+/* @qingtuan-order:002471 */
+
+.world-page #worldTopAction[aria-expanded="true"]{
+  background:var(--wb-face-white)!important;
+  box-shadow:var(--wb-white),var(--wb-shadow)!important;
+}
+
+/* @qingtuan-order:002479 */
+
+/* 青色按钮内侧右下那道暗边调淡（原本跟深青边框同色，会黏在一起） */
+
+/* @qingtuan-order:002480 */
+
+/* 档案状态卡外框（连同 STATUS 侧标签右边那条线）调淡一点点，跟上面欢迎框衔接比较顺 */
+
+/* @qingtuan-order:002481 */
+
+.world-page .world-paper:has(#worldBookEnabled){border-color:color-mix(in srgb,var(--wt) 75%,#FFFFFF)!important}
+
+/* @qingtuan-order:002482 */
+
+.world-page .world-paper:has(#worldBookEnabled)::before{border-right-color:color-mix(in srgb,var(--wt) 75%,#FFFFFF)!important;
+            align-items:center;
+            justify-content:center;
+        }
+
+/* @qingtuan-order:002483 */
+
+/* 页面底色：一整片淡青（白里混 15% 主题色），纯色不加纹路；分区标题底块、波浪边挖洞也跟着用这个色 */
+
+/* @qingtuan-order:002484 */
+
+.world-page{
+  background:var(--world-page-bg)!important;
+}
+
+/* @qingtuan-order:002485 */
+
+/* ===== 学参考图的配法：世界书整体换色 =====
+   原本的主题色（--wk-src，从 :root 取）拆成三个角色：
+   · 框架灰青：世界书里的 --theme-color 直接换成它 → 大色块（顶栏、格子布、封面、侧标签、标题列）、浅底、阴影全部变灰青
+   · 点缀青（--wk-accent）：低饱和，只比原本深一点点，只给 ♡ ★ ※、分隔点点、开关、主按钮、虚线框
+   · 线条 / 文字灰青（--world-teal、--world-title）
+   换主题色时会跟着算，不用另外改 */
+
+/* @qingtuan-order:002486 */
+
+
+.world-page .world-main-title,
+.world-page .world-intro h2,
+.world-page .world-section-head b{color:var(--world-title)!important;-webkit-text-fill-color:var(--world-title)}
+
+/* @qingtuan-order:002487 */
+
+/* 标题旁边的 ♡ 小装饰用自己的点缀色，不跟标题字一起变灰 */
+
+/* @qingtuan-order:002488 */
+
+.world-page .world-section-head b::before,
+.world-page .world-section-head b::after,
+.world-page .world-intro h2::before,
+.world-page .world-intro h2::after{-webkit-text-fill-color:currentColor}
+
+/* @qingtuan-order:002489 */
+
+/* 欢迎框花边改灰青（外框），里面那圈虚线维持主题青 */
+
+/* @qingtuan-order:002490 */
+
+.world-page .world-intro::before{background:var(--world-teal)!important}
+
+/* @qingtuan-order:002491 */
+
+/* 白色按钮（含顶栏返回 / ＋、弹窗 ×）正面下半截的反光阴影再带点青：用顶栏那个青来混 */
+
+/* @qingtuan-order:002492 */
+
+
+/* ===== 世界书换色 · 点缀青只放在这些地方：开关、主按钮、勾选、筛选选中、分隔点点、欢迎框里圈虚线 ===== */
+
+/* @qingtuan-order:002493 */
+
+.world-page .world-toggle:checked,
+.world-page [data-toggle-book].world-toggle:checked,
+.world-page .world-shelf-toggle.world-toggle:checked{background:var(--wk-accent)!important;border-color:var(--wt)!important}
+
+/* @qingtuan-order:002494 */
+
+.world-page .world-entry-filter.is-active{background:var(--wk-accent)!important;border-color:var(--wt)!important;color:#FFFFFF!important}
+
+/* @qingtuan-order:002497 */
+
+.world-page .world-section-head::before{background:radial-gradient(circle,var(--wk-accent) 0 1.2px,transparent 1.6px) 0 50% / 7px 3px repeat-x!important}
+
+/* @qingtuan-order:002501 */
+
+/* 删除：淡红也跟着退灰一点 */
+
+/* @qingtuan-order:002502 */
+
+.world-page .world-action.danger{background:linear-gradient(180deg,#FFFFFF 0%,#FFFFFF 42.5%,#F3E7E8 56.5%,#F8EFF0 100%)!important}
+
+/* @qingtuan-order:002503 */
+
+
+/* ===== 世界书 · 文字分两阶：主标题 / 小标题 / 按钮字用深一点的青灰（--world-title），说明、选中的值用淡青灰（--world-teal） ===== */
+
+/* @qingtuan-order:002504 */
+
+/* 顶栏标题字：跟其他深青灰一样（--world-title） */
+
+/* @qingtuan-order:002505 */
+
+.world-page .world-main-title{color:var(--world-title)!important;-webkit-text-fill-color:var(--world-title)!important}
+
+/* @qingtuan-order:002506 */
+
+/* 档案状态、栏位小标题（关联角色：等）→ 深青灰；全部角色可使用等说明 → 淡青灰 */
+
+/* @qingtuan-order:002507 */
+
+.world-page .world-label{color:var(--world-title)!important;-webkit-text-fill-color:var(--world-title)!important}
+
+/* @qingtuan-order:002508 */
+
+.world-page .world-paper:has(#worldBookEnabled) .world-hint{color:var(--world-teal)!important;-webkit-text-fill-color:var(--world-teal)!important}
+
+/* @qingtuan-order:002509 */
+
+/* 「填写资料」标题列的字 → 深青灰 */
+
+/* @qingtuan-order:002510 */
+
+.world-page .world-paper:has(.world-field)::before{color:var(--world-title)!important}
+
+/* @qingtuan-order:002515 */
+
+/* 书架上书名下面的「全部角色」、输入框里的提示字（例如：山林, 夜晚）→ 淡青灰，跟下拉框选中的值一样 */
+
+/* @qingtuan-order:002516 */
+
+.world-page .world-shelf-meta{color:var(--world-teal)!important;-webkit-text-fill-color:var(--world-teal)!important}
+
+/* @qingtuan-order:002517 */
+
+.world-page .world-input::placeholder,
+.world-page .world-textarea::placeholder,
+.world-page .world-entry-search::placeholder{color:var(--world-teal)!important;-webkit-text-fill-color:var(--world-teal)!important;opacity:1}
+
+/* @qingtuan-order:002518 */
+
+/* 「填写资料」格子布：两层条纹浓一点（30% → 45%） */
+
+/* @qingtuan-order:002519 */
+
+.world-page .world-paper:has(.world-field)::before{
+  background:
+    linear-gradient(90deg,color-mix(in srgb,var(--theme-color) 45%,transparent) 0 5px,transparent 5px) 0 0 / 10px 10px,
+    linear-gradient(180deg,color-mix(in srgb,var(--theme-color) 45%,transparent) 0 5px,transparent 5px) 0 0 / 10px 10px,
+    #FFFFFF!important;
+}
+
+/* @qingtuan-order:002520 */
+
+/* 说明小字（※ 一句话概括…）→ 淡青灰；自己打进去的字 → 深青灰 */
+
+/* @qingtuan-order:002521 */
+
+.world-page .world-hint{color:var(--world-teal)!important;-webkit-text-fill-color:var(--world-teal)!important}
+
+/* @qingtuan-order:002522 */
+
+.world-page .world-input,
+.world-page .world-textarea,
+.world-page .world-entry-search{color:var(--world-title)!important;-webkit-text-fill-color:var(--world-title)!important}
+
+/* @qingtuan-order:002525 */
+
+/* 开关 ON 的青淡一点 */
+
+/* @qingtuan-order:002526 */
+
+.world-page .world-toggle:checked,
+.world-page [data-toggle-book].world-toggle:checked,
+.world-page .world-shelf-toggle.world-toggle:checked{background:color-mix(in srgb,var(--wk-accent) 80%,#FFFFFF)!important}
+
+/* @qingtuan-order:002527 */
+
+/* 欢迎框：里圈虚线改青灰，右下颜文字改点缀青 */
+
+/* @qingtuan-order:002528 */
+
+
+.world-page .world-intro h2::before{color:var(--wk-accent)!important;opacity:1!important}
+
+/* @qingtuan-order:002529 */
+
+/* 欢迎框花边：左右两边的半椭圆是直立的，线条粗细沿短边算，会比上下粗约 1.5 倍；左右另外用细 2/3 的版本 */
+
+/* @qingtuan-order:002530 */
+
+.world-page .world-intro{
+
+            outline-color:var(--world-teal)!important;
+        }
+
+/* @qingtuan-order:003864 */
+
+        /* 世界书「长按条目卡片拖拽排序」：前面的 i 跟文字垂直置中对齐 */
+
+/* @qingtuan-order:003865 */
+
+        .world-page .world-sort-hint { display: flex !important; align-items: center; }
+
+/* @qingtuan-order:003866 */
+
+        .world-page .world-sort-hint::before { flex: none; vertical-align: 0 !important; }
+
+/* @qingtuan-order:004001 */
+
+
+        /* 一开始按的「删除」：普通白按钮，字改淡红提醒（不要粉红框） */
+
+/* @qingtuan-order:004002 */
+
+        :is(html, #_#_#_) .world-page .world-action.danger {
+            background: var(--wb-face-white, #FFFFFF) !important;
+            border-color: var(--win-line) !important;
+            /* 斜面和投影也换成跟「返回」一样的白按钮那套（原本是粉红色系，只换底色会变成白底配粉红影子） */
+            box-shadow: var(--wb-white), var(--wb-shadow) !important;
+            color: #AD8382 !important;
+            -webkit-text-fill-color: #AD8382 !important;
+        }
+
+/* @qingtuan-order:004285 */
+
+
+        /* 世界书右上「＋」的选单：跟聊天室 ··· 选单、Chat 长按角色选单同一款——白底细框、直角、硬投影；
+           选项之间一道刻痕线（不再是虚线），图示深青，按下整条变主题色白字 */
+
+/* @qingtuan-order:004286 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu {
+            transform: none !important; /* 跟聊天室 ··· 一样直接出现，不淡入、不往下滑 */
+            transition: none !important;
+            width: auto !important;
+            min-width: 112px !important;
+            padding: 2px 0 !important;
+            border: 1px solid var(--wm-line) !important;
+            border-radius: 0 !important;
+            background: #FFFFFF !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004287 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu-item {
+            gap: 8px !important;
+            min-height: 34px !important;
+            padding: 0 16px 0 12px !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            color: var(--wm-title) !important;
+            -webkit-text-fill-color: var(--wm-title) !important;
+            font-size: 11.5px !important;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004288 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu-item + .world-action-menu-item {
+            margin-top: 3px;
+            border-top: 1px solid color-mix(in srgb, var(--wm-line) 55%, transparent) !important;
+            box-shadow: inset 0 1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:004289 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu-item svg { width: 14px !important; height: 14px !important; stroke: var(--wm-head) !important; }
+
+/* @qingtuan-order:004290 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu-item:active {
+            translate: none !important;
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:004291 */
+
+        :is(html, #_#_#_) .world-page .world-action-menu-item:active svg { stroke: #FFFFFF !important; }

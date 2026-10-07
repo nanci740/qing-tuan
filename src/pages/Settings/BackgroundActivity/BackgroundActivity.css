@@ -1,0 +1,724 @@
+/* @qingtuan-order:001501 */
+
+
+        /* ---------------- 后台活动设置 · 古早小窗口：后台运行窗、通知对话框、显示分组框 ---------------- */
+
+/* @qingtuan-order:001502 */
+
+        #backgroundActivityPage {
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:001503 */
+
+
+        #backgroundActivityPage .settings-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:001504 */
+
+
+        #backgroundActivityPage .settings-header h2,
+        #backgroundActivityPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001505 */
+
+
+        #backgroundActivityPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001506 */
+
+
+        #backgroundActivityPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001507 */
+
+
+        #backgroundActivityPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001508 */
+
+
+        #backgroundActivityPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001509 */
+
+
+        #backgroundActivityPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001510 */
+
+
+        #backgroundActivityPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:001511 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-content {
+            padding-top: 16px;
+        }
+
+/* @qingtuan-order:001512 */
+
+
+        /* 窗口本体 */
+
+/* @qingtuan-order:001513 */
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group {
+            position: relative;
+            margin-bottom: 16px !important;
+            padding-bottom: 12px;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001514 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group > :not(.background-activity-label) {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+/* @qingtuan-order:001515 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0 0 4px;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 3px 3px 0 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.2;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001516 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001517 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            overflow: visible;
+        }
+
+/* @qingtuan-order:001518 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-row {
+            padding: 10px 0 !important;
+        }
+
+/* @qingtuan-order:001519 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-row + .background-activity-row::before {
+            left: 0 !important;
+            right: 0 !important;
+            height: 0 !important;
+            border-top: 1px dashed var(--win-dash);
+            background: none !important;
+        }
+
+/* @qingtuan-order:001520 */
+
+
+        /* 说明文字：前面一个小 i，上方虚线 */
+
+/* @qingtuan-order:001521 */
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-note {
+            position: relative;
+            margin-top: 2px;
+            padding: 8px 0 0 16px !important;
+            border-top: 1px dashed var(--win-dash);
+        }
+
+/* @qingtuan-order:001522 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-note::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 11px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+        }
+
+/* @qingtuan-order:001523 */
+
+
+        /* 1 后台运行：标题前一弯月亮，意思是锁屏、切到后台以后 */
+
+/* @qingtuan-order:001524 */
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(1) .background-activity-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%203a6%206%200%200%200%209%209%209%209%200%201%201-9-9Z%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%203a6%206%200%200%200%209%209%209%209%200%201%201-9-9Z%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001525 */
+
+
+        /* 2 回复通知：双层框对话框，标题前一只小铃铛，右边只有 ? 和 × */
+
+/* @qingtuan-order:001526 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .background-activity-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M10.268%2021a2%202%200%200%200%203.464%200%27/%3E%3Cpath%20d%3D%27M3.262%2015.326A1%201%200%200%200%204%2017h16a1%201%200%200%200%20.74-1.673C19.41%2013.956%2018%2012.499%2018%208A6%206%200%200%200%206%208c0%204.499-1.411%205.956-2.738%207.326%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M10.268%2021a2%202%200%200%200%203.464%200%27/%3E%3Cpath%20d%3D%27M3.262%2015.326A1%201%200%200%200%204%2017h16a1%201%200%200%200%20.74-1.673C19.41%2013.956%2018%2012.499%2018%208A6%206%200%200%200%206%208c0%204.499-1.411%205.956-2.738%207.326%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001527 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) > :not(.background-activity-label) {
+            margin-left: 14px;
+            margin-right: 14px;
+        }
+
+/* @qingtuan-order:001528 */
+
+
+        /* 3 显示：表单分组框，标题压在框线上 */
+
+/* @qingtuan-order:001529 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label {
+            top: 0;
+            left: 10px;
+        }
+
+/* @qingtuan-order:001530 */
+
+
+        /* 开关：方槽方滑块 */
+
+/* @qingtuan-order:001531 */
+
+        #backgroundActivityPage#backgroundActivityPage .vi-switch {
+            width: 38px !important;
+            height: 20px !important;
+            background: #EEF1F1 !important;
+        }
+
+/* @qingtuan-order:001532 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .vi-switch::after {
+            top: 2px !important;
+            left: 2px !important;
+            width: 14px !important;
+            height: 14px !important;
+            box-sizing: border-box;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001533 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .vi-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:001534 */
+
+
+        #backgroundActivityPage#backgroundActivityPage .vi-switch:checked::after {
+            transform: translateX(18px) !important;
+        }
+
+/* @qingtuan-order:001589 */
+
+
+        /* ============ 后台活动设置二级页面 ============ */
+
+/* @qingtuan-order:001590 */
+
+        #backgroundActivityPage:not(.active) { display: none !important; }
+
+/* @qingtuan-order:001591 */
+
+        #backgroundActivityPage.active { display: flex !important; }
+
+/* @qingtuan-order:001592 */
+
+
+        .background-activity-content {
+            flex: 1;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 12px 16px 28px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+/* @qingtuan-order:001593 */
+
+        .background-activity-group {
+            margin-bottom: 14px;
+        }
+
+/* @qingtuan-order:001594 */
+
+        /* 卡片底边与下一组标题的视觉间距，和说明文字下方保持一致 */
+
+/* @qingtuan-order:001595 */
+
+        .background-activity-group:nth-of-type(2) {
+            margin-bottom: 18px;
+        }
+
+/* @qingtuan-order:001596 */
+
+        .background-activity-label {
+            margin-bottom: 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            color: var(--theme-color);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .8px;
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:001597 */
+
+        .background-activity-card {
+            overflow: hidden;
+            border: .5px solid #DDDDE2;
+            border-radius: 8px;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001598 */
+
+        .background-activity-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 58px;
+            gap: 14px;
+            padding: 10px 14px;
+        }
+
+/* @qingtuan-order:001599 */
+
+        .background-activity-row + .background-activity-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            right: 14px;
+            height: .5px;
+            background: #ECEDEF;
+        }
+
+/* @qingtuan-order:001600 */
+
+        .background-activity-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+/* @qingtuan-order:001601 */
+
+        .background-activity-copy strong {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+/* @qingtuan-order:001602 */
+
+        .background-activity-copy span {
+            display: block;
+            margin-top: 3px;
+            color: #9BA4AE;
+            font-size: 9.5px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:001604 */
+
+        .background-activity-note {
+            padding: 9px 2px 0;
+            color: #A0A8B1;
+            font-size: 9.2px;
+            line-height: 1.55;
+        }
+
+/* @qingtuan-order:003115 */
+
+
+        /* ---------------- 后台活动设置 · 古早升级：三扇窗换成提示对话框、复选框设置窗、活动窗口 ---------------- */
+
+/* @qingtuan-order:003116 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:003117 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-label {
+            border-bottom-color: var(--win-deep) !important;
+        }
+
+/* @qingtuan-order:003118 */
+
+
+        #backgroundActivityPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:003119 */
+
+
+        /* 开关：凹槽里一个凸起方块 */
+
+/* @qingtuan-order:003120 */
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .vi-switch {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003121 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .vi-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:003122 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .vi-switch::after {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 1px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:003123 */
+
+
+        /* ===== 1 后台运行：提示对话框，底下那段说明前面一个大大的 i，像系统的消息框 ===== */
+
+/* @qingtuan-order:003124 */
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(1) .background-activity-note {
+            position: relative;
+            min-height: 44px;
+            margin-top: 4px;
+            padding: 10px 10px 10px 50px !important;
+            border: 1px solid var(--win-line) !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003125 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(1) .background-activity-note::before {
+            content: 'i';
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            width: 26px;
+            height: 26px;
+            margin-top: -13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--win-deep);
+            border-radius: 50%;
+            background: #FFFFFF;
+            color: var(--win-deep);
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: inset -1px -1px 0 var(--win-line), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            -webkit-mask: none !important;
+            mask: none !important;
+        }
+
+/* @qingtuan-order:003126 */
+
+
+        /* ===== 2 回复通知：窄标题栏的设置小窗，三个开关换成老系统的复选框 ===== */
+
+/* @qingtuan-order:003127 */
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) {
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:003128 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .background-activity-label {
+            margin: 0 !important;
+            padding-top: 3px !important;
+            padding-bottom: 3px !important;
+            border: 0 !important;
+            border-bottom: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            font-size: 10px !important;
+        }
+
+/* @qingtuan-order:003129 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .background-activity-label::after {
+            flex-basis: 12px !important;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px !important;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px !important;
+        }
+
+/* @qingtuan-order:003130 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .vi-switch {
+            width: 16px !important;
+            height: 16px !important;
+            flex: 0 0 16px;
+            border-radius: 0 !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003131 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .vi-switch::after {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: var(--set-fill, var(--win-deep)) !important;
+            box-shadow: none !important;
+            transform: none !important;
+            opacity: 0;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2716%27%20height%3D%2716%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%3E%3Cpath%20d%3D%27M4%208.5l2.5%202.5L12%205%27/%3E%3C/svg%3E") no-repeat center / 16px 16px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2716%27%20height%3D%2716%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%3E%3Cpath%20d%3D%27M4%208.5l2.5%202.5L12%205%27/%3E%3C/svg%3E") no-repeat center / 16px 16px;
+        }
+
+/* @qingtuan-order:003132 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .vi-switch:checked {
+            background: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003133 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(2) .vi-switch:checked::after {
+            opacity: 1;
+        }
+
+/* @qingtuan-order:003134 */
+
+
+        /* ===== 3 显示：当前的活动窗口，标题栏是深主色白字，标题前一台小显示器；说明变成状态栏 ===== */
+
+/* @qingtuan-order:003135 */
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) {
+            margin-top: 16px !important;
+            padding-top: 0 !important;
+        }
+
+/* @qingtuan-order:003136 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label {
+            position: static !important;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transform: none !important;
+            margin: 0 !important;
+            padding: 6px 8px 6px 10px !important;
+            border: 0 !important;
+            border-bottom: 1px solid var(--win-deep) !important;
+            background: var(--set-fill, var(--win-deep)) !important;
+            box-shadow: none !important;
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+        }
+
+/* @qingtuan-order:003137 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label::before {
+            content: '';
+            flex: 0 0 13px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h13v9H0zM1.6%201.6v5.8h9.8V1.6zM4%2010.5h5V12H4z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 13px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h13v9H0zM1.6%201.6v5.8h9.8V1.6zM4%2010.5h5V12H4z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 13px 12px;
+        }
+
+/* @qingtuan-order:003138 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label::after {
+            content: '';
+            display: block !important;
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: #FFFFFF;
+            -webkit-mask: var(--win-btns) no-repeat center / 46px 12px;
+            mask: var(--win-btns) no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:003139 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) {
+            padding-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:003140 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-note {
+            margin: 12px 0 0 !important;
+            padding: 4px 22px 4px 10px !important;
+            border-top: 1px solid var(--win-deep) !important;
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
+                var(--win-bar) !important;
+            color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:003141 */
+
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-note::before {
+            display: none !important;
+        }
+
+/* @qingtuan-order:003224 */
+
+
+        /* 后台活动：回复通知那扇的窄标题栏贴着圆角外框，直角会从弯角探出去，统一把超出框的部分裁掉 */
+
+/* @qingtuan-order:003225 */
+
+        #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group {
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:003645 */
+
+        /* 后台活动「显示」窗：标题列是青灰色块，标题前的小屏幕图示改主题青 */
+
+/* @qingtuan-order:003646 */
+
+        #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label::before {
+            background: var(--theme-color) !important;
+        }

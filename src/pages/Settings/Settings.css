@@ -1,0 +1,1644 @@
+/* @qingtuan-order:000172 */
+
+
+        /* 设置主页与个人信息页保持相同的显示方式 */
+
+/* @qingtuan-order:000173 */
+
+        #settingsPage:not(.active) {
+            display: none !important;
+        }
+
+/* @qingtuan-order:000174 */
+
+
+        #settingsPage.active {
+            display: flex !important;
+        }
+
+/* @qingtuan-order:000179 */
+
+
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px 24px;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+/* @qingtuan-order:000180 */
+
+
+        .settings-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+            width: 0;
+            height: 0;
+        }
+
+/* @qingtuan-order:000181 */
+
+
+        .settings-section {
+            margin-bottom: 10px;
+        }
+
+/* @qingtuan-order:000182 */
+
+
+        .settings-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000183 */
+
+
+        /* 设置主页：系统设置式分组卡片 */
+
+/* @qingtuan-order:000184 */
+
+        #settingsPage .settings-section .settings-item {
+            position: relative;
+            padding: 7px 13px 7px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            box-shadow: none;
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000185 */
+
+
+        /* 整组只保留最外层圆角和上下边框 */
+
+/* @qingtuan-order:000186 */
+
+
+        /* 分割线从文字区域开始，不穿过左侧图标列 */
+
+/* @qingtuan-order:000187 */
+
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            height: 0.5px;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:000188 */
+
+
+        #settingsPage .settings-section .settings-item:hover {
+            background: var(--theme-light-14);
+            transform: none;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000189 */
+
+
+        #settingsPage .settings-item:active {
+            transform: none;
+            background: var(--theme-light-18);
+        }
+
+/* @qingtuan-order:000190 */
+
+
+        #settingsPage .settings-item-info {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+/* @qingtuan-order:000191 */
+
+
+        #settingsPage .settings-item-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+/* @qingtuan-order:000192 */
+
+
+        #settingsPage .settings-item:hover .settings-item-icon {
+            background: var(--theme-light-35);
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:000193 */
+
+
+        #settingsPage .settings-item-text {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+/* @qingtuan-order:000194 */
+
+
+        #settingsPage .settings-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            line-height: 1.25;
+        }
+
+/* @qingtuan-order:000195 */
+
+
+        #settingsPage .settings-item-desc {
+            font-size: 10.5px;
+            margin-top: 2px;
+            letter-spacing: 0.1px;
+            line-height: 1.3;
+        }
+
+/* @qingtuan-order:000196 */
+
+
+        #settingsPage .settings-item-action {
+            flex: 0 0 auto;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+
+/* @qingtuan-order:000197 */
+
+
+        #settingsPage .settings-item:hover .settings-item-action {
+            color: var(--theme-deep);
+        }
+
+/* @qingtuan-order:000878 */
+
+
+        /* 个人信息独立卡片，美化设置 + 音乐设置继续合并为一组 */
+
+/* @qingtuan-order:000879 */
+
+
+        #settingsPage .settings-section-personal .settings-item-profile {
+            min-height: 76px;
+            background: #FFFFFF;
+            border: 0.5px solid #DDDDE2 !important;
+            border-radius: var(--ui-radius) !important;
+            padding: 9px 13px 9px 12px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+/* @qingtuan-order:000880 */
+
+
+        /* 手机上点过头像后不要让卡片保持粘滞 hover 高亮 */
+
+/* @qingtuan-order:000881 */
+
+        #settingsPage .settings-section-personal .settings-item-profile:hover,
+        #settingsPage .settings-section-personal .settings-item-profile:focus-within {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000882 */
+
+
+        #settingsPage .settings-section-personal .settings-item-profile::before {
+            display: none !important;
+        }
+
+/* @qingtuan-order:000883 */
+
+
+        #settingsPage .settings-profile-avatar {
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #F3F5F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000884 */
+
+
+        #settingsPage .settings-profile-avatar img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+/* @qingtuan-order:000885 */
+
+
+        #settingsPage .settings-profile-avatar:active {
+            transform: scale(.96);
+        }
+
+/* @qingtuan-order:000886 */
+
+
+        #settingsPage .settings-profile-avatar:focus,
+        #settingsPage .settings-profile-avatar:focus-visible {
+            outline: none;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000887 */
+
+
+        #settingsPage .settings-item-profile .settings-item-info {
+            gap: 12px;
+        }
+
+/* @qingtuan-order:000888 */
+
+
+        /* 个人信息卡标题与描述 */
+
+/* @qingtuan-order:000889 */
+
+        #settingsPage .settings-item-profile .settings-item-title {
+            font-size: 14px;
+        }
+
+/* @qingtuan-order:000890 */
+
+
+        #settingsPage .settings-item-profile .settings-item-desc {
+            margin-top: 3px;
+        }
+
+/* @qingtuan-order:000891 */
+
+
+        /* 美化 + 音乐两项仍作为同一张组合卡 */
+
+/* @qingtuan-order:000892 */
+
+        #settingsPage .settings-section .settings-item-group-start {
+            margin-top: 0;
+        }
+
+/* @qingtuan-order:000893 */
+
+
+        /* 个人信息：真正独立卡片，不参与 settings-item 分组圆角规则 */
+
+/* @qingtuan-order:000894 */
+
+        #settingsPage .settings-section-personal .settings-profile-card {
+            min-height: 76px;
+            width: 100%;
+            padding: 9px 13px 9px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            isolation: isolate;
+        }
+
+/* @qingtuan-order:000895 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000896 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card:active {
+            background: var(--theme-light-18);
+        }
+
+/* @qingtuan-order:000897 */
+
+
+        /* 设置页面统一轻微圆角：8px */
+
+/* @qingtuan-order:000898 */
+
+        #settingsPage .settings-profile-card,
+        #settingsPage .settings-section .settings-item:first-of-type,
+        #settingsPage .settings-section .settings-item:last-child,
+        #settingsPage .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-section .settings-section-title + .settings-item:last-child {
+            border-radius: 8px !important;
+        }
+
+/* @qingtuan-order:000899 */
+
+
+        #settingsPage .settings-section .settings-section-title + .settings-item:last-child {
+            border-radius: 8px !important;
+        }
+
+/* @qingtuan-order:000900 */
+
+
+        /* 设置主页图标：与聊天设置同一套样式，细边框、极淡主色底、主色线条 */
+
+/* @qingtuan-order:000901 */
+
+        #settingsPage .settings-item-icon,
+        #settingsPage .settings-item:hover .settings-item-icon {
+            border: 0.5px solid rgba(var(--theme-rgb), 0.72);
+            border-radius: 5px !important;
+            background: rgba(var(--theme-rgb), 0.08);
+            color: var(--theme-color);
+            width: 31px;
+            height: 31px;
+            flex: 0 0 31px;
+        }
+
+/* @qingtuan-order:000902 */
+
+
+        #settingsPage .settings-item-icon svg {
+            width: 17px;
+            height: 17px;
+            stroke-width: 1.65;
+        }
+
+/* @qingtuan-order:000903 */
+
+
+        /* 方块缩小后，分隔线起点跟着对齐文字：12 内边距 + 31 方块 + 12 间距 */
+
+/* @qingtuan-order:000904 */
+
+
+        /* ---------------- 设置主页 · minimalist-ui：暖白纸面、1px 极浅边框、标题带细线、分组依次浮现 ---------------- */
+
+/* @qingtuan-order:000905 */
+
+        #settingsPage,
+        #settingsPage .settings-header {
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:000906 */
+
+
+        #settingsPage .settings-section {
+            margin-bottom: 8px;
+        }
+
+/* @qingtuan-order:000907 */
+
+
+        #settingsPage .settings-section-personal {
+            margin-bottom: 12px;
+        }
+
+/* @qingtuan-order:000908 */
+
+
+        /* 卡片边框统一为 1px #EAEAEA，比原来的灰更轻 */
+
+/* @qingtuan-order:000909 */
+
+
+        #settingsPage .settings-section .settings-item {
+            min-height: 54px;
+        }
+
+/* @qingtuan-order:000910 */
+
+
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            background: #EFEFEE;
+        }
+
+/* @qingtuan-order:000911 */
+
+
+        /* 分组标题：去掉左侧色条，文字用深青，右边拉一条细线，与聊天设置的标题同一语言 */
+
+/* @qingtuan-order:000912 */
+
+        #settingsPage .settings-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 0;
+            padding-left: 2px;
+            margin-bottom: 9px;
+            color: var(--theme-dark);
+            font-weight: 500;
+            letter-spacing: 1.5px;
+        }
+
+/* @qingtuan-order:000913 */
+
+
+        #settingsPage .settings-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #EAEAEA;
+        }
+
+/* @qingtuan-order:000914 */
+
+
+        #settingsPage .settings-item-action {
+            color: #B8BEC4;
+        }
+
+/* @qingtuan-order:000917 */
+
+
+        #settingsPage.active .settings-section {
+            animation: settingsSectionIn 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+/* @qingtuan-order:000918 */
+
+
+        #settingsPage.active .settings-section:nth-child(2) { animation-delay: 60ms; }
+
+/* @qingtuan-order:000919 */
+
+        #settingsPage.active .settings-section:nth-child(3) { animation-delay: 120ms; }
+
+/* @qingtuan-order:000920 */
+
+        #settingsPage.active .settings-section:nth-child(4) { animation-delay: 180ms; }
+
+/* @qingtuan-order:000921 */
+
+        #settingsPage.active .settings-section:nth-child(5) { animation-delay: 240ms; }
+
+/* @qingtuan-order:000922 */
+
+
+        @media (prefers-reduced-motion: reduce) {
+            #settingsPage.active .settings-section { animation: none; }
+        }
+
+/* @qingtuan-order:000923 */
+
+
+        /* ---------------- 设置主页 · 方案 3：条目去卡片，保留图标；个人信息为玻璃卡片 ---------------- */
+
+/* @qingtuan-order:000924 */
+
+        #settingsPage .settings-section .settings-item,
+        #settingsPage .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-section .settings-item:last-child {
+            background: transparent;
+            border: 0 !important;
+            border-radius: 8px !important;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+/* @qingtuan-order:000925 */
+
+
+        #settingsPage .settings-section .settings-item:hover {
+            background: transparent;
+        }
+
+/* @qingtuan-order:000926 */
+
+
+        #settingsPage .settings-section .settings-item:active {
+            background: var(--theme-light-14);
+        }
+
+/* @qingtuan-order:000927 */
+
+
+        /* 组内细线从文字处起：2 内边距 + 31 图标 + 12 间距 */
+
+/* @qingtuan-order:000928 */
+
+        #settingsPage .settings-section .settings-item + .settings-item::before {
+            left: 45px;
+            right: 2px;
+        }
+
+/* @qingtuan-order:000929 */
+
+
+        /* 个人信息：0.5px 边框 + 玻璃底，沿用主画面玻璃参数，美化设置里调玻璃时一起变 */
+
+/* @qingtuan-order:000930 */
+
+        #settingsPage .settings-section-personal .settings-profile-card {
+            border: 0.5px solid #DDDDE2;
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+            backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+            -webkit-backdrop-filter: blur(var(--ui-glass-blur, 3px)) saturate(105%);
+        
+            position: relative;
+            box-shadow: none;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+/* @qingtuan-order:000931 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card:hover,
+        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
+            background: rgba(255, 255, 255, var(--ui-glass-alpha, 0.08));
+        }
+
+/* @qingtuan-order:000932 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card::before,
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border: 1.4px solid transparent;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:000933 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card::before {
+            border-color: var(--glass-edge-highlight);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+            mask-image: radial-gradient(ellipse 100% 100% at top left, #000 0%, #000 25%, transparent 80%);
+        }
+
+/* @qingtuan-order:000934 */
+
+
+        #settingsPage .settings-section-personal .settings-profile-card::after {
+            border-color: var(--glass-edge-soft);
+            -webkit-mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+            mask-image: radial-gradient(ellipse 100% 100% at bottom right, #000 0%, #000 30%, transparent 85%);
+        }
+
+/* @qingtuan-order:001030 */
+
+
+        /* ---------------- 设置主页 · 窗口：边框圆角与美化设置一致（细线、4px、2px 淡投影、斜面），.exe 标题，各窗一处小细节 ---------------- */
+
+/* @qingtuan-order:001031 */
+
+
+        /* 窗口本体：粗描边、圆角、右下实色投影 */
+
+/* @qingtuan-order:001032 */
+
+        #settingsPage .settings-content > .settings-section {
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001033 */
+
+
+        /* 标题栏：浅主色、粗底线，标题后面带 .exe，右边圆角窗口按钮 */
+
+/* @qingtuan-order:001034 */
+
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: none;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001035 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-section-title::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001036 */
+
+
+        #settingsPage .settings-content > .settings-section .retro-sec-text::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-weight: 500;
+            opacity: 0.55;
+        }
+
+/* @qingtuan-order:001037 */
+
+
+        /* 条目行 */
+
+/* @qingtuan-order:001038 */
+
+        #settingsPage .settings-content > .settings-section .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-section-title + .settings-item,
+        #settingsPage .settings-content > .settings-section .settings-item:last-child {
+            min-height: 48px;
+            padding: 6px 12px 6px 10px;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+/* @qingtuan-order:001039 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item + .settings-item::before {
+            left: 51px;
+            right: 12px;
+            height: 0;
+            background: none;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+/* @qingtuan-order:001040 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item:active {
+            background: var(--win-bar);
+        }
+
+/* @qingtuan-order:001041 */
+
+
+        /* 图标：圆角小块，粗描边，底下一道实色投影 */
+
+/* @qingtuan-order:001042 */
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon,
+        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+            flex: 0 0 29px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001043 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+
+/* @qingtuan-order:001044 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item-action {
+            color: var(--win-line);
+        }
+
+/* @qingtuan-order:001045 */
+
+
+        /* 个人信息：my_profile.exe，右上三颗圆点，头像放在带框的相片格里，箭头变成凸起小按钮 */
+
+/* @qingtuan-order:001046 */
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal {
+            position: relative;
+        }
+
+/* @qingtuan-order:001047 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: #FFFFFF;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding-top: 36px;
+            padding-bottom: 12px;
+        }
+
+/* @qingtuan-order:001048 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
+            display: flex !important;
+            align-items: center;
+            content: 'my_profile.exe' !important;
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 26px;
+            padding-left: 10px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            -webkit-mask: none;
+            mask: none;
+            z-index: 2;
+        }
+
+/* @qingtuan-order:001049 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::after {
+            display: block !important;
+            content: '' !important;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            left: auto;
+            width: 38px;
+            height: 10px;
+            border: 0;
+            border-radius: 0;
+            z-index: 3;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+/* @qingtuan-order:001050 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
+            border: 1px solid var(--win-line);
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:001051 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar img {
+            border-radius: 3px;
+        }
+
+/* @qingtuan-order:001052 */
+
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--win-line);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001053 */
+
+
+        /* 01 个性化内容：标题下面一条菜单栏 */
+
+/* @qingtuan-order:001054 */
+
+        #settingsPage .retro-menubar {
+            display: flex;
+            gap: 14px;
+            padding: 4px 12px 5px;
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001055 */
+
+
+        #settingsPage .retro-menubar span:first-letter {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+/* @qingtuan-order:001056 */
+
+
+        #settingsPage .settings-content > .settings-section.is-collapsed > .retro-menubar {
+            display: none;
+        }
+
+/* @qingtuan-order:001057 */
+
+
+        /* 02 智能连接与服务：底部状态栏，写着这一组有几个项目，右下角拖拽纹 */
+
+/* @qingtuan-order:001058 */
+
+        #settingsPage .retro-win-status {
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
+                var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001059 */
+
+
+        /* 03 系统与存储：后面叠着两扇露出一角的窗口 */
+
+/* @qingtuan-order:001060 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) .settings-section-title {
+            border-radius: 3px 3px 0 0;
+        }
+
+/* @qingtuan-order:001061 */
+
+
+        /* 04 关于：只有关闭键，图标变成大大的圆形 i，像系统信息对话框 */
+
+/* @qingtuan-order:001062 */
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-section-title::after {
+            flex-basis: 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001063 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item {
+            min-height: 58px;
+        }
+
+/* @qingtuan-order:001064 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+            width: 36px;
+            height: 36px;
+            flex-basis: 36px;
+            background: var(--win-bar);
+            color: var(--win-deep);
+        }
+
+/* @qingtuan-order:001065 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.2;
+        }
+
+/* @qingtuan-order:001066 */
+
+
+        /* ---------------- 设置主页 · 程序标题栏、地址栏、分组编号与折叠、底部状态栏 ---------------- */
+
+/* @qingtuan-order:001067 */
+
+        /* 顶栏变成程序标题栏：深色底白字，右侧三个窗口小方块 */
+
+/* @qingtuan-order:001068 */
+
+        #settingsPage .settings-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:001069 */
+
+
+        #settingsPage .settings-header h2,
+        #settingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001070 */
+
+
+        #settingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001071 */
+
+
+        #settingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001072 */
+
+
+        /* 地址栏：浅色条里一格凹陷输入框，写着当前路径 */
+
+/* @qingtuan-order:001073 */
+
+        #settingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001074 */
+
+
+        #settingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001075 */
+
+
+        #settingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:001076 */
+
+
+        #settingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:001077 */
+
+
+        #settingsPage .settings-content {
+            padding-top: 14px;
+        }
+
+/* @qingtuan-order:001078 */
+
+
+        /* 分组标题：前面一个折叠三角和楼层编号，点标题栏可以收起 / 展开 */
+
+/* @qingtuan-order:001079 */
+
+        #settingsPage .settings-content > .settings-section .settings-section-title {
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+/* @qingtuan-order:001080 */
+
+
+        #settingsPage .settings-content > .settings-section .retro-sec-head {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:001081 */
+
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle {
+            flex: 0 0 8px;
+            background: currentColor;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            transition: transform 0.18s ease;
+        }
+
+/* @qingtuan-order:001082 */
+
+
+        #settingsPage .settings-content > .settings-section .retro-sec-no {
+            font-size: 11px; /* 跟标题文字同一个字号 */
+            font-weight: 600;
+            opacity: 1; /* 编号跟标题一样实色深青灰，不再半透明 */
+        }
+
+/* @qingtuan-order:001083 */
+
+
+        #settingsPage .settings-content > .settings-section.is-collapsed > .settings-item {
+            display: none;
+        }
+
+/* @qingtuan-order:001084 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(4).is-collapsed {
+            min-height: 18px;
+        }
+
+/* @qingtuan-order:001085 */
+
+
+        /* 底部状态栏：左边版本号，右边访客计数，右下角拖拽纹 */
+
+/* @qingtuan-order:001086 */
+
+        #settingsPage .retro-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 2px;
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 3px bottom 3px / 9px 9px,
+                var(--win-bar);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:001087 */
+
+
+        #settingsPage .retro-counter {
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+/* @qingtuan-order:001088 */
+
+
+        /* ---------------- 设置主页 · 古早升级：98 式凸起斜面、像素图标、跑马灯与小徽章（颜色全部跟随主题色） ---------------- */
+
+/* @qingtuan-order:001089 */
+
+
+        /* 窗口：深一点的外框 + 双层凸起斜面 + 右下硬投影 */
+
+/* @qingtuan-order:001090 */
+
+        #settingsPage .settings-content > .settings-section {
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:001091 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(4) {
+            margin-top: 26px;
+            margin-right: 10px;
+            box-shadow:
+                var(--win-drop),
+                5px -6px 0 -1px #FFFFFF,
+                5px -6px 0 0 var(--win-deep),
+                10px -12px 0 -1px #FFFFFF,
+                10px -12px 0 0 var(--win-deep);
+            overflow: visible;
+        }
+
+/* @qingtuan-order:001092 */
+
+
+        /* 标题栏：纯浅主色，底线跟窗口外框同深 */
+
+/* @qingtuan-order:001093 */
+
+        #settingsPage .settings-content > .settings-section .settings-section-title,
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card::before {
+            border-bottom: 1px solid var(--win-deep);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            box-shadow: inset 1px 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001094 */
+
+
+        /* 条目：按下时整行不变，只让右侧箭头钮凹进去 */
+
+/* @qingtuan-order:001095 */
+
+        #settingsPage .settings-content > .settings-section .settings-item:active {
+            background: transparent;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:001096 */
+
+
+        /* 图标格：凸起小方块，里面是像素画 */
+
+/* @qingtuan-order:001097 */
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon,
+        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            border: 1px solid var(--win-deep);
+            border-radius: 2px !important;
+            background: var(--win-face);
+            color: var(--win-deep);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:001098 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item-icon svg.retro-pixel-icon {
+            width: 16px;
+            height: 16px;
+            shape-rendering: crispEdges;
+            image-rendering: pixelated;
+        }
+
+/* @qingtuan-order:001099 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon svg.retro-pixel-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+/* @qingtuan-order:001100 */
+
+
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+            border-radius: 2px !important;
+        }
+
+/* @qingtuan-order:001101 */
+
+
+        /* 右侧箭头：凸起的小方钮，按下时凹进去 */
+
+/* @qingtuan-order:001102 */
+
+        #settingsPage .settings-content > .settings-section .settings-item-action,
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
+            width: 22px;
+            height: 22px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:001103 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item-action svg {
+            width: 12px;
+            height: 12px;
+        }
+
+/* @qingtuan-order:001104 */
+
+
+        /* 右侧箭头钮加一层亮面（跟主画面、Chat 的按钮一致）：上半截白、中间一道分界、下半截很淡的主题色；
+           图标格和窗口本身维持平的 Win98 风，点进二级页也不会突然多出别的高光 */
+
+/* @qingtuan-order:001105 */
+
+        #settingsPage .settings-content > .settings-section .settings-item-action,
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
+            background: linear-gradient(#FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 42%, #FFFFFF) 56.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 30%, #FFFFFF) 100%);
+        
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            color: var(--win-deep);
+        }
+
+/* @qingtuan-order:001106 */
+
+
+        #settingsPage .settings-content > .settings-section .settings-item:active .settings-item-action {
+            background: var(--win-face);
+        
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:001107 */
+
+
+        /* 头像：相片格加双层斜面 */
+
+/* @qingtuan-order:001108 */
+
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            padding: 2px;
+            /* 照片后面垫人形剪影（跟主画面头像同一款，按 40×40 照片区等比缩小）：头半径 9 底边 23.5，肩膀顶边 25.5 */
+            background:
+                radial-gradient(circle 9px at 50% 14.5px, #FFFFFF 0 8.5px, transparent 9px) content-box,
+                radial-gradient(ellipse 18px 14.5px at 50% 100%, #FFFFFF 0 99%, transparent 100%) content-box,
+                linear-gradient(var(--theme-color), var(--theme-color)) content-box,
+                var(--win-face);
+            box-shadow: var(--bevel-in), var(--win-drop);
+        }
+
+/* @qingtuan-order:001109 */
+
+
+        /* 读不到头像图时把破图藏起来，露出剪影 */
+
+/* @qingtuan-order:001110 */
+
+        #settingsPage .settings-profile-avatar img.avatar-missing { visibility: hidden; }
+
+/* @qingtuan-order:001111 */
+
+
+        /* 菜单栏 / 分组状态栏 / 地址框：统一到 98 式斜面 */
+
+/* @qingtuan-order:001112 */
+
+        #settingsPage .retro-menubar {
+            background: var(--win-face);
+            border-bottom: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:001113 */
+
+
+        #settingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:001114 */
+
+
+        /* 地址栏下面：一条跑马灯公告 */
+
+/* @qingtuan-order:001115 */
+
+        #settingsPage .retro-marquee {
+            position: relative;
+            overflow: hidden;
+            height: 20px;
+            border-bottom: 1px solid var(--win-deep);
+            background: var(--set-fill, var(--win-deep));
+            color: #FFFFFF;
+            font-size: 10px;
+            line-height: 20px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:001116 */
+
+
+        #settingsPage .retro-marquee-track {
+            display: inline-block;
+            padding-left: 100%;
+            animation: retroMarquee 18s linear -7s infinite;
+        }
+
+/* @qingtuan-order:001118 */
+
+
+        @media (prefers-reduced-motion: reduce) {
+            #settingsPage .retro-marquee-track {
+                padding-left: 12px;
+                animation: none;
+            }
+        }
+
+/* @qingtuan-order:001119 */
+
+
+        /* 底部：访客计数下面一排 88×31 小徽章，像老网站页脚的友情按钮 */
+
+/* @qingtuan-order:001120 */
+
+        #settingsPage .retro-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+/* @qingtuan-order:001121 */
+
+
+        #settingsPage .retro-badge {
+            display: flex;
+            align-items: stretch;
+            width: 88px;
+            height: 31px;
+            border: 1px solid var(--win-deep);
+            background: #FFFFFF;
+            box-shadow: var(--bevel-out);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            color: var(--win-deep);
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001122 */
+
+
+        #settingsPage .retro-badge-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 22px;
+            margin: 2px 0 2px 2px;
+            background: var(--set-fill, var(--win-deep));
+            color: #FFFFFF;
+            font-size: 12px;
+        }
+
+/* @qingtuan-order:001123 */
+
+
+        #settingsPage .retro-badge-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            padding: 0 4px;
+        }
+
+/* @qingtuan-order:001124 */
+
+
+        #settingsPage .retro-badge-text small {
+            font-size: 6.5px;
+            letter-spacing: 0;
+            font-weight: 500;
+            opacity: 0.75;
+        }
+
+/* @qingtuan-order:001125 */
+
+
+        #settingsPage .retro-badge.is-striped {
+            background:
+                repeating-linear-gradient(135deg, var(--win-bar) 0 3px, #FFFFFF 3px 6px);
+        }
+
+/* @qingtuan-order:001126 */
+
+
+        #settingsPage .retro-badge.is-striped .retro-badge-text {
+            margin: 3px;
+            padding: 0 4px;
+            background: #FFFFFF;
+            border: 1px solid var(--win-line);
+            flex: 1;
+            align-items: center;
+        }
+
+/* @qingtuan-order:001127 */
+
+
+        #settingsPage .retro-badge.is-dark {
+            background: var(--set-fill, var(--win-deep));
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001128 */
+
+
+        #settingsPage .retro-badge.is-dark .retro-badge-side {
+            background: var(--theme-color);
+            color: var(--win-deep);
+        }
+
+/* @qingtuan-order:001129 */
+
+
+        /* 状态栏：98 式凹陷分格，左格版本号，右格访客计数 */
+
+/* @qingtuan-order:001130 */
+
+        #settingsPage .retro-status-bar {
+            gap: 3px;
+            margin-top: 18px;
+            padding: 3px 18px 3px 3px;
+            border: 1px solid var(--win-deep);
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade);
+        }
+
+/* @qingtuan-order:001131 */
+
+
+        #settingsPage .retro-status-bar > span,
+        #settingsPage .retro-win-status > span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 18px;
+            padding: 1px 6px;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:001132 */
+
+
+        #settingsPage .retro-status-bar > .retro-visitor {
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+/* @qingtuan-order:001133 */
+
+
+        /* 访客计数：深底主题色数字，像 LCD 计数器 */
+
+/* @qingtuan-order:001134 */
+
+        #settingsPage .retro-counter {
+            padding: 1px 5px;
+            border-radius: 0;
+            /* 访客计数器：底用顶栏那种青（主题色带灰），数字用主题色本身 */
+            background: var(--set-fill, var(--win-deep));
+            color: var(--theme-color);
+            -webkit-text-fill-color: var(--theme-color);
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+/* @qingtuan-order:001135 */
+
+
+        /* 02 的窗口状态栏：同样分格，「3 个项目」占满，右边一格「就绪」 */
+
+/* @qingtuan-order:001136 */
+
+        #settingsPage .retro-win-status {
+            display: flex;
+            gap: 3px;
+            padding: 3px 18px 3px 3px;
+            border-top: 1px solid var(--win-deep);
+        }
+
+/* @qingtuan-order:001137 */
+
+
+        #settingsPage .retro-win-status > span:first-child {
+            flex: 1;
+        }
+
+/* @qingtuan-order:001138 */
+
+
+        /* 折叠按钮：凸起小方块，里面一个三角，收起时三角转向右 */
+
+/* @qingtuan-order:001139 */
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle {
+            position: relative;
+            flex: 0 0 13px;
+            width: 13px;
+            height: 13px;
+            border: 1px solid var(--win-deep);
+            background: var(--win-face);
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade);
+            -webkit-mask: none;
+            mask: none;
+            transition: none;
+        }
+
+/* @qingtuan-order:001140 */
+
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--set-fill, var(--win-deep));
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 7px 7px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%3E%3Cpath%20d%3D%27M0.5%201.5h7L4%206.5z%27/%3E%3C/svg%3E") no-repeat center / 7px 7px;
+            transition: transform 0.18s ease;
+        }
+
+/* @qingtuan-order:001141 */
+
+
+        #settingsPage .settings-content > .settings-section.is-collapsed .retro-sec-toggle {
+            transform: none;
+        }
+
+/* @qingtuan-order:001142 */
+
+
+        #settingsPage .settings-content > .settings-section.is-collapsed .retro-sec-toggle::before {
+            transform: rotate(-90deg);
+        }
+
+/* @qingtuan-order:001143 */
+
+
+        /* 只有按到左边小图示按钮本身才凹（标题列不动） */
+
+/* @qingtuan-order:001144 */
+
+        #settingsPage .settings-content > .settings-section .retro-sec-toggle:active {
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:003606 */
+
+        #settingsPage .settings-item-title { color: var(--set-title) !important; -webkit-text-fill-color: var(--set-title) !important; }
+
+/* @qingtuan-order:003607 */
+
+        #settingsPage .settings-item-desc { color: var(--set-line) !important; -webkit-text-fill-color: var(--set-line) !important; }
+
+/* @qingtuan-order:003693 */
+
+        /* 设置主页窗口标题列的折叠小三角：试用主题青（原色） */
+
+/* @qingtuan-order:003694 */
+
+        #settingsPage#settingsPage .settings-content > .settings-section .retro-sec-toggle::before { background: var(--theme-accent) !important; }

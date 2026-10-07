@@ -1,0 +1,4 @@
+export function SettingsDecorations({ kind }: { kind: 'marquee' | 'badges' }) {
+  if (kind === 'marquee') return <div className="retro-marquee" aria-hidden="true"><span className="retro-marquee-track">★ welcome to 青团机 ★ 把想念，装进小小的屏幕里 ★ best viewed with a happy heart ★ 点标题栏可以收起窗口 ★</span></div>;
+  return <div className="retro-badges" aria-hidden="true">{`\n                    `}<span className="retro-badge"><span className="retro-badge-side">♥</span><span className="retro-badge-text">青团机<small>made with love</small></span></span>{`\n                    `}<span className="retro-badge is-striped"><span className="retro-badge-text">BEST VIEWED<small>on tiny phone</small></span></span>{`\n                    `}<span className="retro-badge is-dark"><span className="retro-badge-side">☆</span><span className="retro-badge-text">Y2K<small>forever online</small></span></span></div>;
+}

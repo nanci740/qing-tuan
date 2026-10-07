@@ -1,0 +1,2518 @@
+/* @qingtuan-order:000272 */
+
+            /* 便条打字时不换颜色 */
+
+/* @qingtuan-order:000273 */
+
+
+        /* 美化设置二级页面 */
+
+/* @qingtuan-order:000274 */
+
+
+        #themeSettingsPage:not(.active) {
+            display: none !important;
+        }
+
+/* @qingtuan-order:000275 */
+
+
+        #themeSettingsPage.active {
+            display: flex !important;
+        }
+
+/* @qingtuan-order:000277 */
+
+
+        .theme-setting-group {
+            margin-bottom: 18px;
+        }
+
+/* @qingtuan-order:000278 */
+
+
+        .theme-setting-label {
+            margin: 0 0 7px 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            color: var(--theme-color);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000279 */
+
+
+        .theme-setting-card {
+            padding: 15px;
+            border: 0.5px solid #DDDDE2;
+            background: #FFFFFF;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000280 */
+
+
+        /* 主画面文字统一编辑 */
+
+/* @qingtuan-order:000281 */
+
+        .theme-text-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+/* @qingtuan-order:000282 */
+
+
+        .theme-text-row {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 0.5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000283 */
+
+
+        .theme-text-row:last-child {
+            border-bottom: 0;
+        }
+
+/* @qingtuan-order:000284 */
+
+
+        .theme-text-name {
+            color: var(--ui-text-primary);
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+/* @qingtuan-order:000285 */
+
+
+        .theme-text-input {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            border-bottom: 0.5px solid #ECEFF2;
+            border-radius: 0;
+            outline: none;
+            background: transparent;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            line-height: 1.45;
+            padding: 4px 2px 5px;
+        }
+
+/* @qingtuan-order:000286 */
+
+
+        /* 输入框点进去不要变（古早风） */
+
+/* @qingtuan-order:000287 */
+
+
+        .theme-text-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 0;
+            padding-top: 10px;
+            border-top: 0.5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000288 */
+
+
+        .theme-text-btn {
+            min-height: 34px;
+            border: 0.5px solid #D9DDE1;
+            border-radius: var(--ui-radius);
+            background: #FFFFFF;
+            color: var(--ui-text-primary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000289 */
+
+
+        .theme-text-btn.primary {
+            border-color: rgba(var(--theme-rgb), 0.42);
+            background: rgba(var(--theme-rgb), 0.16);
+            color: var(--beautify-button-text);
+        }
+
+/* @qingtuan-order:000290 */
+
+
+        .theme-color-current {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+/* @qingtuan-order:000291 */
+
+
+        .theme-color-copy strong {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000292 */
+
+
+        .theme-color-copy span,
+        .theme-setting-note {
+            display: block;
+            margin-top: 3px;
+            color: #8E9BAA;
+            font-size: 10.5px;
+            line-height: 1.5;
+        }
+
+/* @qingtuan-order:000293 */
+
+
+        .theme-color-picker-wrap {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            overflow: hidden;
+            border: 2px solid #FFFFFF;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(var(--theme-rgb), 0.42);
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+/* @qingtuan-order:000294 */
+
+
+        /* 自定义色块是在选颜色，不是按钮：按下不要有效果 */
+
+/* @qingtuan-order:000295 */
+
+
+        .theme-palette-group {
+            margin-top: 14px;
+        }
+
+/* @qingtuan-order:000296 */
+
+
+        .theme-palette-group-light {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 0.5px solid #E8E8EA;
+        }
+
+/* @qingtuan-order:000297 */
+
+
+        .theme-palette-caption {
+            margin: 0 0 8px 2px;
+            color: #8E9BAA;
+            font-size: 10px;
+            letter-spacing: 0.8px;
+        }
+
+/* @qingtuan-order:000298 */
+
+
+        .theme-swatches {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 0;
+        }
+
+/* @qingtuan-order:000299 */
+
+
+        .theme-custom-color-panel {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 0.5px solid #E8E8EA;
+        }
+
+/* @qingtuan-order:000300 */
+
+
+        .theme-custom-color-title {
+            margin: 0 0 8px 2px;
+            color: #8E9BAA;
+            font-size: 10px;
+            letter-spacing: 0.8px;
+        }
+
+/* @qingtuan-order:000301 */
+
+
+        .theme-custom-color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+/* @qingtuan-order:000302 */
+
+
+        .theme-custom-picker-btn {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            border: 2px solid #FFFFFF;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(var(--theme-rgb), 0.42);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+/* @qingtuan-order:000303 */
+
+
+        .theme-custom-color-input {
+            flex: 1;
+            min-width: 0;
+            height: 36px;
+            padding: 0 12px;
+            border: 0.5px solid #E1E6E6;
+            background: #FFFFFF;
+            color: #727C88;
+            font-size: 11px;
+            outline: none;
+            box-sizing: border-box;
+            text-transform: uppercase;
+        }
+
+/* @qingtuan-order:000304 */
+
+
+        /* 输入框点进去不要变（古早风） */
+
+/* @qingtuan-order:000305 */
+
+
+        .theme-custom-color-btn {
+            flex: 0 0 auto;
+            height: 36px;
+            padding: 0 12px;
+            border: 0.5px solid rgba(var(--theme-rgb), 0.42);
+            background: rgba(var(--theme-rgb), 0.16);
+            color: var(--beautify-button-text);
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000306 */
+
+
+        .theme-custom-color-hint {
+            display: block;
+            margin: 7px 2px 0;
+            color: #A0A6AD;
+            font-size: 9.5px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:000311 */
+
+
+        .theme-color-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+/* @qingtuan-order:000312 */
+
+
+        .theme-color-modal-title {
+            color: var(--ui-text-primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000313 */
+
+
+        .theme-color-modal-close {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #76808B;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            transition: color .2s ease, transform .15s ease;
+        }
+
+/* @qingtuan-order:000314 */
+
+
+        .theme-color-modal-preview-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.34);
+            border: 1px solid rgba(255, 255, 255, 0.46);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+            margin-bottom: 12px;
+        }
+
+/* @qingtuan-order:000315 */
+
+
+        .theme-color-modal-preview {
+            width: 52px;
+            height: 52px;
+            background: var(--theme-color);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
+            flex: 0 0 52px;
+        }
+
+/* @qingtuan-order:000316 */
+
+
+        .theme-color-modal-copy strong {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+/* @qingtuan-order:000317 */
+
+
+        .theme-color-modal-copy span {
+            display: block;
+            margin-top: 4px;
+            color: #96A0AA;
+            font-size: 9.5px;
+            line-height: 1.4;
+        }
+
+/* @qingtuan-order:000318 */
+
+
+        .theme-color-slider-group {
+            margin-top: 10px;
+        }
+
+/* @qingtuan-order:000319 */
+
+
+        .theme-color-slider-group:first-of-type {
+            margin-top: 0;
+        }
+
+/* @qingtuan-order:000320 */
+
+
+        .theme-color-slider-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            color: #7E8995;
+            font-size: 10px;
+        }
+
+/* @qingtuan-order:000321 */
+
+
+        .theme-color-range {
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            height: 14px;
+            border-radius: var(--ui-radius);
+            outline: none;
+            background: #E8EBEF;
+        }
+
+/* @qingtuan-order:000322 */
+
+
+        .theme-color-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid rgba(62, 70, 81, 0.12);
+            box-shadow: 0 2px 6px rgba(62, 70, 81, 0.18);
+        }
+
+/* @qingtuan-order:000323 */
+
+
+        .theme-color-range::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid rgba(62, 70, 81, 0.12);
+            box-shadow: 0 2px 6px rgba(62, 70, 81, 0.18);
+        }
+
+/* @qingtuan-order:000324 */
+
+
+        .theme-color-modal-hex-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+/* @qingtuan-order:000325 */
+
+
+        .theme-color-modal-hex-input {
+            flex: 1;
+            min-width: 0;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 255, 255, 0.52);
+            background: rgba(255, 255, 255, 0.42);
+            color: #727C88;
+            font-size: 11px;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            outline: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+/* @qingtuan-order:000326 */
+
+
+        /* 输入框点进去不要变（古早风） */
+
+/* @qingtuan-order:000327 */
+
+
+        .theme-color-modal-hex-apply {
+            flex: 0 0 auto;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 255, 255, 0.42);
+            background: rgba(var(--theme-rgb), 0.18);
+            color: var(--beautify-button-text);
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+/* @qingtuan-order:000328 */
+
+
+        .theme-color-modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+/* @qingtuan-order:000329 */
+
+
+        .theme-color-modal-btn {
+            flex: 1;
+            height: 38px;
+            border: 1px solid rgba(255, 255, 255, 0.48);
+            background: rgba(255, 255, 255, 0.34);
+            color: #7E8995;
+            font-size: 11px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+/* @qingtuan-order:000330 */
+
+
+        .theme-color-modal-btn.primary {
+            border-color: rgba(255, 255, 255, 0.42);
+            background: rgba(var(--theme-rgb), 0.18);
+            color: var(--beautify-button-text);
+        }
+
+/* @qingtuan-order:000340 */
+
+
+        .theme-swatch {
+            width: 30px;
+            height: 30px;
+            justify-self: center;
+            border: 3px solid #FFFFFF;
+            border-radius: 50%;
+            background: var(--swatch-color);
+            box-shadow: 0 0 0 1px rgba(62, 70, 81, 0.13);
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+/* @qingtuan-order:000341 */
+
+
+        .theme-swatch.active {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 1.5px #5F6772;
+        }
+
+/* @qingtuan-order:000342 */
+
+
+        .theme-wallpaper-preview {
+            position: relative;
+            width: 100%;
+            height: 145px;
+            overflow: hidden;
+            border: 0.5px solid #DDDDE2;
+            background-color: #F9F9F9;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+/* @qingtuan-order:000343 */
+
+
+        .theme-wallpaper-preview span {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 5px 10px;
+            border-radius: var(--ui-radius);
+            color: #727C88;
+            background: rgba(255, 255, 255, 0.78);
+            font-size: 10.5px;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000344 */
+
+
+        .theme-wallpaper-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-top: 11px;
+        }
+
+/* @qingtuan-order:000345 */
+
+
+        .theme-action-btn {
+            min-height: 36px;
+            border: 0.5px solid rgba(var(--theme-rgb), 0.42);
+            background: rgba(var(--theme-rgb), 0.16);
+            color: var(--beautify-button-text);
+            font-size: 11.5px;
+            cursor: pointer;
+            box-shadow: none;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        }
+
+/* @qingtuan-order:000346 */
+
+
+        .theme-action-btn.secondary {
+            background: #FFFFFF;
+            border: 0.5px solid #E1E6E6;
+            color: #727C88;
+        }
+
+/* @qingtuan-order:000355 */
+
+
+        .theme-icon-section-title {
+            margin: 0 0 10px 2px;
+            color: #8E9BAA;
+            font-size: 10px;
+            letter-spacing: 0.8px;
+        }
+
+/* @qingtuan-order:000356 */
+
+
+        .theme-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px 10px;
+        }
+
+/* @qingtuan-order:000357 */
+
+
+        .theme-icon-grid + .theme-icon-section-title {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 0.5px solid #ECEEF1;
+        }
+
+/* @qingtuan-order:000365 */
+
+
+        .theme-icon-draft-note {
+            display: block;
+            margin-top: 13px;
+            color: #A0A7AF;
+            font-size: 9.5px;
+            line-height: 1.5;
+        }
+
+/* @qingtuan-order:000366 */
+
+
+        .theme-icon-bottom-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-top: 14px;
+        }
+
+/* @qingtuan-order:000367 */
+
+
+        .theme-icon-bottom-btn {
+            min-height: 36px;
+            border: 0.5px solid #E1E6E6;
+            background: #FFFFFF;
+            color: #727C88;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000368 */
+
+
+        .theme-icon-bottom-btn.primary {
+            border-color: rgba(var(--theme-rgb), 0.42);
+            background: rgba(var(--theme-rgb), 0.16);
+            color: var(--beautify-button-text);
+        }
+
+/* @qingtuan-order:000369 */
+
+
+        .theme-range-row {
+            display: grid;
+            grid-template-columns: auto 1fr 38px;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            color: var(--ui-text-primary);
+            font-size: 11px;
+        }
+
+/* @qingtuan-order:000370 */
+
+
+        #wallpaperOpacity {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 14px;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000371 */
+
+        #wallpaperOpacity:focus {
+            outline: none;
+        }
+
+/* @qingtuan-order:000372 */
+
+        #wallpaperOpacity::-webkit-slider-runnable-track {
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(
+                to right,
+                var(--theme-color) 0%,
+                var(--theme-color) var(--wallpaper-fill),
+                #5F6772 var(--wallpaper-fill),
+                #5F6772 100%
+            );
+        }
+
+/* @qingtuan-order:000373 */
+
+        #wallpaperOpacity::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            margin-top: -3.5px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+        }
+
+/* @qingtuan-order:000374 */
+
+        #wallpaperOpacity::-moz-range-track {
+            height: 3px;
+            border: 0;
+            border-radius: 999px;
+            background: #5F6772;
+        }
+
+/* @qingtuan-order:000375 */
+
+        #wallpaperOpacity::-moz-range-progress {
+            height: 3px;
+            border-radius: 999px;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:000376 */
+
+        #wallpaperOpacity::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+        }
+
+/* @qingtuan-order:000377 */
+
+
+        #wallpaperOpacityValue {
+            text-align: right;
+            color: #727C88;
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:000378 */
+
+
+        .theme-reset-btn {
+            width: 100%;
+            min-height: 36px;
+            margin-top: 12px;
+            border: 0;
+            background: transparent;
+            color: #727C88;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000394 */
+
+
+        .theme-option-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--ui-text-primary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000395 */
+
+
+        .theme-option-value {
+            color: var(--theme-deep);
+            font-size: 10px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000396 */
+
+
+        .theme-segmented {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+            padding: 4px;
+            background: #F4F5F6;
+        }
+
+/* @qingtuan-order:000397 */
+
+
+        .theme-segment-btn {
+            height: 32px;
+            border: 0;
+            background: transparent;
+            color: #8A949F;
+            font-size: 10.5px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000398 */
+
+
+        .theme-segment-btn.active {
+            background: #FFFFFF;
+            color: var(--theme-deep);
+            box-shadow: 0 1px 4px rgba(62, 70, 81, 0.08);
+        }
+
+/* @qingtuan-order:000399 */
+
+
+        .theme-glass-row {
+            margin-top: 10px;
+        }
+
+/* @qingtuan-order:000400 */
+
+
+        .theme-glass-range {
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            height: 5px;
+            border-radius: var(--ui-radius);
+            outline: none;
+            background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.32), rgba(var(--theme-rgb), 0.78));
+        }
+
+/* @qingtuan-order:000401 */
+
+
+        .theme-glass-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid rgba(62,70,81,0.12);
+            box-shadow: 0 2px 6px rgba(62,70,81,0.16);
+        }
+
+/* @qingtuan-order:000402 */
+
+
+        .theme-glass-range::-moz-range-thumb {
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid rgba(62,70,81,0.12);
+            box-shadow: 0 2px 6px rgba(62,70,81,0.16);
+        }
+
+/* @qingtuan-order:000415 */
+
+
+        #fontImportStatus {
+            display: none !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        
+            color: var(--theme-muted);
+        }
+
+/* @qingtuan-order:000650 */
+
+
+        #resetThemeColor,
+        #resetCustomFontBtn,
+        #resetMainTextsBtn,
+        #removeWallpaperBtn,
+        #resetAllCustomIconsBtn {
+            color: var(--ui-text-muted);
+        }
+
+/* @qingtuan-order:000935 */
+
+
+        /* ---------------- 美化设置 · 古早小窗口：每组是一扇带标题栏的小窗，按钮凸起、输入框凹陷，颜色全部取自主题色 ---------------- */
+
+/* @qingtuan-order:000936 */
+
+        #themeSettingsPage {
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:000937 */
+
+
+        /* 窗口本体 */
+
+/* @qingtuan-order:000938 */
+
+        #themeSettingsPage .theme-setting-group {
+            margin-bottom: 16px;
+            border: 1px solid var(--win-line);
+            border-radius: 4px;
+            background: #FFFFFF;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:000939 */
+
+
+        /* 标题栏：浅青底、深青字，右侧最小化 / 最大化 / 关闭三个小方框 */
+
+/* @qingtuan-order:000940 */
+
+        #themeSettingsPage .theme-setting-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:000941 */
+
+
+        #themeSettingsPage .theme-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: 10px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:000942 */
+
+
+        /* 窗口内容区：去掉原卡片的边框和圆角 */
+
+/* @qingtuan-order:000943 */
+
+        #themeSettingsPage .theme-setting-card {
+            border: 0;
+            border-radius: 0 !important;
+            background: transparent;
+        }
+
+/* @qingtuan-order:000944 */
+
+
+        /* 分隔线改成纸品上的虚线 */
+
+/* @qingtuan-order:000945 */
+
+        #themeSettingsPage .theme-custom-color-panel {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+/* @qingtuan-order:000946 */
+
+
+        /* 按钮：凸起的斜面，按下去凹进去 */
+
+/* @qingtuan-order:000947 */
+
+        #themeSettingsPage .theme-settings-content .theme-action-btn,
+        #themeSettingsPage .theme-settings-content .theme-text-btn,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-btn,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+/* @qingtuan-order:000948 */
+
+
+        #themeSettingsPage .theme-settings-content .theme-action-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-text-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-custom-color-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-font-url-btn:active,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:active,
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:000949 */
+
+
+        /* 输入框与选择框：凹陷 */
+
+/* @qingtuan-order:000950 */
+
+
+        /* 分段选择：外框凹陷，选中项凸起 */
+
+/* @qingtuan-order:000951 */
+
+        #themeSettingsPage .theme-segmented {
+            background: #F4F6F6;
+        }
+
+/* @qingtuan-order:000952 */
+
+
+        #themeSettingsPage .theme-segment-btn {
+            border-radius: 2px !important;
+        }
+
+/* @qingtuan-order:000953 */
+
+
+        /* 预览框和图标格子：细实线方框 */
+
+/* @qingtuan-order:000954 */
+
+
+        /* ---------------- 美化设置 · 七扇窗各有来历 ---------------- */
+
+/* @qingtuan-order:000955 */
+
+        #themeSettingsPage {
+            /* 按主题色本身加深，色相和饱和度不变：青还是青，粉还是粉，不会混成灰紫 */
+        }
+
+/* @qingtuan-order:000956 */
+
+
+        /* 1 界面配色：浅色标题栏，标题前一个主题色调色盘（试过深色标题栏，和顶栏叠在一起太重） */
+
+/* @qingtuan-order:000957 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:000958 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::before {
+            content: '';
+            flex: 0 0 13px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2022a1%201%200%200%201%200-20%2010%209%200%200%201%2010%209%205%205%200%200%201-5%205h-2.25a1.75%201.75%200%200%200-1.4%202.8l.3.4a1.75%201.75%200%200%201-1.4%202.8z%27/%3E%3Ccircle%20cx%3D%2713.5%27%20cy%3D%276.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%2717.5%27%20cy%3D%2710.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%276.5%27%20cy%3D%2712.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%278.5%27%20cy%3D%277.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2022a1%201%200%200%201%200-20%2010%209%200%200%201%2010%209%205%205%200%200%201-5%205h-2.25a1.75%201.75%200%200%200-1.4%202.8l.3.4a1.75%201.75%200%200%201-1.4%202.8z%27/%3E%3Ccircle%20cx%3D%2713.5%27%20cy%3D%276.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%2717.5%27%20cy%3D%2710.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%276.5%27%20cy%3D%2712.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%278.5%27%20cy%3D%277.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+/* @qingtuan-order:000959 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:000960 */
+
+
+        /* 2 界面质感：浏览器小窗，左上三颗圆点，标题居中 */
+
+/* @qingtuan-order:000961 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label {
+            justify-content: center;
+            position: relative;
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:000962 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::after {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin: -5px 0 0;
+            width: 38px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+/* @qingtuan-order:000963 */
+
+
+        /* 3 开屏设置：古早 iPod 的状态条，细、灰、右边一个播放三角和电池 */
+
+/* @qingtuan-order:000964 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: var(--win-deep);
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000965 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+/* @qingtuan-order:000966 */
+
+
+        /* 4 字体样式：表单分组框，没有标题栏，标题压在框线上 */
+
+/* @qingtuan-order:000967 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) {
+            position: relative;
+            overflow: visible;
+            margin-top: 26px;
+            background: transparent;
+            box-shadow: none;
+            border-style: solid;
+        }
+
+/* @qingtuan-order:000968 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000969 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            transform: translateY(-50%);
+            margin-left: 10px;
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(var(--set-bg, #F9F9F7) 50%, #FFFFFF 50%);
+            box-shadow: none;
+            color: var(--win-ink);
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:000970 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label::after {
+            display: none;
+        }
+
+/* @qingtuan-order:000971 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+            padding-top: 20px;
+        }
+
+/* @qingtuan-order:000972 */
+
+
+        /* 5 主画面文字：对话框，双层框线，右上只有「?」和关闭 */
+
+/* @qingtuan-order:000973 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) {
+            box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 4px color-mix(in srgb, var(--theme-color) 35%, #E3E6E8), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:000974 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label {
+            margin: 4px 4px 0;
+            border: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:000975 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+/* @qingtuan-order:000976 */
+
+
+        /* 6 主画面背景：看图窗口，底部一条状态栏，右下角拖拽纹 */
+
+/* @qingtuan-order:000977 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card {
+            position: relative;
+            padding-bottom: 34px;
+        }
+
+/* @qingtuan-order:000978 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 18px;
+            border-top: 1px solid var(--win-line);
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px,
+                var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:000979 */
+
+
+        /* 7 图标样式：文件夹窗口，标题前一个小文件夹 */
+
+/* @qingtuan-order:000980 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:000981 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+/* @qingtuan-order:000982 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:000983 */
+
+
+        /* ---------------- 美化设置 · 自定义颜色弹窗：古早调色对话框 ---------------- */
+
+/* @qingtuan-order:000984 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-backdrop {
+            background: rgba(60, 70, 76, 0.22) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:000985 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card {
+            background: #FFFFFF;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:000986 */
+
+
+        /* 标题栏：与「界面配色」窗口同一种深色，白字 */
+
+/* @qingtuan-order:000987 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-title {
+            color: #FFFFFF;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+/* @qingtuan-order:000988 */
+
+
+        /* 关闭钮：凸起的小方块 */
+
+/* @qingtuan-order:000989 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+/* @qingtuan-order:000990 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close:active {
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+/* @qingtuan-order:000991 */
+
+
+        /* 预览区：凹进去的框，色块像一张贴上去的色卡 */
+
+/* @qingtuan-order:000992 */
+
+
+        /* 滑杆：凹陷的槽，方形凸起的滑块 */
+
+/* @qingtuan-order:000993 */
+
+        #themeSettingsPage #themeColorModal .theme-color-range {
+            height: 12px;
+        }
+
+/* @qingtuan-order:000994 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+/* @qingtuan-order:000995 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:000996 */
+
+
+        /* HEX 输入框凹陷，三个按钮与页面上的按钮同一套斜面 */
+
+/* @qingtuan-order:000997 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-hex-input {
+            background: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:000998 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:000999 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:not(.primary),        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn{
+            background: #FFFFFF !important;
+            color: var(--ui-text-primary) !important;
+            -webkit-text-fill-color: var(--ui-text-primary) !important;
+        }
+
+/* @qingtuan-order:001000 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001001 */
+
+
+        /* ---------------- 美化设置 · 页面滑杆、DEFAULT 标签、弹窗主按钮 ---------------- */
+
+/* @qingtuan-order:001002 */
+
+        /* 玻璃感强度：凹陷长槽，方形凸起滑块 */
+
+/* @qingtuan-order:001003 */
+
+        #themeSettingsPage .theme-glass-range {
+            height: 10px;
+            background: rgba(var(--theme-rgb), 0.32);
+        }
+
+/* @qingtuan-order:001004 */
+
+
+        #themeSettingsPage .theme-glass-range::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+/* @qingtuan-order:001005 */
+
+
+        #themeSettingsPage .theme-glass-range::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+/* @qingtuan-order:001006 */
+
+
+        /* 图片透明度：同一种长槽，已选部分填主色，其余是浅灰槽底 */
+
+/* @qingtuan-order:001007 */
+
+        #themeSettingsPage #wallpaperOpacity {
+            height: 22px;
+        }
+
+/* @qingtuan-order:001008 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-runnable-track {
+            height: 10px;
+            border: 1px solid var(--win-line);
+            box-sizing: border-box;
+            background: linear-gradient(
+                to right,
+                var(--theme-color) 0%,
+                var(--theme-color) var(--wallpaper-fill),
+                #EEF1F2 var(--wallpaper-fill),
+                #EEF1F2 100%
+            );
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+/* @qingtuan-order:001009 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+            margin-top: -6px;
+        }
+
+/* @qingtuan-order:001010 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #EEF1F2;
+        }
+
+/* @qingtuan-order:001011 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-progress {
+            height: 8px;
+            border-radius: 2px;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:001012 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-moz-range-thumb {
+            width: 12px;
+            height: 20px;
+            border-radius: 2px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+/* @qingtuan-order:001013 */
+
+
+        /* DEFAULT 标签：像盖在纸上的小印章，细框、字距拉开 */
+
+/* @qingtuan-order:001014 */
+
+        #themeSettingsPage .theme-font-badge {
+            padding: 3px 6px;
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+        }
+
+/* @qingtuan-order:001015 */
+
+
+        /* 弹窗里的青色按钮：和页面上的青色按钮一样，实心主色、白字 */
+
+/* @qingtuan-order:001016 */
+
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:001017 */
+
+
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:001018 */
+
+
+        /* ---------------- 美化设置 · 调色板方色块、统一虚线、预览印章、链接式恢复 ---------------- */
+
+/* @qingtuan-order:001019 */
+
+        /* 色块：老画图软件的方色格，选中时外面套一圈虚线框 */
+
+/* @qingtuan-order:001020 */
+
+        #themeSettingsPage .theme-swatch {
+            width: 28px;
+            height: 28px;
+        }
+
+/* @qingtuan-order:001021 */
+
+
+        #themeSettingsPage .theme-swatch.active {
+            transform: none;
+            outline: 1px dashed var(--win-ink);
+            outline-offset: 3px;
+        }
+
+/* @qingtuan-order:001022 */
+
+
+        /* 色块是在选颜色，不是按钮：按下不要有效果 */
+
+/* @qingtuan-order:001023 */
+
+
+        /* 主题色与自定义色两个大色块：贴在窗口里的方色卡 */
+
+/* @qingtuan-order:001024 */
+
+
+        /* 柔和色系与浅色系之间也改成虚线，和下面一条一致 */
+
+/* @qingtuan-order:001025 */
+
+        #themeSettingsPage .theme-palette-group-light {
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+/* @qingtuan-order:001026 */
+
+
+        /* 背景预览里的「默认灰白背景」：和 DEFAULT 同款小印章 */
+
+/* @qingtuan-order:001027 */
+
+        #themeSettingsPage .theme-wallpaper-preview span {
+            padding: 4px 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:001028 */
+
+
+        /* 恢复默认青色：老网页那种带下划线的链接字 */
+
+/* @qingtuan-order:001029 */
+
+        #themeSettingsPage .theme-reset-btn {
+            min-height: 30px;
+            margin-top: 8px;
+            color: var(--win-ink);
+            text-decoration: underline;
+            text-decoration-color: color-mix(in srgb, var(--theme-color) 60%, #9AA3AC);
+            text-underline-offset: 3px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001145 */
+
+
+        /* ---------------- 美化设置 · 顶栏程序标题栏与地址栏（与设置主页一致） ---------------- */
+
+/* @qingtuan-order:001146 */
+
+        #themeSettingsPage .settings-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:001147 */
+
+
+        #themeSettingsPage .settings-header h2,
+        #themeSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001148 */
+
+
+        #themeSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001149 */
+
+
+        #themeSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001150 */
+
+
+        #themeSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001151 */
+
+
+        #themeSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001152 */
+
+
+        #themeSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001153 */
+
+
+        #themeSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:001553 */
+
+
+        /* 美化设置：所有青色操作按钮统一为主题实色 + 纯白文字 */
+
+/* @qingtuan-order:001554 */
+
+        #themeSettingsPage .ui-cyan-btn {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001555 */
+
+
+        /* 触屏设备不要保留 hover 状态，避免点完按钮后颜色卡住 */
+
+/* @qingtuan-order:001556 */
+
+        @media (hover: hover) and (pointer: fine) {
+            #themeSettingsPage .ui-cyan-btn:hover {
+                box-shadow: none !important;
+            }
+        }
+
+/* @qingtuan-order:001557 */
+
+
+        #themeSettingsPage .ui-cyan-btn:focus-visible {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+/* @qingtuan-order:002552 */
+
+
+        /* 美化设置页：自定义颜色弹窗按钮完全对齐 API 弹窗按钮 */
+
+/* @qingtuan-order:002553 */
+
+        #themeSettingsPage #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,
+        #themeSettingsPage #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn {
+            min-height: 36px !important;
+            height: 36px !important;
+            border-radius: var(--ui-radius) !important;
+            border: 0.75px solid rgba(255,255,255,.72) !important;
+            background: rgba(var(--theme-rgb), 0.72) !important;
+            background-clip: padding-box !important;
+            -webkit-background-clip: padding-box !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            outline: none !important;
+            font-weight: 400 !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+/* @qingtuan-order:002554 */
+
+
+        #themeSettingsPage #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,#themeSettingsPage #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible{
+            border: 0.75px solid rgba(255,255,255,.72) !important;
+            background: rgba(var(--theme-rgb), 0.72) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+/* @qingtuan-order:002555 */
+
+#themeSettingsPage #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:active,#themeSettingsPage #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active{
+            border: 0.75px solid rgba(255,255,255,.72) !important;;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+/* @qingtuan-order:002556 */
+
+
+        #themeSettingsPage #cancelThemeColorModal.theme-color-modal-btn {
+            min-height: 36px !important;
+            height: 36px !important;
+            border-radius: var(--ui-radius) !important;
+            border: 0.75px solid rgba(255, 255, 255, 0.48) !important;
+            background: rgba(255, 255, 255, 0.34) !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            outline: none !important;
+            font-weight: 400 !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+/* @qingtuan-order:002557 */
+
+
+        #themeSettingsPage #cancelThemeColorModal.theme-color-modal-btn:focus-visible{
+            border: 0.75px solid rgba(255, 255, 255, 0.48) !important;
+            background: rgba(255, 255, 255, 0.34) !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+/* @qingtuan-order:002558 */
+
+#themeSettingsPage #cancelThemeColorModal.theme-color-modal-btn:active{
+            border: 0.75px solid rgba(255, 255, 255, 0.48) !important;;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+/* @qingtuan-order:002783 */
+
+
+        /* ---------------- 美化设置 · 古早升级：和设置主页同一套 98 式斜面（深外框、双层凸起 / 凹陷、右下硬投影），颜色全部跟随主题色 ---------------- */
+
+/* @qingtuan-order:002784 */
+
+
+        /* 窗口：深外框 + 右下硬投影 */
+
+/* @qingtuan-order:002785 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group {
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:002786 */
+
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group > .theme-setting-label {
+            border-bottom-color: var(--win-deep);
+        }
+
+/* @qingtuan-order:002787 */
+
+
+        /* 地址框：双层凹陷 */
+
+/* @qingtuan-order:002788 */
+
+        #themeSettingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002789 */
+
+
+        /* 白底按钮：浅色凸起，按下凹进去 */
+
+/* @qingtuan-order:002790 */
+
+        #themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn),
+        #themeSettingsPage .theme-settings-content .theme-text-btn:not(.ui-cyan-btn),
+        #themeSettingsPage .theme-settings-content .theme-font-btn:not(.ui-cyan-btn),
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:not(.ui-cyan-btn) {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002791 */
+
+
+        #themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn):active,
+        #themeSettingsPage .theme-settings-content .theme-text-btn:not(.ui-cyan-btn):active,
+        #themeSettingsPage .theme-settings-content .theme-font-btn:not(.ui-cyan-btn):active,
+        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:not(.ui-cyan-btn):active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002792 */
+
+
+        /* 主题色按钮：保留实心主题色，加上同样的凸起斜面 */
+
+/* @qingtuan-order:002793 */
+
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn,        #themeSettingsPage .theme-settings-content .ui-cyan-btn:focus-visible {
+            position: relative;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002794 */
+
+
+        #themeSettingsPage .theme-settings-content .ui-cyan-btn:active {
+            box-shadow: var(--bevel-solid-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002795 */
+
+
+        /* 输入框：双层凹陷 */
+
+/* @qingtuan-order:002796 */
+
+        #themeSettingsPage .theme-custom-color-input,
+        #themeSettingsPage .theme-font-url-input,
+        #themeSettingsPage input[type="text"],
+        #themeSettingsPage textarea {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002797 */
+
+
+        /* 当前主题色和自定义色块：凹陷的色样框 */
+
+/* @qingtuan-order:002798 */
+
+        #themeSettingsPage .theme-color-picker-wrap,
+        #themeSettingsPage .theme-custom-picker-btn {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: inset 0 0 0 2px #FFFFFF, inset 0 0 0 3px var(--win-line) !important;
+        }
+
+/* @qingtuan-order:002799 */
+
+
+        /* 调色板方块：凸起的小色块，按下凹进去 */
+
+/* @qingtuan-order:002800 */
+
+        #themeSettingsPage .theme-swatch {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 1px !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.7), inset -1px -1px 0 rgba(0, 0, 0, 0.14), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:002801 */
+
+
+        /* 色块是在选颜色，不是按钮：按下不要有效果 */
+
+/* @qingtuan-order:002802 */
+
+
+        /* 分段选择：外框凹陷，选中项凸起 */
+
+/* @qingtuan-order:002803 */
+
+        #themeSettingsPage .theme-segmented {
+            border: 1px solid var(--win-deep);
+            border-radius: 2px !important;
+            background: var(--win-face);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002804 */
+
+
+        #themeSettingsPage .theme-segment-btn.active {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px !important;
+            background: #FFFFFF;
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002805 */
+
+
+        /* 滑杆：凹陷长槽 + 凸起方形滑块 */
+
+/* @qingtuan-order:002806 */
+
+        #themeSettingsPage .theme-glass-range {
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:002807 */
+
+
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-runnable-track {
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.14);
+        }
+
+/* @qingtuan-order:002808 */
+
+
+        #themeSettingsPage .theme-glass-range::-webkit-slider-thumb,
+        #themeSettingsPage #wallpaperOpacity::-webkit-slider-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002809 */
+
+
+        #themeSettingsPage .theme-glass-range::-moz-range-thumb,
+        #themeSettingsPage #wallpaperOpacity::-moz-range-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002810 */
+
+
+        /* 背景预览：凹陷的相框 */
+
+/* @qingtuan-order:002811 */
+
+        #themeSettingsPage .theme-wallpaper-preview {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002812 */
+
+
+        /* 图标格子：凸起小方块，和设置主页的图标格一样 */
+
+/* @qingtuan-order:002813 */
+
+        #themeSettingsPage .theme-icon-choice-btn {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:002814 */
+
+
+        #themeSettingsPage .theme-icon-choice-btn:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002815 */
+
+
+        /* DEFAULT 标签：和版本号、访客计数一样的深底浅青小牌 */
+
+/* @qingtuan-order:002816 */
+
+        #themeSettingsPage .theme-font-badge {
+            border: 1px solid var(--win-deep);
+            border-radius: 0 !important;
+            background: var(--set-fill, var(--win-deep));
+            color: var(--theme-color); -webkit-text-fill-color: var(--theme-color);
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.28);
+        }
+
+/* @qingtuan-order:002817 */
+
+
+        /* ---------------- 美化设置 · 三扇普通窗各补一个来历 ---------------- */
+
+/* @qingtuan-order:002818 */
+
+        /* 1 界面配色：像老画图程序，标题前是前景色 / 背景色两块叠着的方块 */
+
+/* @qingtuan-order:002819 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::before {
+            flex: 0 0 15px;
+            width: 9px;
+            height: 9px;
+            margin-right: 6px;
+            border: 1px solid var(--win-deep);
+            background: var(--theme-color);
+            -webkit-mask: none;
+            mask: none;
+            box-shadow: 4px 4px 0 -1px #FFFFFF, 4px 4px 0 0 var(--win-deep);
+            transform: translateY(-2px);
+        }
+
+/* @qingtuan-order:002820 */
+
+
+        /* 6 主画面背景：看图窗口的状态栏里写上文件名 */
+
+/* @qingtuan-order:002821 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+            content: '主画面背景.bmp';
+            padding-left: 8px;
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            line-height: 17px;
+            letter-spacing: 0.3px;
+            border-top-color: var(--win-deep);
+        }
+
+/* @qingtuan-order:002822 */
+
+
+        /* 7 图标样式：资源管理器，标题下面一条地址栏写着图标所在的文件夹 */
+
+/* @qingtuan-order:002823 */
+
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-card::before {
+            content: 'C:\\青团\\图标\\';
+            display: block;
+            margin: -15px -15px 14px;
+            padding: 4px 10px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:002824 */
+
+
+        /* ---------------- 美化设置 · 调色板弹窗：98 式「编辑颜色」对话框（和 about.exe 同一套窗框），预览分成原来 / 新的两格 ---------------- */
+
+/* @qingtuan-order:002825 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card {
+            padding: 0 0 12px;
+            border: 1px solid var(--win-deep);
+            border-radius: 3px !important;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out), var(--win-drop);
+        }
+
+/* @qingtuan-order:002826 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-card > :not(.theme-color-modal-header) {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+/* @qingtuan-order:002827 */
+
+
+        /* 标题栏：收进窗框 3px，深主色白字 */
+
+/* @qingtuan-order:002828 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-header {
+            margin: 3px 3px 12px;
+            padding: 4px 4px 4px 8px;
+            border: 0;
+            background: var(--set-fill, var(--win-deep));
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:002829 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-title {
+            font-size: 11px;
+        }
+
+/* @qingtuan-order:002830 */
+
+
+        /* 关闭钮：浅色凸起小方块，按下凹进去 */
+
+/* @qingtuan-order:002831 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close {
+            width: 18px;
+            height: 16px;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: var(--win-face);
+            color: var(--win-deep);
+            font-size: 13px;
+            line-height: 13px;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade);
+        }
+
+/* @qingtuan-order:002832 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-close:active {
+            transform: none;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:002833 */
+
+
+        /* 预览区：刻线分组框，左边一块凹陷色样分成「原来 | 新的」两格 */
+
+/* @qingtuan-order:002834 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview-wrap {
+            align-items: flex-start;
+            padding: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 0 !important;
+            background: transparent;
+            box-shadow: inset 1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:002835 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-swatch {
+            flex: 0 0 auto;
+        }
+
+/* @qingtuan-order:002836 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-split {
+            display: flex;
+            padding: 3px;
+            border: 1px solid var(--win-deep);
+            background: #FFFFFF;
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002837 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-old,
+        #themeSettingsPage #themeColorModal .theme-color-modal-preview {
+            width: 38px;
+            height: 44px;
+            flex: 0 0 38px;
+            border: 0;
+            border-radius: 0 !important;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:002838 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-old {
+            border-right: 1px solid #FFFFFF;
+        }
+
+/* @qingtuan-order:002839 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-split-caption {
+            display: flex;
+            margin-top: 3px;
+            color: var(--win-ink);
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:002840 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-split-caption span {
+            flex: 1;
+            text-align: center;
+        }
+
+/* @qingtuan-order:002841 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-copy strong {
+            color: var(--win-ink);
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:002842 */
+
+
+        /* 三条滑杆：保留渐变，外面套直角凹槽，滑块是凸起小方块 */
+
+/* @qingtuan-order:002843 */
+
+        #themeSettingsPage #themeColorModal .theme-color-range {
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.22), inset -1px -1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+/* @qingtuan-order:002844 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-webkit-slider-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002845 */
+
+
+        #themeSettingsPage #themeColorModal .theme-color-range::-moz-range-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002846 */
+
+
+        /* HEX 输入框：双层凹陷 */
+
+/* @qingtuan-order:002847 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-hex-input {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002848 */
+
+
+        /* 按钮：取消是浅色凸起，仅预览 / 套用颜色是主题色凸起，按下都凹进去 */
+
+/* @qingtuan-order:002849 */
+
+        #themeSettingsPage #themeColorModal .theme-color-modal-btn,        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus-visible {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002850 */
+
+
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002851 */
+
+
+        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:active {
+            box-shadow: var(--bevel-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002852 */
+
+
+        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:active,
+        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:active {
+            box-shadow: var(--bevel-solid-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:003664 */
+
+        /* ===== 全面检查后补漏 ===== */
+
+/* @qingtuan-order:003665 */
+
+        /* 调色盘：色相 / 饱和度 / 亮度标签 → 深青灰；数值、说明 → 淡青灰 */
+
+/* @qingtuan-order:003666 */
+
+        #themeSettingsPage #themeColorModal .theme-color-slider-label > span:first-child {
+            color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
+        }
+
+/* @qingtuan-order:003667 */
+
+        #themeSettingsPage #themeColorModal .theme-color-slider-label > span:last-child,
+        #themeSettingsPage #themeColorModal .theme-color-modal-copy > span {
+            color: var(--sb-line) !important; -webkit-text-fill-color: var(--sb-line) !important;
+        }
+
+/* @qingtuan-order:003687 */
+
+        /* 美化设置「图标样式」标题前的资料夹图示 → 深青灰（跟其他窗口标题图示一样） */
+
+/* @qingtuan-order:003688 */
+
+        #themeSettingsPage#themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before { background: var(--sb-title) !important; }

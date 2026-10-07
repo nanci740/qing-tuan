@@ -1,0 +1,1737 @@
+/* @qingtuan-order:000529 */
+
+
+        /* ============ API 设置二级页面 ============ */
+
+/* @qingtuan-order:000530 */
+
+        #apiSettingsPage:not(.active) { display: none !important; }
+
+/* @qingtuan-order:000531 */
+
+        #apiSettingsPage.active { display: flex !important; }
+
+/* @qingtuan-order:000532 */
+
+
+        .api-settings-content {
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 14px 16px 32px;
+            scrollbar-width: none;
+        }
+
+/* @qingtuan-order:000533 */
+
+        .api-settings-content::-webkit-scrollbar { display: none; }
+
+/* @qingtuan-order:000534 */
+
+
+        .api-setting-group { margin-bottom: 18px; }
+
+/* @qingtuan-order:000535 */
+
+        .api-setting-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-color);
+            letter-spacing: .8px;
+            margin: 0 0 7px 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000536 */
+
+        .api-setting-card {
+            background: #FFFFFF;
+            border: .5px solid #DDDDE2;
+            border-radius: var(--ui-radius);
+            padding: 6px 14px;
+        }
+
+/* @qingtuan-order:000537 */
+
+        .api-row {
+            min-height: 48px;
+            display: grid;
+            grid-template-columns: 90px minmax(0,1fr);
+            gap: 10px;
+            align-items: center;
+            border-bottom: .5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000538 */
+
+        .api-row:last-child { border-bottom: 0; }
+
+/* @qingtuan-order:000539 */
+
+        .api-row-label {
+            font-size: 11.5px;
+            color: var(--ui-text-primary);
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000540 */
+
+        .api-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:000541 */
+
+        .api-input,
+        .api-select,
+        .api-number-input {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            padding: 7px 0;
+        }
+
+/* @qingtuan-order:000542 */
+
+        .api-model-select-btn {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            background: transparent;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            padding: 7px 17px 7px 0;
+            text-align: left;
+            position: relative;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:000543 */
+
+        .api-model-select-btn::after {
+            content: '';
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-right: 1.3px solid #939CA6;
+            border-bottom: 1.3px solid #939CA6;
+            transform: translateY(-65%) rotate(-45deg);
+        }
+
+/* @qingtuan-order:000544 */
+
+        .api-model-select-btn.is-default { color: var(--ui-text-primary); }
+
+/* @qingtuan-order:000545 */
+
+        .api-model-select-btn:disabled { opacity: .5; cursor: default; }
+
+/* @qingtuan-order:000546 */
+
+        .api-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, #8A949F 50%), linear-gradient(135deg, #8A949F 50%, transparent 50%);
+            background-position: calc(100% - 10px) 50%, calc(100% - 6px) 50%;
+            background-size: 4px 4px, 4px 4px;
+            background-repeat: no-repeat;
+            padding-right: 18px;
+        }
+
+/* @qingtuan-order:000547 */
+
+        .api-key-toggle,
+        .api-mini-btn,
+        .api-advanced-toggle {
+            border: 0;
+            background: transparent;
+            color: var(--theme-deep);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+/* @qingtuan-order:000548 */
+
+        .api-key-toggle {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            padding: 0;
+        }
+
+/* @qingtuan-order:000549 */
+
+        .api-key-toggle svg { width: 16px; height: 16px; }
+
+/* @qingtuan-order:000550 */
+
+        .api-mini-btn {
+            padding: 5px 8px;
+            border: .5px solid rgba(var(--theme-rgb), .42);
+            border-radius: var(--ui-radius);
+            background: rgba(var(--theme-rgb), .16);
+            color: var(--theme-deep);
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000551 */
+
+        .api-hint {
+            display: block;
+            color: #9AA4AE;
+            font-size: 9.8px;
+            line-height: 1.5;
+            padding: 8px 0 5px;
+        }
+
+/* @qingtuan-order:000552 */
+
+
+        .api-status-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 62px;
+            background: #FFFFFF;
+            border: .5px solid #DDDDE2;
+            border-radius: var(--ui-radius);
+            padding: 11px 14px;
+        }
+
+/* @qingtuan-order:000553 */
+
+        .api-status-left { min-width: 0; }
+
+/* @qingtuan-order:000554 */
+
+        .api-status-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--ui-text-primary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000555 */
+
+        .api-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #B8C0C8;
+            box-shadow: 0 0 0 3px rgba(184,192,200,.12);
+            flex: 0 0 auto;
+        }
+
+/* @qingtuan-order:000556 */
+
+        .api-status-card.is-ok .api-status-dot {
+            background: var(--theme-color);
+            box-shadow: 0 0 0 3px rgba(var(--theme-rgb), .14);
+        }
+
+/* @qingtuan-order:000557 */
+
+        .api-status-card.is-error .api-status-dot {
+            background: #B98C8C;
+            box-shadow: 0 0 0 3px rgba(185,140,140,.12);
+        }
+
+/* @qingtuan-order:000558 */
+
+        .api-status-desc {
+            margin-top: 4px;
+            color: #929CA7;
+            font-size: 10px;
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 260px;
+        }
+
+/* @qingtuan-order:000559 */
+
+        .api-status-badge {
+            font-size: 9px;
+            color: #87919C;
+            border: .5px solid #E1E4E7;
+            border-radius: var(--ui-radius);
+            padding: 3px 7px;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000560 */
+
+
+        .api-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-top: 10px;
+        }
+
+/* @qingtuan-order:000561 */
+
+        .api-action-btn {
+            min-height: 36px;
+            border-radius: var(--ui-radius);
+            border: .5px solid #E1E6E6;
+            background: #FFFFFF;
+            color: #727C88;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000562 */
+
+        .api-action-btn.primary {
+            border-color: rgba(var(--theme-rgb), .42);
+            background: rgba(var(--theme-rgb), .16);
+            color: var(--theme-deep);
+        }
+
+/* @qingtuan-order:000563 */
+
+        .api-action-btn:disabled { opacity: .55; cursor: default; }
+
+/* @qingtuan-order:000564 */
+
+
+        .api-advanced-toggle {
+            width: 100%;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            padding: 0;
+        }
+
+/* @qingtuan-order:000565 */
+
+        .api-advanced-arrow {
+            width: 8px;
+            height: 8px;
+            border-right: 1.5px solid #919AA4;
+            border-bottom: 1.5px solid #919AA4;
+            transform: rotate(45deg) translateY(-2px);
+            transition: transform .2s ease;
+        }
+
+/* @qingtuan-order:000566 */
+
+        .api-advanced-toggle.open .api-advanced-arrow {
+            transform: rotate(225deg) translate(-1px,-1px);
+        }
+
+/* @qingtuan-order:000567 */
+
+        .api-advanced-body { display: none; border-top: .5px solid #ECEDEF; }
+
+/* @qingtuan-order:000568 */
+
+        .api-advanced-body.open { display: block; }
+
+/* @qingtuan-order:000569 */
+
+        .api-param-row {
+            min-height: 45px;
+            display: grid;
+            grid-template-columns: 92px minmax(0,1fr);
+            align-items: center;
+            gap: 8px;
+            border-bottom: .5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000570 */
+
+        .api-param-row:last-child { border-bottom: 0; }
+
+/* @qingtuan-order:000571 */
+
+        .api-param-copy strong {
+            display: block;
+            font-size: 11px;
+            color: var(--ui-text-primary);
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:000572 */
+
+        .api-param-copy span {
+            display: block;
+            font-size: 9px;
+            color: #A0A8B1;
+            margin-top: 1px;
+        }
+
+/* @qingtuan-order:000573 */
+
+        .api-number-input {
+            text-align: right;
+            border-bottom: 1px solid #E3E6E8;
+            padding: 4px 2px;
+        }
+
+/* @qingtuan-order:000574 */
+
+        .api-advanced-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 10px;
+        }
+
+/* @qingtuan-order:000575 */
+
+        .api-advanced-actions-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+
+/* @qingtuan-order:000605 */
+
+
+        /* API 扩展设置 */
+
+/* @qingtuan-order:000606 */
+
+        .api-subsection-title {
+            padding: 10px 0 5px;
+            font-size: 9.5px;
+            color: var(--ui-text-muted);
+            letter-spacing: .35px;
+        }
+
+/* @qingtuan-order:000607 */
+
+        .api-subsection-title:not(:first-child) {
+            border-top: .5px solid #ECEDEF;
+            margin-top: 2px;
+        }
+
+/* @qingtuan-order:000612 */
+
+        .api-fallback-box {
+            display: none;
+            padding-bottom: 4px;
+        }
+
+/* @qingtuan-order:000613 */
+
+        .api-fallback-box.open { display: block; }
+
+/* @qingtuan-order:000614 */
+
+        .api-setting-card.api-fallback-collapsed > .api-row:first-child {
+            border-bottom-color: transparent;
+        }
+
+/* @qingtuan-order:000615 */
+
+        .api-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+/* @qingtuan-order:000616 */
+
+        .api-stat-chip {
+            min-width: 0;
+            padding: 9px 8px;
+            border: .5px solid #E1E4E7;
+            border-radius: var(--ui-radius);
+            background: rgba(255,255,255,.62);
+        }
+
+/* @qingtuan-order:000617 */
+
+        .api-stat-chip strong {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000618 */
+
+        .api-stat-chip span {
+            display: block;
+            color: #A0A8B1;
+            font-size: 8.8px;
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:000619 */
+
+        .api-last-request {
+            margin-top: 8px;
+            padding: 9px 10px;
+            border: .5px solid #E1E4E7;
+            border-radius: var(--ui-radius);
+            background: rgba(255,255,255,.62);
+            color: #7A8590;
+            font-size: 9.5px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:000620 */
+
+
+        /* ===== API 设置页视觉统一到音乐设置页基准 ===== */
+
+/* @qingtuan-order:000621 */
+
+        #apiSettingsPage .api-input::placeholder,
+        #apiSettingsPage .api-number-input::placeholder,
+        #apiSettingsPage .api-model-search::placeholder {
+            color: #A2ABB5;
+        }
+
+/* @qingtuan-order:000622 */
+
+        #apiSettingsPage .api-status-title,
+        #apiSettingsPage .api-model-sheet-title {
+            color: var(--ui-text-primary);
+        }
+
+/* @qingtuan-order:000623 */
+
+        #apiSettingsPage .api-param-copy strong,
+        #apiSettingsPage .api-stat-chip strong,
+        #apiSettingsPage .api-model-name {
+            color: var(--ui-text-primary);
+        }
+
+/* @qingtuan-order:000624 */
+
+        #apiSettingsPage .api-mini-btn,
+        #apiSettingsPage .api-action-btn.primary,
+        #apiSettingsPage .api-model-action.primary {
+            border: .5px solid rgba(var(--theme-rgb), .24);
+            background: rgba(var(--theme-rgb), .10);
+            color: var(--ui-text-primary);
+        }
+
+/* @qingtuan-order:000625 */
+
+        #apiSettingsPage .api-action-btn,
+        #apiSettingsPage .api-model-action {
+            border: .5px solid #E6E8EB;
+            background: #FFFFFF;
+            color: #727C88;
+        }
+
+/* @qingtuan-order:000626 */
+
+        #apiSettingsPage .api-status-badge {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000627 */
+
+        #apiSettingsPage .api-status-card.is-ok .api-status-badge {
+            color: var(--ui-cyan-button-text);
+        }
+
+/* @qingtuan-order:000628 */
+
+        #apiSettingsPage .api-status-card.is-error .api-status-badge {
+            color: #AE7775;
+        }
+
+/* @qingtuan-order:000629 */
+
+        #apiSettingsPage .api-status-badge.is-saved {
+            color: #A0BDC2;
+        }
+
+/* @qingtuan-order:000630 */
+
+        #apiSettingsPage .api-model-modal {
+            background: rgba(43, 50, 58, .18);
+            backdrop-filter: blur(12px) saturate(120%);
+            -webkit-backdrop-filter: blur(12px) saturate(120%);
+        }
+
+/* @qingtuan-order:000631 */
+
+        #apiSettingsPage .api-model-sheet::before {
+            border-width: .5px;
+            border-color: rgba(255,255,255,.34);
+        }
+
+/* @qingtuan-order:000632 */
+
+        #apiSettingsPage .api-model-sheet-head {
+            padding: 14px 16px 9px;
+        }
+
+/* @qingtuan-order:000633 */
+
+        #apiSettingsPage .api-model-item {
+            color: var(--ui-text-primary);
+            border-bottom: .5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000634 */
+
+        #apiSettingsPage .api-model-check {
+            border: .5px solid #AAB3BC;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000635 */
+
+        #apiSettingsPage .api-model-item.selected .api-model-check {
+            border-color: rgba(var(--theme-rgb), .24);
+        }
+
+/* @qingtuan-order:000636 */
+
+        #apiSettingsPage .api-model-item.selected .api-model-name {
+            color: var(--ui-text-primary);
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000643 */
+
+
+        /* ===== 连接设置：获取模型改为箭头入口 ===== */
+
+/* @qingtuan-order:000644 */
+
+        #apiFetchModelsBtn.api-chevron-btn {
+            width: 14px;
+            height: 22px;
+            position: relative;
+        }
+
+/* @qingtuan-order:000645 */
+
+        #apiFetchModelsBtn.api-chevron-btn::before {
+            content: '';
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-right: 1.3px solid currentColor;
+            border-bottom: 1.3px solid currentColor;
+            transform: translateY(-65%) rotate(-45deg);
+        }
+
+/* @qingtuan-order:000648 */
+
+
+        /* ===== API 设置页：浅青边框再深一点点 ===== */
+
+/* @qingtuan-order:000649 */
+
+        #apiSettingsPage .api-mini-btn,
+        #apiSettingsPage .api-action-btn.primary:not(.ui-cyan-btn),
+        #apiSettingsPage .api-model-action.primary,
+        #apiSettingsPage .api-model-item.selected .api-model-check {
+            border-color: rgba(var(--theme-rgb), .34) !important;
+        }
+
+/* @qingtuan-order:000651 */
+
+
+        /* ===== API 设置页面弹窗：青色主按钮加白色边框 ===== */
+
+/* @qingtuan-order:000652 */
+
+        #apiSettingsPage .api-model-action.primary {
+            border: .5px solid rgba(255, 255, 255, 0.96) !important;
+            background: rgba(var(--theme-rgb), 0.14) !important;
+            color: var(--ui-text-primary) !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:000653 */
+
+        #apiSettingsPage .api-model-action.primary:disabled {
+            border: .5px solid rgba(255, 255, 255, 0.96) !important;
+        }
+
+/* @qingtuan-order:000669 */
+
+
+        /* API 模型弹窗沿用基础玻璃卡片样式 */
+
+/* @qingtuan-order:000670 */
+
+        #apiSettingsPage .api-model-item.selected .api-model-check {
+            border: .5px solid rgba(var(--theme-rgb), .42) !important;
+            background: rgba(var(--theme-rgb), .16) !important;
+            color: var(--theme-deep) !important;
+        }
+
+/* @qingtuan-order:000671 */
+
+
+        /* 获取模型纯箭头保持不做按钮底 */
+
+/* @qingtuan-order:000672 */
+
+        #apiFetchModelsBtn.api-chevron-btn {
+            border: 0 !important;
+            background: transparent !important;
+            color: #939CA6 !important;
+        
+            padding: 0;
+            margin: 0;
+            font-size: 0;
+            display: block;
+            flex: 0 0 14px;
+        }
+
+/* @qingtuan-order:000673 */
+
+
+        /* ===== API 接口类型自定义弹窗与细节修正 ===== */
+
+/* @qingtuan-order:000674 */
+
+        #apiSettingsPage .api-row:last-child,
+        #apiSettingsPage .api-fallback-box > .api-row:last-child,
+        #apiSettingsPage .api-setting-card > .api-row:last-child,
+        #apiSettingsPage .api-setting-card > div.api-row:last-child {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:000675 */
+
+        #apiSettingsPage .api-provider-sheet {
+            max-width: 340px;
+        }
+
+/* @qingtuan-order:000676 */
+
+        #apiSettingsPage .api-provider-list {
+            max-height: none;
+            margin-top: 6px;
+        }
+
+/* @qingtuan-order:000677 */
+
+        #apiSettingsPage .api-provider-list .api-model-item:last-child {
+            border-bottom: 0;
+        }
+
+/* @qingtuan-order:000678 */
+
+        #apiSettingsPage .api-chevron-btn:disabled {
+            opacity: .55;
+            cursor: default;
+        }
+
+/* @qingtuan-order:001305 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-hint {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+/* @qingtuan-order:001306 */
+
+
+        /* API 1 使用状态：两位数的计数器格子，像老网页的 TODAY / TOTAL */
+
+/* @qingtuan-order:001307 */
+
+        #apiSettingsPage#apiSettingsPage .api-stats-grid {
+            gap: 8px;
+        }
+
+/* @qingtuan-order:001308 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip {
+            display: flex !important;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 4px !important;
+        }
+
+/* @qingtuan-order:001309 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip strong {
+            min-width: 44px;
+            padding: 2px 6px;
+            border-radius: 1px;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+/* @qingtuan-order:001310 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-stat-chip span {
+            color: var(--win-ink) !important;
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001311 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-last-request {
+            margin-top: 8px;
+            padding: 6px 0 0 !important;
+            border: 0 !important;
+            border-top: 1px dashed var(--win-dash) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            font-size: 10px;
+        }
+
+/* @qingtuan-order:001312 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-setting-card.api-fallback-collapsed > .api-row:first-child {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:001313 */
+
+
+        /* API 2 连接设置：表单框，标题居中，下面双线 */
+
+/* @qingtuan-order:001314 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(2) .api-setting-label {
+            justify-content: center;
+            border-bottom: 3px double var(--win-line);
+        }
+
+/* @qingtuan-order:001315 */
+
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(2) .api-setting-label::after {
+            display: none;
+        }
+
+/* @qingtuan-order:001316 */
+
+
+        /* API 3 备用连接：表单分组框，标题压在框线上 */
+
+/* @qingtuan-order:001317 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001318 */
+
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) .api-setting-label {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            transform: translateY(-50%);
+            margin: 0;
+            padding: 0 6px;
+            border: 0;
+            background: linear-gradient(var(--set-bg, #F9F9F7) 50%, #FFFFFF 50%);
+            box-shadow: none;
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:001319 */
+
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) .api-setting-label::after {
+            display: none;
+        }
+
+/* @qingtuan-order:001320 */
+
+
+        /* API 4 模型分配：标题栏右边一支箭头，像老网站的栏目条 */
+
+/* @qingtuan-order:001321 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-setting-label::after {
+            flex-basis: 24px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2712%27%20viewBox%3D%270%200%2024%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M1%206h21M17%201.5%2022%206l-5%204.5%27/%3E%3C/svg%3E") no-repeat center / 24px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2712%27%20viewBox%3D%270%200%2024%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M1%206h21M17%201.5%2022%206l-5%204.5%27/%3E%3C/svg%3E") no-repeat center / 24px 12px;
+        }
+
+/* @qingtuan-order:001322 */
+
+
+        /* API 5 连接状态：对话框，只有 ? 和 ×；状态前一个图标，等宽字；测试中走一条分格进度条 */
+
+/* @qingtuan-order:001323 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(5) .api-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+/* @qingtuan-order:001324 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-card {
+            position: relative;
+            min-height: 0 !important;
+        }
+
+/* @qingtuan-order:001325 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-dot {
+            width: 13px !important;
+            height: 13px !important;
+            border-radius: 0 !important;
+            background: #A9B3B9 !important;
+            box-shadow: none !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+/* @qingtuan-order:001326 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-ok .api-status-dot {
+            background: var(--set-fill, var(--win-deep)) !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+/* @qingtuan-order:001327 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-error .api-status-dot {
+            background: #B08A8A !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
+        }
+
+/* @qingtuan-order:001328 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-desc {
+            font-size: 9.5px !important;
+        }
+
+/* @qingtuan-order:001329 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-badge {
+            padding: 2px 6px !important;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001330 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting {
+            padding-bottom: 20px !important;
+        }
+
+/* @qingtuan-order:001331 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2px;
+            height: 10px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background:
+                repeating-linear-gradient(90deg, var(--theme-color) 0 7px, transparent 7px 9px) left 2px center / 0 6px no-repeat,
+                #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+            animation: retroProgress 1.6s steps(8) infinite;
+        }
+
+/* @qingtuan-order:001333 */
+
+
+        @media (prefers-reduced-motion: reduce) {
+            #apiSettingsPage#apiSettingsPage .api-status-card.is-waiting::after {
+                animation: none;
+                background-size: 50% 6px, auto;
+            }
+        }
+
+/* @qingtuan-order:001334 */
+
+
+        /* API 6 模型参数：文件夹窗，标题前一个小文件夹 */
+
+/* @qingtuan-order:001335 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(6) .api-setting-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 11px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+/* @qingtuan-order:001336 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-advanced-body {
+            border-top: 1px dashed var(--win-dash) !important;
+        }
+
+/* @qingtuan-order:001337 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-subsection-title {
+            color: var(--win-ink) !important;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001396 */
+
+
+        /* 提示前一行不再画虚线，免得和提示上方的虚线叠成两条 */
+
+/* @qingtuan-order:001397 */
+
+        #apiSettingsPage#apiSettingsPage .api-row:has(+ .api-hint) {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:001541 */
+
+
+        /* 行本身不要圆角，否则 border-bottom 会在两端向上弯 */
+
+/* @qingtuan-order:001542 */
+
+        #apiSettingsPage .api-row,
+        #apiSettingsPage .api-param-row {
+            border-radius: 0 !important;
+        }
+
+/* @qingtuan-order:001543 */
+
+
+        /* API 设置页补齐 8px 圆角：按钮 + 使用状态卡片 */
+
+/* @qingtuan-order:001544 */
+
+        #apiSettingsPage .api-setting-card,
+        #apiSettingsPage .api-status-card,
+        #apiSettingsPage .api-stat-chip,
+        #apiSettingsPage .api-last-request,
+        #apiSettingsPage .api-action-btn,
+        #apiSettingsPage .api-mini-btn,
+        #apiSettingsPage .api-model-select-btn,
+        #apiSettingsPage .api-fallback-box {
+            border-radius: 8px !important;
+        }
+
+/* @qingtuan-order:001545 */
+
+
+        #apiSettingsPage .api-stat-chip,
+        #apiSettingsPage .api-last-request {
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001558 */
+
+
+        /* API 设置：按钮统一到美化页面 */
+
+/* @qingtuan-order:001559 */
+
+        #apiSettingsPage .api-action-btn.primary.ui-cyan-btn,
+        #apiSettingsPage .api-model-action.primary.ui-cyan-btn {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:001560 */
+
+
+        /* 测试连接 / 重置等白底按钮：对齐美化页“恢复默认” */
+
+/* @qingtuan-order:001561 */
+
+        #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary),
+        #apiSettingsPage .api-model-action.ui-cyan-btn:not(.primary) {
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:001562 */
+
+
+        /* 明确固定“测试连接”为白底次级按钮 */
+
+/* @qingtuan-order:001563 */
+
+        #apiSettingsPage #apiTestBtn {
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001564 */
+
+
+        #apiSettingsPage .api-action-btn.ui-cyan-btn:focus-visible,        #apiSettingsPage .api-model-action.ui-cyan-btn:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001565 */
+
+
+        #apiSettingsPage .api-action-btn.primary.ui-cyan-btn:focus-visible,#apiSettingsPage .api-model-action.primary.ui-cyan-btn:focus-visible{
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:001566 */
+
+
+        #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary):focus-visible{
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+        }
+
+/* @qingtuan-order:001833 */
+
+.world-select-btn.api-model-select-btn{
+  display:block;
+  padding:11px 34px 11px 12px;
+  font-size:12px;
+  line-height:1.65;
+  color:var(--world-ink);
+  border:.6px solid var(--world-line);
+  border-radius:8px;
+  background:#FFFFFF;
+  text-align:left;
+}
+
+/* @qingtuan-order:001834 */
+
+.world-select-btn.api-model-select-btn::after{
+  right:15px;
+  top:50%;
+  transform:translateY(-65%) rotate(45deg);
+}
+
+/* @qingtuan-order:002066 */
+
+/* 世界书输入框点进去不要变（外框色、光晕、虚线变实线、底色都拿掉） */
+
+/* @qingtuan-order:002067 */
+
+/* 下拉选单：右边贴一个凸起的小三角按钮 */
+
+/* @qingtuan-order:002068 */
+
+.world-page .world-select-btn.api-model-select-btn{position:relative;padding-right:34px}
+
+/* @qingtuan-order:002069 */
+
+.world-page .world-select-btn.api-model-select-btn::after{
+  content:''!important;position:absolute;top:2px!important;right:2px!important;bottom:2px;
+  width:22px!important;height:auto!important;
+  border:1px solid var(--win-line)!important;border-radius:1px;
+  background:var(--win-bar);box-shadow:inset 1px 1px 0 var(--win-hi),inset -1px -1px 0 var(--win-lo);
+  transform:none!important;box-sizing:border-box;
+}
+
+/* @qingtuan-order:002070 */
+
+.world-page .world-select-btn.api-model-select-btn::before{
+  content:'';position:absolute;z-index:1;top:50%;width:8px;height:5px;margin-top:-2px;
+  clip-path:polygon(0 0,100% 0,50% 100%);
+}
+
+/* @qingtuan-order:002322 */
+
+/* 世界书输入框点进去不要变（外框色、光晕、虚线变实线、底色都拿掉） */
+
+/* @qingtuan-order:002323 */
+
+/* 下拉：拿掉方形箭头钮，只留一个小三角 */
+
+/* @qingtuan-order:002324 */
+
+.world-page .world-select-btn.api-model-select-btn::after{display:none!important}
+
+/* @qingtuan-order:002325 */
+
+.world-page .world-select-btn.api-model-select-btn::before{right:12px;background:var(--wt)}
+
+/* @qingtuan-order:002886 */
+
+
+        /* ---------------- API 设置 · 古早升级：98 式斜面统一；六扇窗换成六种不同的老程序 ---------------- */
+
+/* @qingtuan-order:002887 */
+
+
+        /* ===== 通用：窗框、输入框、下拉、开关、按钮 ===== */
+
+/* @qingtuan-order:002888 */
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:002889 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group > .api-setting-label {
+            border-bottom-color: var(--win-deep);
+        }
+
+/* @qingtuan-order:002890 */
+
+
+        #apiSettingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002891 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-row > .api-input,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-input-wrap,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-number-input,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-model-select-btn {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002892 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-model-select-btn::after,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-key-toggle,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn {
+            border: 1px solid var(--win-deep) !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:002893 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-model-select-btn:active::after,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-key-toggle:active,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002894 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-toggle-input {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:002895 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-toggle-input:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:002896 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-toggle-input::after {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 1px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:002897 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn,        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn:focus-visible {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002898 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn.primary,        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn.primary:focus-visible {
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+        }
+
+/* @qingtuan-order:002899 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn:active {
+            box-shadow: var(--bevel-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002900 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn.primary:active {
+            box-shadow: var(--bevel-solid-in) !important;
+        }
+
+/* @qingtuan-order:002901 */
+
+
+        /* ===== 1 使用状态：任务管理器的性能面板，读数格是凹陷面板 ===== */
+
+/* @qingtuan-order:002902 */
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(1) .api-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:002903 */
+
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(1) .api-setting-label::before {
+            content: '';
+            flex: 0 0 13px;
+            height: 11px;
+            background: var(--sb-title, var(--win-deep));
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2711%27%3E%3Cpath%20d%3D%27M0%200h13v11H0z%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27/%3E%3Cpath%20d%3D%27M3%208h1.5V5H3zM6%208h1.5V3H6zM9%208h1.5V6H9z%27/%3E%3C/svg%3E") no-repeat center / 13px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2711%27%3E%3Cpath%20d%3D%27M0%200h13v11H0z%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27/%3E%3Cpath%20d%3D%27M3%208h1.5V5H3zM6%208h1.5V3H6zM9%208h1.5V6H9z%27/%3E%3C/svg%3E") no-repeat center / 13px 11px;
+        }
+
+/* @qingtuan-order:002904 */
+
+
+        #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(1) .api-setting-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:002905 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-stat-chip {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002906 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-last-request::before {
+            content: '> ';
+            color: var(--win-deep);
+        }
+
+/* @qingtuan-order:002907 */
+
+
+        /* ===== 3 备用连接：一只档案夹，标题是夹子上冒出来的标签页 ===== */
+
+/* @qingtuan-order:002908 */
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) {
+            margin-top: 34px;
+            padding-top: 0;
+            border-top-left-radius: 0 !important;
+        }
+
+/* @qingtuan-order:002909 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) .api-setting-label {
+            top: -24px;
+            left: -1px;
+            height: 23px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            border: 1px solid var(--win-deep);
+            border-bottom: 0;
+            border-radius: 4px 4px 0 0;
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 #FFFFFF;
+            transform: none;
+            color: var(--win-ink);
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:002910 */
+
+
+        /* 标签页立在夹子的上框线上，底下那条框线整条连过去 */
+
+/* @qingtuan-order:002911 */
+
+
+        /* ===== 4 模型分配：一张小表格，前面是行号，左列灰底写用途 ===== */
+
+/* @qingtuan-order:002912 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-setting-card {
+            counter-reset: retro-sheet;
+            padding: 0 !important;
+            margin: 0 0 -12px !important;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:002913 */
+
+
+        #apiSettingsPage .api-sheet-head {
+            display: grid;
+            grid-template-columns: 24px 90px minmax(0, 1fr);
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+/* @qingtuan-order:002914 */
+
+
+        /* 表头的竖线画在格子右边，和下面每一行的竖线对齐 */
+
+/* @qingtuan-order:002915 */
+
+        #apiSettingsPage .api-sheet-head span:not(:last-child) {
+            border-right: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:002916 */
+
+
+        /* 标题栏下面直接接表头，不留空白 */
+
+/* @qingtuan-order:002917 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) > .api-setting-label {
+            margin-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:002918 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-row {
+            counter-increment: retro-sheet;
+            grid-template-columns: 24px 90px minmax(0, 1fr) !important;
+            gap: 0 !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            border-bottom: 1px solid var(--win-line) !important;
+        }
+
+/* @qingtuan-order:002919 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-row:last-child {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:002920 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-row::before {
+            content: counter(retro-sheet);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: stretch;
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-family: var(--mono);
+            font-size: 9.5px;
+            border-right: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:002921 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-row-label {
+            display: flex;
+            align-items: center;
+            align-self: stretch;
+            padding: 0 8px;
+            border-right: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:002922 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(4) .api-model-select-btn {
+            width: auto !important;
+            min-width: 0 !important;
+            margin: 5px 6px !important;
+        }
+
+/* @qingtuan-order:002923 */
+
+
+        /* ===== 5 连接状态：命令提示符窗口，状态像一行命令，后面一个闪烁的光标 ===== */
+
+/* @qingtuan-order:002924 */
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(5) .api-setting-label {
+            justify-content: flex-start;
+            gap: 7px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:002925 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(5) .api-setting-label::before {
+            content: 'C:\\>';
+            padding: 0 3px;
+            background: var(--set-fill, var(--win-deep));
+            color: var(--theme-color);
+            font-size: 8px;
+            line-height: 12px;
+            letter-spacing: 0;
+        }
+
+/* @qingtuan-order:002926 */
+
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(5) .api-setting-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:002927 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-card {
+            margin: 10px 12px 0;
+            padding: 8px 10px 6px !important;
+            border: 1px solid var(--win-deep) !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002928 */
+
+
+        /* 测试中：底下留出进度条的位置，进度条缩进框内，不压住说明文字 */
+
+/* @qingtuan-order:002929 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-card.is-waiting {
+            padding-bottom: 24px !important;
+        }
+
+/* @qingtuan-order:002930 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-card.is-waiting::after {
+            left: 10px;
+            right: 10px;
+            bottom: 7px;
+            border-color: var(--win-deep);
+            border-radius: 0;
+        }
+
+/* @qingtuan-order:002931 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-desc::after {
+            content: '_';
+            margin-left: 2px;
+            color: var(--win-deep);
+            animation: retroCaret 1s steps(1) infinite;
+        }
+
+/* @qingtuan-order:002933 */
+
+
+        @media (prefers-reduced-motion: reduce) {
+            #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-desc::after { animation: none; }
+        }
+
+/* @qingtuan-order:002934 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-badge {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+        }
+
+/* @qingtuan-order:002935 */
+
+
+        /* ===== 6 模型参数：注册表编辑器，高级设置是树上一个可以展开的节点 ===== */
+
+/* @qingtuan-order:002936 */
+
+        #apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:nth-child(6) .api-setting-label::before {
+            flex-basis: 13px;
+            height: 12px;
+            background: var(--sb-title, var(--win-deep));
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%206h6v6H0zM7%206h6v6H7zM3.5%200h6v6h-6z%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27/%3E%3C/svg%3E") no-repeat center / 13px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2713%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%206h6v6H0zM7%206h6v6H7zM3.5%200h6v6h-6z%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.6%27/%3E%3C/svg%3E") no-repeat center / 13px 12px;
+        }
+
+/* @qingtuan-order:002937 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-toggle {
+            justify-content: flex-start;
+            gap: 6px;
+        }
+
+/* @qingtuan-order:002938 */
+
+
+        /* 树节点的 + / − 小方框 */
+
+/* @qingtuan-order:002939 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-toggle::before {
+            content: '+';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 11px;
+            width: 11px;
+            height: 11px;
+            border: 1px solid var(--win-line);
+            background: #FFFFFF;
+            color: var(--win-deep);
+            font-family: var(--mono);
+            font-size: 10px;
+            line-height: 1;
+        }
+
+/* @qingtuan-order:002940 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-toggle.open::before {
+            content: '−';
+        }
+
+/* @qingtuan-order:002941 */
+
+
+        /* 节点前的小文件夹 */
+
+/* @qingtuan-order:002942 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-toggle > span:first-child::before {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 11px;
+            margin-right: 6px;
+            vertical-align: -1px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 14px 11px;
+        }
+
+/* @qingtuan-order:002943 */
+
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-arrow {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:002944 */
+
+
+        /* 展开后：子项缩进，左边一条点线连着树 */
+
+/* @qingtuan-order:002945 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-advanced-body.open {
+            margin-left: 5px;
+            padding-left: 12px;
+            border-top: 0 !important;
+            border-left: 1px dotted var(--win-line);
+        }
+
+/* @qingtuan-order:003647 */
+
+        /* API 使用状态的数字格、连接状态的 OFFLINE 标签：底用顶栏青灰，字用主题色 */
+
+/* @qingtuan-order:003648 */
+
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-stat-chip strong,
+        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-badge {
+            background: var(--set-block) !important;
+            border-color: var(--set-block) !important;
+            color: var(--theme-color) !important; -webkit-text-fill-color: var(--theme-color) !important;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12) !important;
+        }

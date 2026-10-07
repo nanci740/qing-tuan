@@ -1,0 +1,1563 @@
+/* @qingtuan-order:000198 */
+
+
+        /* 个人信息二级页面：独立命名空间，避免影响其他组件 */
+
+/* @qingtuan-order:000199 */
+
+            #personalProfilePage {
+              overflow: hidden;
+            }
+
+/* @qingtuan-order:000200 */
+
+
+            #personalProfilePage:not(.active) {
+              display: none !important;
+            }
+
+/* @qingtuan-order:000201 */
+
+
+            #personalProfilePage.active {
+              display: flex !important;
+            }
+
+/* @qingtuan-order:000202 */
+
+
+            .pp2-content, .pp2-content * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* @qingtuan-order:000203 */
+
+
+            #personalProfilePage .pp2-content {
+              min-height: 0;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              flex-direction: column;
+              background-color: transparent;
+              padding: 0 16px 48px;
+              overflow-x: hidden;
+              overflow-y: auto;
+              scrollbar-width: none;
+              height: 100vh;
+            }
+
+/* @qingtuan-order:000204 */
+
+            #personalProfilePage .pp2-content::-webkit-scrollbar { display: none; }
+
+/* @qingtuan-order:000205 */
+
+
+            .pp2-page-header {
+              width: calc(100% + 32px);
+              flex-shrink: 0;
+              padding: 8px 16px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: #F9F9F9;
+              border-bottom: 1px solid #DDDDE2;
+              margin: 0 -16px;
+              position: sticky;
+              top: 0;
+              z-index: 40;
+            }
+
+/* @qingtuan-order:000206 */
+
+
+            .pp2-page-header-left {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+
+/* @qingtuan-order:000207 */
+
+
+            .pp2-page-back {
+              width: 28px;
+              height: 28px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: transparent;
+              border: none;
+              cursor: pointer;
+              color: var(--ui-text-primary);
+              text-decoration: none;
+              padding: 0;
+              flex-shrink: 0;
+            }
+
+/* @qingtuan-order:000208 */
+
+
+            .pp2-page-back svg {
+              width: 20px;
+              height: 20px;
+              display: block;
+            }
+
+/* @qingtuan-order:000209 */
+
+
+            .pp2-page-header-title {
+              margin: 0;
+              color: var(--ui-text-primary);
+              font-size: 15px;
+              font-weight: 600;
+              letter-spacing: 0.5px;
+              line-height: 1.2;
+            }
+
+/* @qingtuan-order:000210 */
+
+            .pp2-card {
+              margin-top: 37px;
+              position: relative;
+              width: 100%;
+              max-width: 380px;
+              background: #ffffff;
+              border-radius: 10px;
+              border: 0.5px solid #dddde2;
+              overflow: visible;
+            }
+
+/* @qingtuan-order:000211 */
+
+
+            .pp2-tabs {
+              position: absolute;
+              top: -18px;
+              right: 32px;
+              display: flex;
+              gap: 6px;
+              z-index: 10;
+            }
+
+/* @qingtuan-order:000212 */
+
+            .pp2-tab { width: 16px; height: 36px; border-radius: 5px 5px 4px 4px; }
+
+/* @qingtuan-order:000213 */
+
+            .pp2-tab-1 { background: var(--theme-color); }
+
+/* @qingtuan-order:000214 */
+
+            .pp2-tab-2 { background: var(--theme-light-35); border: 0.5px solid var(--theme-light-50); }
+
+/* @qingtuan-order:000215 */
+
+
+            /* 拍立得样式便利贴：完全按示意图蓝色在上、红色在下叠加 */
+
+/* @qingtuan-order:000216 */
+
+            .pp2-polaroid-wrap {
+              position: absolute;
+              top: 38px;
+              right: -10px;
+              width: 92px;
+              height: 102px;
+              z-index: 20;
+            }
+
+/* @qingtuan-order:000217 */
+
+
+            /* 后面垫底的纸张（对应示意图红色） */
+
+/* @qingtuan-order:000218 */
+
+            .pp2-polaroid-back {
+              position: absolute;
+              top: 0px;
+              left: 4px;
+              width: 88px;
+              height: 100px;
+              background: #f0f2f2;
+              border: 0.5px solid #e1e6e6;
+              border-radius: 2px;
+              transform: rotate(-5.8deg);
+              box-shadow: 1px 1px 4px rgba(0,0,0,0.06);
+            }
+
+/* @qingtuan-order:000219 */
+
+
+            /* 前面拍立得卡片（对应示意图蓝色） */
+
+/* @qingtuan-order:000220 */
+
+            .pp2-polaroid-front {
+              position: absolute;
+              top: 0;
+              left: 4px;
+              width: 88px;
+              height: 100px;
+              background: #f6f7f7;
+              border: 0.5px solid #e5e9e9;
+              border-radius: 2px;
+              transform: rotate(1.9deg);
+              box-shadow: 1px 2px 6px rgba(0,0,0,0.07);
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+            }
+
+/* @qingtuan-order:000221 */
+
+
+            /* 拍立得照片区 */
+
+/* @qingtuan-order:000222 */
+
+            .pp2-polaroid-photo {
+              flex: 1;
+              background: #e9eded;
+              margin: 7px 7px 4px 7px;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
+            }
+
+/* @qingtuan-order:000223 */
+
+            .pp2-polaroid-photo::after {
+              content: '＋';
+              position: absolute;
+              inset: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #b6c2c4;
+              font-family: var(--font-active);
+              font-size: 14px;
+              transition: opacity 0.18s ease;
+            }
+
+/* @qingtuan-order:000224 */
+
+            .pp2-polaroid-photo.has-photo::after { opacity: 0; }
+
+/* @qingtuan-order:000225 */
+
+            .pp2-polaroid-photo:focus-visible {
+              outline: 1px solid var(--theme-color);
+              outline-offset: -1px;
+            }
+
+/* @qingtuan-order:000226 */
+
+            .pp2-polaroid-file { display: none; }
+
+/* @qingtuan-order:000227 */
+
+
+            /* 拍立得底部白边 */
+
+/* @qingtuan-order:000228 */
+
+            .pp2-polaroid-bottom {
+              height: 20px;
+              background: #f6f7f7;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0;
+            }
+
+/* @qingtuan-order:000229 */
+
+            .pp2-polaroid-caption {
+              display: block;
+              width: 100%;
+              height: 20px;
+              margin: 0;
+              padding: 0;
+              border: 0;
+              border-radius: 0;
+              outline: none;
+              background: transparent;
+              appearance: none;
+              -webkit-appearance: none;
+              font-size: 7.5px;
+              font-weight: 400;
+              color: var(--ui-text-primary);
+              letter-spacing: 0.06em;
+              font-style: italic;
+              line-height: 20px;
+              transform: translateY(-2px);
+              cursor: text;
+              text-align: center;
+            }
+
+/* @qingtuan-order:000230 */
+
+            /* 打字时不换颜色 */
+
+/* @qingtuan-order:000231 */
+
+            /* 回形针：缩短、收窄 */
+
+/* @qingtuan-order:000232 */
+
+            .pp2-paperclip {
+              position: absolute;
+              top: -10px;
+              left: 52%;
+              width: 13px;
+              height: 24px;
+              transform: translateX(-50%) rotate(1deg);
+              z-index: 25;
+              overflow: visible;
+            }
+
+/* @qingtuan-order:000233 */
+
+
+            /* 下方便利贴：手账横线便签风格 */
+
+/* @qingtuan-order:000234 */
+
+            .pp2-memo-wrap {
+              position: absolute;
+              bottom: 75px;
+              right: 41px;
+              width: 86px;
+              height: 70px;
+              z-index: 20;
+              transform: rotate(-2.5deg);
+            }
+
+/* @qingtuan-order:000235 */
+
+            .pp2-memo-tape {
+              position: absolute;
+              top: -6px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 31px;
+              height: 11px;
+              background: rgba(var(--theme-rgb), 0.35);
+              border-radius: 0;
+              clip-path: polygon(
+                4% 0%, 96% 0%,
+                100% 10%, 96% 20%, 100% 31%, 95% 42%, 100% 54%,
+                96% 65%, 100% 77%, 95% 89%, 98% 100%,
+                3% 100%, 0% 90%, 4% 79%, 0% 68%, 5% 56%,
+                0% 44%, 4% 33%, 0% 21%, 5% 10%
+              );
+            }
+
+/* @qingtuan-order:000236 */
+
+            .pp2-memo-body {
+              width: 100%;
+              height: 100%;
+              background: var(--theme-light-14);
+              border: 0.5px solid #e1e6e6;
+              border-radius: 1px;
+              box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+              padding: 9px 8px 7px 8px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-around;
+            }
+
+/* @qingtuan-order:000237 */
+
+            .pp2-memo-line {
+              height: 0.5px;
+              background: var(--theme-light-40);
+            }
+
+/* @qingtuan-order:000238 */
+
+            .pp2-memo-text {
+              font-size: 8px;
+              color: var(--theme-muted);
+              letter-spacing: 0.05em;
+              font-style: italic;
+              cursor: text;
+              outline: none;
+              min-height: 10px;
+            }
+
+/* @qingtuan-order:000239 */
+
+            /* 打字时不换颜色 */
+
+/* @qingtuan-order:000240 */
+
+
+            .pp2-title {
+              font-size: 16.5px;
+              font-weight: 400;
+              color: var(--ui-text-primary);
+              letter-spacing: 0.015em;
+              padding: 14px 20px 10px 20px;
+              user-select: none;
+            }
+
+/* @qingtuan-order:000241 */
+
+
+            .pp2-title-divider { margin: 0 20px; border-bottom: 0.5px solid #e2e8f0; }
+
+/* @qingtuan-order:000242 */
+
+            .pp2-divider { margin: 0 20px; border-bottom: 0.5px solid #d0d8e4; }
+
+/* @qingtuan-order:000243 */
+
+
+            .pp2-row {
+              display: flex;
+              align-items: center;
+              height: 30px;
+              padding: 0 20px;
+              gap: 8px;
+              position: relative;
+            }
+
+/* @qingtuan-order:000244 */
+
+            .pp2-row::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 20px;
+              right: 20px;
+              border-bottom: 0.5px solid #d0d8e4;
+            }
+
+/* @qingtuan-order:000245 */
+
+            .pp2-row.pp2-spacer { height: 0; }
+
+/* @qingtuan-order:000246 */
+
+            .pp2-row.pp2-no-line::after { display: none; }
+
+/* @qingtuan-order:000247 */
+
+
+            .pp2-info-key {
+              font-size: 10.5px;
+              color: var(--theme-muted);
+              letter-spacing: 0.07em;
+              font-style: italic;
+              min-width: 66px;
+              user-select: none;
+            }
+
+/* @qingtuan-order:000248 */
+
+
+            .pp2-editable-text {
+              font-size: 12.5px;
+              color: #3a3d48;
+              letter-spacing: 0.02em;
+              cursor: pointer;
+              border: none;
+              outline: none;
+              background: transparent;
+              width: 100%;
+              padding: 0;
+            }
+
+/* @qingtuan-order:000249 */
+
+            .pp2-editable-text:empty::before,
+            .pp2-editable-text.pp2-is-empty { color: #b4c0cc; content: attr(data-placeholder); }
+
+/* @qingtuan-order:000250 */
+
+            .pp2-editable-text:focus { outline: none; border: none; box-shadow: none; }
+
+/* @qingtuan-order:000251 */
+
+
+            /* 打孔点：深浅交替手账孔 */
+
+/* @qingtuan-order:000252 */
+
+            .pp2-perfs {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 12px 20px;
+            }
+
+/* @qingtuan-order:000253 */
+
+            .pp2-perf {
+              width: 13px; height: 13px;
+              border-radius: 50%;
+              border: 0.5px solid var(--theme-light-38);
+            }
+
+/* @qingtuan-order:000254 */
+
+            .pp2-perf.pp2-light { background: var(--theme-light-18); }
+
+/* @qingtuan-order:000255 */
+
+            .pp2-perf.pp2-dark  { background: var(--theme-light-42); }
+
+/* @qingtuan-order:000256 */
+
+
+            .pp2-section-label-love {
+              font-size: 10px;
+              color: var(--theme-dark);
+              letter-spacing: 0.1em;
+              padding: 8px 20px 8px 20px;
+              font-style: italic;
+              user-select: none;
+            }
+
+/* @qingtuan-order:000257 */
+
+            .pp2-section-label-dislike {
+              font-size: 10px;
+              color: #d4a8b4;
+              letter-spacing: 0.1em;
+              padding: 10px 20px 8px 20px;
+              font-style: italic;
+              user-select: none;
+            }
+
+/* @qingtuan-order:000258 */
+
+
+            .pp2-like-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--theme-color); flex-shrink: 0; }
+
+/* @qingtuan-order:000259 */
+
+            .pp2-like-dot.pp2-dislike { background: #d4a8b4; }
+
+/* @qingtuan-order:000260 */
+
+
+            .pp2-footer {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 10px 20px 14px 20px;
+              user-select: none;
+            }
+
+/* @qingtuan-order:000261 */
+
+            .pp2-footer-left {
+              font-size: 10px; color: #b0b8c8; letter-spacing: 0.05em;
+              font-style: italic;
+              display: flex; align-items: center; gap: 4px;
+            }
+
+/* @qingtuan-order:000262 */
+
+            .pp2-footer-tag {
+              font-size: 10px; color: #b0b8c8; letter-spacing: 0.08em;
+              font-style: italic;
+            }
+
+/* @qingtuan-order:000263 */
+
+            .pp2-sparkle-icon { width: 11px; height: 11px; display: inline-block; flex-shrink: 0; }
+
+/* @qingtuan-order:000264 */
+
+
+            /* 下方撕边纸条 */
+
+/* @qingtuan-order:000265 */
+
+            .pp2-torn-note-wrap {
+              position: relative;
+              width: min(350px, 92vw);
+              height: 96px;
+              margin: 18px auto 0;
+              flex-shrink: 0;
+              transform: rotate(-0.6deg);
+            }
+
+/* @qingtuan-order:000266 */
+
+
+            .pp2-torn-svg {
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+              overflow: visible;
+            }
+
+/* @qingtuan-order:000267 */
+
+
+            .pp2-paper-tape {
+              position: absolute;
+              height: 13px;
+              background: rgba(var(--theme-rgb), 0.42);
+              z-index: 3;
+              clip-path: polygon(
+                1% 0%, 99% 0%,
+                100% 18%, 99% 50%, 100% 82%, 99% 100%,
+                1% 100%, 0% 78%, 1% 50%, 0% 22%
+              );
+            }
+
+/* @qingtuan-order:000268 */
+
+            .pp2-paper-tape.pp2-top-right {
+              top: 6px; right: 0;
+              width: 60px;
+              transform: rotate(17deg);
+            }
+
+/* @qingtuan-order:000269 */
+
+            .pp2-paper-tape.pp2-bottom-left {
+              bottom: 4px; left: 4px;
+              width: 54px;
+              transform: rotate(14deg);
+            }
+
+/* @qingtuan-order:000270 */
+
+
+            .pp2-torn-note-text {
+              position: absolute;
+              z-index: 2;
+              inset: 21px 34px 20px;
+              display: block;
+              width: calc(100% - 68px);
+              height: 55px;
+              margin: 0;
+              padding: 0;
+              border: 0;
+              border-radius: 0;
+              background: transparent;
+              appearance: none;
+              -webkit-appearance: none;
+              overflow: hidden;
+              color: #778187;
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 55px;
+              letter-spacing: 0.04em;
+              text-align: center;
+              cursor: text;
+              outline: none;
+            }
+
+/* @qingtuan-order:000271 */
+
+            .pp2-torn-note-text::placeholder {
+              color: #aeb8bb;
+              opacity: 1;
+            }
+
+/* @qingtuan-order:000427 */
+
+
+        /* 设置主页分组卡片：覆盖全局圆角规则，避免每个条目各自变成独立卡片 */
+
+/* @qingtuan-order:000428 */
+
+        /* ===== 圆角保护区：主画面拍立得与个人信息页不参与美化页圆角切换 ===== */
+
+/* @qingtuan-order:000429 */
+
+
+        #personalProfilePage .pp2-polaroid-back,
+        #personalProfilePage .pp2-polaroid-front { border-radius: 2px !important; }
+
+/* @qingtuan-order:000430 */
+
+        #personalProfilePage .pp2-polaroid-caption { border-radius: 0 !important; }
+
+/* @qingtuan-order:003142 */
+
+
+        /* ---------------- 个人信息 · Cyworld 式迷你小窝：活页本 + 左栏相片 + 右侧资料表 + 索引贴 + 留言板 ---------------- */
+
+/* @qingtuan-order:003143 */
+
+        #personalProfilePage {
+            background: #F9F9F7;
+        }
+
+/* @qingtuan-order:003144 */
+
+
+        /* 顶栏：程序标题栏，和设置各页一样 */
+
+/* @qingtuan-order:003145 */
+
+        #personalProfilePage#personalProfilePage .pp2-page-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:003146 */
+
+
+        #personalProfilePage#personalProfilePage .pp2-page-back,
+        #personalProfilePage#personalProfilePage .pp2-page-header-title {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:003147 */
+
+
+        #personalProfilePage#personalProfilePage .pp2-page-header-title::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:003148 */
+
+
+        #personalProfilePage#personalProfilePage .pp2-page-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:003149 */
+
+
+        /* 地址栏：贴在标题栏下面，跟着一起吸顶 */
+
+/* @qingtuan-order:003150 */
+
+        #personalProfilePage .mh-address {
+            position: sticky;
+            top: 44px;
+            z-index: 39;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            width: calc(100% + 32px);
+            margin: 0 -16px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:003151 */
+
+
+        #personalProfilePage .mh-address .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:003152 */
+
+
+        #personalProfilePage .mh-address .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: var(--bevel-in);
+            color: var(--win-ink);
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:003153 */
+
+
+        #personalProfilePage .mh-address .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:003154 */
+
+
+        /* 活页本：细格纸面，左边一排装订孔和金属环，右边留出索引贴的位置 */
+
+/* @qingtuan-order:003155 */
+
+        #personalProfilePage#personalProfilePage .pp2-card.mh-binder {
+            align-self: flex-start;
+            width: calc(100% - 16px);
+            max-width: 364px;
+            margin-top: 18px;
+            padding: 12px 12px 4px 36px;
+            border: 1px solid var(--win-deep);
+            border-radius: 4px;
+            background:
+                linear-gradient(rgba(var(--theme-rgb), 0.14) 1px, transparent 1px) 0 0 / 14px 14px,
+                linear-gradient(90deg, rgba(var(--theme-rgb), 0.14) 1px, transparent 1px) 0 0 / 14px 14px,
+                #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003156 */
+
+
+        #personalProfilePage .mh-binder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 24px;
+            border-right: 1px dashed var(--win-line);
+            border-radius: 4px 0 0 4px;
+            background:
+                radial-gradient(circle at 12px 18px, #F9F9F7 0 4px, var(--win-line) 4px 5px, transparent 5.5px) 0 0 / 24px 36px repeat-y,
+                var(--win-face);
+        }
+
+/* @qingtuan-order:003157 */
+
+
+        /* 金属环：横跨装订孔的一截圆角环 */
+
+/* @qingtuan-order:003158 */
+
+        #personalProfilePage .mh-binder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -9px;
+            width: 26px;
+            background: var(--win-shade);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2726%27%20height%3D%2736%27%3E%3Crect%20x%3D%271%27%20y%3D%2715%27%20width%3D%2723%27%20height%3D%276%27%20rx%3D%273%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27/%3E%3C/svg%3E") 0 0 / 26px 36px repeat-y;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2726%27%20height%3D%2736%27%3E%3Crect%20x%3D%271%27%20y%3D%2715%27%20width%3D%2723%27%20height%3D%276%27%20rx%3D%273%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27/%3E%3C/svg%3E") 0 0 / 26px 36px repeat-y;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003159 */
+
+
+        #personalProfilePage .mh-binder > .pp2-tabs,
+        #personalProfilePage .mh-binder > .pp2-title-divider,
+        #personalProfilePage .mh-binder > .pp2-perfs,
+        #personalProfilePage .mh-binder > .pp2-divider,
+        #personalProfilePage .mh-binder > .pp2-row {
+            display: none;
+        }
+
+/* @qingtuan-order:003160 */
+
+
+        /* 访客计数：Cyworld 左上角那行 TODAY / TOTAL */
+
+/* @qingtuan-order:003161 */
+
+        #personalProfilePage .mh-counter {
+            margin-bottom: 8px;
+            color: var(--win-ink);
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:003162 */
+
+
+        #personalProfilePage .mh-counter b {
+            color: var(--win-deep);
+            font-weight: 700;
+        }
+
+/* @qingtuan-order:003163 */
+
+
+        #personalProfilePage .mh-counter i {
+            margin: 0 4px;
+            font-style: normal;
+            opacity: 0.5;
+        }
+
+/* @qingtuan-order:003164 */
+
+
+        /* 两栏：左边相片和心情，右边资料表 */
+
+/* @qingtuan-order:003165 */
+
+        #personalProfilePage .mh-grid {
+            display: grid;
+            grid-template-columns: 100px minmax(0, 1fr);
+            gap: 10px;
+            align-items: start;
+        }
+
+/* @qingtuan-order:003166 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-wrap {
+            position: relative;
+            top: auto;
+            right: auto;
+            width: 96px;
+            height: 108px;
+            margin: 10px auto 0;
+        }
+
+/* @qingtuan-order:003167 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-back,
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-front {
+            left: 2px;
+            width: 92px;
+            height: 104px;
+        }
+
+/* @qingtuan-order:003168 */
+
+
+        #personalProfilePage .mh-mood {
+            margin-top: 12px;
+            padding: 5px 7px 6px;
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003169 */
+
+
+        #personalProfilePage .mh-mood-label {
+            display: block;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:003170 */
+
+
+        #personalProfilePage .mh-mood-text {
+            word-break: break-all;
+
+            min-height: 14px;
+            cursor: text;
+            outline: none;
+        
+            display: block;
+            margin-top: 3px;
+            color: #3A3D48;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+/* @qingtuan-order:003171 */
+
+
+        #personalProfilePage .mh-mood-text:empty::before {
+            content: attr(data-placeholder);
+            color: #B4C0CC;
+        }
+
+/* @qingtuan-order:003172 */
+
+
+        /* 拍立得：换成和小窗同一种语言，白底、一条深色细框、右下淡淡的硬投影；后面那张纸不再歪着露出一角，改成整齐错开的一张 */
+
+/* @qingtuan-order:003173 */
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-front {
+            transform: none;
+            border: 1px solid var(--win-deep);
+            border-radius: 2px !important;
+            background: #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003174 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-back {
+            top: 4px;
+            left: 6px;
+            transform: none;
+            border: 1px solid var(--win-line);
+            border-radius: 2px !important;
+            background: var(--theme-light-18);
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:003175 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-photo {
+            border: 1px solid var(--win-line);
+            background-color: var(--win-face);
+        }
+
+/* @qingtuan-order:003176 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-bottom {
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:003177 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-caption {
+            color: var(--win-ink);
+            font-style: normal;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:003178 */
+
+
+        #personalProfilePage#personalProfilePage .mh-side .pp2-paperclip path {
+            stroke: var(--win-shade);
+        }
+
+/* @qingtuan-order:003179 */
+
+
+        /* 便签：一样改成细框加淡硬投影，胶带换成主题色实色纸胶带 */
+
+/* @qingtuan-order:003180 */
+
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-memo-body {
+            border: 1px solid var(--win-line);
+            border-radius: 0;
+            background: var(--theme-light-14);
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003181 */
+
+
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-memo-tape {
+            background: rgba(var(--theme-rgb), 0.6);
+        }
+
+/* @qingtuan-order:003182 */
+
+
+        /* 小窗：深外框、浅色标题栏、淡投影 */
+
+/* @qingtuan-order:003183 */
+
+        #personalProfilePage .mh-win {
+            position: relative;
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003184 */
+
+
+        #personalProfilePage .mh-win-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 4px 6px 4px 8px;
+            border-bottom: 1px solid var(--win-deep);
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:003185 */
+
+
+        #personalProfilePage .mh-win-head::after {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:003186 */
+
+
+        #personalProfilePage#personalProfilePage .mh-win-head .pp2-title,
+        #personalProfilePage#personalProfilePage .mh-win-head .pp2-section-label-love,
+        #personalProfilePage#personalProfilePage .mh-win-head .pp2-section-label-dislike {
+            padding: 0;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            font-style: normal;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:003187 */
+
+
+        #personalProfilePage#personalProfilePage .mh-win-head .pp2-section-label-dislike {
+            color: var(--mh-dislike);
+        }
+
+/* @qingtuan-order:003188 */
+
+
+        /* things i love：跟前面的像素爱心同色系，稍微压深一点，浅青标题栏上才读得清 */
+
+/* @qingtuan-order:003189 */
+
+
+        /* About me：一格格的资料表，左栏浅底写项目名 */
+
+/* @qingtuan-order:003190 */
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-row {
+            display: flex;
+            align-items: stretch;
+            height: 27px;
+            padding: 0;
+            gap: 0;
+            border-bottom: 1px solid var(--win-line);
+        }
+
+/* @qingtuan-order:003191 */
+
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-row:last-child {
+            border-bottom: 0;
+        }
+
+/* @qingtuan-order:003192 */
+
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-row::after {
+            display: none;
+        }
+
+/* @qingtuan-order:003193 */
+
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-info-key {
+            display: flex;
+            align-items: center;
+            flex: 0 0 58px;
+            min-width: 58px;
+            padding: 0 6px;
+            border-right: 1px solid var(--win-line);
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-size: 8.5px;
+            font-style: normal;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:003194 */
+
+
+        /* 不用 flex 居中：空的可编辑格在 flex 里光标会贴到顶上，改用行高撑满整格 */
+
+/* @qingtuan-order:003195 */
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-editable-text {
+            display: block;
+            line-height: 26px;
+            min-width: 0;
+            padding: 0 7px;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:003196 */
+
+
+        /* 喜欢 / 不喜欢：两扇小窗，项目前面是像素小爱心和像素小叉 */
+
+/* @qingtuan-order:003197 */
+
+        #personalProfilePage .mh-love,
+        #personalProfilePage .mh-dislike {
+            margin-top: 12px;
+        }
+
+/* @qingtuan-order:003198 */
+
+
+        #personalProfilePage#personalProfilePage .mh-love .pp2-row,
+        #personalProfilePage#personalProfilePage .mh-dislike .pp2-row {
+            height: 27px;
+            padding: 0 10px;
+            gap: 8px;
+        }
+
+/* @qingtuan-order:003199 */
+
+
+        #personalProfilePage#personalProfilePage .mh-love .pp2-row::after,
+        #personalProfilePage#personalProfilePage .mh-dislike .pp2-row::after {
+            left: 10px;
+            right: 10px;
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+/* @qingtuan-order:003200 */
+
+
+        #personalProfilePage#personalProfilePage .mh-love .pp2-row:last-child::after,
+        #personalProfilePage#personalProfilePage .mh-dislike .pp2-row:last-child::after {
+            display: none;
+        }
+
+/* @qingtuan-order:003201 */
+
+
+        #personalProfilePage#personalProfilePage .mh-love .pp2-editable-text,
+        #personalProfilePage#personalProfilePage .mh-dislike .pp2-editable-text {
+            font-size: 11.5px;
+        }
+
+/* @qingtuan-order:003202 */
+
+
+        #personalProfilePage#personalProfilePage .mh-win .pp2-like-dot {
+            width: 9px;
+            height: 8px;
+            border-radius: 0;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%279%27%20height%3D%278%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M1%200h2v1h1v1h1V1h1V0h2v1h1v3H8v1H7v1H6v1H5v1H4V7H3V6H2V5H1V4H0V1h1z%27/%3E%3C/svg%3E") no-repeat center / 9px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%279%27%20height%3D%278%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M1%200h2v1h1v1h1V1h1V0h2v1h1v3H8v1H7v1H6v1H5v1H4V7H3V6H2V5H1V4H0V1h1z%27/%3E%3C/svg%3E") no-repeat center / 9px 8px;
+        }
+
+/* @qingtuan-order:003203 */
+
+
+        #personalProfilePage#personalProfilePage .mh-win .pp2-like-dot.pp2-dislike {
+            width: 8px;
+            height: 8px;
+            background: var(--mh-dislike);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h2v1h1v1h2V1h1V0h2v2H7v1H6v2h1v1h1v2H6V7H5V6H3v1H2v1H0V6h1V5h1V3H1V2H0z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h2v1h1v1h2V1h1V0h2v2H7v1H6v2h1v1h1v2H6V7H5V6H3v1H2v1H0V6h1V5h1V3H1V2H0z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+        }
+
+/* @qingtuan-order:003204 */
+
+
+        /* 便签：贴在「不喜欢」小窗的右下角 */
+
+/* @qingtuan-order:003205 */
+
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-memo-wrap {
+            bottom: 44px;
+            right: 14px;
+            z-index: 30;
+        }
+
+/* @qingtuan-order:003206 */
+
+
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-footer {
+            padding: 12px 0 6px;
+        }
+
+/* @qingtuan-order:003207 */
+
+
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-footer-left,
+        #personalProfilePage#personalProfilePage .mh-binder .pp2-footer-tag {
+            font-style: normal;
+            font-size: 9px;
+            opacity: 0.7;
+        }
+
+/* @qingtuan-order:003208 */
+
+
+        /* 右边缘的索引贴：Home / Profile / Diary，Profile 那张和本子连在一起 */
+
+/* @qingtuan-order:003209 */
+
+        #personalProfilePage .mh-index {
+            position: absolute;
+            top: 30px;
+            right: -19px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 5;
+        }
+
+/* @qingtuan-order:003210 */
+
+
+        #personalProfilePage .mh-index span {
+            display: block;
+            width: 18px;
+            padding: 7px 0;
+            border: 1px solid var(--win-deep);
+            border-left: 0;
+            border-radius: 0 3px 3px 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 8px;
+            letter-spacing: 1px;
+            text-align: center;
+            writing-mode: vertical-rl;
+            box-shadow: inset -1px 1px 0 #FFFFFF, 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:003211 */
+
+
+        #personalProfilePage .mh-index span.is-active {
+            width: 19px;
+            margin-left: -1px;
+            background: #FFFFFF;
+            font-weight: 700;
+        }
+
+/* @qingtuan-order:003212 */
+
+
+        /* 留言板.txt：记事本小窗，写字的地方是横线纸 */
+
+/* @qingtuan-order:003213 */
+
+        #personalProfilePage#personalProfilePage .pp2-torn-note-wrap.mh-notepad {
+            align-self: flex-start;
+            width: calc(100% - 16px);
+            max-width: 364px;
+            height: auto;
+            margin: 18px 0 0;
+            transform: none;
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
+            background: #FFFFFF;
+            box-shadow: var(--win-drop);
+        }
+
+/* @qingtuan-order:003214 */
+
+
+        #personalProfilePage .mh-notepad .pp2-torn-svg,
+        #personalProfilePage .mh-notepad .pp2-paper-tape {
+            display: none;
+        }
+
+/* @qingtuan-order:003215 */
+
+
+        #personalProfilePage .mh-notepad-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 4px 6px 4px 8px;
+            border-bottom: 1px solid var(--win-deep);
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:003216 */
+
+
+        #personalProfilePage .mh-notepad-head::before {
+            content: '';
+            flex: 0 0 11px;
+            height: 13px;
+            border: 1px solid var(--win-deep);
+            background: repeating-linear-gradient(#FFFFFF 0 2px, var(--win-line) 2px 3px);
+        }
+
+/* @qingtuan-order:003217 */
+
+
+        #personalProfilePage .mh-notepad-head::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:003218 */
+
+
+        /* 留言板：三行横线，每一行都能写 */
+
+/* @qingtuan-order:003219 */
+
+        #personalProfilePage#personalProfilePage .mh-notepad {
+            padding-bottom: 8px;
+        }
+
+/* @qingtuan-order:003220 */
+
+
+        #personalProfilePage#personalProfilePage .mh-notepad .pp2-torn-note-text {
+            position: static;
+            inset: auto;
+            display: block;
+            width: calc(100% - 24px);
+            height: 30px;
+            margin: 0 12px;
+            padding: 0 2px;
+            border-bottom: 1px solid rgba(var(--theme-rgb), 0.55);
+            background: transparent;
+            font-size: 12px;
+            line-height: 30px;
+            text-align: left;
+        }
+
+/* @qingtuan-order:003221 */
+
+
+        /* 个人信息：小窗是 3px 圆角，里面的标题栏原本是直角，四个角会探出框外、带着一条白色高光，看起来像多了一块白边。
+           标题栏和记事本标题也给上 2px 圆角（外框 3px 减去 1px 边线），刚好贴着框的内侧 */
+
+/* @qingtuan-order:003222 */
+
+        #personalProfilePage#personalProfilePage .mh-win-head,
+        #personalProfilePage#personalProfilePage .mh-notepad-head {
+            border-radius: 2px 2px 0 0;
+        }
+
+/* @qingtuan-order:003223 */
+
+
+        #personalProfilePage#personalProfilePage .mh-win,
+        #personalProfilePage#personalProfilePage .pp2-torn-note-wrap.mh-notepad {
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:003603 */
+
+
+        /* ===== 设置页 + 各设置子页面换色：跟世界书同一套 =====
+           · 底色：米灰 → 白里混 15% 主题色的淡青（原本写死 #F9F9F7 的地方都改读 --set-bg）
+           · 外框、分隔线（原本 --win-deep 浅青）→ 淡青灰（亮度 .8）
+           · 窗口标题、项目名称（原本深青 / 深蓝灰）→ 深青灰（亮度 .78）；项目说明 → 淡青灰
+           · 顶栏、跑马灯、访客计数器这几块整片的色块，还有主按钮：主题色带一点灰（亮度 .85、饱和度 ×1.15） */
+
+/* @qingtuan-order:003604 */
+
+        :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
+            #voiceImageSettingsPage, #backgroundActivityPage, #personalProfilePage,
+            #apiProviderModal, #apiModelModal, #viChoiceModal, #mcpToolsModal, #mcpServiceModal, #aboutAppModal) { /* 重点色块：浅色主题压到 .85，深色主题保持原色深度 */
+            /* 原本写死的深蓝灰正文 / 灰色说明字 → 深青灰 / 淡青灰 */
+            /* 原本拿 --win-deep 当整块底色的地方（标题列、徽章、计数器、版本标签…）改读这个：主题色带一点灰 */
+        }
+
+/* @qingtuan-order:003605 */
+
+        :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
+            #voiceImageSettingsPage, #backgroundActivityPage, #personalProfilePage) {
+            background-color: var(--set-bg) !important;
+        }
+
+/* @qingtuan-order:003635 */
+
+        /* 输入框里的 placeholder → 淡青灰 */
+
+/* @qingtuan-order:003636 */
+
+        :is(#themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage, #voiceImageSettingsPage,
+            #backgroundActivityPage, #personalProfilePage, #mcpServiceModal) :is(input, textarea)::placeholder {
+            color: var(--tx-desc) !important; -webkit-text-fill-color: var(--tx-desc) !important; opacity: 1;
+        }
+
+/* @qingtuan-order:003677 */
+
+        /* 个人信息页：填进去的字（打字时、打完后都一样）→ 深青灰，跟其他页面输入的字同色；原本写死深灰黑 */
+
+/* @qingtuan-order:003678 */
+
+        #personalProfilePage .pp2-editable-text:not(.pp2-is-empty) {
+            color: var(--tx-title) !important; -webkit-text-fill-color: var(--tx-title) !important;
+        }
+
+/* @qingtuan-order:003679 */
+
+        /* 个人信息页：还没填的栏位提示字 → 淡青灰 */
+
+/* @qingtuan-order:003680 */
+
+        #personalProfilePage .pp2-editable-text.pp2-is-empty::before,
+        #personalProfilePage .mh-mood-text:empty::before {
+            color: var(--sb-line) !important; -webkit-text-fill-color: var(--sb-line) !important;
+        }
+
+/* @qingtuan-order:003681 */
+
+        /* ===== 个人信息页：只在几处文字点上主题青（用原本 things i love 那个浅青：主题色亮度 -0.045、饱和度 ×1.25） ===== */
+
+/* @qingtuan-order:003682 */
+
+        #personalProfilePage#personalProfilePage .mh-about .pp2-title,
+        #personalProfilePage#personalProfilePage .pp2-section-label-love,
+        #personalProfilePage#personalProfilePage .mh-mood-label,
+        #personalProfilePage#personalProfilePage .mh-today,
+        #personalProfilePage#personalProfilePage .mh-total,
+        #personalProfilePage#personalProfilePage .is-active {
+            color: oklch(from var(--theme-color) calc(l - 0.045) calc(c * 1.25) h) !important;
+            -webkit-text-fill-color: oklch(from var(--theme-color) calc(l - 0.045) calc(c * 1.25) h) !important;
+        }
+
+/* @qingtuan-order:003683 */
+
+        /* 便利贴的字 → 深青灰（跟灰色横线搭；原本是主题浅青） */
+
+/* @qingtuan-order:003684 */
+
+        #personalProfilePage#personalProfilePage .pp2-memo-text {
+            color: var(--tx-title) !important;
+            -webkit-text-fill-color: var(--tx-title) !important;
+        }
+
+/* @qingtuan-order:003685 */
+
+        /* 个人信息页便利贴的横线：原本 0.5px、主题色 40% 太淡 → 1px 淡青灰（30%） */
+
+/* @qingtuan-order:003686 */
+
+        #personalProfilePage#personalProfilePage .pp2-memo-line { height: 1px !important; background: var(--sb-line) !important; opacity: 0.3 !important; }

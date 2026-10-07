@@ -1,0 +1,5 @@
+import {useRef,useState} from 'react';
+import {useChatMemory} from '../../../providers/ChatMemoryProvider';
+import type {NativeAttribute} from '../../../types/dom';
+export function ChatMemoryPhoto({attributes}:{attributes:NativeAttribute[]}){const memory=useChatMemory(),id=attributes.find(a=>a.name==='id')!.value;const [loaded,setLoaded]=useState(false),[failed,setFailed]=useState('');const source=memory.photos[id];const img=useRef<HTMLImageElement|null>(null);return <div className={'chat-memory-photo-wrap'+(loaded?' has-photo':'')} tabIndex={0} role="button" aria-label="添加或更换回忆照片" onClick={()=>memory.open(id)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();memory.open(id);}}}><img ref={img} className="chat-memory-photo" id={id} alt="回忆照片" src={source&&source!==failed?source:undefined} onLoad={()=>setLoaded(true)} onError={()=>{setLoaded(false);setFailed(source);}}/></div>;}
+export function ChatMemoryInput(){const memory=useChatMemory();return <input ref={memory.input} type="file" accept="image/*" hidden aria-label="选择回忆照片" onChange={memory.change}/>;}

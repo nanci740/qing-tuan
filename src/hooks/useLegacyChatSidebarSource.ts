@@ -1,0 +1,9 @@
+import { useLayoutEffect, useState } from 'react';
+import { useChatSidebarSources } from '../providers/ChatSidebarProvider';
+import { DEFAULT_AVATAR } from '../utils/defaultAvatar';
+import { readMyPresence } from '../utils/chatPresence';
+/** 临时输入适配：聊天主体迁移后由其 React 状态直接提供资料，并移除此观察器和旧服务桥接。侧栏自身不写入旧 DOM。 */
+export function useLegacyChatSidebarSource(){const refs=useChatSidebarSources(),[source,setSource]=useState({peerAvatar:'',peerName:'',selfAvatar:DEFAULT_AVATAR,online:'在线',status:''});
+ useLayoutEffect(()=>{const refresh=()=>{const avatar=refs.peerAvatar.current,self=refs.selfAvatar.current;let selfAvatar=DEFAULT_AVATAR;if(self?.src&&!self.classList.contains('avatar-missing'))selfAvatar=self.currentSrc||self.src;else try{selfAvatar=localStorage.getItem('avatar_star_custom')||DEFAULT_AVATAR;}catch{/* 原默认头像回退。 */}const presence=window.smallphoneGetChatPresence?.(window.smallphoneGetActiveChatKey?.())||{online:'在线',status:''};const next={peerAvatar:avatar?.currentSrc||avatar?.src||'',peerName:refs.peerName.current?.textContent?.trim()||'',selfAvatar,online:presence.online,status:presence.status||''};setSource(current=>Object.keys(next).every(key=>current[key as keyof typeof current]===next[key as keyof typeof next])?current:next);};
+ const observer=new MutationObserver(refresh);if(refs.peerAvatar.current)observer.observe(refs.peerAvatar.current,{attributes:true,attributeFilter:['src']});if(refs.peerName.current)observer.observe(refs.peerName.current,{childList:true,characterData:true,subtree:true});if(refs.room.current)observer.observe(refs.room.current,{attributes:true,attributeFilter:['class']});window.smallphoneRefreshChatSide=refresh;window.smallphoneGetMyPresence=()=>readMyPresence().online;refresh();return()=>{observer.disconnect();if(window.smallphoneRefreshChatSide===refresh)delete window.smallphoneRefreshChatSide;delete window.smallphoneGetMyPresence;};},[refs.room,refs.peerAvatar,refs.peerName,refs.selfAvatar]);return source;
+}

@@ -1,0 +1,3076 @@
+/* @qingtuan-order:000010 */
+
+
+        #main-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 38px 12px 100px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.85s ease;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+/* @qingtuan-order:000011 */
+
+
+        #main-content::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+/* @qingtuan-order:000012 */
+
+
+        #main-content.visible {
+            display: flex;
+            animation: fadeInSimple 0.85s ease forwards;
+        }
+
+/* @qingtuan-order:000070 */
+
+
+        /* ---------------- 顶部状态栏 ---------------- */
+
+/* @qingtuan-order:000071 */
+
+        .ios-status-bar {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 380px;
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 22px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--ui-text-primary);
+            z-index: 50;
+            pointer-events: none;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:000072 */
+
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+/* @qingtuan-order:000073 */
+
+
+        .status-right svg {
+            fill: none;
+            stroke: #5F6772;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:000074 */
+
+
+        /* ---------------- 主画面播放器组件 ---------------- */
+
+/* @qingtuan-order:000075 */
+
+        .widget-card {
+            width: 100%;
+            max-width: 380px;
+            background: transparent;
+            padding: 10px 18px 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(0.90);
+            transform-origin: top center;
+            margin: -10px 0 0;
+            flex-shrink: 0; /* 锁定弹性缩放 */
+        }
+
+/* @qingtuan-order:000076 */
+
+
+        .avatars-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+/* @qingtuan-order:000077 */
+
+
+        .avatar-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+/* @qingtuan-order:000078 */
+
+
+        .speech-bubble-container {
+            position: relative;
+            width: 118px;
+            height: 65px;
+            margin-bottom: -28px; 
+            z-index: 5;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:000079 */
+
+
+        .bubble-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+/* @qingtuan-order:000080 */
+
+
+        .bubble-text-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 4px;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:000081 */
+
+
+        .bubble-text {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--ui-text-primary);
+            white-space: nowrap;
+            pointer-events: auto;
+            cursor: text;
+            outline: none;
+            padding: 2px 6px;
+            transition: background 0.2s ease;
+        }
+
+/* @qingtuan-order:000082 */
+
+
+        /* 输入框点进去不要变（古早风） */
+
+/* @qingtuan-order:000083 */
+
+
+        .avatar-frame-container {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+/* @qingtuan-order:000084 */
+
+
+        .avatar-frame-container:hover {
+            transform: scale(1.05);
+        }
+
+/* @qingtuan-order:000085 */
+
+
+        .avatar-frame-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+/* @qingtuan-order:000086 */
+
+
+        .avatar-inner-circle {
+            width: 98px;
+            height: 98px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+            position: relative;
+            z-index: 1;
+        }
+
+/* @qingtuan-order:000087 */
+
+
+        .avatar-inner-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+/* @qingtuan-order:000088 */
+
+
+        .heart-icon {
+            position: absolute;
+            top: 132px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            z-index: 3;
+            color: var(--theme-color);
+        }
+
+/* @qingtuan-order:000089 */
+
+
+        .earphone-wires {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+/* @qingtuan-order:000090 */
+
+
+        .subtitle {
+            color: #7E8894; /* 改回灰色 */
+            font-size: 11px; /* 调小字体 */
+            font-style: italic;
+            margin: 14px 0 8px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.6); /* 改回原来的白色光晕 */
+            z-index: 2;
+        }
+
+/* @qingtuan-order:000091 */
+
+
+        .player-box {
+            width: 330px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(3px) saturate(105%);
+            border: none;
+            padding: 6px 16px 4px;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            box-shadow: none;
+            margin-top: 4px;
+        }
+
+/* @qingtuan-order:000092 */
+
+
+        .player-header {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 28px;
+            margin-bottom: 2px;
+            padding: 0 8px;
+        }
+
+/* @qingtuan-order:000093 */
+
+
+        .song-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ui-text-primary);
+            margin: 0;
+            /* 使用 DM Serif Display 字体 */
+        }
+
+/* @qingtuan-order:000094 */
+
+
+        .sound-wave {
+            display: flex;
+            align-items: center;
+            gap: 2.5px;
+            height: 14px;
+        }
+
+/* @qingtuan-order:000095 */
+
+
+        .sound-wave span {
+            display: block;
+            width: 2.5px;
+            background-color: #5F6772; /* 改回灰色 */
+            transition: height 0.2s ease;
+        }
+
+/* @qingtuan-order:000096 */
+
+
+        /* 正在播放时的音波跳动动画 */
+
+/* @qingtuan-order:000097 */
+
+        .player-box.playing .sound-wave span:nth-child(1) { animation: waveBounce 0.75s ease-in-out infinite alternate 0.1s; }
+
+/* @qingtuan-order:000098 */
+
+        .player-box.playing .sound-wave span:nth-child(2) { animation: waveBounce 1.05s ease-in-out infinite alternate 0.3s; }
+
+/* @qingtuan-order:000099 */
+
+        .player-box.playing .sound-wave span:nth-child(3) { animation: waveBounce 0.65s ease-in-out infinite alternate 0.05s; }
+
+/* @qingtuan-order:000100 */
+
+        .player-box.playing .sound-wave span:nth-child(4) { animation: waveBounce 0.9s ease-in-out infinite alternate 0.25s; }
+
+/* @qingtuan-order:000101 */
+
+        .player-box.playing .sound-wave span:nth-child(5) { animation: waveBounce 0.8s ease-in-out infinite alternate 0.15s; }
+
+/* @qingtuan-order:000103 */
+
+
+        /* 暂停时的音波静止状态 */
+
+/* @qingtuan-order:000104 */
+
+        .player-box.paused .sound-wave span {
+            animation: none !important;
+            height: 4px !important;
+            opacity: 0.6;
+        }
+
+/* @qingtuan-order:000105 */
+
+
+        .song-details {
+            text-align: center;
+            font-size: 11px;
+            color: var(--ui-text-primary); /* 改回深灰色 */
+            margin: 0 auto 10px auto;
+            letter-spacing: 1.5px;
+            cursor: text;
+            padding: 2px 4px;
+            width: fit-content;
+            outline: none;
+            background: transparent;
+            user-select: text;
+        }
+
+/* @qingtuan-order:000106 */
+
+
+        .progress-container {
+            padding: 0 4px;
+        }
+
+/* @qingtuan-order:000107 */
+
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: color-mix(in srgb, var(--theme-color) 34%, #FFFFFF); /* 未播放部分：淡青 */
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: height 0.2s ease;
+        }
+
+/* @qingtuan-order:000108 */
+
+
+        .progress-bar-bg:hover {
+            height: 8px;
+        }
+
+/* @qingtuan-order:000109 */
+
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--theme-color); /* 主色 */
+            pointer-events: none;
+            transition: width 0.1s linear;
+        }
+
+/* @qingtuan-order:000110 */
+
+
+        .time-stamps {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #727c88;
+            margin-top: 4px;
+            font-weight: 500;
+            user-select: none;
+        }
+
+/* @qingtuan-order:000111 */
+
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            padding: 0 8px;
+        }
+
+/* @qingtuan-order:000112 */
+
+
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--ui-text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+            outline: none;
+        }
+
+/* @qingtuan-order:000113 */
+
+
+        .btn-star svg, .btn-heart svg {
+            width: 18px;
+            height: 18px;
+            fill: #5F6772;
+            transition: fill 0.3s ease;
+        }
+
+/* @qingtuan-order:000114 */
+
+
+        /* 收藏与心形状态 */
+
+/* @qingtuan-order:000115 */
+
+        .btn-heart.liked svg, .btn-star.starred svg {
+            fill: var(--theme-color);
+        }
+
+/* @qingtuan-order:000116 */
+
+
+        .btn-prev svg, .btn-next svg {
+            width: 28px;
+            height: 28px;
+            fill: #5F6772;
+        }
+
+/* @qingtuan-order:000117 */
+
+
+        .btn-play {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+/* @qingtuan-order:000118 */
+
+
+        .btn-play .pause-bars {
+            display: flex;
+            gap: 4px;
+            height: 15px;
+            align-items: center;
+        }
+
+/* @qingtuan-order:000119 */
+
+
+        .btn-play .pause-bars span {
+            width: 4.5px;
+            height: 15px;
+            background: #5F6772;
+        }
+
+/* @qingtuan-order:000120 */
+
+
+        .btn-play svg.icon-play {
+            display: none;
+            width: 15px;
+            height: 15px;
+            fill: #5F6772;
+            margin-left: 2px;
+        }
+
+/* @qingtuan-order:000121 */
+
+
+        /* 暂停时显示三角播放按钮，隐藏双竖线 */
+
+/* @qingtuan-order:000122 */
+
+        .player-box.paused .btn-play .pause-bars {
+            display: none;
+        }
+
+/* @qingtuan-order:000123 */
+
+
+        .player-box.paused .btn-play svg.icon-play {
+            display: block;
+        }
+
+/* @qingtuan-order:000124 */
+
+
+        /* 浮动音符特效容器 (播放器外部上方) */
+
+/* @qingtuan-order:000125 */
+
+        .floating-notes-container {
+            width: 100%;
+            height: 0;
+            position: relative;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 20;
+        }
+
+/* @qingtuan-order:000128 */
+
+
+        /* ---------------- 底部 App & 拍立得 区域 ---------------- */
+
+/* @qingtuan-order:000129 */
+
+        .app-section {
+            width: 100%;
+            max-width: 380px;
+            padding: 0 16px;
+            margin-top: 0;
+            display: flex;
+            justify-content: center; /* 從 space-between 改為 center，防止兩側擴展 */
+            align-items: center;
+            gap: 25px;               /* 固定 App 與拍立得之間的距離 */
+            flex-shrink: 0; /* 锁定弹性缩放 */
+        }
+
+/* @qingtuan-order:000130 */
+
+
+        .app-grid-container {
+            width: 130px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 10px;
+            flex-shrink: 0;
+            margin-top: -15px;
+            margin-left: 5px;
+        }
+
+/* @qingtuan-order:000131 */
+
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+/* @qingtuan-order:000132 */
+
+
+        .app-item:active .app-card {
+            transform: scale(0.95);
+        }
+
+/* @qingtuan-order:000133 */
+
+
+        .app-card {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            -webkit-backdrop-filter: blur(3px) saturate(105%);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+/* @qingtuan-order:000134 */
+
+
+        .icon-box {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:000135 */
+
+
+        .icon-box svg {
+            width: 32px;
+            height: 32px;
+            stroke: #5F6772;
+            fill: none;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s ease; /* 添加悬停变色过渡 */
+        }
+
+/* @qingtuan-order:000136 */
+
+        
+        .app-item:hover .icon-box svg {
+            stroke: var(--theme-color); /* 悬停时图标变淡青色 */
+        }
+
+/* @qingtuan-order:000137 */
+
+
+        .app-label-cn {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--ui-text-primary);
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:000347 */
+
+
+        .app-custom-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            border-radius: inherit;
+        }
+
+/* @qingtuan-order:000348 */
+
+
+        .icon-box.has-custom-icon svg {
+            display: none;
+        }
+
+/* @qingtuan-order:000349 */
+
+
+        .icon-box.has-custom-icon .app-custom-icon {
+            display: block;
+        }
+
+/* @qingtuan-order:000420 */
+
+
+        /* 主画面可编辑文字：不显示浏览器默认黄色/蓝色聚焦框 */
+
+/* @qingtuan-order:000421 */
+
+        #mainSubtitle[contenteditable="true"]:focus,
+        #songTitle[contenteditable="true"]:focus {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:000483 */
+
+
+        /* ===== 音乐设置：三首上限 / 小封面 / 可编辑音乐 ===== */
+
+/* @qingtuan-order:000484 */
+
+        .player-mini-cover {
+            position: absolute;
+            left: 12px;
+            top: 10px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(3px) saturate(105%);
+            -webkit-backdrop-filter: blur(3px) saturate(105%);
+            box-sizing: border-box;
+        }
+
+/* @qingtuan-order:000485 */
+
+        .player-mini-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+/* @qingtuan-order:000486 */
+
+        .player-mini-cover span {
+            font-size: 16px;
+            color: rgba(62,70,81,.55);
+            line-height: 1;
+        }
+
+/* @qingtuan-order:000487 */
+
+        .player-header {
+            min-height: 30px;
+            padding-left: 64px;
+        }
+
+/* @qingtuan-order:000488 */
+
+        .song-details {
+            max-width: calc(100% - 64px);
+            margin-left: 64px;
+        }
+
+/* @qingtuan-order:000527 */
+
+
+        /* 触屏设备不保留 hover 状态，避免更换图片后遮罩/放大效果黏住 */
+
+/* @qingtuan-order:000528 */
+
+        @media (hover: none), (pointer: coarse) {
+            .avatar-frame-container:hover {
+                transform: none;
+            }
+
+        }
+
+/* @qingtuan-order:001674 */
+
+        .chat-message-row.is-user.is-read .chat-read-receipt { display: inline-flex; }
+
+/* @qingtuan-order:002019 */
+
+#chatListView svg.px-icon .px-l{fill:color-mix(in srgb, var(--win-deep) 55%, var(--theme-color))}
+
+/* @qingtuan-order:003286 */
+
+
+        /* ---------------- 主画面 · 古早升级：播放器是一台古早 MP3；头像是方形相框 + 像素气泡，副标题是一条花边贴纸，App 是桌面图标，Dock 是凸起底座（颜色全部跟随主题色） ---------------- */
+
+/* @qingtuan-order:003287 */
+
+        #main-content {
+            /* 主画面配色跟设置页一样：线条、图标、外框用 --win-deep（设置页图标那种浅青），文字用 --win-ink，填色用主题色 */
+        }
+
+/* @qingtuan-order:003288 */
+
+
+        /* 头像：圆框换成方形相片框，白色卡纸边 + 深色细外框 + 右下硬投影 */
+
+/* @qingtuan-order:003289 */
+
+        #main-content .avatar-frame-svg { display: none; }
+
+/* @qingtuan-order:003290 */
+
+
+        #main-content .avatar-inner-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 0;
+            border: 1px solid var(--win-deep);
+            padding: 4px;
+            background: #FFFFFF; /* 实色白卡纸边，像拍立得 */
+            box-shadow: var(--win-drop); /* 跟其他页面窗口同一个右下硬投影 */
+        }
+
+/* @qingtuan-order:003291 */
+
+
+        #main-content .avatar-inner-circle img {
+            border: 1px solid var(--win-shade-soft);
+            border-radius: 1px;
+        }
+
+/* @qingtuan-order:003292 */
+
+
+        #main-content .avatar-frame-container:hover { transform: translateY(-2px); }
+
+/* @qingtuan-order:003293 */
+
+
+        /* 气泡：去掉圆润玻璃泡，换成像素描边的小对话框，底下一个阶梯状小尾巴 */
+
+/* @qingtuan-order:003294 */
+
+        #main-content .speech-bubble-container {
+            width: auto;
+            min-width: 96px;
+            height: 26px;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:003295 */
+
+
+        #main-content .bubble-svg { display: none; }
+
+/* @qingtuan-order:003296 */
+
+
+        #main-content .bubble-text-layer {
+            position: relative;
+            height: 100%;
+            padding: 0 4px;
+        }
+
+/* @qingtuan-order:003297 */
+
+
+        #main-content .bubble-text {
+            font-size: 12px;
+            border-radius: 1px !important;
+        }
+
+/* @qingtuan-order:003298 */
+
+
+        /* Star 气泡跟 Moon 同一个高度（原本 Star 往下挪 2px，已拿掉） */
+
+/* @qingtuan-order:003299 */
+
+
+        /* 尾巴：朝下的小三角，深色三角垫底、白色三角叠在上面，看起来就是描了边的尖角 */
+
+/* @qingtuan-order:003300 */
+
+        #main-content .speech-bubble-container::before {
+            border-color: var(--win-deep) transparent transparent transparent;
+        }
+
+/* @qingtuan-order:003301 */
+
+
+        /* 白三角跟深色三角一样大，只往上挪 1.5px：斜边露出来的深色约 1px，跟气泡外框一样细 */
+
+/* @qingtuan-order:003302 */
+
+
+        /* ---- 对话框改像素气泡：四个角各缺一格的像素圆角，尖角是一阶一阶的像素三角；右下 2px 实色硬阴影（不晕开） ---- */
+
+/* @qingtuan-order:003303 */
+
+        #main-content .speech-bubble-container {
+            border: 0;
+            border-radius: 0 !important;
+            /* 外框：上下左右四条线各缩进 1px，角落空出来；角落里面再点一颗像素，就是阶梯状的像素角 */
+            box-shadow: 0 -2px 0 -1px var(--bub-line), 0 2px 0 -1px var(--bub-line), -2px 0 0 -1px var(--bub-line), 2px 0 0 -1px var(--bub-line);
+            background:
+                linear-gradient(var(--bub-line), var(--bub-line)) 0 0 / 1px 1px no-repeat,
+                linear-gradient(var(--bub-line), var(--bub-line)) 100% 0 / 1px 1px no-repeat,
+                linear-gradient(var(--bub-line), var(--bub-line)) 0 100% / 1px 1px no-repeat,
+                linear-gradient(var(--bub-line), var(--bub-line)) 100% 100% / 1px 1px no-repeat,
+                #FFFFFF;
+            /* 硬阴影用 drop-shadow，像素角和尖角都会跟着有阴影 */
+            filter: drop-shadow(2px 2px 0 rgba(var(--theme-rgb), 0.3)); /* 跟 --win-drop 同一个硬投影 */
+        
+            margin-bottom: 2px;
+            /* 相框上方本来就空 9px，尾巴尖离相框约 4px */
+            overflow: visible;
+        }
+
+/* @qingtuan-order:003304 */
+
+        #main-content .speech-bubble-container::before,
+        #main-content .speech-bubble-container::after {
+            content: '';
+            /* 往上多盖 2px 进气泡里，白色把气泡下框整段盖掉，缩放时才不会在开口露出一条细线 */
+            top: calc(100% - 2px);
+            left: 50%;
+            margin-left: -6px;
+            width: 12px;
+            height: 10px;
+            border: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003305 */
+
+        /* 尖角描边：开口宽度不变，两格一阶往下收，最后尖端收成 2 格 */
+
+/* @qingtuan-order:003306 */
+
+        #main-content .speech-bubble-container::before {
+            background: var(--bub-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='9'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='9'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='9'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='9'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
+        }
+
+/* @qingtuan-order:003307 */
+
+        /* 尖角里面的白 */
+
+/* @qingtuan-order:003308 */
+
+        #main-content .speech-bubble-container::after {
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='8'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='8'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
+        }
+
+/* @qingtuan-order:003309 */
+
+
+        /* 副标题：一条花边贴纸，上下虚线，两头小星星 */
+
+/* @qingtuan-order:003310 */
+
+        #main-content .subtitle {
+            margin: 16px 0 10px;
+            padding: 2px 10px;
+            font-style: normal;
+            font-size: 10.5px;
+            font-weight: 500;
+            /* 没有底色和虚线框：字跟耳机线同色（亮度一样），彩度比耳机线再高一点点 */
+            color: oklch(from var(--theme-color) calc(l - 0.05) calc(c * 1.4) h); /* 彩度收一点点，带一丝灰调 */
+            background: transparent;
+            border: 0;
+            text-shadow: 0 0 4px rgba(255, 255, 255, 0.55); /* 只留一点点柔和的白光 */
+            position: relative;
+        }
+
+/* @qingtuan-order:003311 */
+
+
+        /* 两边的小星星不要了 */
+
+/* @qingtuan-order:003312 */
+
+        #main-content .subtitle::before,
+        #main-content .subtitle::after { content: none; 
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 9px;
+            color: var(--theme-color);
+            font-style: normal;
+        }
+
+/* @qingtuan-order:003313 */
+
+
+        /* ---- 播放器：一台 2000 年代的横版 MP3，左边背光液晶屏，右边圆形转盘键，机身左边挂一小圈挂绳 ---- */
+
+/* @qingtuan-order:003314 */
+
+        #main-content .player-box.mp3-player { /* 屏幕里的字跟图标描边同色 */
+            width: 330px;
+            display: grid;
+            grid-template-columns: 1fr 96px;
+            grid-template-rows: auto auto;
+            column-gap: 12px;
+            align-items: center;
+            padding: 9px 12px 9px 14px;
+            margin-top: 10px;
+            overflow: visible;
+            border: 1px solid var(--win-deep);
+            border-radius: 18px !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:003315 */
+
+
+        #main-content .player-box.mp3-player::before,
+        #main-content .player-box.mp3-player::after { display: none; }
+
+/* @qingtuan-order:003316 */
+
+
+        /* 液晶屏：深色塑料边框里一块主题色背光屏，带一点点像素格 */
+
+/* @qingtuan-order:003317 */
+
+        #main-content .mp3-screen {
+            grid-column: 1;
+            grid-row: 1;
+            position: relative;
+            min-width: 0;
+            padding: 5px 8px 5px;
+            border-radius: 5px;
+            border: 3px solid var(--mp3-lcd-ink);
+            background:
+                /* 交错波点：两层同样的小圆点，第二层错开半格，排成斜斜的菱形；颜色取屏幕文字色的淡版 */
+                radial-gradient(circle, color-mix(in srgb, var(--mp3-lcd-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 10px 10px,
+                radial-gradient(circle, color-mix(in srgb, var(--mp3-lcd-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 5px 5px / 10px 10px,
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
+                var(--mp3-lcd);
+            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.14), 0 1px 0 #FFFFFF;
+            color: var(--mp3-lcd-ink);
+        }
+
+/* @qingtuan-order:003318 */
+
+
+        /* 屏幕第一行：播放状态 · 音波 · 电池 */
+
+/* @qingtuan-order:003319 */
+
+        #main-content .mp3-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 12px;
+            margin-bottom: 4px;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+        }
+
+/* @qingtuan-order:003320 */
+
+
+        #main-content .mp3-mode { flex: 1; }
+
+/* @qingtuan-order:003321 */
+
+        #main-content .player-box.paused .mp3-mode::before { content: '❚❚ PAUSE'; }
+
+/* @qingtuan-order:003322 */
+
+        #main-content .player-box:not(.paused) .mp3-mode::before { content: '▶ PLAY'; }
+
+/* @qingtuan-order:003323 */
+
+
+        #main-content .mp3-status .sound-wave span {
+            width: 2px;
+            border-radius: 0 !important;
+            background-color: var(--mp3-lcd-ink);
+            opacity: 0.8;
+        }
+
+/* @qingtuan-order:003324 */
+
+
+        /* 屏幕里只有 10px 高，跳动幅度跟着缩小 */
+
+/* @qingtuan-order:003325 */
+
+        #main-content .player-box.playing .mp3-status .sound-wave span {
+            animation-name: mp3Bar;
+            animation-fill-mode: both; /* 各条延迟开始的那一下先用 2px，不会先冒出 HTML 里写的 16px */
+        }
+
+/* @qingtuan-order:003326 */
+
+
+        #main-content .mp3-status .sound-wave {
+            height: 10px;
+            overflow: hidden;
+            gap: 1.5px;
+            align-items: flex-end;
+        }
+
+/* @qingtuan-order:003329 */
+
+
+        #main-content .player-box.paused .mp3-status .sound-wave span { height: 2px !important; }
+
+/* @qingtuan-order:003330 */
+
+
+        #main-content .mp3-battery {
+            width: 15px;
+            height: 7px;
+            border: 1px solid var(--mp3-lcd-ink);
+            position: relative;
+            background: linear-gradient(90deg, var(--mp3-lcd-ink) 0 70%, transparent 70%);
+            background-clip: content-box;
+            padding: 1px;
+        }
+
+/* @qingtuan-order:003331 */
+
+
+        #main-content .mp3-battery::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 1px;
+            width: 2px;
+            height: 3px;
+            background: var(--mp3-lcd-ink);
+        }
+
+/* @qingtuan-order:003332 */
+
+
+        /* 屏幕中间：小封面 + 歌名 + 自己的装饰字 */
+
+/* @qingtuan-order:003333 */
+
+        #main-content .mp3-track {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:003334 */
+
+
+        #main-content .mp3-player .player-mini-cover {
+            position: relative;
+            top: auto;
+            left: auto;
+            flex: 0 0 34px;
+            padding: 0;
+            border-radius: 2px;
+            border: 1px solid var(--mp3-lcd-ink);
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:003335 */
+
+
+        #main-content .mp3-player .player-mini-cover img { filter: saturate(0.55) contrast(1.05); }
+
+/* @qingtuan-order:003336 */
+
+        #main-content .mp3-player .player-mini-cover span { color: var(--mp3-lcd-ink); font-size: 14px; }
+
+/* @qingtuan-order:003337 */
+
+
+        #main-content .mp3-track-text { flex: 1; min-width: 0; }
+
+/* @qingtuan-order:003338 */
+
+
+        #main-content .mp3-player .player-header {
+            height: auto;
+            min-height: 0;
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: 0;
+            box-shadow: none;
+            display: block;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:003339 */
+
+
+        #main-content .mp3-player .song-title {
+            position: static;
+            transform: none;
+            max-width: 100%;
+            text-shadow: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:003340 */
+
+
+        #main-content .mp3-player .song-details {
+            max-width: 100%;
+            margin: 1px 0 0;
+            padding: 0;
+            color: var(--mp3-lcd-dim);
+            letter-spacing: 0.8px;
+            filter: grayscale(1); /* 单色液晶屏：彩色 emoji 也显示成灰阶 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:003341 */
+
+
+        /* 进度条：屏幕底下一排小方块 */
+
+/* @qingtuan-order:003342 */
+
+        #main-content .mp3-player .progress-container {
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+/* @qingtuan-order:003343 */
+
+
+        #main-content .mp3-player .progress-bar-bg,
+        #main-content .mp3-player .progress-bar-bg:hover {
+            flex: 1;
+            order: 2;
+            padding: 1px;
+            border-radius: 0 !important;
+            border: 1px solid var(--mp3-lcd-ink);
+            background: transparent;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:003344 */
+
+
+        #main-content .mp3-player .progress-bar-fill {
+            border-radius: 0 !important;
+            background: repeating-linear-gradient(90deg, var(--mp3-lcd-ink) 0 3px, transparent 3px 5px);
+        }
+
+/* @qingtuan-order:003345 */
+
+
+        #main-content .mp3-player .time-stamps { display: contents; }
+
+/* @qingtuan-order:003346 */
+
+
+        #main-content .mp3-player .time-stamps span {
+            font-family: 'SF Mono', Menlo, Consolas, monospace !important;
+            color: var(--mp3-lcd-ink);
+            margin: 0;
+        }
+
+/* @qingtuan-order:003347 */
+
+
+        #main-content .mp3-player #currTime { order: 1; }
+
+/* @qingtuan-order:003348 */
+
+        #main-content .mp3-player #totalTime { order: 3; }
+
+/* @qingtuan-order:003349 */
+
+
+        /* 机身刻字：屏幕下面一行浅浅的字，内容在美化设置里改 */
+
+/* @qingtuan-order:003350 */
+
+        #main-content .mp3-brand {
+            grid-column: 1;
+            grid-row: 2;
+            margin: 4px 0 0 2px;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            color: color-mix(in srgb, var(--win-deep) 60%, #FFFFFF); /* 刻字比图标描边再淡一级 */
+            text-shadow: 0 1px 0 #FFFFFF;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: none;
+        }
+
+/* @qingtuan-order:003351 */
+
+
+        /* 转盘键：中间播放，上收藏、下喜欢、左右切歌 */
+
+/* @qingtuan-order:003352 */
+
+        #main-content .mp3-player .controls {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            position: relative;
+            width: 92px;
+            height: 92px;
+            margin: 0;
+            padding: 0;
+            display: block;
+            border-radius: 50%;
+            border: 1px solid var(--win-deep);
+            background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, var(--theme-light-18) 55%, var(--theme-light-42) 100%);
+        }
+
+/* @qingtuan-order:003353 */
+
+
+        #main-content .mp3-player .controls .btn {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:003354 */
+
+
+        #main-content .mp3-player .controls .btn:active {
+            /* 按下不换颜色，只往右下挪 1px（跟资料卡按钮一样） */
+            transform: none;
+            opacity: 1;
+            translate: 1px 1px;
+        }
+
+/* @qingtuan-order:003355 */
+
+
+        /* 四个小钮的圆心都落在圆环中线上（外圈半径 45、中键半径 18，中线离外沿 13.5px） */
+
+/* @qingtuan-order:003356 */
+
+        #main-content .mp3-player .btn-star  { top: 1.5px;    left: 50%; margin-left: -12px; }
+
+/* @qingtuan-order:003357 */
+
+        #main-content .mp3-player .btn-heart { bottom: 1.5px; left: 50%; margin-left: -12px; }
+
+/* @qingtuan-order:003358 */
+
+        #main-content .mp3-player .btn-prev  { left: 1.5px;   top: 50%;  margin-top: -12px; }
+
+/* @qingtuan-order:003359 */
+
+        #main-content .mp3-player .btn-next  { right: 1.5px;  top: 50%;  margin-top: -12px; }
+
+/* @qingtuan-order:003360 */
+
+
+        #main-content .mp3-player .controls .btn-play {
+            width: 36px;
+            height: 36px;
+            margin: -18px 0 0 -18px;
+            border: 1px solid var(--win-deep);
+        }
+
+/* @qingtuan-order:003361 */
+
+
+        #main-content .mp3-player .controls .btn-play:active {
+            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003362 */
+
+
+        #main-content .mp3-player .btn-prev svg,
+        #main-content .mp3-player .btn-next svg { width: 13px; height: 13px; fill: var(--home-ink); }
+
+/* @qingtuan-order:003363 */
+
+
+        #main-content .mp3-player .btn-star svg,
+        #main-content .mp3-player .btn-heart svg { width: 11px; height: 11px; fill: var(--home-ink); }
+
+/* @qingtuan-order:003364 */
+
+
+        #main-content .mp3-player .btn-heart.liked svg,
+        #main-content .mp3-player .btn-star.starred svg { fill: var(--theme-color); }
+
+/* @qingtuan-order:003365 */
+
+
+        #main-content .mp3-player .btn-play svg.icon-play { width: 11px; height: 11px; margin-left: 2px; fill: var(--home-ink); }
+
+/* @qingtuan-order:003366 */
+
+        #main-content .mp3-player .btn-play .pause-bars { height: 11px; gap: 3px; }
+
+/* @qingtuan-order:003367 */
+
+        #main-content .mp3-player .btn-play .pause-bars span { width: 3px; height: 11px; border-radius: 0 !important; background: var(--home-ink); }
+
+/* @qingtuan-order:003368 */
+
+
+        /* ---- MP3 精修：屏幕嵌在一块有色玻璃面板里、机身加 Y2K 亮面塑料高光、液晶排版收紧 ---- */
+
+/* @qingtuan-order:003369 */
+
+
+        /* 机身：边框内侧一圈细亮边，上半部一道柔和的高光带 */
+
+/* @qingtuan-order:003370 */
+
+
+        #main-content .mp3-player .mp3-brand { position: relative; margin-top: 9px; }
+
+/* @qingtuan-order:003371 */
+
+
+        /* 机身外框、转盘外圈的描边调细 */
+
+/* @qingtuan-order:003372 */
+
+        #main-content .player-box.mp3-player { border-width: 0.7px; }
+
+/* @qingtuan-order:003373 */
+
+        #main-content .mp3-player .controls { border-width: 0.7px; }
+
+/* @qingtuan-order:003374 */
+
+        #main-content .mp3-player .controls .btn-play { border-width: 0.8px; 
+            left: 50%;
+            top: 50%;
+        }
+
+/* @qingtuan-order:003375 */
+
+
+        /* 屏幕面板：液晶外面一块圆角有色玻璃（颜色跟按钮图标同一个），左上亮、右下深，外沿一圈细线 */
+
+/* @qingtuan-order:003376 */
+
+        #main-content .mp3-player .mp3-screen {
+            margin: 5px 5px 0 5px;
+            border: 1px solid rgba(0, 0, 0, 0.22);
+            border-radius: 3px;
+        }
+
+/* @qingtuan-order:003377 */
+
+
+        #main-content .mp3-player .mp3-screen::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            z-index: -1;
+            border-radius: 8px;
+            border: 1px solid var(--win-deep);
+            background:
+                linear-gradient(155deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(0, 0, 0, 0.06) 100%),
+                var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+/* @qingtuan-order:003378 */
+
+
+        /* 液晶上斜斜一道淡淡的反光 */
+
+/* @qingtuan-order:003379 */
+
+        #main-content .mp3-player .mp3-screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 34%, rgba(255, 255, 255, 0) 34.5%);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003380 */
+
+
+        /* 液晶排版：状态行下一条点线分隔，歌名小一号，行距收匀 */
+
+/* @qingtuan-order:003381 */
+
+        #main-content .mp3-player .mp3-status {
+            height: 13px;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
+            border-bottom: 1px dotted rgba(var(--theme-rgb), 0.9);
+            border-bottom-color: color-mix(in srgb, var(--mp3-lcd-ink) 45%, transparent);
+            font-size: 8px;
+        }
+
+/* @qingtuan-order:003382 */
+
+
+        #main-content .mp3-player .mp3-status .sound-wave { height: 8px; }
+
+/* @qingtuan-order:003383 */
+
+        #main-content .mp3-player .mp3-battery { height: 7px; width: 14px; }
+
+/* @qingtuan-order:003384 */
+
+
+        #main-content .mp3-player .mp3-track { gap: 8px; }
+
+/* @qingtuan-order:003385 */
+
+
+        #main-content .mp3-player .player-mini-cover {
+            flex-basis: 32px;
+            width: 32px;
+            height: 32px;
+        }
+
+/* @qingtuan-order:003386 */
+
+
+        #main-content .mp3-player .song-title {
+            font-size: 12.5px;
+            line-height: 1.3;
+            letter-spacing: 0.3px;
+        }
+
+/* @qingtuan-order:003387 */
+
+
+        #main-content .mp3-player .song-details {
+            margin-top: 2px;
+            font-size: 9px;
+            line-height: 1.3;
+        }
+
+/* @qingtuan-order:003388 */
+
+
+        #main-content .mp3-player .progress-container {
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+/* @qingtuan-order:003389 */
+
+
+        #main-content .mp3-player .progress-bar-bg,
+        #main-content .mp3-player .progress-bar-bg:hover { height: 6px; }
+
+/* @qingtuan-order:003390 */
+
+
+        #main-content .mp3-player .time-stamps span { font-size: 8px; letter-spacing: 0.3px; }
+
+/* @qingtuan-order:003391 */
+
+
+        /* ---- App：桌面图标，不要卡片底；名字是桌面上那种小标签，选中时整块主题色 ---- */
+
+/* @qingtuan-order:003392 */
+
+        #main-content .app-card {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:003393 */
+
+
+        #main-content .app-card::before,
+        #main-content .app-card::after { display: none; }
+
+/* @qingtuan-order:003394 */
+
+
+        #main-content .icon-box svg {
+            width: 34px;
+            height: 34px;
+            filter: drop-shadow(2px 2px 0 rgba(var(--theme-rgb), 0.35));
+        }
+
+/* @qingtuan-order:003395 */
+
+
+        /* App 名字：平常只有字（加一道淡白字影，壁纸上也看得清）；按下去才出现主题色反白底，像点选桌面上的文件 */
+
+/* @qingtuan-order:003396 */
+
+        #main-content .app-label-cn {
+            padding: 1px 5px;
+            font-size: 10.5px;
+            border: 1px dotted transparent;
+            background: transparent;
+            text-shadow: none;
+            line-height: 1.3;
+        }
+
+/* @qingtuan-order:003397 */
+
+
+        #main-content .app-item:hover .app-label-cn,
+        #main-content .app-item:active .app-label-cn {
+            background: var(--theme-color);
+            color: #FFFFFF;
+            border-color: var(--win-deep);
+            text-shadow: none;
+        }
+
+/* @qingtuan-order:003398 */
+
+
+        #main-content .app-item:active .app-card { transform: translate(1px, 1px); }
+
+/* @qingtuan-order:003399 */
+
+
+        /* ---- 主画面排版：票根先藏起来（JS 还会读写里面的时钟、天气，直接删会报错），剩下两块在状态栏和导航栏之间平均分开 ---- */
+
+/* @qingtuan-order:003400 */
+
+
+        #main-content {
+            padding-bottom: 135px; /* 导航栏 58px 高 + 离底 37px + 40px 空隙（小圆点排在内容最后面，底部就在这条线上） */
+        }
+
+/* @qingtuan-order:003401 */
+
+
+        /* 导航栏往上提，离底 42px */
+
+/* @qingtuan-order:003402 */
+
+        #main-content .dock-bar { bottom: 37px; }
+
+/* @qingtuan-order:003403 */
+ /* 离底 37px，上面空出来的地方放页数小圆点 */
+
+/* @qingtuan-order:003404 */
+
+
+        /* 自动边距：空间多就平均拉开，空间不够就变 0，不会把上面的内容挤出屏幕 */
+
+/* @qingtuan-order:003405 */
+
+        #main-content > .widget-card {
+            margin-top: 19px; /* 固定从上方开始，对话框顶端跟第二页消息小窗后面最上面那扇叠窗同一个高度 */
+            margin-bottom: 0;
+            transform: none; /* 票根拿掉后空间够了，头像和 MP3 回到 100% */
+        }
+
+/* @qingtuan-order:003406 */
+
+
+        /* 矮屏幕：上半部缩回 90%，免得拍立得顶到 MP3 */
+
+/* @qingtuan-order:003407 */
+
+        @media (max-height: 720px) {
+            #main-content > .widget-card {
+                transform: scale(0.9);
+                margin-bottom: -30px;
+            }
+        }
+
+/* @qingtuan-order:003408 */
+
+
+        /* 手机桌面式格子：跟 MP3 同宽 330px，切成 4 栏；左 2 栏是 2x2 的 App，右 2 栏是 2x2 的拍立得小组件 */
+
+/* @qingtuan-order:003409 */
+
+        #main-content > .app-section {
+            margin-top: 26px; /* 固定贴在 MP3 下面，空白留在下面 */
+            margin-bottom: 0;
+            width: 100%;
+            max-width: 330px;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0;
+            align-items: center;
+            justify-items: center;
+        }
+
+/* @qingtuan-order:003410 */
+
+
+        /* 两栏强制等宽，名字再长也撑不开 */
+
+/* @qingtuan-order:003411 */
+
+        #main-content .app-grid-container {
+            width: 100%;
+            margin: 0;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px 0;
+        }
+
+/* @qingtuan-order:003412 */
+
+
+        #main-content .app-item { min-width: 0; }
+
+/* @qingtuan-order:003413 */
+
+
+        /* 每个图标坐在固定 52px 的格子里，四个一样大 */
+
+/* @qingtuan-order:003414 */
+
+        #main-content .app-card {
+            width: 52px;
+            height: 52px;
+            aspect-ratio: auto;
+            margin: 0 auto 4px;
+        
+            overflow: visible;
+        }
+
+/* @qingtuan-order:003415 */
+
+
+        #main-content .app-label-cn {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:003416 */
+
+
+        /* 头像预设图：照片后面垫一张人形剪影（主题色底 + 白色圆头和肩膀）。剪影区 88×88：头半径 20 圆心 y=32（底边 52），肩膀顶边 56，头跟身体隔 4px；
+           没上传头像时图片是藏起来的，露出剪影；上传了头像、图片读到了就会盖住剪影 */
+
+/* @qingtuan-order:003417 */
+
+        #main-content .avatar-inner-circle::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            z-index: 0;
+            border: 1px solid var(--win-shade-soft);
+            border-radius: 1px;
+            background:
+                radial-gradient(circle 20px at 50% 32px, #FFFFFF 0 19.5px, transparent 20px),
+                radial-gradient(ellipse 40px 32px at 50% 100%, #FFFFFF 0 99%, transparent 100%),
+                var(--theme-color);
+        }
+
+/* @qingtuan-order:003418 */
+
+
+        #main-content .avatar-inner-circle img {
+            position: relative;
+            z-index: 1;
+        }
+
+/* @qingtuan-order:003419 */
+
+
+        #main-content .avatar-inner-circle img.avatar-missing { visibility: hidden; }
+
+/* @qingtuan-order:003420 */
+
+
+        /* 耳机线和耳塞：整组改成浅青（跟图标里面的填色一样），浅底上才看得到 */
+
+/* @qingtuan-order:003421 */
+
+
+        /* 播放时飘出的音符：从 MP3 的上边框冒出来（MP3 上面有 10px 间距，容器往下挪 4px，音符底部刚好贴着上缘） */
+
+/* @qingtuan-order:003422 */
+
+        #main-content .floating-notes-container { top: 4px; }
+
+/* @qingtuan-order:003423 */
+
+
+        /* ---- 主画面分两页：往左滑，头像到电子宠物整块滑出去，第二页从右边滑进来；导航栏、状态栏不动 ---- */
+
+/* @qingtuan-order:003424 */
+
+        #main-content { overflow-x: hidden; }
+
+/* @qingtuan-order:003425 */
+
+
+        #main-content > .widget-card,
+        #main-content > .app-section {
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+/* @qingtuan-order:003426 */
+
+
+        #main-content.on-page-2 > .widget-card,
+        #main-content.on-page-2 > .app-section {
+            transform: translateX(-110vw);
+        }
+
+/* @qingtuan-order:003427 */
+
+
+        #main-content .home-page2 {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 44px;
+            bottom: 112px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 12px 0; /* 上面留空给小窗后面往上叠的两扇窗 */
+            transform: translateX(110vw);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003428 */
+
+
+        #main-content.on-page-2 .home-page2 { transform: none; pointer-events: auto; }
+
+/* @qingtuan-order:003429 */
+
+
+        /* 页数小圆点：两个像素小方点，当前页实心；夹在内容和导航栏中间 */
+
+/* @qingtuan-order:003430 */
+
+        #main-content .home-dots {
+            position: relative;
+            flex-shrink: 0;
+            margin-top: auto; /* 排在 App 那一行后面、贴着底部留白；空间不够时往下推，不会叠到 App 上 */
+            padding-top: 14px;
+            display: flex;
+            gap: 8px;
+            z-index: 5;
+        }
+
+/* @qingtuan-order:003431 */
+
+
+        #main-content .home-dot {
+            position: relative;
+            width: 6px;
+            height: 6px;
+            padding: 0;
+            border: 1px solid color-mix(in srgb, var(--home-ink) 75%, #FFFFFF); /* 比图标描边淡一点点 */
+            background: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003432 */
+
+
+        #main-content .home-dot::before { content: ''; position: absolute; inset: -9px; }
+
+/* @qingtuan-order:003433 */
+ /* 点击范围放大，手指比较好按 */
+
+/* @qingtuan-order:003434 */
+
+        #main-content .home-dot.active { background: color-mix(in srgb, var(--home-ink) 75%, #FFFFFF); }
+
+/* @qingtuan-order:003435 */
+
+
+        /* 导航栏以外的内容整体往上挪 5px（用 top 挪，不影响排版计算） */
+
+/* @qingtuan-order:003436 */
+
+        #main-content > .widget-card,
+        #main-content > .app-section {
+            position: relative;
+            top: -5px;
+        }
+
+/* @qingtuan-order:003437 */
+
+
+        /* ---- 消息小窗：第二页最上面一扇古早 .exe 小窗，显示角色最新传来的一句话，点一下打开那个聊天 ---- */
+
+/* @qingtuan-order:003438 */
+
+        #main-content .home-notice {
+            flex-shrink: 0;
+            width: calc(100% - 10px);
+            max-width: 320px; /* 右边留 10px 给后面叠着的两扇窗，整体还是对齐 330px */
+            margin-right: 10px;
+            padding: 0;
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
+            background: #FFFFFF;
+            /* 后面叠着两扇空白小窗，往右上各错开一次，像一叠古早弹窗 */
+            box-shadow:
+                var(--win-drop),
+                5px -6px 0 -1px #FFFFFF,
+                5px -6px 0 0 var(--win-deep),
+                10px -12px 0 -1px #FFFFFF,
+                10px -12px 0 0 var(--win-deep);
+            text-align: left;
+            font: inherit;
+            color: var(--win-ink);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003439 */
+
+
+        #main-content .home-notice:active { transform: translate(1px, 1px); }
+
+/* @qingtuan-order:003440 */
+
+
+        /* 标题栏：浅主题色，左边信封 + message.exe，右边未读数，最右三个小钮 */
+
+/* @qingtuan-order:003441 */
+
+        #main-content .home-notice-bar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: 17px;
+            padding: 0 4px 0 6px;
+            border-bottom: 1px solid var(--win-deep);
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 var(--win-hi);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--win-ink);
+            user-select: none;
+        }
+
+/* @qingtuan-order:003442 */
+
+
+        #main-content .home-notice-title { flex: 1; white-space: nowrap; }
+
+/* @qingtuan-order:003443 */
+
+        #main-content .home-notice-title em { font-style: normal; font-weight: 400; opacity: 0.6; }
+
+/* @qingtuan-order:003444 */
+
+
+        #main-content .home-notice-badge {
+            min-width: 14px;
+            height: 11px;
+            padding: 0 3px;
+            border: 1px solid var(--win-deep);
+            background: var(--home-ink);
+            color: #FFFFFF;
+            font: 700 8px/9px 'SF Mono', Menlo, Consolas, monospace;
+            text-align: center;
+        }
+
+/* @qingtuan-order:003445 */
+
+        #main-content .home-notice-badge[hidden] { display: none; }
+
+/* @qingtuan-order:003446 */
+
+
+        /* 右上三个小钮：跟设置页窗口标题栏同一张图（细线框的 _ □ ×），颜色也一样 */
+
+/* @qingtuan-order:003447 */
+
+        #main-content .home-notice-btns {
+            flex: 0 0 46px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:003448 */
+
+
+        #main-content .home-notice-btns i { display: none; }
+
+/* @qingtuan-order:003449 */
+
+
+        /* 内容：左边凹进去的头像框，右边名字、时间和那句话 */
+
+/* @qingtuan-order:003450 */
+
+        #main-content .home-notice-body {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px 8px 8px;
+        }
+
+/* @qingtuan-order:003451 */
+
+
+        #main-content .home-notice-avatar {
+            flex: 0 0 36px;
+            width: 36px;
+            height: 36px;
+            padding: 2px;
+            border: 1px solid var(--win-shade);
+            background: var(--win-face);
+            box-shadow: var(--bevel-in);
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:003452 */
+
+
+        #main-content .home-notice-avatar img,
+        #main-content .home-notice-avatar svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+/* @qingtuan-order:003453 */
+
+
+        /* 预设头像：主题色底 + 白色人形剪影（圆头 + 肩膀），换主题色会跟着变 */
+
+/* @qingtuan-order:003454 */
+
+        #main-content .home-notice-avatar .na-bg { fill: var(--theme-color); }
+
+/* @qingtuan-order:003455 */
+
+        #main-content .home-notice-avatar .na-fg { fill: #FFFFFF; }
+
+/* @qingtuan-order:003456 */
+
+
+        #main-content .home-notice-copy { display: block; flex: 1; min-width: 0; }
+
+/* @qingtuan-order:003457 */
+
+
+        #main-content .home-notice-head {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+
+/* @qingtuan-order:003458 */
+
+
+        #main-content .home-notice-name {
+            flex: 1;
+            min-width: 0;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--win-ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:003459 */
+
+
+        #main-content .home-notice-time {
+            flex-shrink: 0;
+            font: 9px/1 'SF Mono', Menlo, Consolas, monospace;
+            color: color-mix(in srgb, var(--win-ink) 60%, #FFFFFF);
+        }
+
+/* @qingtuan-order:003460 */
+
+
+        #main-content .home-notice-text {
+            display: block; /* 要是块才会在太长时出现 … */
+            font-size: 11px;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:003461 */
+
+
+        #main-content .home-notice.is-empty .home-notice-head { display: none; }
+
+/* @qingtuan-order:003462 */
+
+
+        /* 没有未读时：字淡一点 */
+
+/* @qingtuan-order:003463 */
+
+
+        /* ---- 电子宠物：半透明果冻壳的蛋形机（像拓麻歌子），放在 App 右边、代替拍立得的 2x2 位置 ---- */
+
+/* @qingtuan-order:003464 */
+
+        /* 拍立得先藏起来：里面还放着换头像用的隐藏上传框，不能删 */
+
+/* @qingtuan-order:003465 */
+
+
+        #main-content .tama-widget {
+            position: relative;
+            isolation: isolate;
+            width: 142px;
+            height: 178px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 46px; /* 蛋的上半部窄，屏幕放低一点，四个角才不会超出蛋壳 */
+            gap: 13px;
+            /* 蛋形：上面窄一点、下面圆胖 */
+            border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%;
+            border: 0.8px solid color-mix(in srgb, var(--win-deep) 85%, transparent);
+            /* 果冻塑料：半透明主题色，左上一片亮光 */
+            /* 玻璃感强度（美化设置的滑杆）：--tama-jelly 0 最清透、1 最饱满磨砂，0.5 是原本的样子 */
+            background:
+                radial-gradient(ellipse 55% 35% at 32% 16%, rgba(255, 255, 255, calc(0.4 + 0.6 * var(--tama-jelly, 0.5))), rgba(255, 255, 255, 0) 70%),
+                linear-gradient(165deg, rgba(var(--theme-rgb), calc(0.06 + 0.44 * var(--tama-jelly, 0.5))) 0%, rgba(var(--theme-rgb), calc(0.16 + 0.68 * var(--tama-jelly, 0.5))) 100%);
+            backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
+            -webkit-backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
+            box-shadow:
+                inset 0 0 0 1.5px rgba(255, 255, 255, 0.45),
+                inset -8px -12px 18px rgba(var(--theme-rgb), 0.35),
+                inset 6px 8px 14px rgba(255, 255, 255, 0.45),
+                var(--win-drop); /* 外面的投影跟全站同一个硬投影；里面那几层柔光是果冻质感，保留 */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+/* @qingtuan-order:003466 */
+
+
+        /* 右下一道贴着蛋壳弧线的弯月形亮边：跟蛋壳同样的圆角往内缩一点，只留右下那一段，两头渐隐 */
+
+/* @qingtuan-order:003467 */
+
+        #main-content .tama-widget::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: inherit;
+            border: 2px solid transparent;
+            border-right-color: rgba(255, 255, 255, 0.7);
+            border-bottom-color: rgba(255, 255, 255, 0.7);
+            -webkit-mask-image: linear-gradient(135deg, transparent 58%, #000 70%, #000 80%, transparent 92%);
+            mask-image: linear-gradient(135deg, transparent 58%, #000 70%, #000 80%, transparent 92%);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003468 */
+
+
+        /* 液晶小窗：底色、波点和 MP3 屏幕同一套，外面一圈顶栏青的玻璃边 */
+
+/* @qingtuan-order:003469 */
+
+        #main-content .tama-screen {
+            position: relative;
+            flex-shrink: 0;
+            width: 96px;
+            height: 70px;
+            border: 1px solid rgba(0, 0, 0, 0.18);
+            border-radius: 3px;
+            background:
+                radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 10px 10px,
+                radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 5px 5px / 10px 10px,
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
+                color-mix(in srgb, var(--theme-color) 32%, #F9FBFB);
+            color: var(--home-ink);
+        }
+
+/* @qingtuan-order:003470 */
+
+
+        #main-content .tama-screen::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            z-index: -1;
+            border-radius: 9px;
+            border: 1px solid var(--win-deep);
+            background:
+                linear-gradient(155deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(0, 0, 0, 0.06) 100%),
+                var(--win-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+/* @qingtuan-order:003471 */
+
+
+        /* ::before 画在液晶框外面，所以框本身不裁切；由里面这一层把青团和特效关在屏幕里 */
+
+/* @qingtuan-order:003472 */
+
+        #main-content .tama-inner {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: inherit;
+        }
+
+/* @qingtuan-order:003473 */
+
+
+        /* 顶上一排：左边饱食度（苹果），右边心情（爱心），各 4 格 */
+
+/* @qingtuan-order:003474 */
+
+        #main-content .tama-status {
+            position: absolute;
+            top: 4px;
+            left: 5px;
+            right: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 7px;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003475 */
+
+
+        #main-content .tama-meter { display: flex; gap: 2px; }
+
+/* @qingtuan-order:003476 */
+
+        #main-content .tama-meter svg { width: 7px; height: auto; display: block; shape-rendering: crispEdges; }
+
+/* @qingtuan-order:003477 */
+
+        #main-content .tama-meter .tf-x { fill: var(--home-ink); }
+
+/* @qingtuan-order:003478 */
+
+        #main-content .tama-meter .tf-w { fill: #FFFFFF; }
+
+/* @qingtuan-order:003479 */
+
+        #main-content .tama-meter svg.empty { opacity: 0.35; }
+
+/* @qingtuan-order:003480 */
+ /* 空格淡一点，一眼分得出还剩几格 */
+
+/* @qingtuan-order:003481 */
+
+
+        /* 地板：一条点线 */
+
+/* @qingtuan-order:003482 */
+
+        #main-content .tama-stage {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 13px;
+            bottom: 0;
+        }
+
+/* @qingtuan-order:003483 */
+
+
+        #main-content .tama-stage::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            bottom: 5px;
+            border-bottom: 1px dotted color-mix(in srgb, var(--home-ink) 55%, transparent);
+        }
+
+/* @qingtuan-order:003484 */
+
+
+        /* 青团本体：左右走用 steps() 一格一格跳，像老液晶 */
+
+/* @qingtuan-order:003485 */
+
+        #main-content .tama-pet {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            width: 28px;
+            height: 21px;
+            transition: left 2.8s steps(12);
+            cursor: pointer;
+            z-index: 2;
+        }
+
+/* @qingtuan-order:003486 */
+
+
+        #main-content .tama-bob { width: 100%; height: 100%; animation: tamaBob 1.2s steps(1) infinite; }
+
+/* @qingtuan-order:003487 */
+
+        #main-content .tama-pet svg { width: 100%; height: 100%; display: block; shape-rendering: crispEdges; }
+
+/* @qingtuan-order:003488 */
+
+        #main-content .tama-pet.flip svg { transform: scaleX(-1); }
+
+/* @qingtuan-order:003490 */
+
+
+        #main-content .tama-pet.jump .tama-bob { animation: tamaJump 0.5s steps(4) 1; }
+
+/* @qingtuan-order:003492 */
+
+
+        #main-content .tama-pet.no .tama-bob { animation: tamaNo 0.6s steps(2) 1; }
+
+/* @qingtuan-order:003494 */
+
+
+        /* 像素颜色：描边、眼睛、嘴 = 点缀色；身体白；腮红淡粉 */
+
+/* @qingtuan-order:003495 */
+
+        #main-content .tama-pet .tq-x,
+        #main-content .tama-pet .tq-eye,
+        #main-content .tama-pet .tq-eye-closed,
+        #main-content .tama-pet .tq-mouth,
+        #main-content .tama-pet .tq-mouth-open { fill: var(--home-ink); }
+
+/* @qingtuan-order:003496 */
+
+        #main-content .tama-pet .tq-o { fill: #FFFFFF; }
+
+/* @qingtuan-order:003497 */
+
+        #main-content .tama-pet .tq-h { fill: #FFFFFF; }
+
+/* @qingtuan-order:003498 */
+
+        #main-content .tama-pet .tq-b { fill: rgba(236, 150, 170, 0.75); }
+
+/* @qingtuan-order:003499 */
+
+
+        /* 眨眼：大部分时间睁眼，偶尔闭一下 */
+
+/* @qingtuan-order:003500 */
+
+        #main-content .tama-pet .tq-eye { animation: tamaBlinkOpen 4.2s steps(1) infinite; }
+
+/* @qingtuan-order:003501 */
+
+        #main-content .tama-pet .tq-eye-closed { opacity: 0; animation: tamaBlinkClosed 4.2s steps(1) infinite; }
+
+/* @qingtuan-order:003504 */
+
+
+        /* 摸摸：眯眯眼（平平的一条线） */
+
+/* @qingtuan-order:003505 */
+
+        #main-content .tama-pet.love .tq-eye { animation: none; opacity: 0; }
+
+/* @qingtuan-order:003506 */
+
+        #main-content .tama-pet.love .tq-eye-closed { animation: none; opacity: 1; }
+
+/* @qingtuan-order:003507 */
+
+
+        /* 吃东西：嘴巴一开一合 */
+
+/* @qingtuan-order:003508 */
+
+        #main-content .tama-pet .tq-mouth-open { opacity: 0; }
+
+/* @qingtuan-order:003509 */
+
+        #main-content .tama-pet.eat .tq-mouth { animation: tamaChew 0.3s steps(1) infinite; }
+
+/* @qingtuan-order:003510 */
+
+        #main-content .tama-pet.eat .tq-mouth-open { animation: tamaChewOpen 0.3s steps(1) infinite; }
+
+/* @qingtuan-order:003513 */
+
+
+        /* 睡觉：闭眼、晃得慢、屏幕变暗 */
+
+/* @qingtuan-order:003514 */
+
+        #main-content .tama-widget.sleeping .tama-pet .tq-eye { animation: none; opacity: 0; }
+
+/* @qingtuan-order:003515 */
+
+        #main-content .tama-widget.sleeping .tama-pet .tq-eye-closed { animation: none; opacity: 1; }
+
+/* @qingtuan-order:003516 */
+
+        #main-content .tama-widget.sleeping .tama-bob { animation-duration: 2.6s; }
+
+/* @qingtuan-order:003517 */
+
+        #main-content .tama-widget.sleeping .tama-inner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.26); /* 睡觉：屏幕像关灯一样盖一层半透明黑，青团还看得到 */
+            pointer-events: none;
+            z-index: 3;
+        }
+
+/* @qingtuan-order:003518 */
+
+
+        /* 肚子饿或便便太多：头上冒一个 ! */
+
+/* @qingtuan-order:003519 */
+
+        #main-content .tama-need {
+            position: absolute;
+            top: -9px;
+            left: 50%;
+            transform: translateX(-50%);
+            font: 700 8px/1 'SF Mono', Menlo, Consolas, monospace;
+            color: var(--win-ink);
+            display: none;
+            animation: tamaBob 0.6s steps(1) infinite;
+        }
+
+/* @qingtuan-order:003520 */
+
+        #main-content .tama-widget.needy:not(.sleeping) .tama-need { display: block; }
+
+/* @qingtuan-order:003521 */
+
+
+        /* 特效：爱心往上飘、z Z 往斜上飘、饭团被吃掉 */
+
+/* @qingtuan-order:003522 */
+
+        #main-content .tama-fx {
+            position: absolute;
+            z-index: 4;
+            pointer-events: none;
+            color: var(--win-ink);
+        }
+
+/* @qingtuan-order:003523 */
+
+        #main-content .tama-fx svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
+
+/* @qingtuan-order:003524 */
+
+        #main-content .tama-fx.heart { width: 7px; height: 6px; animation: tamaFloat 1s steps(5) forwards; }
+
+/* @qingtuan-order:003525 */
+
+        #main-content .tama-fx.zz { font: 700 8px/1 'SF Mono', Menlo, Consolas, monospace; animation: tamaZz 4.5s steps(10) forwards; }
+
+/* @qingtuan-order:003526 */
+ /* 睡觉的 z 从旁边慢慢往斜上飘 */
+
+/* @qingtuan-order:003527 */
+
+        #main-content .tama-fx.zz.left { animation-name: tamaZzLeft; }
+
+/* @qingtuan-order:003530 */
+
+        #main-content .tama-fx.food { width: 11px; height: 10px; animation: tamaEaten 1.2s steps(3) forwards; }
+
+/* @qingtuan-order:003533 */
+
+
+        #main-content .tama-fx .tf-x { fill: var(--home-ink); }
+
+/* @qingtuan-order:003534 */
+
+        #main-content .tama-fx .tf-w { fill: #FFFFFF; }
+
+/* @qingtuan-order:003535 */
+
+
+        /* 便便：点一下清掉；上面两条臭臭线一闪一闪 */
+
+/* @qingtuan-order:003536 */
+
+        #main-content .tama-poop {
+            position: absolute;
+            bottom: 6px;
+            width: 12px;
+            height: 13px;
+            padding: 0;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003537 */
+
+        #main-content .tama-poop svg { position: absolute; left: 2px; bottom: 0; width: 8px; height: 7px; display: block; shape-rendering: crispEdges; }
+
+/* @qingtuan-order:003538 */
+
+        #main-content .tama-poop .tf-x { fill: var(--home-ink); }
+
+/* @qingtuan-order:003539 */
+
+        #main-content .tama-poop .tf-w { fill: color-mix(in srgb, var(--theme-color) 32%, #F9FBFB); }
+
+/* @qingtuan-order:003540 */
+
+        #main-content .tama-poop::before,
+        #main-content .tama-poop::after {
+            content: '';
+            position: absolute;
+            bottom: 9px;
+            width: 1px;
+            height: 3px;
+            background: var(--home-ink);
+            opacity: 0.6;
+            animation: tamaStink 1s steps(1) infinite;
+        }
+
+/* @qingtuan-order:003541 */
+
+        #main-content .tama-poop::before { left: 4px; }
+
+/* @qingtuan-order:003542 */
+
+        #main-content .tama-poop::after { left: 7px; animation-delay: 0.5s; }
+
+/* @qingtuan-order:003544 */
+
+        #main-content .tama-fx.sparkle { font: 700 9px/1 'SF Mono', Menlo, Consolas, monospace; animation: tamaFloat 0.8s steps(4) forwards; }
+
+/* @qingtuan-order:003545 */
+
+
+        /* 三颗按钮：屏幕下面排一排，跟 MP3 中间播放键同一种圆钮 */
+
+/* @qingtuan-order:003546 */
+
+        #main-content .tama-buttons { display: flex; gap: 9px; flex-shrink: 0; }
+
+/* @qingtuan-order:003547 */
+
+
+        #main-content .tama-btn {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border-radius: 50%;
+            border: 0.8px solid var(--win-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003548 */
+
+
+        #main-content .tama-btn:active {
+            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003549 */
+
+
+        #main-content .tama-btn svg { width: 11px; height: auto; display: block; shape-rendering: crispEdges; }
+
+/* @qingtuan-order:003550 */
+
+        #main-content .tama-btn .tb-x { fill: var(--home-ink); }
+
+/* @qingtuan-order:003551 */
+
+        #main-content .tama-btn .tb-w { fill: #FFFFFF; }
+
+/* @qingtuan-order:003552 */
+
+
+        /* 一般手机（低于 780px）：头像 + MP3、App + 电子宠物两块一起缩到 90%，左右边缘还是对齐 */
+
+/* @qingtuan-order:003553 */
+
+        @media (max-height: 780px) {
+            #main-content > .widget-card {
+                transform: none;
+                margin-top: 13px; /* 缩到 90% 时第二页的叠窗也跟着往上，这里少留一点才对得齐 */
+                margin-bottom: 0;
+                zoom: 0.9;
+            }
+            #main-content > .app-section,
+            #main-content .home-page2 { zoom: 0.9; }
+        }
+
+/* @qingtuan-order:003554 */
+
+
+        /* ---- 主画面减重：原本写死的深灰 #5F6772 改成跟主题色走的颜色，跟设置页一样轻 ---- */
+
+/* @qingtuan-order:003555 */
+
+
+        /* App 图标和名字：跟 MP3 按钮同色，线条细一点 */
+
+/* @qingtuan-order:003556 */
+
+        #main-content .icon-box svg { stroke: var(--win-ink); stroke-width: 1.2; }
+
+/* @qingtuan-order:003557 */
+
+        #main-content .app-label-cn { color: var(--win-ink); }
+
+/* @qingtuan-order:003565 */
+
+        svg.px-icon .px-l { fill: color-mix(in srgb, var(--home-ink, var(--win-ink)) 70%, var(--theme-color)); }
+
+/* @qingtuan-order:003566 */
+ /* 浅一级描边：文件夹口袋外框 */
+
+/* @qingtuan-order:003567 */
+
+
+        /* App 图标 32px = 每个像素放大两倍，边缘最清楚 */
+
+/* @qingtuan-order:003568 */
+
+        #main-content .icon-box svg.px-icon { width: 32px; height: 32px; }
+
+/* @qingtuan-order:003569 */
+
+
+        /* 导航栏图标 21.33px：手机 3 倍屏上刚好每个像素 4 个点 */
+
+/* @qingtuan-order:003570 */
+
+        #main-content .dock-item svg.px-icon { width: 21.333px; height: 21.333px; }
+
+/* @qingtuan-order:003571 */
+
+
+        /* ---- Dock：和 MP3 同一种珍珠亮面塑料；当前那格是嵌进机身的一小块液晶屏 ---- */
+
+/* @qingtuan-order:003572 */
+
+        #main-content .dock-bar {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 0.7px solid var(--win-deep);
+            border-radius: 18px !important;
+        }
+
+/* @qingtuan-order:003573 */
+
+
+        /* 上半部一道高光带：比 MP3 矮一点、淡一点，左右两端渐隐，不留硬边压在两边的字上 */
+
+/* @qingtuan-order:003574 */
+
+        #main-content .dock-bar::before {
+            display: block;
+            content: '';
+            position: absolute;
+            inset: 3px 10px auto 10px;
+            border: 0;
+            border-radius: 14px 14px 50% 50% / 14px 14px 8px 8px;
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+            z-index: 0;
+        }
+
+/* @qingtuan-order:003575 */
+
+
+        #main-content .dock-bar::after { display: none; }
+
+/* @qingtuan-order:003576 */
+
+
+        #main-content .dock-item {
+            position: relative;
+            z-index: 1;
+            border-radius: 12px !important;
+            min-height: 44px;
+            border: 0.7px solid transparent;
+            /* 不要过渡：按下、切换页面时阴影要马上出现（原本淡入 0.2 秒，看起来慢半拍） */
+            transition: none;
+        }
+
+/* @qingtuan-order:003577 */
+
+        #main-content .dock-item svg,
+        #main-content .dock-item span { transition: none !important; }
+
+/* @qingtuan-order:003578 */
+ /* 图示、文字颜色也马上换 */
+
+/* @qingtuan-order:003579 */
+
+        #main-content .mp3-player .controls .btn,
+        #main-content .tama-btn { transition: none !important; }
+
+/* @qingtuan-order:003580 */
+ /* MP3、电子宠物按键按下的凹陷也马上出现 */
+
+/* @qingtuan-order:003581 */
+
+
+        /* 当前页：一小块凹进去的液晶屏，底色和 MP3 屏幕同一个 */
+
+/* @qingtuan-order:003582 */
+
+        #main-content .dock-item.active {
+            background:
+                /* 格子小，波点比 MP3 屏幕密一点 */
+                radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 8px 8px,
+                radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 4px 4px / 8px 8px,
+                color-mix(in srgb, var(--theme-color) 32%, #F9FBFB);
+            border-color: var(--home-ink);
+            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.16), 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+/* @qingtuan-order:003583 */
+
+
+        #main-content .dock-item:active {
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003584 */
+
+
+        #main-content .dock-item svg { width: 21px; height: 21px; stroke: var(--home-ink); stroke-width: 1.3; }
+
+/* @qingtuan-order:003585 */
+
+        #main-content .dock-item.cat-item svg { stroke: var(--home-ink); }
+
+/* @qingtuan-order:003586 */
+
+        #main-content .dock-item.active svg { stroke: var(--home-ink); fill: var(--theme-light-35); }
+
+/* @qingtuan-order:003587 */
+
+        #main-content .dock-item.cat-item.active svg { fill: none; }
+
+/* @qingtuan-order:003588 */
+
+
+        /* 名字：跟 MP3 机身刻字一样，小号大写、字距拉开 */
+
+/* @qingtuan-order:003589 */
+
+        #main-content .dock-item span {
+            color: color-mix(in srgb, var(--win-ink) 65%, #FFFFFF); /* 文字色淡一点，当前页才突出 */
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+/* @qingtuan-order:003590 */
+
+
+        #main-content .dock-item.active span { color: var(--win-ink); font-weight: 700; text-shadow: none; }
+
+/* @qingtuan-order:003591 */
+
+
+        /* ---------------- 主画面 · 高光加强：跟 Chat 同一套古早塑胶光泽——机身上半部一道亮面反光（中间有分界）、
+           边缘左上亮白右下暗边两层；小按钮上半截亮、下半截淡主题色（颜色全部跟随主题色） ---------------- */
+
+/* @qingtuan-order:003592 */
+
+
+        /* MP3 机身：两层立体边 + 上半部亮面 */
+
+/* @qingtuan-order:003593 */
+
+        #main-content .player-box.mp3-player {
+            isolation: isolate;
+            /* 机身整体带一点淡主题色，上半部的白色亮面才浮得出来 */
+            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, #FFFFFF) 100%) !important;
+            box-shadow: var(--home-rim), var(--win-drop);
+        }
+
+/* @qingtuan-order:003594 */
+
+        #main-content .player-box.mp3-player::before {
+            display: block;
+            content: '';
+            position: absolute;
+            z-index: -1;
+            inset: 3px 14px auto 14px;
+            height: 46%;
+            border-radius: 15px 15px 40% 40% / 15px 15px 10px 10px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.55) 88%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003595 */
+
+
+        /* 转盘：外圈加两层立体边，上半一片弯月亮面；中间播放钮改成上亮下淡的塑胶钮 */
+
+/* @qingtuan-order:003596 */
+
+        #main-content .mp3-player .controls {
+            box-shadow: var(--home-rim), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:003597 */
+
+        #main-content .mp3-player .controls::before {
+            content: '';
+            position: absolute;
+            inset: 3px 12px auto 12px;
+            height: 42%;
+            border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.35) 85%, rgba(255, 255, 255, 0));
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:003598 */
+
+        #main-content .mp3-player .controls .btn-play,
+        #main-content .tama-btn {
+            background: var(--home-gloss-btn);
+        }
+
+/* @qingtuan-order:003599 */
+
+        #main-content .mp3-player .controls .btn-play:active,
+        #main-content .tama-btn:active {
+            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003600 */
+
+
+        /* 底部导航：亮面带加强，下缘收成一条清楚的分界；外框也用两层立体边 */
+
+/* @qingtuan-order:003601 */
+
+        #main-content .dock-bar {
+            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, #FFFFFF) 100%) !important;
+            box-shadow: var(--home-rim), inset 0 -6px 12px rgba(var(--theme-rgb), 0.1), var(--win-drop);
+        
+            padding: 6px 7px;
+            gap: 2px;
+        }
+
+/* @qingtuan-order:003602 */
+
+        #main-content .dock-bar::before {
+            height: 44%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.5) 88%, rgba(255, 255, 255, 0) 100%);
+        }
+
+/* @qingtuan-order:003608 */
+
+
+        /* ===== 主画面换色：跟世界书同一套 =====
+           · 底色：白里混 15% 主题色的淡青
+           · 线条、外框、淡色字（原本的 --win-deep 浅青）→ 淡青灰（亮度 .8）
+           · App 名称、头像对话框字、歌名、状态栏时间和图标（原本的深色）→ 深青灰（亮度 .78）
+           · 白色亮面按钮的下半截、斜面固定用亮度 .96 的浅青灰，换深色主题也不会变厚
+           · 心形、星星、虚线这些点缀维持主题色 */
+
+/* @qingtuan-order:003609 */
+
+        #main-content { background-color: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF); }
+
+/* @qingtuan-order:003610 */
+
+        #main-content > .ios-status-bar,
+        #main-content > .widget-card,
+        #main-content > .app-section,
+        #main-content > .home-page2,
+        #main-content > .home-dots,
+        #main-content .dock-bar {
+            /* 主画面直接用框架色 */ /* 框架色已经在 body 算好深浅，这里不再另外限制（原本的上限会让深色主题在主画面没变化） */
+        }
+
+/* @qingtuan-order:003611 */
+
+        #main-content .status-time,
+        #main-content .bubble-text,
+        #main-content .song-title { color: var(--home-title) !important; -webkit-text-fill-color: var(--home-title) !important; }
+
+/* @qingtuan-order:003612 */
+
+        #main-content > .ios-status-bar svg [fill="#5F6772"] { fill: var(--home-title); }
+
+/* @qingtuan-order:003613 */
+
+        #main-content > .ios-status-bar svg [stroke="#5F6772"] { stroke: var(--home-title); }
+
+/* @qingtuan-order:003614 */
+
+        #main-content > .ios-status-bar svg line { stroke: var(--home-title) !important; }
+
+/* @qingtuan-order:003615 */
+
+        /* 主画面 App 图标和 Dock 图标的描边：跟着框架色深浅走，比框架色暗 0.146，框架越深就少暗一点（差距的 25%）
+           （淡青主题刚好等于淡青灰 .80；深色主题描边跟着变深，但不会太重） */
+
+/* @qingtuan-order:003616 */
+
+        #main-content .app-item svg.px-icon .px-x,
+        #main-content .dock-bar svg.px-icon .px-x { fill: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h); }
+
+/* @qingtuan-order:003617 */
+
+        /* 浅一级描边（文件夹后面那片、图标内侧的细线）：跟上面的描边同一套，再混 30% 框架色 */
+
+/* @qingtuan-order:003618 */
+
+        #main-content .app-item svg.px-icon .px-l,
+        #main-content .dock-bar svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)); }
+
+/* @qingtuan-order:003619 */
+
+        /* 播放器、电子宠物屏幕最外缘那圈细线和内侧凹陷阴影：原本是半透明黑，改成深青灰半透明，换主题会跟着变 */
+
+/* @qingtuan-order:003620 */
+
+        #main-content .mp3-player .mp3-screen,
+        #main-content .tama-screen {
+            border-color: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h) 70%, transparent) !important;
+            /* 凹陷阴影只在左上（70%，柔和 2px）；右下不加 */
+            box-shadow: inset 1px 1px 2px color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h) 70%, transparent) !important;
+        }
+
+/* @qingtuan-order:003621 */
+
+        /* 两个头像中间的爱心：跟耳机线同色（主题色亮度 -0.04、饱和度 ×1.15） */
+
+/* @qingtuan-order:003622 */
+
+        #main-content .heart-icon { fill: currentColor !important; 
+/* 像素爱心：11×10 格，两边圆一点，不加反光 */
+ width: 12.1px; height: 11px; top: 138px; 
+            color: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h) !important;
+        }
+
+/* @qingtuan-order:003623 */
+ /* 原本 132px，往下挪一点 */
+
+/* @qingtuan-order:003624 */
+
+        /* 播放器、电子宠物不套淡青灰，用主题色加一点灰的浅青灰（亮面按钮照原本） */
+
+/* @qingtuan-order:003625 */
+
+        #main-content .player-box,
+        #main-content .tama-widget {
+            /* 外框、文字：主题色加一点灰——亮度压到 .85、饱和度 1.15 倍（原本是 l - .07、c × 1.3 的浅青） */
+        }
+
+/* @qingtuan-order:003626 */
+
+        /* 播放钮、电子宠物按钮：内边跟其他白色按钮同一套（右下深边 + 淡主题色内边）；投影跟窗口同款（2px 主题色 30%） */
+
+/* @qingtuan-order:003627 */
+
+        #main-content .mp3-player .controls .btn-play,
+        #main-content .tama-btn {
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent),
+                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent),
+                2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:003628 */
+
+        #main-content .player-box .song-title { color: var(--win-deep) !important; -webkit-text-fill-color: var(--win-deep) !important; }
+
+/* @qingtuan-order:003629 */
+
+        /* 耳机线、耳塞：跟爱心同一组，用主题色再深一阶（亮度 -0.04、饱和度 ×1.15） */
+
+/* @qingtuan-order:003630 */
+
+        #main-content .earphone-wires path { stroke: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h); }
+
+/* @qingtuan-order:003631 */
+
+        #main-content .earphone-wires ellipse { fill: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h); }
+
+/* @qingtuan-order:003691 */
+
+        #themeSettingsPage svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)) !important; }
+
+/* @qingtuan-order:003840 */
+
+        #chatAppPage#chatAppPage #chatListView svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)); }

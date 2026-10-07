@@ -1,0 +1,2174 @@
+/* @qingtuan-order:001612 */
+
+
+        .chat-list-view.is-hidden,
+        .chat-room-view.is-hidden {
+            display: none;
+        }
+
+/* @qingtuan-order:001639 */
+
+
+        .chat-room-view {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+/* @qingtuan-order:001640 */
+
+
+        .chat-room-header {
+            min-height: 62px;
+            display: grid;
+            grid-template-columns: 40px 36px minmax(0, 1fr) 40px;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 2px 8px;
+            border-bottom: .5px solid #DDDDE2;
+        }
+
+/* @qingtuan-order:001641 */
+
+
+        .chat-room-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #EEF1F2;
+            border: 1.5px solid #FFFFFF;
+            outline: .5px solid rgba(62, 70, 81, .12);
+        }
+
+/* @qingtuan-order:001642 */
+
+
+        .chat-room-title {
+            color: var(--ui-text-primary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:001643 */
+
+
+        .chat-room-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+            color: #9DA5AE;
+            font-size: 8.5px;
+        }
+
+/* @qingtuan-order:001644 */
+
+
+        .chat-room-status::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:001645 */
+
+
+        .chat-message-list {
+            position: relative;
+            isolation: isolate;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 14px 4px 12px;
+            background-color: #F9F9F9;
+        }
+
+/* @qingtuan-order:001677 */
+
+
+        /* Chat 快捷工具：轻量横向滚动；图标在左、英文在右。 */
+
+/* @qingtuan-order:001678 */
+
+        .chat-quick-actions {
+            display: none;
+            align-items: center;
+            gap: 22px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
+            scrollbar-width: none;
+            padding: 3px 20px 0;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001679 */
+
+        .chat-quick-actions::-webkit-scrollbar { display: none; }
+
+/* @qingtuan-order:001680 */
+
+        .chat-quick-actions.open { display: flex; }
+
+/* @qingtuan-order:001681 */
+
+        .chat-quick-action {
+            display: inline-flex;
+            flex: 0 0 auto;
+            min-height: 28px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--ui-text-primary);
+            font: inherit;
+            font-size: 11px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001682 */
+
+        .chat-quick-action svg {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 17px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:001683 */
+
+        .chat-composer {
+            display: grid;
+            grid-template-columns: 32px 32px minmax(0, 1fr) 32px 34px;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 13px calc(10px + env(safe-area-inset-bottom, 0px));
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001684 */
+
+        .chat-composer .chat-compose-icon,
+        .chat-composer .chat-mic-btn,
+        .chat-composer .chat-moon-btn,
+        .chat-composer .chat-send-btn {
+            display: grid;
+            width: 32px;
+            height: 34px;
+            place-items: center;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--ui-text-primary);
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001685 */
+
+        /* 麦克风始终保持正圆形：结束或取消录音时不再闪成方形。 */
+
+/* @qingtuan-order:001686 */
+
+        .chat-composer .chat-mic-btn {
+            position: relative;
+            isolation: isolate;
+            height: 32px;
+            border-radius: 50%;
+            transition: color .18s ease, background-color .18s ease;
+        }
+
+/* @qingtuan-order:001687 */
+
+        .chat-composer .chat-mic-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            background: rgba(var(--theme-rgb), .52);
+            border: .5px solid rgba(var(--theme-rgb), .54);
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 0;
+        }
+
+/* @qingtuan-order:001688 */
+
+        .chat-composer .chat-compose-icon svg,
+        .chat-composer .chat-mic-btn svg,
+        .chat-composer .chat-moon-btn svg,
+        .chat-composer .chat-send-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:001689 */
+
+        .chat-composer .chat-moon-btn svg { width: 21px; height: 21px; stroke-width: 2; }
+
+/* @qingtuan-order:001690 */
+
+        .chat-composer .chat-compose-field {
+            min-width: 0;
+            min-height: 36px;
+            max-height: 100px;
+            padding: 10px 12px;
+            resize: none;
+            overflow-y: auto;
+            border: .5px solid #E1E6E6;
+            border-radius: 18px;
+            outline: 0;
+            background: #FFFFFF;
+            color: var(--ui-text-primary);
+            font: inherit;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:001691 */
+
+        .chat-composer .chat-compose-field::placeholder { color: var(--ui-text-muted); }
+
+/* @qingtuan-order:001692 */
+
+        .chat-composer .chat-send-btn:disabled {
+            color: #B5BEC6;
+            opacity: 1;
+            cursor: default;
+        }
+
+/* @qingtuan-order:001693 */
+
+        .chat-composer .chat-mic-btn svg { position: relative; z-index: 1; }
+
+/* @qingtuan-order:001694 */
+
+        .chat-composer .chat-mic-btn.recording {
+            color: #FFFFFF;
+            /* 青色实心圆直径 26px，按钮点击范围仍保留 32px。 */
+            background: radial-gradient(circle at center, var(--theme-color) 0 13px, transparent 13.2px);
+        }
+
+/* @qingtuan-order:001695 */
+
+        /* 单道涟漪围绕 26px 青色录音圆，扩散范围控制在约 40px。 */
+
+/* @qingtuan-order:001696 */
+
+        .chat-composer .chat-mic-btn.recording::before {
+            animation: chatMicRipple 1.65s ease-out infinite;
+        }
+
+/* @qingtuan-order:001698 */
+
+        @media (prefers-reduced-motion: reduce) {
+            .chat-composer .chat-mic-btn.recording::before {
+                animation: none;
+                opacity: .48;
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+        }
+
+/* @qingtuan-order:001728 */
+
+        .chat-compose-quote {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 14px 5px;
+            border-top: .5px solid #EFF1F2;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001729 */
+
+        .chat-compose-quote-copy { min-width: 0; display: flex; align-items: center; gap: 6px; }
+
+/* @qingtuan-order:001730 */
+
+        .chat-compose-quote-label { color: var(--theme-deep); font-size: 9px; flex: 0 0 auto; }
+
+/* @qingtuan-order:001731 */
+
+        .chat-compose-quote-text {
+            overflow: hidden;
+            color: #9AA3AC;
+            font-size: 9px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:001732 */
+
+        .chat-compose-quote-close {
+            flex: 0 0 22px;
+            width: 22px;
+            height: 22px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #9AA3AC;
+            font: inherit;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001739 */
+
+        .chat-app-page.chat-room-open .chat-room-view { width: 100%; max-width: none; }
+
+/* @qingtuan-order:001740 */
+
+        /* 聊天内页以 Chat 列表页为基准：两侧按钮中心在移动端均距屏幕边缘 32px；
+           宽屏时跟随列表 430px 内容区域居中，不改变消息区的左右间距。 */
+
+/* @qingtuan-order:001741 */
+
+        .chat-app-page.chat-room-open .chat-room-header {
+            padding-left: max(12px, calc((100% - 458px) / 2 + 12px));
+            padding-right: max(12px, calc((100% - 458px) / 2 + 12px));
+        }
+
+/* @qingtuan-order:001742 */
+
+        .chat-app-page.chat-room-open .chat-message-list { padding-left: 18px; padding-right: 18px; }
+
+/* @qingtuan-order:001749 */
+
+        .chat-room-more svg { fill: currentColor; stroke: none; }
+
+/* @qingtuan-order:002690 */
+
+#chatAppPage .chat-message-list .chat-bubble {font-size:var(--chat-message-font-size);font-family:var(--chat-message-font-family)!important;}
+
+/* @qingtuan-order:002691 */
+
+#chatAppPage .chat-message-list .chat-bubble * {font-family:var(--chat-message-font-family)!important;}
+
+/* @qingtuan-order:002692 */
+
+#chatAppPage .chat-message-list {background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+/* @qingtuan-order:002693 */
+
+#chatAppPage.chat-wallpaper-on .chat-message-list::before {content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:rgba(249,249,249,var(--chat-wallpaper-fade));backdrop-filter:blur(var(--chat-wallpaper-blur));-webkit-backdrop-filter:blur(var(--chat-wallpaper-blur));}
+
+/* @qingtuan-order:002694 */
+
+#chatAppPage.chat-wallpaper-on .chat-message-list > * {position:relative;z-index:1;}
+
+/* @qingtuan-order:002710 */
+
+.chat-room-view.chat-selection-mode .chat-room-header,
+.chat-room-view.chat-selection-mode .chat-quick-actions,
+.chat-room-view.chat-selection-mode .chat-composer,
+.chat-room-view.chat-selection-mode .chat-compose-quote,
+.chat-room-view.chat-selection-mode .chat-message-pinbar {display:none!important;}
+
+/* @qingtuan-order:002711 */
+
+.chat-room-view.chat-selection-mode .chat-message-list {padding-top:66px;padding-bottom:82px;}
+
+/* @qingtuan-order:002712 */
+
+.chat-room-view.chat-selection-mode .chat-message-row {position:relative;padding-left:30px;cursor:pointer;}
+
+/* @qingtuan-order:002713 */
+
+.chat-room-view.chat-selection-mode .chat-message-row::before {content:'';position:absolute;left:8px;top:var(--chat-select-center,50%);transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:.5px solid #AFB5BC;background:#FFFFFF;box-sizing:border-box;}
+
+/* @qingtuan-order:002714 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-selected::before {border:0;background:var(--theme-color);box-shadow:none;}
+
+/* @qingtuan-order:002715 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-selected::after {content:'';position:absolute;left:13px;top:var(--chat-select-center,50%);width:5px;height:9px;border-right:1.8px solid #FFFFFF;border-bottom:1.8px solid #FFFFFF;transform:translateY(-62%) rotate(45deg);}
+
+/* @qingtuan-order:002716 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-user {justify-content:flex-end;}
+
+/* @qingtuan-order:002717 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-user .chat-bubble-wrap {max-width:76%;}
+
+/* @qingtuan-order:002719 */
+
+/* 多選只顯示左側勾選，訊息氣泡不再套第二層選中外框。 */
+
+/* @qingtuan-order:002720 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-selected .chat-bubble {outline:none!important;box-shadow:none!important;}
+
+/* @qingtuan-order:002724 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-user:has(.chat-forward-record-card) .chat-bubble-wrap {width:min(320px,calc(100% - 6px));max-width:min(76%,calc(100% - 34px));}
+
+/* @qingtuan-order:002725 */
+
+.chat-room-view.chat-selection-mode .chat-message-row.is-user:has(.chat-forward-record-card) .chat-bubble {width:100%;}
+
+/* @qingtuan-order:003854 */
+
+        /* 聊天室 */
+
+/* @qingtuan-order:003855 */
+
+        #chatAppPage#chatAppPage #chatRoomView,
+        #chatAppPage#chatAppPage #chatMessageList { background-color: var(--ch-bg) !important; }
+
+/* @qingtuan-order:003858 */
+
+        #chatAppPage#chatAppPage :is(.chat-room-back, .chat-room-more, .chat-compose-icon, .chat-mic-btn, .chat-moon-btn, .chat-send-btn) { color: var(--ch-title) !important; }
+
+/* @qingtuan-order:003859 */
+
+        #chatAppPage#chatAppPage .chat-compose-field { border-color: var(--ch-line) !important; color: var(--ch-title) !important; }
+
+/* @qingtuan-order:003860 */
+
+        #chatAppPage#chatAppPage .chat-compose-field::placeholder { color: var(--ch-line) !important; opacity: 1; }
+
+/* @qingtuan-order:004014 */
+
+
+        /* ===================== 聊天室：QQ2006 / MSN 聊天窗 =====================
+           顶部对方资料条（跟 Chat 列表顶栏同一种直向渐层 + 方形头像框）→ 凹陷白框讯息区（「名字 (时间)」下接文字、没有气泡）
+           → 输入区：工具钮一排 + 大输入框 + 右下「发送(S)」。跟资料卡「查看资料」同一家族的配色和按钮 */
+
+/* @qingtuan-order:004015 */
+
+        #chatAppPage#chatAppPage #chatRoomView {
+            /* 名字颜色：对方 = 深一点的青；自己 = 偏绿的灰青（像 QQ 一蓝一绿） */
+            /* 名字、工具列图示、边栏小三角：跟资料卡「保存」钮同一个青（--cr-head） */
+            background: var(--cr-bg) !important;
+        }
+
+/* @qingtuan-order:004016 */
+
+
+        /* ---- 顶部：对方资料条 ---- */
+
+/* @qingtuan-order:004017 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-header {
+            /* 跟 Chat 列表顶栏对齐：高 52px、按钮离边 12px（内容区最宽 430px，跟列表一样置中）、按钮离顶 12px */
+            box-sizing: border-box !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            align-items: center !important;
+            gap: 9px !important;
+            padding: 6px max(12px, calc((100% - 430px) / 2 + 12px)) !important;
+            /* 跟 Chat 列表顶栏一样：浅青在上、青在下的直向渐层，上半截亮面慢慢淡掉 */
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+            border-bottom: 1px solid var(--cr-line) !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004018 */
+
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-room-back, .chat-room-more) {
+            position: static !important;
+            transform: none !important;
+            margin: 0 !important;
+            width: 34px !important;
+            height: 28px !important;
+            flex: 0 0 auto;
+            display: grid !important;
+            place-items: center;
+            padding: 0 !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004019 */
+
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-room-back, .chat-room-more) svg { width: 15px !important; height: 15px !important; }
+
+/* @qingtuan-order:004020 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-header > div { flex: 1 1 auto !important; min-width: 0; max-width: none !important; margin: 0 !important; }
+
+/* @qingtuan-order:004021 */
+
+        /* ··· 跟 Chat 列表的 ＋ 一样：贴右边 12px（内容区最宽 430px 置中）、离顶 12px */
+
+/* @qingtuan-order:004022 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-header { position: relative !important; padding-right: calc(max(12px, calc((100% - 430px) / 2 + 12px)) + 43px) !important; }
+
+/* @qingtuan-order:004023 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-header .chat-room-more#chatRoomMore {
+            position: absolute !important;
+            top: 12px !important;
+            right: max(12px, calc((100% - 430px) / 2 + 12px)) !important;
+        }
+
+/* @qingtuan-order:004024 */
+ /* 名字那块撑满中间，··· 才会贴齐右边 */
+
+/* @qingtuan-order:004025 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-avatar {
+            width: 32px !important;
+            height: 32px !important;
+            flex: 0 0 32px;
+            padding: 2px;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 0 !important;
+            /* 白色卡纸边 + 里面主题青底（预设头像是白色剪影，要有青底才看得到；上传的照片会盖住） */
+            background: linear-gradient(var(--theme-color), var(--theme-color)) content-box, #FFFFFF !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            object-fit: cover;
+            margin: 0 !important;
+        }
+
+/* @qingtuan-order:004026 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-title {
+            color: var(--cr-title) !important; /* 名字：跟 Chat 顶栏「Chat」字同色（深青灰） */
+            -webkit-text-fill-color: var(--cr-title) !important;
+            line-height: 1.3 !important;
+            font-weight: 500 !important;
+        }
+
+/* @qingtuan-order:004027 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-status {
+            /* 独立一行，下面的 margin-top 才会生效 */
+            align-items: center;
+            gap: 4px;
+            color: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.13) calc(c * 1.3) h) !important;
+            -webkit-text-fill-color: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.13) calc(c * 1.3) h) !important;
+            font-size: 9px !important;
+            line-height: 1.3 !important;
+            margin-top: 4.7px !important; /* 跟名字的距离：原本 6.7px，再靠近 2px */
+        }
+
+/* @qingtuan-order:004028 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-status::before { background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.13) calc(c * 1.3) h) !important; }
+
+/* @qingtuan-order:004029 */
+
+
+        /* ---- 讯息区：凹陷白框 ---- */
+
+/* @qingtuan-order:004030 */
+
+        #chatAppPage#chatAppPage #chatRoomView #chatMessageList {
+            margin: 8px 8px 0 !important;
+            padding: 8px 0 10px !important;
+            background-color: #FFFFFF !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--cr-sunken) !important;
+        }
+
+/* @qingtuan-order:004031 */
+
+        #chatAppPage#chatAppPage.chat-wallpaper-on #chatRoomView #chatMessageList::before { background: rgba(255, 255, 255, var(--chat-wallpaper-fade)) !important; }
+
+/* @qingtuan-order:004032 */
+
+        /* 日期：—— 22:57 —— */
+
+/* @qingtuan-order:004033 */
+
+        
+        #chatAppPage#chatAppPage #chatRoomView .chat-date-divider::before,
+        #chatAppPage#chatAppPage #chatRoomView .chat-date-divider::after { content: none; }
+
+/* @qingtuan-order:004034 */
+
+         /* 只留中间的时间，不要两边虚线 */
+
+/* @qingtuan-order:004035 */
+
+        /* 时间套一圈细框：跟工具列图示同一个青（--cr-peer） */
+
+/* @qingtuan-order:004036 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-date-divider {
+            align-items: center;
+            gap: 8px;
+            /* 时间：深青灰，跟顶栏「与 XX 聊天中」同色 */
+            font-size: 9.5px !important;
+            width: fit-content;
+            margin: 6px auto 8px !important;
+            padding: 0 4px !important;
+            border: 1px solid color-mix(in srgb, var(--cr-peer) 65%, #FFFFFF) !important;
+            /* 跟着字一起调淡 */
+            color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            border-radius: 2px !important;
+            line-height: 12px !important;
+            /* 行高比字号大一截，字才落在框正中 */
+            font-variant-numeric: lining-nums;
+            /* Georgia 默认数字高低错落，改成齐高才看得出上下居中 */
+            display: flex !important;
+            background: none !important;
+            box-shadow: none !important;
+            justify-content: center;
+        }
+
+/* @qingtuan-order:004037 */
+
+
+        /* 每则讯息：一行「名字 (时间)」，下面缩进接文字；不分左右、没有气泡 */
+
+/* @qingtuan-order:004038 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row {
+            margin: 0 !important;
+            padding: 3px 12px 5px !important;
+        }
+
+/* @qingtuan-order:004039 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row::before {
+            content: attr(data-sender) attr(data-time);
+            display: block;
+            margin-bottom: 1px;
+            font-size: 10.5px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--cr-peer);
+            -webkit-text-fill-color: var(--cr-peer);
+        }
+
+/* @qingtuan-order:004040 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row.is-user::before { color: var(--cr-self); -webkit-text-fill-color: var(--cr-self); }
+
+/* @qingtuan-order:004041 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-mini-avatar,
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-shape { display: none !important; }
+
+/* @qingtuan-order:004042 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap {
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 0 0 10.5px !important; /* 正好一个名字字宽（名字 10.5px），文字和语音条都从第二个字底下开始 */
+        }
+
+/* @qingtuan-order:004043 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble {
+            display: inline !important;
+            max-width: none !important;
+            padding: 0 !important;
+            background: none !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            filter: none !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            line-height: 1.6 !important;
+        }
+
+/* @qingtuan-order:004044 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble > div { display: inline; }
+
+/* @qingtuan-order:004045 */
+
+        /* 语音条：不加框，跟文字讯息一样直接排在名字下面；波形用工具列的青 */
+
+/* @qingtuan-order:004046 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-control {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            height: 18px;
+            margin: 2px 0;
+            padding: 0;
+            vertical-align: middle;
+            border: 0;
+            background: none;
+            box-shadow: none;
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004047 */
+
+        /* 收起的转文字要真的藏起来（不然会被上面「> div 一律 inline」顶回语音条右边） */
+
+/* @qingtuan-order:004048 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-text-result.is-collapsed { display: none !important; }
+
+/* @qingtuan-order:004049 */
+
+        /* 语音转文字：另起一行放在语音条下面，去掉上面的灰线 */
+
+/* @qingtuan-order:004050 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-text-result:not(.is-collapsed) {
+            display: block !important;
+            width: auto;
+            margin: 1px 0 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            color: var(--cr-title);
+            -webkit-text-fill-color: var(--cr-title);
+            font-size: 10.5px;
+            line-height: 1.6;
+        }
+
+/* @qingtuan-order:004051 */
+
+        /* 前面一个小 ▶，播放时换成 ■ */
+
+/* @qingtuan-order:004052 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-control::before {
+            content: '';
+            flex: 0 0 auto;
+            width: 0;
+            height: 0;
+            border-left: 3.5px solid var(--cr-peer);
+            border-top: 2.5px solid transparent;
+            border-bottom: 2.5px solid transparent;
+        }
+
+/* @qingtuan-order:004053 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-control.is-playing::before {
+            width: 4px;
+            height: 4px;
+            border: 0;
+            background: var(--cr-peer);
+        }
+
+/* @qingtuan-order:004054 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-wave { gap: 2px; height: 12px; color: var(--cr-peer); /* 小图标统一用主题色（工具列图示那个色） */ }
+
+/* @qingtuan-order:004055 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-wave span { width: 2px; border-radius: 0; opacity: 1; }
+
+/* @qingtuan-order:004056 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-length {
+            height: 12px;
+            color: var(--cr-title);
+            -webkit-text-fill-color: var(--cr-title);
+            font-size: 9.5px;
+            font-variant-numeric: lining-nums tabular-nums;
+        }
+
+/* @qingtuan-order:004057 */
+
+        /* 静止时的竖条高低：高低错落像真的声音（原本是中间高两边低的一道弧） */
+
+/* @qingtuan-order:004058 */
+
+        /* 播放时：沿用原本从左到右扫过去的效果 */
+
+/* @qingtuan-order:004059 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-control.is-playing .chat-voice-wave span { animation-name: chatRoomVoiceTravel; }
+
+/* @qingtuan-order:004061 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time {
+            display: inline-flex !important;
+            position: static !important;
+            margin: 0 0 0 6px !important;
+            vertical-align: baseline;
+            color: var(--cr-line) !important;
+            font-size: 0 !important; /* 时间已经写在名字后面，这里只留已读标记 */
+        }
+
+/* @qingtuan-order:004062 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time .chat-read-receipt,
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time svg { width: 11px !important; height: 11px !important; font-size: 9px; }
+
+/* @qingtuan-order:004063 */
+
+        /* 已读勾勾挪到「我 14:50:39」那行：讯息列改成 flex，名字行 + 勾勾排第一行，其余内容各占一整行 */
+
+/* @qingtuan-order:004064 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row {
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start !important; /* 旧样式会把「我」的讯息推到右边 */
+            gap: 0 !important; /* 旧样式的 7~8px 间距会让每行之间多空一截 */
+        
+            text-align: left !important;
+        }
+
+/* @qingtuan-order:004065 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row > *,
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > * { order: 2; flex: 0 0 100%; min-width: 0; }
+
+/* @qingtuan-order:004066 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap { display: contents !important; }
+
+/* @qingtuan-order:004067 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > :not(.chat-bubble-time) { margin-left: 10.5px !important; max-width: calc(100% - 10.5px) !important; }
+
+/* @qingtuan-order:004068 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > .chat-bubble-time {
+            order: 1;
+            margin: 0 0 1px 6px !important;
+        }
+
+/* @qingtuan-order:004069 */
+
+        /* 编辑过的讯息：时间那行的勾勾后面加一个「已编辑」小字（淡色），♡ / 图钉还是靠最右 */
+
+/* @qingtuan-order:004070 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-edited="true"] .chat-bubble-time::before,
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-edited="true"][data-favorite="true"] .chat-bubble-time::before {
+            content: '已编辑' !important;
+            order: 2;
+            margin: 0 0 0 5px !important;
+            color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            font-size: 9px !important;
+            font-weight: 400;
+            line-height: 1;
+        }
+
+/* @qingtuan-order:004071 */
+
+        /* 收藏的 ♡：不放在时间和勾勾中间，改成名字那行的最右边，像书签 */
+
+/* @qingtuan-order:004072 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-favorite="true"] .chat-bubble-time::before { content: none !important; }
+
+/* @qingtuan-order:004073 */
+
+        /* 时间格撑满名字行剩下的宽度：勾勾靠左贴着时间，♡、图钉靠最右（图钉在最右） */
+
+/* @qingtuan-order:004074 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > .chat-bubble-time { flex: 1 1 auto; justify-content: flex-start !important; }
+
+/* @qingtuan-order:004075 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time .chat-read-receipt { order: 1; color: var(--cr-peer) !important; }
+
+/* @qingtuan-order:004076 */
+ /* 小图标统一用主题色 */
+
+/* @qingtuan-order:004077 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-favorite="true"] .chat-bubble-time::after {
+            content: '♡';
+            order: 2;
+            margin-left: auto;
+            color: var(--cr-peer); /* 跟勾勾、图钉同色 */
+            -webkit-text-fill-color: var(--cr-peer);
+            font-size: 10px;
+            line-height: 1;
+        }
+
+/* @qingtuan-order:004078 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time .chat-message-pin-indicator { order: 3; margin: 0 0 0 auto !important; color: var(--cr-peer) !important; }
+
+/* @qingtuan-order:004079 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator { margin-left: 3px !important; }
+
+/* @qingtuan-order:004080 */
+
+        /* 引用：自己一行放在正文上面（不然会被「> div 一律 inline」挤成同一行），左边一条细线 */
+
+/* @qingtuan-order:004081 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-quoted-message {
+            display: block !important;
+            width: fit-content;
+            max-width: 100%;
+            margin: 3px 0 4px !important;
+            padding: 0 0 0 6px !important;
+            border-left: 2px solid rgba(var(--theme-rgb), .65) !important; /* 竖线、字号、空隙沿用原本的 */
+            color: color-mix(in srgb, var(--cr-title) 70%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 70%, #FFFFFF) !important;
+            font-size: 9.5px !important;
+            line-height: 1.1 !important; /* 竖线高度跟行高走：压低行高，竖线就只比字高一点点 */
+        }
+
+/* @qingtuan-order:004082 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-time .chat-message-pin-indicator svg { width: 9.5px !important; height: 9.5px !important; }
+
+/* @qingtuan-order:004083 */
+
+        /* 翻译：不要圆角白卡片，跟转文字一样另起一行、靠左对齐，字淡一点 */
+
+/* @qingtuan-order:004084 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row .chat-message-translation-card {
+            width: auto !important;
+            margin: 1px 0 0 10.5px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: none !important;
+            box-shadow: none !important;
+            color: color-mix(in srgb, var(--cr-title) 75%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 75%, #FFFFFF) !important;
+            font-size: 10.5px !important;
+            line-height: 1.6 !important;
+            text-align: left !important;
+        }
+
+/* @qingtuan-order:004085 */
+
+
+        /* ---- 输入区：工具钮一排 / 大输入框 / 右下发送 ---- */
+
+/* @qingtuan-order:004086 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer {
+            display: grid !important;
+            grid-template-columns: auto auto auto 1fr auto;
+            align-items: center;
+            gap: 6px 4px !important;
+            padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+            background: var(--cr-bg) !important;
+            border-top: 0 !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004087 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatActionToggle { grid-area: plus; }
+
+/* @qingtuan-order:004088 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn { grid-area: mic; }
+
+/* @qingtuan-order:004089 */
+
+
+        /* 月亮（让角色回复）按钮拿掉：改成停顿后自动回复 */
+
+/* @qingtuan-order:004090 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMoonReplyBtn#chatMoonReplyBtn { display: none !important; }
+
+/* @qingtuan-order:004091 */
+
+
+        /* 工具钮：小小的世界书白按钮 */
+
+/* @qingtuan-order:004092 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer :is(#chatActionToggle, #chatMicBtn, #chatMoonReplyBtn) {
+            width: 28px !important;
+            height: 24px !important;
+            min-width: 0 !important;
+            display: grid !important;
+            place-items: center;
+            padding: 0 !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004093 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer :is(#chatActionToggle, #chatMicBtn, #chatMoonReplyBtn) svg { width: 14px !important; height: 14px !important; }
+
+/* @qingtuan-order:004094 */
+
+        /* 录音中：按钮凹下去 + 右上角红色 REC 灯闪烁（替代圆形涟漪） */
+
+/* @qingtuan-order:004095 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording {
+            background: color-mix(in srgb, var(--theme-color) 22%, #FFFFFF) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), inset -1px -1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:004096 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording svg { transform: translate(1px, 1px); }
+
+/* @qingtuan-order:004097 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording::before {
+            top: 2px;
+            left: auto;
+            right: 2px;
+            width: 5px;
+            height: 5px;
+            border: 0;
+            background: #C67878;
+            box-shadow: 0 0 3px rgba(198, 120, 120, .7);
+            transform: none;
+            opacity: 1;
+            animation: chatMicRecBlink 1.8s steps(1) infinite;
+        }
+
+/* @qingtuan-order:004099 */
+
+        @media (prefers-reduced-motion: reduce) {
+            #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording::before { animation: none; transform: none; opacity: 1; }
+        }
+
+/* @qingtuan-order:004100 */
+
+        /* 大输入框：凹陷白格 */
+
+/* @qingtuan-order:004101 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatComposeField {
+            grid-area: field;
+            width: 100% !important;
+            min-height: 58px !important;
+            height: 58px;
+            max-height: 120px;
+            padding: 6px 8px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--cr-sunken) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 12px !important;
+            line-height: 1.6 !important;
+            resize: none;
+        }
+
+/* @qingtuan-order:004102 */
+
+        /* 发送(S)：标题栏那个青的亮面主按钮 */
+
+/* @qingtuan-order:004103 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn {
+            width: auto !important;
+            min-width: 78px !important;
+            height: 28px !important;
+            display: grid !important;
+            place-items: center;
+            padding: 0 12px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度提两成：上半截淡、下半截 --cr-send */ /* 改用顶栏最下面那个深青（--win-deep），跟转发钮同色 */
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: #FFFFFF !important;
+        
+            grid-area: send;
+        }
+
+/* @qingtuan-order:004104 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn svg { display: none !important; }
+
+/* @qingtuan-order:004105 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn::after {
+            content: '发送(S)';
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #FFFFFF;
+            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
+        }
+
+/* @qingtuan-order:004106 */
+
+
+        /* ＋ 号展开的那排功能：一排世界书白按钮，像 QQ 输入框上方的工具列 */
+
+/* @qingtuan-order:004107 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-actions {
+            background: var(--cr-bg) !important;
+            border-top: 1px solid var(--cr-line) !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004108 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action {
+            background: var(--cr-btn-face) !important;
+        }
+
+/* @qingtuan-order:004109 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action span { color: var(--cr-title) !important; -webkit-text-fill-color: var(--cr-title) !important; }
+
+/* @qingtuan-order:004110 */
+
+
+        /* 引用条：输入框上方一条凹陷小白条 */
+
+/* @qingtuan-order:004111 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-compose-quote {
+            margin: 6px 8px 0 !important;
+            background: #FFFFFF !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--cr-sunken) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004112 */
+
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-compose-quote-label, .chat-compose-quote-text, .chat-compose-quote-close) { color: var(--cr-title) !important; -webkit-text-fill-color: var(--cr-title) !important; }
+
+/* @qingtuan-order:004113 */
+
+
+        /* ===================== 聊天室 QQ 版面：顶栏「与 XX 聊天中」→ 工具列 → 左讯息 / 右边栏（对方形象、TA 的动态、我的形象） ===================== */
+
+/* @qingtuan-order:004114 */
+
+        /* 顶栏：不放头像、不放状态，标题写成「与 测试 聊天中」 */
+
+/* @qingtuan-order:004115 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-header { display: flex !important; }
+
+/* @qingtuan-order:004116 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-avatar,
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-status { display: none !important; }
+
+/* @qingtuan-order:004117 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-title {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        
+/* 顶栏字：跟 Chat 列表顶栏「Chat」同一套白色描边 + 右下叠一层白 + 淡主题青 */
+
+            text-shadow:
+                -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
+                2px 2px 0 #FFFFFF, 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+        
+            overflow: hidden;
+            font-size: 12.5px !important;
+        }
+
+/* @qingtuan-order:004118 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-title::before { content: '与 '; font-weight: 400; }
+
+/* @qingtuan-order:004119 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-title::after { content: ' 聊天中'; font-weight: 400; font-size: 11px; }
+
+/* @qingtuan-order:004120 */
+
+
+        /* 顺序：顶栏 → 工具列 → 置顶条 → 讯息区 → 引用条 → 输入区 */
+
+/* @qingtuan-order:004121 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-quick-actions { order: 1; }
+
+/* @qingtuan-order:004122 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-message-pinbar { order: 2; }
+
+/* @qingtuan-order:004123 */
+
+        #chatAppPage#chatAppPage #chatRoomView > #chatMessageList { order: 3; }
+
+/* @qingtuan-order:004124 */
+
+
+        /* 工具列：一直显示，一排「图示 + 字」的平面按钮（像 QQ 的 图片/文件、表情…） */
+
+/* @qingtuan-order:004125 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-quick-actions {
+            display: flex !important;
+            flex: 0 0 auto;
+            gap: 2px !important;
+            height: 40px;
+            margin: 0 !important;
+            padding: 0 8px !important;
+            align-items: center !important;
+            overflow-x: auto;
+            background: linear-gradient(180deg, #FFFFFF 0%, var(--cr-bg) 100%) !important;
+            border: 0 !important;
+            border-bottom: 1px solid var(--cr-line) !important;
+            border-radius: 0 !important;
+            box-shadow: inset 0 -1px 0 #FFFFFF !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            pointer-events: auto !important;
+            max-height: none !important;
+        }
+
+/* @qingtuan-order:004126 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action {
+            flex: 0 0 auto !important;
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 4px !important;
+            width: auto !important;
+            height: 30px !important;
+            min-height: 0 !important;
+            padding: 0 7px !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004127 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action svg {
+            width: 17px !important;
+            height: 17px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            background: none !important;
+            box-shadow: none !important;
+            color: var(--cr-peer) !important;
+            stroke: currentColor !important;
+        }
+
+/* @qingtuan-order:004128 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action span { font-size: 0 !important; }
+
+/* @qingtuan-order:004129 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action span::after { font-size: 11px; color: var(--cr-title); -webkit-text-fill-color: var(--cr-title); }
+
+/* @qingtuan-order:004130 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action[data-chat-action="image"] span::after { content: 'Image'; }
+
+/* @qingtuan-order:004131 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action[data-chat-action="camera"] span::after { content: 'Camera'; }
+
+/* @qingtuan-order:004132 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action[data-chat-action="draw"] span::after { content: '生图'; }
+
+/* @qingtuan-order:004133 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action[data-chat-action="location"] span::after { content: '位置'; }
+
+/* @qingtuan-order:004134 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-quick-action[data-chat-action="world"] span::after { content: '世界书'; }
+
+/* @qingtuan-order:004135 */
+
+        /* 工具列一直在，输入区的 ＋ 就不需要了 */
+
+/* @qingtuan-order:004136 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatActionToggle#chatActionToggle { display: none !important; }
+
+/* @qingtuan-order:004137 */
+
+
+        /* 置顶条：跟引用条同款的白色凹陷细框，也让出右边栏的位置 */
+
+/* @qingtuan-order:004138 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-message-pinbar {
+            margin: 8px calc(var(--cr-side-w) + 8px) 0 8px !important;
+            padding: 4px 8px !important;
+            gap: 5px !important;
+            background: #FFFFFF !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--cr-sunken) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 10.5px !important;
+            line-height: 1.4 !important;
+        }
+
+/* @qingtuan-order:004139 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-message-pinbar svg { width: 10px !important; height: 10px !important; color: var(--cr-peer); }
+
+/* @qingtuan-order:004140 */
+
+
+        /* 多选（Win98 清单风）：每则讯息左边一个方形凹陷勾选框，选中打勾 + 整行淡青底；
+           名字行用的是 ::before，所以勾选框改用 ::after，不再画原本的圆形勾选 */
+
+/* @qingtuan-order:004141 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row {
+            position: relative !important;
+            border-radius: 0 !important;
+        }
+
+/* @qingtuan-order:004142 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row::before {
+            position: static !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:004143 */
+
+        /* 勾选框：方框用讯息列的背景画（左上 10px、11×11、细框 + 白底 + 左上一道凹陷暗线）；
+           里面的勾跟世界书「关联角色」同一个画法（左、下两条边转 -45°），颜色用主题色 */
+
+/* @qingtuan-order:004144 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row {
+            background: var(--cr-check-box) !important;
+        
+            padding-left: 28px !important;
+        }
+
+/* @qingtuan-order:004145 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row::after { content: none !important; }
+
+/* @qingtuan-order:004146 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row.is-selected::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 9px !important;
+            left: 12.5px !important;
+            box-sizing: content-box !important;
+            width: 4.5px !important;
+            height: 2px !important;
+            border: 0 !important;
+            border-left: 1.5px solid var(--cr-peer) !important;
+            border-bottom: 1.5px solid var(--cr-peer) !important;
+            border-radius: 0 !important;
+            background: none !important;
+            box-shadow: none !important;
+            transform: rotate(-45deg) !important;
+        }
+
+/* @qingtuan-order:004147 */
+
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row.is-selected {
+            background: var(--cr-check-box), color-mix(in srgb, var(--theme-color) 14%, #FFFFFF) !important;
+            outline: 0 !important;
+        }
+
+/* @qingtuan-order:004148 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* @qingtuan-order:004149 */
+
+
+        /* 多选时的顶栏：跟聊天室顶栏同一套青色渐层；「取消」和搜索做成跟返回钮一样的凸起小白钮 */
+
+/* @qingtuan-order:004150 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-header {
+            padding: 0 max(12px, calc((100% - 430px) / 2 + 12px)) !important;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+            border-bottom: 1px solid var(--cr-line) !important;
+        }
+
+/* @qingtuan-order:004155 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-title {
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 12px !important;
+            text-shadow:
+                -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
+                2px 2px 0 #FFFFFF, 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+        }
+
+/* @qingtuan-order:004156 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-header :is(.chat-message-selection-cancel, .chat-message-selection-search) {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            height: 24px !important;
+            min-width: 28px;
+            padding: 0 9px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            text-shadow: none !important;
+            font-size: 10.5px !important;
+        }
+
+/* @qingtuan-order:004157 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-header .chat-message-selection-search { width: 28px !important; padding: 0 !important; }
+
+/* @qingtuan-order:004158 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-header .chat-message-selection-search svg { width: 14px !important; height: 14px !important; }
+
+/* @qingtuan-order:004159 */
+
+
+        /* 多选时的底部工具列：一排凸起小白钮（图示 + 字横排），跟输入区的按钮同款 */
+
+/* @qingtuan-order:004160 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar {
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+            background: var(--cr-bg) !important;
+            border-top: 1px solid var(--cr-line) !important;
+        }
+
+/* @qingtuan-order:004161 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button {
+            flex-direction: row !important;
+            gap: 4px !important;
+            min-width: 0 !important;
+            height: 26px;
+            padding: 0 10px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 10.5px !important;
+        }
+
+/* @qingtuan-order:004162 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button svg { width: 13px !important; height: 13px !important; color: var(--cr-peer); }
+
+/* @qingtuan-order:004163 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button[data-select-tool="delete"],
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button[data-select-tool="delete"] svg { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+
+/* @qingtuan-order:004164 */
+ /* 跟世界书「删除」同色 */
+
+/* @qingtuan-order:004165 */
+
+
+        /* 搜索聊天记录：顶栏同款青色渐层；返回、上下一个做成凸起小白钮，输入框是白色凹陷框 */
+
+/* @qingtuan-order:004166 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-searchbar {
+            min-height: 52px !important;
+            padding: 0 max(12px, calc((100% - 430px) / 2 + 12px)) !important;
+            gap: 6px !important;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+            border-bottom: 1px solid var(--cr-line) !important;
+        }
+
+/* @qingtuan-order:004167 */
+
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-history-search-close, .chat-history-search-nav button) {
+            width: 28px !important;
+            height: 24px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004168 */
+
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-history-search-close, .chat-history-search-nav) svg { width: 14px !important; height: 14px !important; }
+
+/* @qingtuan-order:004169 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-nav { gap: 4px !important; }
+
+/* @qingtuan-order:004170 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field {
+            height: 26px !important;
+            padding: 0 8px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--cr-sunken) !important;
+        }
+
+/* @qingtuan-order:004171 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input { color: var(--cr-title) !important; -webkit-text-fill-color: var(--cr-title) !important; }
+
+/* @qingtuan-order:004172 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::placeholder { color: color-mix(in srgb, var(--cr-title) 50%, #FFFFFF) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 50%, #FFFFFF) !important; }
+
+/* @qingtuan-order:004173 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-count {
+            min-width: 26px !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 9.5px !important;
+            text-shadow: -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:004174 */
+
+
+        /* 搜索框里浏览器自带的清除叉叉（原本系统蓝黑色）：换成主题色细线叉 */
+
+/* @qingtuan-order:004175 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 9px;
+            height: 9px;
+            margin-left: 6px;
+            background: var(--cr-peer);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 1l8 8M9 1L1 9' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 1l8 8M9 1L1 9' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:004176 */
+
+        /* 搜索改成清单：不用上一个 / 下一个，右边只留「N 条」 */
+
+/* @qingtuan-order:004177 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-nav button { display: none !important; }
+
+/* @qingtuan-order:004178 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-searchbar { grid-template-columns: 28px minmax(0, 1fr) auto !important; }
+
+/* @qingtuan-order:004179 */
+
+        /* 搜索结果清单：盖在顶栏下面整片，白底；一则一行，中间细虚线分隔 */
+
+/* @qingtuan-order:004180 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-results {
+            position: absolute;
+            top: 52px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 454;
+            overflow-y: auto;
+            padding: 6px max(8px, calc((100% - 430px) / 2 + 8px)) 12px;
+            background: var(--cr-bg);
+        }
+
+/* @qingtuan-order:004181 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-results[hidden] { display: none !important; }
+
+/* @qingtuan-order:004182 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            width: 100%;
+            margin: 0 0 6px;
+            padding: 8px 10px;
+            border: 1px solid var(--cr-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: var(--cr-sunken);
+            color: var(--cr-title);
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004183 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result:active { background: color-mix(in srgb, var(--theme-color) 12%, #FFFFFF); }
+
+/* @qingtuan-order:004184 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-avatar {
+            flex: 0 0 30px;
+            width: 30px;
+            height: 30px;
+            box-sizing: border-box;
+            border: 1px solid var(--cr-line);
+            background: var(--theme-color) center / cover no-repeat;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:004185 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-body { flex: 1 1 auto; min-width: 0; }
+
+/* @qingtuan-order:004186 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+/* @qingtuan-order:004187 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: var(--cr-peer);
+            -webkit-text-fill-color: var(--cr-peer);
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:004188 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-time {
+            flex: 0 0 auto;
+            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            font-size: 9px;
+            font-variant-numeric: lining-nums tabular-nums;
+        }
+
+/* @qingtuan-order:004189 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-text {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            color: var(--cr-title);
+            -webkit-text-fill-color: var(--cr-title);
+            font-size: 10.5px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+/* @qingtuan-order:004190 */
+
+        /* 关键字：主题色字 + 淡主题色底，像古早网页的反白 */
+
+/* @qingtuan-order:004191 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-text mark {
+            padding: 0 1px;
+            background: color-mix(in srgb, var(--theme-color) 28%, #FFFFFF);
+            color: var(--cr-peer);
+            -webkit-text-fill-color: var(--cr-peer);
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:004192 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result-empty {
+            padding: 28px 0;
+            text-align: center;
+            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:004254 */
+
+
+        /* 转发出来的「聊天记录」卡片：白底细框小卡（像古早的文件夹卡），标题深青灰、预览淡一点，
+           下面一道细线 + 「聊天记录」小字。卡片在讯息里面，要另外设成 block，不然会被「> div 一律 inline」挤成一行 */
+
+/* @qingtuan-order:004255 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-forward-record-card {
+            display: block !important;
+            width: min(240px, 100%) !important;
+            margin: 2px 0 !important;
+            padding: 6px 9px 5px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004256 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-card:active { background: color-mix(in srgb, var(--theme-color) 12%, #FFFFFF) !important; }
+
+/* @qingtuan-order:004257 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-title { color: var(--cr-title) !important; -webkit-text-fill-color: var(--cr-title) !important; font-size: 10.5px !important; font-weight: 600 !important; }
+
+/* @qingtuan-order:004258 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-preview { margin-top: 3px !important; color: color-mix(in srgb, var(--cr-title) 65%, #FFFFFF) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 65%, #FFFFFF) !important; }
+
+/* @qingtuan-order:004259 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-divider { margin-top: 5px !important; border-top: 1px solid color-mix(in srgb, var(--cr-line) 45%, transparent) !important; }
+
+/* @qingtuan-order:004260 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-footer { padding-top: 3px !important; color: var(--cr-head) !important; -webkit-text-fill-color: var(--cr-head) !important; font-size: 9px !important; }
+
+/* @qingtuan-order:004261 */
+
+
+        /* 点开聊天记录的详情页：跟聊天室同一套——淡青底、青色渐层顶栏 + 白描边标题、凸起返回钮；
+           记录排在凹陷白框里，每则「名字 时间」一行、下面缩进接文字，跟聊天室讯息同款 */
+
+/* @qingtuan-order:004262 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view { background: var(--cr-bg) !important; }
+
+/* @qingtuan-order:004263 */
+
+        /* 聊天记录详情页顶栏（版面都在这里；底色和白字跟其他 Chat 顶栏共用上面那组）：
+           跟聊天室顶栏一样高 52px，返回钮离边 12px，标题排在返回钮右边，日期在标题下面一行小字 */
+
+/* @qingtuan-order:004264 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-header {
+            position: relative;
+            box-sizing: border-box !important;
+            flex: 0 0 52px !important;
+            min-height: 52px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            padding: 0 calc(max(12px, calc((100% - 430px) / 2 + 12px)) + 43px) !important;
+        }
+
+/* @qingtuan-order:004265 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-back {
+            position: absolute;
+            left: max(12px, calc((100% - 430px) / 2 + 12px));
+            top: 50% !important;
+            transform: translateY(-50%);
+            width: 34px !important;
+            height: 28px !important;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004266 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-back svg {
+            width: 15px !important;
+            height: 15px !important;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:004267 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-title {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 12.5px !important;
+            font-weight: 500 !important;
+            line-height: 1.3;
+        }
+
+/* @qingtuan-order:004268 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-subtitle {
+            margin-top: 1px;
+            font-size: 9px !important;
+            line-height: 1.3;
+            opacity: .85;
+        }
+
+/* @qingtuan-order:004269 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-view-list {
+            margin: 8px !important;
+            padding: 6px 12px 10px !important;
+            background: #FFFFFF !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--cr-sunken) !important;
+        }
+
+/* @qingtuan-order:004270 */
+
+        /* 每则：左边方形头像框（同一个人连续几则只在第一则显示，后面留空位），右边名字 + 靠右的时间，下面接文字；
+           分隔线只画在右边内容下面（像 QQ 聊天记录） */
+
+/* @qingtuan-order:004271 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item {
+            display: flex !important;
+            align-items: flex-start;
+            gap: 9px;
+            padding: 0 !important;
+            border: 0 !important;
+        }
+
+/* @qingtuan-order:004272 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-avatar {
+            flex: 0 0 30px;
+            width: 30px;
+            height: 30px;
+            margin-top: 7px;
+            box-sizing: border-box;
+            border: 1px solid var(--cr-line);
+            background: var(--theme-color) center / cover no-repeat;
+            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:004273 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item.is-continued .chat-record-item-avatar { visibility: hidden; }
+
+/* @qingtuan-order:004274 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-main {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 6px 0 7px;
+            border-bottom: 1px dotted color-mix(in srgb, var(--cr-line) 45%, transparent);
+        }
+
+/* @qingtuan-order:004275 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item:last-child .chat-record-item-main { border-bottom: 0; }
+
+/* @qingtuan-order:004276 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-head { justify-content: space-between !important; align-items: baseline !important; gap: 8px !important; }
+
+/* @qingtuan-order:004277 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-speaker { color: var(--cr-peer) !important; -webkit-text-fill-color: var(--cr-peer) !important; font-size: 10.5px !important; font-weight: 600 !important; }
+
+/* @qingtuan-order:004278 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-time {
+            color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            font-size: 9px !important;
+            font-weight: 400 !important;
+            font-variant-numeric: lining-nums tabular-nums;
+        }
+
+/* @qingtuan-order:004279 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-record-item-text {
+            margin: 2px 0 0 !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 10.5px !important;
+        }
+
+/* @qingtuan-order:004280 */
+
+
+        /* 「以下为新消息」：两边细线改成古早的刻痕线（暗线 + 白线），字用深青 */
+
+/* @qingtuan-order:004281 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-unread-divider {
+            margin: 6px 12px 8px !important;
+            width: auto !important;
+            color: var(--cr-head) !important;
+            -webkit-text-fill-color: var(--cr-head) !important;
+            font-size: 9px !important;
+        }
+
+/* @qingtuan-order:004282 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-unread-divider::before,
+        #chatAppPage#chatAppPage #chatRoomView .chat-unread-divider::after {
+            height: 0 !important;
+            background: none !important;
+            border-top: 1px solid color-mix(in srgb, var(--cr-line) 60%, transparent);
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+/* @qingtuan-order:004283 */
+
+
+        /* 对方讯息里的 **粗体**：深一点、粗一点 */
+
+/* @qingtuan-order:004284 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble strong { font-weight: 700; color: var(--cr-title); -webkit-text-fill-color: var(--cr-title); }
+
+/* @qingtuan-order:004292 */
+
+
+        /* 「你撤回了一条消息」：比讯息字小一号、淡一点，跟日期时间那种系统提示同一级 */
+
+/* @qingtuan-order:004293 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-recall-notice {
+            margin: 4px auto 8px !important;
+            padding: 0 !important;
+            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF) !important;
+            font-size: 9.5px !important;
+            line-height: 1.5 !important;
+        }
+
+/* @qingtuan-order:004294 */
+
+
+        /* 右上角 ··· 的选单：跟 Chat 页面长按角色的小选单同款——白底细框、直角、硬投影；
+           选项靠左，图示用深青，按下整条变主题色白字（像 Win98 选单） */
+
+/* @qingtuan-order:004295 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel {
+            top: 50px !important;
+            width: auto !important;
+            min-width: 112px;
+            padding: 2px 0 !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 0 !important;
+            background: #FFFFFF !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:004296 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button {
+            gap: 8px !important;
+            min-height: 34px;
+            padding: 0 16px 0 12px !important;
+            border-radius: 0 !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 11.5px !important;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004297 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button + button {
+            margin-top: 3px;
+            border-top: 1px solid color-mix(in srgb, var(--cr-line) 55%, transparent) !important;
+            box-shadow: inset 0 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:004298 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel svg { width: 14px !important; height: 14px !important; color: var(--cr-head); }
+
+/* @qingtuan-order:004299 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active {
+            translate: none !important;
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:004300 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active svg { color: #FFFFFF; }
+
+/* @qingtuan-order:004301 */
+
+
+        /* 左边：讯息区、引用条、输入区让出右边栏的位置 */
+
+/* @qingtuan-order:004302 */
+
+        #chatAppPage#chatAppPage #chatRoomView > #chatMessageList { margin-right: calc(var(--cr-side-w) + 8px) !important; }
+
+/* @qingtuan-order:004303 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-compose-quote {
+            order: 4;
+            margin-right: calc(var(--cr-side-w) + 8px) !important;
+        }
+
+/* @qingtuan-order:004304 */
+
+        #chatAppPage#chatAppPage #chatRoomView > .chat-composer { margin-right: calc(var(--cr-side-w) + 2px) !important; 
+            order: 5;
+        }
+
+/* @qingtuan-order:004305 */
+
+
+        /* 输入区上面那排：麦克风 + 「准备发送消息」 */
+
+/* @qingtuan-order:004306 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer { grid-template-areas: "mic img cam hint hint" "field field field field field" ". . . . send" !important; }
+
+/* @qingtuan-order:004307 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action[data-chat-action="image"] { grid-area: img; }
+
+/* @qingtuan-order:004308 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action[data-chat-action="camera"] { grid-area: cam; }
+
+/* @qingtuan-order:004309 */
+
+        /* 搬到输入区的图片、拍照：跟语音一样的小白钮，只有图示 */
+
+/* @qingtuan-order:004310 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action {
+            width: 28px !important;
+            height: 24px !important;
+            padding: 0 !important;
+            justify-content: center !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+        }
+
+/* @qingtuan-order:004311 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action svg { width: 14px !important; height: 14px !important; color: var(--cr-title) !important; }
+
+/* @qingtuan-order:004312 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action span { display: none !important; }
+
+/* @qingtuan-order:004313 */
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer::before {
+            content: none;
+            grid-area: hint;
+            font-size: 10px;
+            color: var(--cr-line);
+            -webkit-text-fill-color: var(--cr-line);
+        }
+
+/* @qingtuan-order:004314 */
+
+
+        /* ---- 右边栏 ---- */
+
+/* @qingtuan-order:004315 */
+
+        #chatAppPage#chatAppPage #chatRoomView .cr-side {
+            position: absolute;
+            z-index: 2;
+            top: 92px; /* 顶栏 52 + 工具列 40 */
+            right: 0;
+            bottom: 0;
+            width: var(--cr-side-w);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)) 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:004316 */
+
+        #chatAppPage#chatAppPage #chatRoomView.is-hidden .cr-side { display: none; }

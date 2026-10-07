@@ -1,0 +1,7 @@
+import { PressedButton } from '../../../components/shared/PressedButton';
+import { useButtonPress } from '../../../hooks/useButtonPress';
+import { useChatMyPresenceState } from '../../../providers/ChatSidebarProvider';
+import { MY_PRESENCE_STATES } from '../../../utils/chatPresence';
+function PresenceOption({state,selected,choose}:{state:string;selected:boolean;choose:(state:string)=>void}){const press=useButtonPress(selected?'is-current':undefined);return <PressedButton type="button" role="menuitemradio" data-my-state={state} {...press} onClick={()=>choose(state)}><i data-dot={state}/>{state}</PressedButton>;}
+export function ChatMyPresenceMenu(){const {open,selection,custom,position,menu,input,choose,saveCustom,setCustom,setOpen}=useChatMyPresenceState();return <div className="cr-my-menu" hidden={!open} role="menu" ref={menu} style={position} onClick={event=>event.stopPropagation()}>{MY_PRESENCE_STATES.map(state=><PresenceOption state={state} selected={selection===state} choose={choose} key={state}/>)}<div className="cr-my-custom"><input type="text" maxLength={8} placeholder="自定义状态" aria-label="自定义在线状态" ref={input} value={custom} onChange={event=>setCustom(event.currentTarget.value)} onKeyDown={event=>{if(event.key==='Enter'){event.preventDefault();saveCustom();}if(event.key==='Escape')setOpen(false);}}/><PressedButton type="button" data-my-custom-ok="" onClick={saveCustom}>确定</PressedButton></div></div>;
+}

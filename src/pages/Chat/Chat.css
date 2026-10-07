@@ -1,0 +1,382 @@
+/* @qingtuan-order:001605 */
+
+
+        /* ============ Chat：会话列表与聊天室原型 ============ */
+
+/* @qingtuan-order:001606 */
+
+        .chat-app-page {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: none;
+            overflow: hidden;
+            padding: 0 14px 14px;
+            color: var(--ui-text-primary);
+            background: #F9F9F9;
+        }
+
+/* @qingtuan-order:001607 */
+
+
+        .chat-app-page.active {
+            display: block;
+            animation: chatPageIn .28s cubic-bezier(.16, 1, .3, 1) both;
+        }
+
+/* @qingtuan-order:001671 */
+
+        .chat-app-page.chat-time-group .chat-message-row:not(.is-tail) .chat-bubble-time,
+        .chat-app-page.chat-time-hidden .chat-message-row .chat-bubble-time { display: none; }
+
+/* @qingtuan-order:001717 */
+
+        .chat-message-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 5200;
+            background: transparent;
+        }
+
+/* @qingtuan-order:001718 */
+
+        .chat-message-menu-panel {
+            position: fixed;
+            align-items: center;
+            min-width: 0;
+            border: .5px solid rgba(255,255,255,.82);
+            border-radius: 10px;
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(16px) saturate(118%);
+            -webkit-backdrop-filter: blur(16px) saturate(118%);
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:001719 */
+
+        .chat-message-menu-panel button {
+            background: transparent;
+            color: #5F6772;
+            font: inherit;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001737 */
+
+        /* 聊天室全宽显示：不受聊天首页的外边距约束。 */
+
+/* @qingtuan-order:001738 */
+
+        .chat-app-page.chat-room-open { padding: 0; background: #F9F9F9; }
+
+/* @qingtuan-order:001910 */
+
+.chat-app-page:not(.chat-room-open){padding-left:0;padding-right:0;background:#F7F7F6}
+
+/* @qingtuan-order:002572 */
+
+
+        /* 选择地区：最终配色与远程服务弹窗一致（集中维护，不再叠加旧颜色） */
+
+/* @qingtuan-order:002573 */
+
+
+        /* 强调操作：远程服务弹窗「保存」按钮的最终状态 */
+
+/* @qingtuan-order:002574 */
+
+
+        /* 未选中地区：远程服务弹窗「取消」按钮的最终状态 */
+
+/* @qingtuan-order:002575 */
+
+
+/* 聊天消息编辑：沿用应用内的磨砂确认弹窗风格。 */
+
+/* @qingtuan-order:002576 */
+
+.chat-edit-overlay[hidden] {display:none!important;}
+
+/* @qingtuan-order:002577 */
+
+.chat-edit-overlay {
+  position:fixed;inset:0;z-index:5500;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:rgba(214,220,226,.26);
+  backdrop-filter:blur(8px) saturate(112%);-webkit-backdrop-filter:blur(8px) saturate(112%);
+}
+
+/* @qingtuan-order:002578 */
+
+.chat-edit-card {
+  width:min(340px,90vw);border:.5px solid rgba(255,255,255,.72);
+  border-radius:var(--ui-radius);padding:18px 16px 15px;background:rgba(255,255,255,.74);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28);
+  color:#5F6772;
+}
+
+/* @qingtuan-order:002579 */
+
+.chat-edit-title {font-size:15px;font-weight:600;margin-bottom:12px;}
+
+/* @qingtuan-order:002580 */
+
+.chat-edit-input {
+  display:block;width:100%;min-height:110px;max-height:min(42vh,280px);resize:vertical;
+  border:.5px solid rgba(95,103,114,.18);border-radius:var(--ui-radius);
+  background:rgba(255,255,255,.64);padding:10px 11px;font:inherit;font-size:12px;
+  line-height:1.65;color:#5F6772;outline:none;box-shadow:none;
+}
+
+/* @qingtuan-order:002581 */
+
+/* 编辑讯息框点进去外框不变 */
+
+/* @qingtuan-order:002582 */
+
+.chat-edit-actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px;}
+
+/* @qingtuan-order:002583 */
+
+.chat-edit-btn {
+  height:34px;border:.5px solid rgba(255,255,255,.62);border-radius:var(--ui-radius);
+  background:rgba(255,255,255,.54);color:#9AA3AC;font:inherit;font-size:12px;cursor:pointer;
+}
+
+/* @qingtuan-order:002584 */
+
+.chat-edit-btn.primary {background:rgba(var(--theme-rgb),.78);border-color:rgba(255,255,255,.8);color:#FFFFFF;}
+
+/* @qingtuan-order:002585 */
+
+
+/* 兩分鐘內撤回：沿用聊天編輯彈窗的磨砂樣式 */
+
+/* @qingtuan-order:002586 */
+
+.chat-recall-description {font-size:12px;line-height:1.7;color:#5F6772;}
+
+/* @qingtuan-order:002588 */
+
+.chat-message-menu-panel button[data-message-action="recall"] {color:#5F6772;}
+
+/* @qingtuan-order:002589 */
+
+/* 消息长按：双排操作、多选模式与置顶标记 */
+
+/* @qingtuan-order:002590 */
+
+.chat-message-menu-panel {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;width:min(292px,calc(100vw - 20px));padding:6px;overflow:visible;}
+
+/* @qingtuan-order:002591 */
+
+.chat-message-menu-panel button {border:0!important;min-width:0;height:33px;padding:0 3px;border-radius:5px;font-size:11px;}
+
+/* @qingtuan-order:002592 */
+
+.chat-message-menu-panel button[hidden] {display:none!important;}
+
+/* @qingtuan-order:002593 */
+
+.chat-message-menu-panel button[data-message-action="delete"] {color:#C67878;}
+
+/* @qingtuan-order:002610 */
+
+.chat-app-page.chat-hide-read-receipts .chat-read-receipt {display:none!important;}
+
+/* @qingtuan-order:003833 */
+
+
+        /* ===== Chat 换色：跟其他页面同一套 =====
+           底色淡青；线条 / 说明 → 淡青灰；标题、名字、聊天文字、按钮图示 → 深青灰；
+           snapshot.jpg 标题列这种整块色块 → 主题色带一点灰（重点色） */
+
+/* @qingtuan-order:003834 */
+
+        #chatAppPage#chatAppPage {
+            background-color: var(--ch-bg) !important;
+        }
+
+/* @qingtuan-order:004193 */
+
+
+        /* 长按讯息的选单（在聊天室外面，颜色变量要再写一次）：古早小视窗——白底细框 + 右下硬投影，
+           每个选项是凸起小白钮（跟输入区按钮同款），「删除」跟世界书删除一样豆沙红字 */
+
+/* @qingtuan-order:004194 */
+
+        /* 照 Win98 右键选单：一条直的文字清单，外框凸起；选项靠左、按下整条变主题色白字；
+           分组之间一条刻痕线（暗线 + 白线）：翻译 引用 复制 ｜ 收藏 转发 多选 置顶 ｜ 编辑 撤回 ｜ 删除 */
+
+/* @qingtuan-order:004195 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel {
+            display: flex !important;
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 0 !important;
+            width: 112px !important;
+            padding: 3px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent),
+                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:004196 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 24px !important;
+            padding: 0 12px !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 10.5px !important;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:004197 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button:active {
+            translate: none !important;
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:004198 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button:is([data-message-action="favorite"], [data-message-action="edit"], [data-message-action="edit"][hidden] + [data-message-action="recall"], [data-message-action="delete"]) { margin-top: 5px; }
+
+/* @qingtuan-order:004199 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button:is([data-message-action="favorite"], [data-message-action="edit"], [data-message-action="edit"][hidden] + [data-message-action="recall"], [data-message-action="delete"])::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 2px;
+            right: 2px;
+            border-top: 1px solid color-mix(in srgb, var(--cr-line) 55%, transparent);
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+/* @qingtuan-order:004200 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"] { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+
+/* @qingtuan-order:004201 */
+
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"]:active { background: #AD8382 !important; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+
+/* @qingtuan-order:004244 */
+
+
+        /* 编辑 / 撤回讯息的弹窗：跟 Chat 页面「删除角色」确认弹窗（.sp-confirm）同一款——
+           淡青底细框 + 硬投影，标题列是深青（上缘一道白亮边），白字；左取消右主按钮（深青亮面钮）。
+           弹窗在聊天室外面，所以颜色变量要再写一次 */
+
+/* @qingtuan-order:004245 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay {
+            background: rgba(34, 40, 47, 0.2) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+/* @qingtuan-order:004246 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-card {
+            width: min(300px, 88vw) !important;
+            padding: 0 !important;
+            overflow: hidden;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 4px !important;
+            background: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: var(--cr-title) !important;
+        }
+
+/* @qingtuan-order:004247 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-title {
+            display: flex;
+            align-items: center;
+            height: 26px;
+            margin: 0 !important;
+            padding: 0 9px !important;
+            background: linear-gradient(180deg, #FFFFFF 0%, var(--cr-head) 12%, var(--cr-head) 100%) !important;
+            border-bottom: 1px solid var(--cr-line);
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            letter-spacing: 1px;
+            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title), 1px 1px 0 color-mix(in srgb, var(--cr-title) 70%, transparent) !important;
+        }
+
+/* @qingtuan-order:004248 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay :is(.chat-recall-description, .chat-edit-input) { margin: 16px 18px 0 !important; }
+
+/* @qingtuan-order:004249 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-recall-description {
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 12px !important;
+            line-height: 1.65 !important;
+        }
+
+/* @qingtuan-order:004250 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-input {
+            width: calc(100% - 36px) !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--cr-sunken) !important;
+            color: var(--cr-title) !important;
+            font-size: 11.5px !important;
+        }
+
+/* @qingtuan-order:004251 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-actions { margin: 0 !important; padding: 14px 18px 16px !important; gap: 10px !important; }
+
+/* @qingtuan-order:004252 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-btn {
+            height: 32px !important;
+            padding: 0 12px !important;
+            border: 1px solid var(--cr-line) !important;
+            border-radius: 3px !important;
+            background: var(--cr-btn-face) !important;
+            box-shadow: var(--cr-btn-shadow) !important;
+            color: var(--cr-title) !important;
+            -webkit-text-fill-color: var(--cr-title) !important;
+            font-size: 12px !important;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:004253 */
+
+        #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-btn.primary {
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
+        }

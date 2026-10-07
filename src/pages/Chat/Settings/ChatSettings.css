@@ -1,0 +1,992 @@
+/* @qingtuan-order:001603 */
+
+        .background-activity-row.is-disabled {
+            opacity: .48;
+        }
+
+/* @qingtuan-order:002611 */
+
+#chatSettingsPage:not(.active) {display:none!important;}
+
+/* @qingtuan-order:002612 */
+
+#chatSettingsPage.active {display:flex!important;}
+
+/* @qingtuan-order:002613 */
+
+#chatSettingsPage {z-index:2150;}
+
+/* @qingtuan-order:002614 */
+
+.chat-settings-shell {padding:10px 12px 30px!important;background:linear-gradient(180deg,rgba(var(--theme-rgb),.08),#F7F8F9 34%,#F7F8F9);}
+
+/* @qingtuan-order:002615 */
+
+.chat-settings-profile {display:flex;align-items:center;gap:13px;padding:16px;margin-bottom:12px;border:.5px solid rgba(255,255,255,.9);border-radius:18px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(91,105,114,.055);}
+
+/* @qingtuan-order:002616 */
+
+.chat-settings-profile-avatar {width:58px;height:58px;flex:0 0 auto;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.92);background:#EEF2F3;}
+
+/* @qingtuan-order:002617 */
+
+.chat-settings-profile-name {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ui-text-primary);font-size:17px;font-weight:650;line-height:1.35;}
+
+/* @qingtuan-order:002618 */
+
+
+/* 聊天设置：证件卡与顶栏使用同一张纸白底；卡片仅用细线与青灰点缀。 */
+
+/* @qingtuan-order:002619 */
+
+#chatSettingsPage,
+#chatSettingsPage .settings-header,
+#chatSettingsPage .chat-settings-shell {background:#F9F9F9!important;}
+
+/* @qingtuan-order:002620 */
+
+#chatSettingsPage .settings-header {flex:0 0 auto;}
+
+/* @qingtuan-order:002621 */
+
+#chatSettingsPage .settings-header h2 {font-weight:600;letter-spacing:.04em;}
+
+/* @qingtuan-order:002622 */
+
+#chatSettingsPage .chat-settings-shell {background-image:none!important;}
+
+/* @qingtuan-order:002623 */
+
+/* QingTuan: 透明工牌卡套 + 轻量织带与扣件，整体跟随内容宽度 */
+
+/* @qingtuan-order:002624 */
+
+#chatSettingsPage .chat-settings-profile-avatar {width:100%;height:100%;border:0;border-radius:0;outline:0;display:block;object-fit:cover;background:#EEF2F3;}
+
+/* @qingtuan-order:002625 */
+
+#chatSettingsPage .chat-settings-profile-name {display:block;max-width:100%;font-size:11.5px;line-height:1.22;color:#4E5A64;font-weight:650;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* @qingtuan-order:002626 */
+
+@media(max-width:360px){#chatSettingsPage .chat-settings-profile-name {font-size:10.5px}}
+
+/* @qingtuan-order:002627 */
+
+.chat-settings-menu-label {display:flex;align-items:center;gap:9px;margin:0 2px 8px;color:#87939A;font-size:8px;font-weight:650;letter-spacing:.16em;}
+
+/* @qingtuan-order:002628 */
+
+.chat-settings-menu-label::after {content:'';height:.5px;flex:1;background:rgba(95,103,114,.18);}
+
+/* @qingtuan-order:002629 */
+
+.chat-settings-menu {overflow:hidden;border:.5px solid rgba(95,103,114,.25);border-radius:8px;background:#FFFFFF;}
+
+/* @qingtuan-order:002630 */
+
+.chat-settings-entry {border-bottom:.5px solid rgba(95,103,114,.16);background:#FFFFFF;}
+
+/* @qingtuan-order:002631 */
+
+.chat-settings-entry:last-child {border-bottom:0;}
+
+/* @qingtuan-order:002632 */
+
+.chat-settings-entry-button {display:flex;width:100%;min-height:62px;align-items:center;gap:11px;padding:9px 12px;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer;}
+
+/* @qingtuan-order:002633 */
+
+.chat-settings-entry-icon {display:flex;width:31px;height:31px;flex:0 0 auto;align-items:center;justify-content:center;border:.5px solid rgba(var(--theme-rgb),.72);border-radius:5px;background:rgba(var(--theme-rgb),.08)!important;color:var(--theme-color,#DDF2F4)!important;}
+
+/* @qingtuan-order:002634 */
+
+.chat-settings-entry-icon svg {width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;}
+
+/* @qingtuan-order:002635 */
+
+.chat-settings-entry-copy {display:flex;min-width:0;flex:1;flex-direction:column;gap:3px;}
+
+/* @qingtuan-order:002636 */
+
+.chat-settings-entry-copy strong {color:#5F6772;font-size:11.5px;font-weight:650;line-height:1.3;letter-spacing:.015em;}
+
+/* @qingtuan-order:002637 */
+
+.chat-settings-entry-copy span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9BA4AA;font-size:8.8px;line-height:1.4;}
+
+/* @qingtuan-order:002638 */
+
+.chat-settings-entry-chevron {width:14px;height:14px;flex:0 0 auto;fill:none;stroke:#8F9BA1;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease;}
+
+/* @qingtuan-order:002639 */
+
+.chat-settings-entry.is-open .chat-settings-entry-chevron {transform:rotate(90deg);}
+
+/* @qingtuan-order:002640 */
+
+.chat-settings-entry-panel {display:none;padding:0 18px 12px;border-top:.5px solid rgba(95,103,114,.11);background:#FBFCFC;}
+
+/* @qingtuan-order:002641 */
+
+.chat-settings-entry.is-open .chat-settings-entry-panel {display:block;}
+
+/* @qingtuan-order:002642 */
+
+.chat-font-card {padding:10px 0 9px;border-bottom:.5px solid rgba(95,103,114,.12);}
+
+/* @qingtuan-order:002643 */
+
+.chat-font-card .theme-font-current {padding-bottom:8px;}
+
+/* @qingtuan-order:002644 */
+
+.chat-font-card .theme-font-current-copy strong {font-size:10.8px;}
+
+/* @qingtuan-order:002645 */
+
+.chat-font-card .theme-font-current-copy span {font-size:8.8px;}
+
+/* @qingtuan-order:002646 */
+
+#chatFontImportStatus {min-height:13px;margin-top:7px;color:var(--theme-muted);font-size:9.3px;line-height:1.45;}
+
+/* @qingtuan-order:002647 */
+
+.chat-setting-row {display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:8px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+
+/* @qingtuan-order:002648 */
+
+.chat-setting-row:last-child {border-bottom:0;}
+
+/* @qingtuan-order:002649 */
+
+.chat-setting-copy {display:flex;min-width:0;flex:1;flex-direction:column;gap:3px;}
+
+/* @qingtuan-order:002650 */
+
+.chat-setting-copy strong {color:#5F6772;font-size:10.8px;font-weight:600;line-height:1.35;}
+
+/* @qingtuan-order:002651 */
+
+.chat-setting-copy span {color:#9AA3A9;font-size:8.8px;line-height:1.45;}
+
+/* @qingtuan-order:002652 */
+
+.chat-setting-range-row {padding:12px 0 4px;}
+
+/* @qingtuan-order:002653 */
+
+.chat-setting-range-row.is-disabled {opacity:.45;}
+
+/* @qingtuan-order:002654 */
+
+.chat-setting-range-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#5F6772;font-size:10.8px;font-weight:600;}
+
+/* @qingtuan-order:002655 */
+
+.chat-setting-range-value {color:var(--theme-color,#DDF2F4);font-size:9px;font-weight:500;}
+
+/* @qingtuan-order:002656 */
+
+.chat-setting-range {width:100%;height:14px;margin:0;padding:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;}
+
+/* @qingtuan-order:002657 */
+
+.chat-setting-range::-webkit-slider-runnable-track {height:2px;border-radius:999px;background:#DDE3E5;}
+
+/* @qingtuan-order:002658 */
+
+.chat-setting-range::-webkit-slider-thumb {width:14px;height:14px;margin-top:-5.5px;border:0;border-radius:50%;background:var(--theme-color);box-shadow:none;appearance:none;-webkit-appearance:none;}
+
+/* @qingtuan-order:002659 */
+
+.chat-setting-range::-moz-range-track {height:2px;border:0;border-radius:999px;background:#DDE3E5;}
+
+/* @qingtuan-order:002660 */
+
+.chat-setting-range::-moz-range-thumb {width:14px;height:14px;border:0;border-radius:50%;background:var(--theme-color);box-shadow:none;}
+
+/* @qingtuan-order:002661 */
+
+.chat-setting-field-row {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+
+/* @qingtuan-order:002662 */
+
+.chat-setting-field-row:last-child {border-bottom:0;}
+
+/* @qingtuan-order:002663 */
+
+.chat-setting-field-label {display:flex;min-width:0;flex:1;flex-direction:column;gap:3px;}
+
+/* @qingtuan-order:002664 */
+
+.chat-setting-field-label strong {color:#5F6772;font-size:10.8px;font-weight:600;line-height:1.35;}
+
+/* @qingtuan-order:002665 */
+
+.chat-setting-field-label span {color:#9AA3A9;font-size:8.8px;line-height:1.45;}
+
+/* @qingtuan-order:002666 */
+
+.chat-setting-input,.chat-setting-select {width:min(46%,148px);height:30px;border:.5px solid rgba(95,103,114,.20);border-radius:5px;background:#FFFFFF;padding:0 8px;color:#5F6772;font:inherit;font-size:9.5px;outline:none;box-shadow:none;}
+
+/* @qingtuan-order:002667 */
+
+.chat-setting-input:focus,.chat-setting-select:focus {border-color:rgba(var(--theme-rgb),.92);}
+
+/* @qingtuan-order:002668 */
+
+.chat-setting-select {appearance:auto;-webkit-appearance:menulist;}
+
+/* @qingtuan-order:002669 */
+
+.chat-setting-subhead {margin:11px 0 7px;color:#5F6772;font-size:10.8px;font-weight:600;}
+
+/* @qingtuan-order:002670 */
+
+.chat-setting-hint {color:#9AA3A9;font-size:8.8px;line-height:1.55;}
+
+/* @qingtuan-order:002671 */
+
+.chat-setting-empty {padding:11px 8px;border:.5px solid rgba(95,103,114,.12);border-radius:5px;color:#A7AEB4;font-size:9px;text-align:center;}
+
+/* @qingtuan-order:002672 */
+
+.chat-worldbook-list {display:grid;gap:6px;margin-bottom:7px;}
+
+/* @qingtuan-order:002676 */
+
+.chat-setting-block {display:block;padding:9px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+
+/* @qingtuan-order:002677 */
+
+.chat-setting-block.no-divider {border-bottom:0;}
+
+/* @qingtuan-order:002678 */
+
+.chat-setting-block-title {display:block;margin-bottom:3px;color:#5F6772;font-size:10.8px;font-weight:600;}
+
+/* @qingtuan-order:002679 */
+
+.chat-setting-textarea,.chat-setting-code {display:block;width:100%;min-height:70px;margin-top:8px;resize:vertical;border:.5px solid rgba(95,103,114,.20);border-radius:5px;background:#FFFFFF;padding:8px 9px;color:#5F6772;font:inherit;font-size:9.5px;line-height:1.55;outline:none;box-shadow:none;}
+
+/* @qingtuan-order:002680 */
+
+.chat-setting-code {min-height:96px;font-size:8.8px;tab-size:2;}
+
+/* @qingtuan-order:002681 */
+
+.chat-setting-textarea:focus,.chat-setting-code:focus {border-color:rgba(var(--theme-rgb),.92);}
+
+/* @qingtuan-order:002682 */
+
+.chat-setting-inline-actions {display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+
+/* @qingtuan-order:002683 */
+
+.chat-setting-inline-actions.end {justify-content:flex-end;margin-top:8px;}
+
+/* @qingtuan-order:002684 */
+
+.chat-setting-action {min-height:28px;padding:5px 9px;border:.5px solid #DDE2E5;border-radius:5px;background:#FFFFFF;color:#7E8790;font:inherit;font-size:8.8px;cursor:pointer;}
+
+/* @qingtuan-order:002685 */
+
+.chat-setting-action.primary {border-color:rgba(var(--theme-rgb),.50);background:rgba(var(--theme-rgb),.18);color:color-mix(in srgb,var(--theme-color) 70%,#5F6772);}
+
+/* @qingtuan-order:002686 */
+
+.chat-setting-action.danger {border-color:rgba(184,74,57,.35);color:#B84A39;}
+
+/* @qingtuan-order:002687 */
+
+.chat-settings-entry-panel > .chat-setting-action:first-child {margin-top:10px;}
+
+/* @qingtuan-order:002688 */
+
+#chatSettingRestart {margin-top:4px;}
+
+/* @qingtuan-order:002689 */
+
+.chat-setting-action-grid {display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0 8px;}
+
+/* @qingtuan-order:003703 */
+
+
+        /* ===================== 聊天设置的身份卡：Win98 小窗口（跟 Chat 页 snapshot.jpg 同一套） ===================== */
+
+/* @qingtuan-order:003704 */
+
+        #chatSettingsPage .idw {
+            display: block !important;
+            box-sizing: border-box;
+            width: auto !important;
+            margin: 14px 0 0 !important;
+            padding: 3px !important;
+            border: 1px solid var(--idw-line) !important;
+            border-radius: 3px !important;
+            background: var(--idw-face) !important;
+            box-shadow: var(--idw-raised), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: var(--idw-title);
+        }
+
+/* @qingtuan-order:003705 */
+
+        #chatSettingsPage .idw * { box-sizing: border-box; }
+
+/* @qingtuan-order:003706 */
+
+        #chatSettingsPage .idw-bar {
+            display: flex; align-items: center; gap: 5px; height: 20px; padding: 0 3px 0 4px;
+            background:
+                linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.08) 50%, transparent 52%),
+                linear-gradient(90deg, oklch(from var(--idw-block) calc(l + 0.015) calc(c * 1.3) h) 8%, color-mix(in srgb, var(--theme-color) 50%, #FFFFFF) 82%, color-mix(in srgb, var(--theme-color) 35%, #FFFFFF) 100%);
+        }
+
+/* @qingtuan-order:003707 */
+
+        #chatSettingsPage .idw-ico { position: relative; flex: 0 0 auto; width: 13px; height: 10px; border: 1px solid #FFFFFF; border-radius: 1px; }
+
+/* @qingtuan-order:003708 */
+
+        #chatSettingsPage .idw-ico::before { content: ''; position: absolute; left: 1px; top: 1px; width: 4px; height: 6px; background: #FFFFFF; }
+
+/* @qingtuan-order:003709 */
+
+        #chatSettingsPage .idw-ico::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 1px; background: #FFFFFF; box-shadow: 0 2px 0 #FFFFFF, 0 4px 0 #FFFFFF; }
+
+/* @qingtuan-order:003710 */
+
+        #chatSettingsPage .idw-bar b { color: #FFFFFF; font-size: 10.5px; font-weight: 600; letter-spacing: .5px; text-shadow: 1px 1px 0 color-mix(in srgb, var(--idw-head) 60%, transparent); }
+
+/* @qingtuan-order:003711 */
+
+        #chatSettingsPage .idw-btns { margin-left: auto; display: flex; gap: 2px; }
+
+/* @qingtuan-order:003712 */
+
+        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--idw-btn-face); box-shadow: inset 1px 1px 0 #FFFFFF; }
+
+/* @qingtuan-order:003713 */
+
+        #chatSettingsPage .idw-btns i.idw-cls { margin-left: 2px; }
+
+/* @qingtuan-order:003714 */
+
+        #chatSettingsPage .idw-btns svg { display: block; width: 9px; height: 9px; fill: none; stroke: var(--idw-title); stroke-linecap: round; }
+
+/* @qingtuan-order:003715 */
+
+        #chatSettingsPage .idw-menu { display: flex; gap: 12px; padding: 3px 5px 2px; border-bottom: 1px solid var(--idw-soft); box-shadow: 0 1px 0 #FFFFFF; color: var(--idw-title); font-size: 9px; }
+
+/* @qingtuan-order:003716 */
+
+        #chatSettingsPage .idw-menu u { text-underline-offset: 1.5px; }
+
+/* @qingtuan-order:003717 */
+
+        #chatSettingsPage .idw-page {
+            display: grid; grid-template-columns: 31% minmax(0, 1fr); gap: 10px; align-items: stretch;
+            margin: 6px 1px 0; padding: 9px 8px 8px;
+            border: 1px solid var(--idw-line); background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--idw-soft);
+        }
+
+/* @qingtuan-order:003718 */
+
+        #chatSettingsPage .idw-photo { position: relative; aspect-ratio: 3 / 4; padding: 3px; border: 1px solid var(--idw-line); background: var(--idw-face); box-shadow: var(--idw-sunken); }
+
+/* @qingtuan-order:003719 */
+
+        #chatSettingsPage .idw-photo img { display: block; width: 100% !important; height: 100% !important; object-fit: cover; border: 0 !important; border-radius: 0 !important; background: var(--theme-color); box-shadow: none !important; }
+
+/* @qingtuan-order:003720 */
+
+        #chatSettingsPage .idw-corner { position: absolute; width: 7px; height: 7px; background: var(--idw-head); clip-path: polygon(0 0, 100% 0, 0 100%); }
+
+/* @qingtuan-order:003721 */
+
+        #chatSettingsPage .idw-corner.c1 { left: -1px; top: -1px; }
+
+/* @qingtuan-order:003722 */
+
+        #chatSettingsPage .idw-corner.c2 { right: -1px; top: -1px; transform: scaleX(-1); }
+
+/* @qingtuan-order:003723 */
+
+        #chatSettingsPage .idw-corner.c3 { left: -1px; bottom: -1px; transform: scaleY(-1); }
+
+/* @qingtuan-order:003724 */
+
+        #chatSettingsPage .idw-corner.c4 { right: -1px; bottom: -1px; transform: scale(-1); }
+
+/* @qingtuan-order:003725 */
+
+        #chatSettingsPage .idw-barcode { display: flex; align-items: stretch; height: 15px; margin-top: 7px; opacity: .85; }
+
+/* @qingtuan-order:003726 */
+
+        #chatSettingsPage .idw-barcode i { display: block; background: var(--idw-title); }
+
+/* @qingtuan-order:003727 */
+
+        #chatSettingsPage .idw-code { margin-top: 2px; text-align: center; color: var(--idw-title); font-size: 7.5px; letter-spacing: 1.5px; }
+
+/* @qingtuan-order:003728 */
+
+        #chatSettingsPage .idw-props { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+/* @qingtuan-order:003729 */
+
+        #chatSettingsPage .idw-row { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 5px; }
+
+/* @qingtuan-order:003730 */
+
+        #chatSettingsPage .idw-row label { color: color-mix(in srgb, var(--idw-title) 80%, #FFFFFF); font-size: 8.5px; letter-spacing: .3px; text-align: right; }
+
+/* @qingtuan-order:003731 */
+
+        #chatSettingsPage .idw-row label::after { content: ':'; margin-left: 1px; }
+
+/* @qingtuan-order:003732 */
+
+        #chatSettingsPage .idw-row strong {
+            display: block; height: 17px; padding: 0 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            border: 1px solid var(--idw-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--idw-sunken);
+            color: var(--idw-title) !important; -webkit-text-fill-color: var(--idw-title) !important;
+            font-size: 10.5px !important; font-weight: 400 !important; line-height: 15px !important; letter-spacing: 0 !important;
+        }
+
+/* @qingtuan-order:003733 */
+
+        #chatSettingsPage .idw-memo { flex: 1 1 auto; align-items: stretch; }
+
+/* @qingtuan-order:003734 */
+
+        #chatSettingsPage .idw-memo label { padding-top: 3px; }
+
+/* @qingtuan-order:003735 */
+
+        #chatSettingsPage .idw-memo strong { height: auto; min-height: 30px; padding-top: 1px; white-space: normal; line-height: 1.45 !important; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+
+/* @qingtuan-order:003736 */
+
+        #chatSettingsPage .idw-actions { display: flex; justify-content: flex-end; margin-top: 2px; }
+
+/* @qingtuan-order:003737 */
+
+        #chatSettingsPage .idw-detail {
+            height: 20px; padding: 0 10px; border: 1px solid var(--idw-line); border-radius: 2px;
+            background: var(--idw-btn-face); box-shadow: var(--idw-raised), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            color: var(--idw-title); font: inherit; font-size: 9.5px; letter-spacing: .5px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003738 */
+
+        #chatSettingsPage .idw-detail:active { box-shadow: var(--idw-sunken); translate: 1px 1px; }
+
+/* @qingtuan-order:003739 */
+
+        #chatSettingsPage .idw-status { display: flex; align-items: stretch; gap: 2px; margin-top: 3px; }
+
+/* @qingtuan-order:003740 */
+
+        #chatSettingsPage .idw-status > span { padding: 1px 5px; border: 1px solid var(--idw-soft); box-shadow: var(--idw-sunken); color: var(--idw-title); font-size: 8px; letter-spacing: .5px; }
+
+/* @qingtuan-order:003741 */
+
+        #chatSettingsPage .idw-status .idw-grow { flex: 1; }
+
+/* @qingtuan-order:003742 */
+
+        #chatSettingsPage .idw-dot { display: inline-block; width: 5px; height: 5px; margin-right: 3px; border-radius: 50%; background: oklch(from var(--idw-head) l calc(c * 1.2) h); box-shadow: 0 0 0 1px #FFFFFF; }
+
+/* @qingtuan-order:003743 */
+
+        #chatSettingsPage .idw-status .idw-grip { flex: 0 0 12px; padding: 0; border: 0; box-shadow: none; background: linear-gradient(135deg, transparent 0 45%, var(--idw-line) 45% 52%, transparent 52% 62%, var(--idw-line) 62% 69%, transparent 69% 79%, var(--idw-line) 79% 86%, transparent 86%); }
+
+/* @qingtuan-order:003744 */
+
+
+        /* ===================== 聊天设置页：跟 Chat 列表 / 聊天室同一套古早风 =====================
+           顶栏青色渐层 + 白描边标题、凸起返回钮；七个选项是白底细框小卡（图示放凹陷小方格）；
+           展开的设定：输入框 / 下拉 / 文字框是白色凹陷框，开关是方形凹槽 + 凸起小方块，
+           滑杆是细凹槽 + 凸起长方形把手，按钮是凸起小白钮（主要钮深青、危险钮豆沙红字） */
+
+/* @qingtuan-order:003745 */
+
+        #chatSettingsPage#chatSettingsPage {
+            background: var(--cs-bg) !important;
+        }
+
+/* @qingtuan-order:003746 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-shell { background: var(--cs-bg) !important; padding: 6px 12px 30px !important; }
+
+/* @qingtuan-order:003747 */
+
+
+        /* ---- 顶栏 ---- */
+
+/* @qingtuan-order:003748 */
+
+        #chatSettingsPage#chatSettingsPage .settings-header {
+            min-height: 52px;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:003749 */
+
+        #chatSettingsPage#chatSettingsPage .settings-header h2 {
+            font-size: 14px !important;
+        }
+
+/* @qingtuan-order:003750 */
+
+        #chatSettingsPage#chatSettingsPage .settings-header .back-btn {
+            display: grid; place-items: center;
+            width: 34px !important; height: 28px !important; padding: 0 !important;
+            border: 1px solid var(--cs-line) !important; border-radius: 3px !important;
+            background: var(--cs-btn-face) !important;
+            box-shadow: var(--cs-raised), var(--cs-drop) !important;
+            color: var(--cs-title) !important;
+        }
+
+/* @qingtuan-order:003751 */
+
+        #chatSettingsPage#chatSettingsPage .settings-header .back-btn svg { width: 15px; height: 15px; }
+
+/* @qingtuan-order:003752 */
+
+
+        /* ---- 「CHAT CONFIGURATION · 07」：跟身份卡隔开一点 ---- */
+
+/* @qingtuan-order:003753 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu-label { margin: 18px 2px 8px; color: var(--cs-title); font-size: 8.5px; }
+
+/* @qingtuan-order:003754 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu-label::before { content: '\25BE'; color: var(--cs-head); margin-right: -4px; }
+
+/* @qingtuan-order:003755 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu-label::after { height: 0; border-top: 1px solid var(--cs-soft); border-bottom: 1px solid #FFFFFF; background: none; }
+
+/* @qingtuan-order:003756 */
+
+
+        /* ---- 七个选项：一张张白底细框小卡 ---- */
+
+/* @qingtuan-order:003757 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu { flex-direction: column; border: 0; border-radius: 0; background: transparent; }
+
+/* @qingtuan-order:003758 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry {
+            border: 1px solid var(--cs-line) !important; border-radius: 2px; background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, var(--cs-drop);
+        }
+
+/* @qingtuan-order:003759 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-button { -webkit-tap-highlight-color: transparent; }
+
+/* @qingtuan-order:003760 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry.is-open > .chat-settings-entry-button { background: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF); }
+
+/* @qingtuan-order:003761 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-icon {
+            border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
+            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            color: var(--cs-head) !important;
+        }
+
+/* @qingtuan-order:003762 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-icon svg { stroke: var(--cs-head) !important; }
+
+/* @qingtuan-order:003763 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-copy strong { color: var(--cs-title); font-weight: 600; }
+
+/* @qingtuan-order:003764 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-copy span { color: var(--cs-muted); }
+
+/* @qingtuan-order:003765 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-chevron { stroke: var(--cs-line); }
+
+/* @qingtuan-order:003766 */
+
+
+        /* ---- 展开的设定区 ---- */
+
+/* @qingtuan-order:003767 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-panel {
+            background: color-mix(in srgb, var(--theme-color) 6%, #FFFFFF);
+        }
+
+/* @qingtuan-order:003768 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-row, .chat-setting-field-row, .chat-setting-block) { min-height: 0; padding: 8px 0; border-bottom: 1px dotted var(--cs-soft); }
+
+/* @qingtuan-order:003769 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-row, .chat-setting-field-row, .chat-setting-block):last-child,
+        #chatSettingsPage#chatSettingsPage .chat-setting-block.no-divider { border-bottom: 0; }
+
+/* @qingtuan-order:003770 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range-row { padding: 9px 0 6px; border-bottom: 1px dotted var(--cs-soft); }
+
+/* @qingtuan-order:003771 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-copy strong, .chat-setting-field-label strong, .chat-setting-block-title, .chat-setting-subhead, .chat-setting-range-head) { color: var(--cs-title); font-size: 10.5px; font-weight: 600; }
+
+/* @qingtuan-order:003772 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-copy span, .chat-setting-field-label span, .chat-setting-hint) { color: var(--cs-muted); font-size: 8.8px; }
+
+/* @qingtuan-order:003773 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range-value { color: var(--cs-head); font-size: 9px; font-weight: 600; font-variant-numeric: lining-nums tabular-nums; }
+
+/* @qingtuan-order:003774 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-empty { border: 1px dashed var(--cs-soft); border-radius: 2px; background: #FFFFFF; color: var(--cs-muted); }
+
+/* @qingtuan-order:003775 */
+
+
+        /* 输入框 / 文字框 / 下拉：白色凹陷框 */
+
+/* @qingtuan-order:003776 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-select, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input) {
+            border: 1px solid var(--cs-line) !important; border-radius: 2px !important;
+            background-color: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            color: var(--cs-title) !important; -webkit-text-fill-color: var(--cs-title) !important;
+            font-size: 10px !important; outline: none !important;
+        }
+
+/* @qingtuan-order:003777 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-select) { height: 26px; }
+
+/* @qingtuan-order:003778 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input)::placeholder { color: color-mix(in srgb, var(--cs-title) 45%, #FFFFFF); -webkit-text-fill-color: color-mix(in srgb, var(--cs-title) 45%, #FFFFFF); }
+
+/* @qingtuan-order:003779 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-select, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input):focus { border-color: var(--cs-head) !important; }
+
+/* @qingtuan-order:003780 */
+
+        /* 下拉：右边一颗凸起小钮，里面一个往下的小三角 */
+
+/* @qingtuan-order:003781 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-select {
+            appearance: none !important; -webkit-appearance: none !important; 
+        }
+
+/* @qingtuan-order:003782 */
+
+
+        /* 开关：方形凹槽 + 凸起白色小方块，打开时凹槽变主题色 */
+
+/* @qingtuan-order:003783 */
+
+        #chatSettingsPage#chatSettingsPage .api-toggle-input {
+            flex: 0 0 auto; width: 34px !important; height: 18px !important;
+            border: 1px solid var(--cs-line) !important; border-radius: 2px !important;
+            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+        }
+
+/* @qingtuan-order:003784 */
+
+        #chatSettingsPage#chatSettingsPage .api-toggle-input:checked { background: var(--theme-color) !important; }
+
+/* @qingtuan-order:003785 */
+
+        #chatSettingsPage#chatSettingsPage .api-toggle-input::after {
+            width: 14px !important; height: 12px !important; top: 2px !important; left: 2px !important;
+            border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
+            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003786 */
+
+        #chatSettingsPage#chatSettingsPage .api-toggle-input:checked::after { transform: translateX(14px) !important; }
+
+/* @qingtuan-order:003787 */
+
+
+        /* 滑杆：细凹槽 + 凸起长方形把手 */
+
+/* @qingtuan-order:003788 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-runnable-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--cs-sunken); }
+
+/* @qingtuan-order:003789 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-moz-range-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; }
+
+/* @qingtuan-order:003790 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-thumb {
+            width: 10px; height: 16px; margin-top: -7px;
+            border: 1px solid var(--cs-line); border-radius: 1px;
+            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 60%, transparent), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:003791 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-moz-range-thumb {
+            width: 10px; height: 16px; border: 1px solid var(--cs-line); border-radius: 1px; background: var(--cs-btn-face);
+        }
+
+/* @qingtuan-order:003792 */
+
+
+        /* 按钮：凸起小白钮；主要钮深青（跟发送(S)同款）；危险钮豆沙红字 */
+
+/* @qingtuan-order:003793 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn) {
+            min-height: 26px; padding: 4px 10px;
+            border: 1px solid var(--cs-line) !important; border-radius: 3px !important;
+            background: var(--cs-btn-face) !important; box-shadow: var(--cs-raised), var(--cs-drop) !important;
+            color: var(--cs-title) !important; -webkit-text-fill-color: var(--cs-title) !important;
+            font-size: 9.5px !important; -webkit-tap-highlight-color: transparent;
+        }
+
+/* @qingtuan-order:003794 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action.primary, .theme-font-btn.ui-cyan-btn) {
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cs-deep) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cs-deep) 55%, #FFFFFF) 42.5%, var(--cs-deep) 56.5%, var(--cs-deep) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,.7), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), var(--cs-drop) !important;
+            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
+            text-shadow: 0 0 1px var(--cs-title), 0 0 2px var(--cs-title);
+        }
+
+/* @qingtuan-order:003795 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-action.danger { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+
+/* @qingtuan-order:003796 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn):active { translate: 1px 1px; box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 45%, transparent) !important; }
+
+/* @qingtuan-order:003797 */
+
+
+        /* 关联世界书：每本一格白底细框，勾选框是方形凹陷 + 主题色勾 */
+
+/* @qingtuan-order:003798 */
+
+        #chatSettingsPage#chatSettingsPage .chat-worldbook-option {
+            margin-bottom: 4px; padding: 5px 8px; min-height: 0;
+            border: 1px solid var(--cs-line); border-radius: 2px; background: #FFFFFF;
+            color: var(--cs-title); font-size: 10px;
+        }
+
+/* @qingtuan-order:003799 */
+
+        #chatSettingsPage#chatSettingsPage .chat-worldbook-option input {
+            appearance: none; -webkit-appearance: none; position: relative; flex: 0 0 auto;
+            width: 12px; height: 12px; margin: 0;
+            border: 1px solid var(--cs-line); border-radius: 0; background: #FFFFFF; box-shadow: var(--cs-sunken);
+        }
+
+/* @qingtuan-order:003800 */
+
+        #chatSettingsPage#chatSettingsPage .chat-worldbook-option input:checked::after {
+            content: ''; position: absolute; left: 2.5px; top: 2.5px; width: 4.5px; height: 2px;
+            border-left: 1.5px solid var(--cs-head); border-bottom: 1.5px solid var(--cs-head); transform: rotate(-45deg);
+        }
+
+/* @qingtuan-order:003801 */
+
+
+        /* 字体那一块：白底细框 */
+
+/* @qingtuan-order:003802 */
+
+        #chatSettingsPage#chatSettingsPage .chat-font-card {
+            margin: 8px 0; padding: 8px;
+            border: 1px solid var(--cs-line); border-radius: 2px; background: #FFFFFF; box-shadow: none;
+        }
+
+/* @qingtuan-order:003803 */
+
+        #chatSettingsPage#chatSettingsPage .chat-font-card .theme-font-current { border: 0; background: transparent; box-shadow: none; padding: 0 0 6px; }
+
+/* @qingtuan-order:003804 */
+
+        #chatSettingsPage#chatSettingsPage .chat-font-card :is(#chatFontName) { color: var(--cs-title); font-size: 10.5px; }
+
+/* @qingtuan-order:003805 */
+
+        #chatSettingsPage#chatSettingsPage .chat-font-card :is(#chatFontSource, .theme-font-hint) { color: var(--cs-muted); font-size: 8.8px; }
+
+/* @qingtuan-order:003806 */
+
+
+        /* ---- 聊天设置·第二轮（参考 98.css）：选项卡小一点；展开区做成刻痕线框起来的群组框；
+           开关改成 Win98 复选框（凹陷小方格 + 勾，放在说明左边）；下拉右边一颗整高的凸起方钮；滑杆下面加刻度 ---- */
+
+/* @qingtuan-order:003807 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu { gap: 5px; 
+            display: flex;
+            overflow: visible;
+        }
+
+/* @qingtuan-order:003808 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-button { min-height: 42px; gap: 9px; padding: 6px 9px; }
+
+/* @qingtuan-order:003809 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-icon { width: 24px; height: 24px; }
+
+/* @qingtuan-order:003810 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-icon svg { width: 13px; height: 13px; }
+
+/* @qingtuan-order:003811 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-copy { gap: 1px; }
+
+/* @qingtuan-order:003812 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-copy strong { font-size: 11px; }
+
+/* @qingtuan-order:003813 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-copy span { font-size: 8.5px; }
+
+/* @qingtuan-order:003814 */
+
+
+        /* 按下：整张卡一起往右下沉 1px、投影收掉、边变凹陷（不只里面的字移动） */
+
+/* @qingtuan-order:003815 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry:has(> .chat-settings-entry-button:active) {
+            translate: 1px 1px;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003816 */
+
+        /* 展开区：卡片里再一圈刻痕线群组框（外暗内白），里面白底 */
+
+/* @qingtuan-order:003817 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry-panel {
+            margin: 0 8px 8px; padding: 4px 9px 6px;
+            border: 1px solid var(--cs-soft) !important; border-top: 1px solid var(--cs-soft) !important;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:003818 */
+
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry.is-open > .chat-settings-entry-button { background: transparent; }
+
+/* @qingtuan-order:003819 */
+
+        /* 群组框里的每一项不用分隔线，靠间距分开 */
+
+/* @qingtuan-order:003820 */
+
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-row, .chat-setting-field-row, .chat-setting-block, .chat-setting-range-row) { border-bottom: 0 !important; padding: 6px 0; }
+
+/* @qingtuan-order:003821 */
+
+
+        /* 开关 → Win98 复选框：凹陷小方格放在说明左边，打勾 */
+
+/* @qingtuan-order:003822 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-row { justify-content: flex-start; gap: 7px; align-items: flex-start; cursor: pointer; }
+
+/* @qingtuan-order:003823 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input {
+            order: -1; width: 13px !important; height: 13px !important; margin-top: 1px;
+            border: 1px solid var(--cs-line) !important; border-radius: 0 !important;
+            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+        }
+
+/* @qingtuan-order:003824 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input:checked { background: #FFFFFF !important; }
+
+/* @qingtuan-order:003825 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input::after {
+            content: none !important;
+        }
+
+/* @qingtuan-order:003826 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input:checked::after {
+            content: '' !important; top: 2.5px !important; left: 2.5px !important; width: 5px !important; height: 2.5px !important;
+            border: 0 !important; border-left: 1.6px solid var(--cs-head) !important; border-bottom: 1.6px solid var(--cs-head) !important;
+            border-radius: 0 !important; background: none !important; box-shadow: none !important; transform: rotate(-45deg) !important;
+        }
+
+/* @qingtuan-order:003827 */
+
+
+        /* 下拉：白色凹陷框 + 右边一颗整高的凸起方钮（中间一个往下的三角） */
+
+/* @qingtuan-order:003828 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-select {
+            padding: 0 22px 0 7px !important;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--cs-title) 50%),
+                linear-gradient(135deg, var(--cs-title) 50%, transparent 50%),
+                linear-gradient(var(--cs-line), var(--cs-line)),
+                linear-gradient(#FFFFFF, #FFFFFF),
+                var(--cs-btn-face) !important;
+            background-size: 4px 4px, 4px 4px, 1px 100%, 1px 100%, 16px 100% !important;
+            background-position: calc(100% - 9px) 50%, calc(100% - 5px) 50%, calc(100% - 16px) 0, calc(100% - 15px) 0, 100% 0 !important;
+            background-repeat: no-repeat !important;
+        }
+
+/* @qingtuan-order:003829 */
+
+
+        /* 滑杆：凹槽下面一排刻度；数值放在小凹陷格里 */
+
+/* @qingtuan-order:003830 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range {
+            height: 24px;
+            background: repeating-linear-gradient(90deg, var(--cs-line) 0 1px, transparent 1px calc(10% - 0.1px)) 5px 100% / calc(100% - 10px) 4px no-repeat;
+        }
+
+/* @qingtuan-order:003831 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range-head { margin-bottom: 4px; }
+
+/* @qingtuan-order:003832 */
+
+        #chatSettingsPage#chatSettingsPage .chat-setting-range-value {
+            min-width: 44px; padding: 0 5px; text-align: right;
+            border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--cs-sunken);
+            line-height: 16px;
+        }

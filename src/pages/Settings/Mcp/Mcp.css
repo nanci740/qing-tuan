@@ -1,0 +1,1006 @@
+/* @qingtuan-order:000434 */
+
+
+        /* MCP 设置页原来少了这两条，打开时会淡入上滑，和其他设置页不一样；补上后同样直接出现 */
+
+/* @qingtuan-order:000435 */
+
+        #mcpSettingsPage:not(.active) { display: none !important; }
+
+/* @qingtuan-order:000436 */
+
+        #mcpSettingsPage.active { display: flex !important; }
+
+/* @qingtuan-order:000686 */
+
+
+        /* ============ MCP 设置 ============ */
+
+/* @qingtuan-order:000687 */
+
+        .mcp-settings-content {
+            position: absolute;
+            inset: 56px 0 0;
+            overflow-y: auto;
+            padding: 14px 16px 34px;
+            background: #F9F9F9;
+        }
+
+/* @qingtuan-order:000688 */
+
+        .mcp-setting-group { margin-bottom: 18px; }
+
+/* @qingtuan-order:000689 */
+
+        .mcp-setting-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-color);
+            letter-spacing: .8px;
+            margin: 0 0 7px 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000690 */
+
+        .mcp-card {
+            background: #FFFFFF;
+            border: .5px solid #DDDDE2;
+            border-radius: var(--ui-radius);
+        }
+
+/* @qingtuan-order:000691 */
+
+        .mcp-master-card {
+            min-height: 66px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+/* @qingtuan-order:000692 */
+
+        .mcp-master-title {
+            color: var(--ui-text-primary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000693 */
+
+        .mcp-master-desc {
+            color: #98A2AE;
+            font-size: 9.5px;
+            margin-top: 3px;
+        }
+
+/* @qingtuan-order:000694 */
+
+        .mcp-master-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+/* @qingtuan-order:000695 */
+
+        .mcp-count {
+            min-width: 42px;
+            text-align: right;
+            color: #7C8792;
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:000696 */
+
+        .mcp-switch {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 38px;
+            height: 22px;
+            border: 0;
+            padding: 0;
+            border-radius: 999px;
+            background: #E1E5E8;
+            position: relative;
+            cursor: pointer;
+            transition: background .2s ease;
+            flex: 0 0 auto;
+        }
+
+/* @qingtuan-order:000697 */
+
+        .mcp-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 3px;
+            left: 3px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: 0 1px 4px rgba(0,0,0,.12);
+            transition: transform .2s ease;
+        }
+
+/* @qingtuan-order:000698 */
+
+        .mcp-switch:checked { background: rgba(var(--theme-rgb), .72); }
+
+/* @qingtuan-order:000699 */
+
+        .mcp-switch:checked::after { transform: translateX(16px); }
+
+/* @qingtuan-order:000700 */
+
+
+        .mcp-service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+/* @qingtuan-order:000720 */
+
+        .mcp-add-btn {
+            width: 100%;
+            min-height: 36px;
+            margin-top: 10px;
+            border: .5px solid rgba(var(--theme-rgb), .42);
+            border-radius: var(--ui-radius);
+            background: rgba(var(--theme-rgb), .16);
+            color: var(--theme-deep);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001423 */
+
+
+        /* ---------------- MCP 设置 · 古早小窗口：总开关窗、服务列表窗，服务像一张张小卡片 ---------------- */
+
+/* @qingtuan-order:001424 */
+
+
+        #mcpSettingsPage {
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:001425 */
+
+
+        #mcpSettingsPage .settings-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:001426 */
+
+
+        #mcpSettingsPage .settings-header h2,
+        #mcpSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001427 */
+
+
+        #mcpSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001428 */
+
+
+        #mcpSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001429 */
+
+
+        #mcpSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001430 */
+
+
+        #mcpSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001431 */
+
+
+        #mcpSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001432 */
+
+
+        #mcpSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:001433 */
+
+
+        /* 内容区原本绝对定位在顶栏下 56px，加了地址栏后改成跟着排 */
+
+/* @qingtuan-order:001434 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-settings-content {
+            position: relative;
+            inset: auto;
+            flex: 1;
+            min-height: 0;
+            padding-top: 16px;
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:001435 */
+
+
+        /* 窗口本体 */
+
+/* @qingtuan-order:001436 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001437 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group > :not(.mcp-setting-label) {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+/* @qingtuan-order:001438 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0 0 10px;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            border-radius: 3px 3px 0 0;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.2;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001439 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001440 */
+
+
+        /* 1 MCP 状态：标题前一个插头；已启用数量做成深色小计数器 */
+
+/* @qingtuan-order:001441 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group:nth-of-type(1) .mcp-setting-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2022v-5%27/%3E%3Cpath%20d%3D%27M9%208V2%27/%3E%3Cpath%20d%3D%27M15%208V2%27/%3E%3Cpath%20d%3D%27M18%208v5a4%204%200%200%201-4%204h-4a4%204%200%200%201-4-4V8Z%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2022v-5%27/%3E%3Cpath%20d%3D%27M9%208V2%27/%3E%3Cpath%20d%3D%27M15%208V2%27/%3E%3Cpath%20d%3D%27M18%208v5a4%204%200%200%201-4%204h-4a4%204%200%200%201-4-4V8Z%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001442 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-master-card {
+            min-height: 0 !important;
+            padding: 2px 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001443 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-count {
+            min-width: 0 !important;
+            padding: 2px 6px;
+            background: var(--set-fill, var(--win-deep));
+            font-size: 10.5px !important;
+            letter-spacing: 1.5px;
+            text-align: center !important;
+        }
+
+/* @qingtuan-order:001444 */
+
+
+        /* 2 已连接服务：服务器小图标；每个服务是一张细框小卡，卡与卡之间留缝 */
+
+/* @qingtuan-order:001445 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group:nth-of-type(2) .mcp-setting-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20width%3D%2720%27%20height%3D%278%27%20x%3D%272%27%20y%3D%272%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Crect%20width%3D%2720%27%20height%3D%278%27%20x%3D%272%27%20y%3D%2714%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Cline%20x1%3D%276%27%20x2%3D%276.01%27%20y1%3D%276%27%20y2%3D%276%27/%3E%3Cline%20x1%3D%276%27%20x2%3D%276.01%27%20y1%3D%2718%27%20y2%3D%2718%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20width%3D%2720%27%20height%3D%278%27%20x%3D%272%27%20y%3D%272%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Crect%20width%3D%2720%27%20height%3D%278%27%20x%3D%272%27%20y%3D%2714%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Cline%20x1%3D%276%27%20x2%3D%276.01%27%20y1%3D%276%27%20y2%3D%276%27/%3E%3Cline%20x1%3D%276%27%20x2%3D%276.01%27%20y1%3D%2718%27%20y2%3D%2718%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001446 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-empty {
+            background: #F7F8F8 !important;
+            color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:001447 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-icon {
+            border: 1px solid var(--win-line);
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001448 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-kind {
+            padding: 0 4px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: var(--win-bar);
+            color: var(--win-ink) !important;
+            font-size: 8px !important;
+            line-height: 1.5;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:001449 */
+
+
+        /* 工具一行：凹陷的框，工具名做成小印章，右边凸起小方块打开权限 */
+
+/* @qingtuan-order:001450 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-tools-row {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+            background: #F7F8F8 !important;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001451 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-tool-chip {
+            padding: 1px 5px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink) !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 8.5px !important;
+        }
+
+/* @qingtuan-order:001452 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-edit-btn:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001453 */
+
+
+        /* 已连接服务窗：标题栏右边只留 ? 和 ×，和上面的 MCP 状态窗区分开 */
+
+/* @qingtuan-order:001454 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group:nth-of-type(2) .mcp-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+/* @qingtuan-order:001455 */
+
+
+        /* 添加按钮在窗里左右各留 12px，不再撑出窗外 */
+
+/* @qingtuan-order:001456 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-add-btn {
+            width: calc(100% - 24px) !important;
+        }
+
+/* @qingtuan-order:001457 */
+
+
+        /* 已连接服务窗底部一条状态栏：用 CSS 计数写出真实的服务数，右下角拖拽纹 */
+
+/* @qingtuan-order:001458 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-list {
+            counter-reset: mcpsvc;
+        }
+
+/* @qingtuan-order:001459 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-card {
+            counter-increment: mcpsvc;
+        }
+
+/* @qingtuan-order:001460 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-setting-group:nth-of-type(2)::after {
+            content: counter(mcpsvc) ' 个服务';
+            display: block;
+            margin: 12px 0 -12px;
+            padding: 3px 20px 3px 10px;
+            border-top: 1px solid var(--win-line);
+            border-radius: 0 0 3px 3px;
+            background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27%237E8C94%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px, var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001461 */
+
+
+        /* 状态：前面换成图标（i / 勾 / 警告三角），等宽字 */
+
+/* @qingtuan-order:001462 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-foot {
+            padding-top: 8px;
+            border-top: 1px dashed var(--win-dash);
+        }
+
+/* @qingtuan-order:001463 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-status {
+            color: var(--win-ink) !important;
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+        }
+
+/* @qingtuan-order:001464 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-status::before {
+            width: 11px !important;
+            height: 11px !important;
+            border-radius: 0 !important;
+            background: #A9B3B9 !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+        }
+
+/* @qingtuan-order:001465 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-status.online::before {
+            background: var(--set-fill, var(--win-deep)) !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27m9%2012%202%202%204-4%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+        }
+
+/* @qingtuan-order:001466 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-service-status.error::before {
+            background: #B08A8A !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+        }
+
+/* @qingtuan-order:001467 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-edit-btn {
+            min-width: 60px !important;
+            min-height: 26px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+/* @qingtuan-order:001468 */
+
+
+        /* 开关：方槽方滑块（页面和工具权限弹窗都用） */
+
+/* @qingtuan-order:001469 */
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-switch,
+        #mcpToolsModal#mcpToolsModal .mcp-switch {
+            width: 38px !important;
+            height: 20px !important;
+            background: #EEF1F1 !important;
+        }
+
+/* @qingtuan-order:001470 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-switch::after,
+        #mcpToolsModal#mcpToolsModal .mcp-switch::after {
+            top: 2px !important;
+            left: 2px !important;
+            width: 14px !important;
+            height: 14px !important;
+            box-sizing: border-box;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:001471 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-switch:checked,
+        #mcpToolsModal#mcpToolsModal .mcp-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:001472 */
+
+
+        #mcpSettingsPage#mcpSettingsPage .mcp-switch:checked::after,
+        #mcpToolsModal#mcpToolsModal .mcp-switch:checked::after {
+            transform: translateX(18px) !important;
+        }
+
+/* @qingtuan-order:002531 */
+
+
+        /* ===== MCP 按钮统一：仅作用于 MCP 页面与 MCP 弹窗 ===== */
+
+/* @qingtuan-order:002532 */
+
+
+        /* MCP 页面主按钮：实色主题青 + 白字 */
+
+/* @qingtuan-order:002533 */
+
+        #mcpSettingsPage #mcpAddServiceBtn {
+            background: var(--theme-color) !important;
+            border: 0.75px solid var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:002534 */
+
+
+        /* MCP 页面次级按钮：白底灰字 */
+
+/* @qingtuan-order:002535 */
+
+        #mcpSettingsPage .mcp-edit-btn {
+            background: #FFFFFF !important;
+            border: 0.5px solid #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:002542 */
+
+
+        #mcpSettingsPage #mcpAddServiceBtn:focus-visible{
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002543 */
+
+/* 触摸 / 聚焦时不改变按钮色 */
+
+/* @qingtuan-order:002544 */
+
+        #mcpSettingsPage #mcpAddServiceBtn:active{;;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002976 */
+
+
+        /* ---------------- MCP 设置 · 古早升级：状态窗是系统托盘，服务窗里每个服务是一扇小子窗；两个弹窗是向导和权限清单 ---------------- */
+
+/* @qingtuan-order:002977 */
+
+
+        /* ===== 通用：窗框、开关、按钮、输入框 ===== */
+
+/* @qingtuan-order:002978 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-setting-group {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:002979 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-setting-label {
+            border-bottom-color: var(--win-deep) !important;
+        }
+
+/* @qingtuan-order:002980 */
+
+
+        #mcpSettingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002981 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-switch,
+        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-switch {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:002982 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-switch:checked,
+        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:002983 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-switch::after,
+        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-switch::after {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 1px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:002984 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-add-btn{
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002985 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-add-btn:active {
+            box-shadow: var(--bevel-solid-in) !important;
+        }
+
+/* @qingtuan-order:002986 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002987 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002988 */
+
+
+        /* ===== 1 MCP 状态：系统托盘，计数和开关收在右边一格凹陷的托盘里，前面一颗指示灯，开着就亮 ===== */
+
+/* @qingtuan-order:002989 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-master-side {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 6px 4px 8px;
+            border: 1px solid var(--win-line);
+            background: var(--win-face);
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:002990 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-master-side::before {
+            content: '';
+            flex: 0 0 8px;
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--win-deep);
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12);
+        }
+
+/* @qingtuan-order:002991 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-master-side:has(.mcp-switch:checked)::before {
+            background: var(--theme-color);
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.35);
+        }
+
+/* @qingtuan-order:002992 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-count {
+            border-radius: 0 !important;
+            background: transparent !important;
+            color: var(--win-ink) !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002993 */
+
+
+        /* ===== 2 已连接服务：大窗里套小子窗，每个服务一扇，名字那一栏是子窗的标题栏 ===== */
+
+/* @qingtuan-order:002994 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-card {
+            padding: 0 !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-out), var(--win-drop) !important;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:002995 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-head {
+            margin: 2px 2px 0;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+        }
+
+/* @qingtuan-order:002996 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-icon {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:002997 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-kind {
+            /* 跟音乐设置「当前」标签同一套：主按钮青、饱和度拉高一点、带一丝灰 */
+            border: 1px solid var(--sb-line, var(--win-deep)) !important;
+            border-radius: 0 !important;
+            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002998 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tools-row {
+            margin: 8px 10px 0 !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002999 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tool-chip {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 0 !important;
+            background: var(--win-face) !important;
+            font-family: var(--mono);
+        }
+
+/* @qingtuan-order:003000 */
+
+
+        /* 子窗底部：一格凹陷的状态栏 */
+
+/* @qingtuan-order:003001 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-foot {
+            margin: 8px 2px 2px !important;
+            padding: 4px 4px 4px 8px !important;
+            border-top: 1px solid var(--win-line) !important;
+            background: var(--win-face) !important;
+        }
+
+/* @qingtuan-order:003002 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-status {
+            flex: 1;
+            padding: 2px 6px;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+            font-family: var(--mono);
+        }
+
+/* @qingtuan-order:003003 */
+
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-empty {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003668 */
+
+        /* MCP 服务卡片：描述、尚未获取工具 → 淡青灰 */
+
+/* @qingtuan-order:003669 */
+
+        #mcpSettingsPage .mcp-service-desc, #mcpSettingsPage .mcp-tools-empty {
+            color: var(--sb-line) !important; -webkit-text-fill-color: var(--sb-line) !important;
+        }
+
+/* @qingtuan-order:003670 */
+
+        /* MCP 服务卡片的「编辑」：跟其他白色按钮一样 */
+
+/* @qingtuan-order:003671 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--sb-line) !important;
+            border-radius: 3px !important;
+            color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
+                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
+                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:003672 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn:active {
+            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+        }
+
+/* @qingtuan-order:003673 */
+
+        /* MCP 工具列右边的箭头钮（全部样式都在这里）：跟设置首页的箭头钮一样——22px、2px 圆角、Win98 凸起边、没有外投影；
+           正面维持纯白不加高光；箭头是遮罩画的小 >，颜色跟边框一样 */
+
+/* @qingtuan-order:003674 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tools-open {
+            position: relative;
+            width: 22px !important;
+            height: 22px !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:003675 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tools-open:active {
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003676 */
+
+        #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tools-open::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            width: auto !important;
+            height: auto !important;
+            border: 0 !important;
+            background: var(--win-deep) !important;
+            transform: none !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%201.5%205.5%204%203%206.5%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%201.5%205.5%204%203%206.5%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+        }

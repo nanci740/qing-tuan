@@ -1,0 +1,2147 @@
+/* @qingtuan-order:000760 */
+
+
+        /* ===== 备用 API：折叠时不显示内部底部分隔线 ===== */
+
+/* @qingtuan-order:000761 */
+
+
+        /* ============ 语音与生图设置 ============ */
+
+/* @qingtuan-order:000762 */
+
+        #voiceImageSettingsPage:not(.active) { display: none !important; }
+
+/* @qingtuan-order:000763 */
+
+        #voiceImageSettingsPage.active { display: flex !important; }
+
+/* @qingtuan-order:000764 */
+
+
+        .vi-settings-content {
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 14px 16px 32px;
+            scrollbar-width: none;
+        }
+
+/* @qingtuan-order:000765 */
+
+        .vi-settings-content::-webkit-scrollbar { display:none; }
+
+/* @qingtuan-order:000766 */
+
+        .vi-group { margin-bottom: 18px; }
+
+/* @qingtuan-order:000767 */
+
+        .vi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-color);
+            letter-spacing: .8px;
+            margin: 0 0 7px 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000768 */
+
+        .vi-card {
+            background: #fff;
+            border: .5px solid #DDDDE2;
+            border-radius: var(--ui-radius);
+            padding: 6px 14px;
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:000769 */
+
+        .vi-row {
+            min-height: 48px;
+            display: grid;
+            grid-template-columns: 92px minmax(0,1fr);
+            gap: 10px;
+            align-items: center;
+            border-bottom: .5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000770 */
+
+        .vi-row:last-child { border-bottom: 0; }
+
+/* @qingtuan-order:000771 */
+
+        .vi-row-label {
+            font-size: 11.5px;
+            color: var(--ui-text-primary);
+            white-space: nowrap;
+        }
+
+/* @qingtuan-order:000772 */
+
+        .vi-input,
+        .vi-choice-btn {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            padding: 7px 0;
+            text-align: left;
+        }
+
+/* @qingtuan-order:000773 */
+
+        .vi-choice-btn {
+            position: relative;
+            cursor: pointer;
+            padding-right: 18px;
+        }
+
+/* @qingtuan-order:000774 */
+
+        .vi-choice-btn::after {
+            content: '';
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-right: 1.2px solid #A0A8B1;
+            border-bottom: 1.2px solid #A0A8B1;
+            transform: translateY(-65%) rotate(45deg);
+        }
+
+/* @qingtuan-order:000775 */
+
+        .vi-input::placeholder { color: #A7AFB8; }
+
+/* @qingtuan-order:000776 */
+
+        .vi-secret-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:000777 */
+
+        .vi-secret-wrap .vi-input { flex: 1; }
+
+/* @qingtuan-order:000778 */
+
+        .vi-eye {
+            width: 28px;
+            height: 28px;
+            border: 0;
+            background: transparent;
+            color: #8EA0AA;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000779 */
+
+        .vi-eye svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+        }
+
+/* @qingtuan-order:000780 */
+
+        .vi-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 54px;
+            gap: 12px;
+        }
+
+/* @qingtuan-order:000781 */
+
+        .vi-toggle-copy strong {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:000782 */
+
+        .vi-toggle-copy span {
+            display: block;
+            color: #9BA4AE;
+            font-size: 9.5px;
+            margin-top: 3px;
+        }
+
+/* @qingtuan-order:000787 */
+
+
+        .vi-range-wrap {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 36px;
+            gap: 8px;
+            align-items: center;
+        }
+
+/* @qingtuan-order:000788 */
+
+        .vi-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 14px;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000789 */
+
+        .vi-range:focus {
+            outline: none;
+        }
+
+/* @qingtuan-order:000790 */
+
+        .vi-range::-webkit-slider-runnable-track {
+            height: 3px;
+            border-radius: 999px;
+            background: #5F6772;
+        }
+
+/* @qingtuan-order:000791 */
+
+        .vi-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            margin-top: -3.5px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+        }
+
+/* @qingtuan-order:000792 */
+
+        .vi-range::-moz-range-track {
+            height: 3px;
+            border: 0;
+            border-radius: 999px;
+            background: #5F6772;
+        }
+
+/* @qingtuan-order:000793 */
+
+        .vi-range::-moz-range-progress {
+            height: 3px;
+            border-radius: 999px;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:000794 */
+
+        .vi-range::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--theme-color);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+        }
+
+/* @qingtuan-order:000795 */
+
+        .vi-range-value {
+            text-align: right;
+            color: #84909B;
+            font-size: 10px;
+        }
+
+/* @qingtuan-order:000796 */
+
+        .vi-note {
+            color: #A0A8B1;
+            font-size: 9.2px;
+            line-height: 1.5;
+            padding: 9px 2px 2px;
+        }
+
+/* @qingtuan-order:000797 */
+
+        .vi-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 9px;
+        }
+
+/* @qingtuan-order:000800 */
+
+        .vi-status {
+            min-height: 18px;
+            margin-top: 7px;
+            color: #99A3AD;
+            font-size: 9.3px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:000801 */
+
+        .vi-status.ok { color: var(--theme-deep); }
+
+/* @qingtuan-order:000802 */
+
+        .vi-status.error { color: #B38C8C; }
+
+/* @qingtuan-order:000803 */
+
+        #voiceStatus,
+        #imageStatus {
+            display: none !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+/* @qingtuan-order:000804 */
+
+
+        .vi-preview {
+            margin-top: 8px;
+            min-height: 52px;
+            border: .5px solid #E1E6E6;
+            border-radius: var(--ui-radius);
+            background: #FFFFFF;
+            display: none;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:000805 */
+
+        .vi-preview.show { display: block; }
+
+/* @qingtuan-order:000806 */
+
+        .vi-preview audio {
+            display: none;
+        }
+
+/* @qingtuan-order:000807 */
+
+        .vi-audio-player {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 52px;
+            padding: 0 13px;
+            background: #FFFFFF;
+        }
+
+/* @qingtuan-order:000808 */
+
+        #voicePreview + .vi-actions {
+            margin-top: 14px;
+        }
+
+/* @qingtuan-order:000809 */
+
+        .vi-audio-play,
+        .vi-audio-volume {
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            border: 0;
+            background: transparent;
+            color: var(--ui-text-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+        }
+
+/* @qingtuan-order:000810 */
+
+        .vi-audio-play svg,
+        .vi-audio-volume svg {
+            display: block;
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+/* @qingtuan-order:000811 */
+
+        .vi-audio-play .icon-pause { display: none; }
+
+/* @qingtuan-order:000812 */
+
+        .vi-audio-player.is-playing .vi-audio-play .icon-play { display: none; }
+
+/* @qingtuan-order:000813 */
+
+        .vi-audio-player.is-playing .vi-audio-play .icon-pause { display: block; }
+
+/* @qingtuan-order:000814 */
+
+        .vi-audio-time {
+            flex: 0 0 auto;
+            min-width: 54px;
+            color: #7E8894;
+            font-size: 10px;
+            line-height: 1;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+/* @qingtuan-order:000815 */
+
+        .vi-audio-progress {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 14px;
+            margin: 0;
+            padding: 0;
+            display: block;
+            background: transparent;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000816 */
+
+        .vi-audio-progress:focus {
+            outline: none;
+        }
+
+/* @qingtuan-order:000817 */
+
+        .vi-audio-progress::-webkit-slider-runnable-track {
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), #5F6772 var(--progress, 0%), #5F6772 100%);
+        }
+
+/* @qingtuan-order:000818 */
+
+        .vi-audio-progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--theme-color);
+            border: 0;
+            margin-top: -3.5px;
+            box-shadow: 0 0 0 1px rgba(0,0,0,.04);
+        }
+
+/* @qingtuan-order:000819 */
+
+        .vi-audio-progress::-moz-range-track {
+            height: 3px;
+            border: 0;
+            border-radius: 999px;
+            background: #5F6772;
+        }
+
+/* @qingtuan-order:000820 */
+
+        .vi-audio-progress::-moz-range-progress {
+            height: 3px;
+            border-radius: 999px;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:000821 */
+
+        .vi-audio-progress::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--theme-color);
+            border: 0;
+            box-shadow: 0 0 0 1px rgba(0,0,0,.04);
+        }
+
+/* @qingtuan-order:000822 */
+
+        .vi-audio-volume.is-muted {
+            color: #A7AFB7;
+        }
+
+/* @qingtuan-order:000823 */
+
+        .vi-image-preview {
+            padding: 16px;
+            text-align: left;
+            background: rgba(255,255,255,.78);
+            border-color: #E7EBED;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+/* @qingtuan-order:000824 */
+
+        .vi-image-frame {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0;
+            background: #F5F7F7;
+        }
+
+/* @qingtuan-order:000825 */
+
+        .vi-image-preview img {
+            display: block;
+            width: 100%;
+            max-height: 340px;
+            object-fit: contain;
+            border-radius: 0;
+        }
+
+/* @qingtuan-order:000826 */
+
+        .vi-image-meta {
+            padding: 14px 3px 2px;
+        }
+
+/* @qingtuan-order:000827 */
+
+        .vi-image-meta-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+/* @qingtuan-order:000828 */
+
+        .vi-image-model {
+            min-width: 0;
+            color: var(--ui-text-primary);
+            font-size: 12.5px;
+            font-weight: 600;
+            line-height: 1.35;
+            letter-spacing: .02em;
+        }
+
+/* @qingtuan-order:000829 */
+
+        .vi-image-desc {
+            color: var(--ui-text-muted);
+            font-size: 11.5px;
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            word-break: break-word;
+        }
+
+/* @qingtuan-order:000830 */
+
+        .vi-regenerate-btn {
+            border: 0;
+            background: transparent;
+            color: #A2A9B1;
+            font-size: 10px;
+            line-height: 1;
+            padding: 2px 1px;
+            flex: 0 0 auto;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color .18s ease, opacity .18s ease, transform .12s ease;
+        }
+
+/* @qingtuan-order:000831 */
+
+        .vi-regenerate-btn:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+/* @qingtuan-order:000848 */
+
+
+        /* ===== 生图角色提示容器 ===== */
+
+/* @qingtuan-order:000849 */
+
+        #voiceImageSettingsPage .vi-prompt-builder {
+            padding: 2px 14px 12px;
+        }
+
+/* @qingtuan-order:000850 */
+
+        #voiceImageSettingsPage .vi-builder-field {
+            display: block;
+            padding: 11px 0 9px;
+        }
+
+/* @qingtuan-order:000851 */
+
+        #voiceImageSettingsPage .vi-builder-field-label,
+        #voiceImageSettingsPage .vi-character-title {
+            display: block;
+            color: var(--ui-text-primary);
+            font-size: 11.5px;
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:000852 */
+
+        #voiceImageSettingsPage .vi-builder-textarea {
+            width: 100%;
+            max-height: 120px;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            color: var(--ui-text-primary);
+            font-size: 10.5px;
+            line-height: 1.5;
+        }
+
+/* @qingtuan-order:000853 */
+
+        #voiceImageSettingsPage .vi-builder-textarea::placeholder {
+            color: #A7AFB8;
+        }
+
+/* @qingtuan-order:000854 */
+
+        #voiceImageSettingsPage .vi-builder-textarea:focus {
+            background: transparent;
+        }
+
+/* @qingtuan-order:000855 */
+
+        #voiceImageSettingsPage .vi-character-section {
+            padding-top: 10px;
+        }
+
+/* @qingtuan-order:000856 */
+
+        #voiceImageSettingsPage .vi-character-head,
+        #voiceImageSettingsPage .vi-character-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+/* @qingtuan-order:000857 */
+
+        #voiceImageSettingsPage .vi-character-hint {
+            display: block;
+            margin-top: 2px;
+            font-size: 9px;
+        }
+
+/* @qingtuan-order:000858 */
+
+        #voiceImageSettingsPage .vi-character-add {
+            flex: 0 0 28px;
+            font-size: 19px;
+            font-weight: 300 !important;
+            line-height: 1;
+            padding: 0 0 2px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000859 */
+
+        #voiceImageSettingsPage .vi-character-add:disabled {
+            opacity: .42;
+            cursor: default;
+        }
+
+/* @qingtuan-order:000860 */
+
+        #voiceImageSettingsPage .vi-character-list {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-top: 8px;
+        }
+
+/* @qingtuan-order:000861 */
+
+        #voiceImageSettingsPage .vi-character-card {
+            padding: 9px 10px 7px;
+            border: 0;
+            border-radius: 8px;
+            background: rgba(var(--theme-rgb), .07);
+        }
+
+/* @qingtuan-order:000862 */
+
+        #voiceImageSettingsPage .vi-character-role {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:000863 */
+
+        #voiceImageSettingsPage .vi-character-name {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            font: inherit;
+            line-height: inherit;
+            cursor: text;
+        }
+
+/* @qingtuan-order:000864 */
+
+        #voiceImageSettingsPage .vi-character-name-input {
+            width: 100px;
+            max-width: 42vw;
+            padding: 0 1px;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            line-height: inherit;
+        }
+
+/* @qingtuan-order:000865 */
+
+        #voiceImageSettingsPage .vi-character-remove {
+            border: 0;
+            background: transparent;
+            color: #A0A8B1;
+            font-family: var(--font-active);
+            font-size: 9.5px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000866 */
+
+        #voiceImageSettingsPage .vi-character-field {
+            display: block;
+            margin-top: 7px;
+            padding-top: 6px;
+            border-top: .5px solid rgba(var(--theme-rgb), .13);
+        }
+
+/* @qingtuan-order:000867 */
+
+        #voiceImageSettingsPage .vi-character-field span {
+            display: block;
+            margin-bottom: 1px;
+            font-size: 9.5px;
+        }
+
+/* @qingtuan-order:000868 */
+
+        #voiceImageSettingsPage .vi-character-card .vi-builder-textarea {
+            min-height: 27px;
+            margin-top: 0;
+        }
+
+/* @qingtuan-order:000869 */
+
+        #voiceImageSettingsPage .vi-scene-field {
+            margin-top: 10px;
+            padding: 11px 0 2px;
+            border-bottom: 0;
+        }
+
+/* @qingtuan-order:000870 */
+
+        #voiceImageSettingsPage .vi-builder-field-hint {
+            display: block;
+            margin-top: 2px;
+            font-size: 9px;
+            line-height: 1.45;
+        }
+
+/* @qingtuan-order:000871 */
+
+        #voiceImageSettingsPage .vi-scene-field .vi-builder-textarea {
+            margin-top: 5px;
+        }
+
+/* @qingtuan-order:000872 */
+
+
+        /* ===== 语音 / 生图 模型输入箭头 ===== */
+
+/* @qingtuan-order:000873 */
+
+        #voiceImageSettingsPage .vi-model-picker {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:000874 */
+
+        #voiceImageSettingsPage .vi-model-picker .vi-input {
+            flex: 1;
+            min-width: 0;
+        }
+
+/* @qingtuan-order:000875 */
+
+        #voiceImageSettingsPage .vi-fetch-arrow {
+            position: relative;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+/* @qingtuan-order:000876 */
+
+        #voiceImageSettingsPage .vi-fetch-arrow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-right: 1.2px solid currentColor;
+            border-bottom: 1.2px solid currentColor;
+        }
+
+/* @qingtuan-order:000877 */
+
+        #voiceImageSettingsPage .vi-fetch-arrow:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+/* @qingtuan-order:001281 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-textarea {
+            margin-top: 5px;
+            padding: 6px 8px !important;
+        }
+
+/* @qingtuan-order:001338 */
+
+
+        /* 语音 / 生图 分页标签：像老网站顶上的一排栏目，选中的那页和下面连在一起 */
+
+/* @qingtuan-order:001339 */
+
+        #voiceImageSettingsPage .retro-tabs {
+            display: flex;
+            gap: 3px;
+            padding: 8px 12px 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:001340 */
+
+
+        #voiceImageSettingsPage .retro-tab {
+            flex: 0 0 auto;
+            min-width: 72px;
+            margin-bottom: -1px;
+            padding: 5px 14px 4px;
+            border: 1px solid var(--win-line);
+            color: var(--win-ink);
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:001341 */
+
+
+        #voiceImageSettingsPage .retro-tab.active {
+            padding-top: 7px;
+            margin-top: -2px;
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:001342 */
+
+
+        #voiceImageSettingsPage .vi-settings-content[data-tab="voice"] > .vi-group:nth-child(n+3),
+        #voiceImageSettingsPage .vi-settings-content[data-tab="image"] > .vi-group:nth-child(-n+2) {
+            display: none;
+        }
+
+/* @qingtuan-order:001343 */
+
+
+        /* 服务开关（语音 1、生图 3）：浏览器小窗，左上三颗圆点，标题居中 */
+
+/* @qingtuan-order:001344 */
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label,
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label {
+            justify-content: center;
+            position: relative;
+            background: #F6F7F7;
+            color: #8A949C;
+            font-weight: 500;
+        }
+
+/* @qingtuan-order:001345 */
+
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label::after,
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label::after {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin: -5px 0 0;
+            width: 38px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2738%27%20height%3D%2710%27%20viewBox%3D%270%200%2038%2010%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3Ccircle%20cx%3D%2733%27%20cy%3D%275%27%20r%3D%274.5%27/%3E%3C/svg%3E") no-repeat center / 38px 10px;
+        }
+
+/* @qingtuan-order:001346 */
+
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1),
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) {
+            padding-bottom: 4px;
+        }
+
+/* @qingtuan-order:001347 */
+
+
+        /* 生图提示设置：便签窗，右上只有一个关闭 */
+
+/* @qingtuan-order:001348 */
+
+        #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-label::after {
+            flex-basis: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3.5%203.5l5%205M8.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001349 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-field,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-section {
+            border-bottom: 1px dashed var(--win-dash) !important;
+        }
+
+/* @qingtuan-order:001350 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-add {
+            width: 24px;
+            height: 24px;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:001351 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-list > * {
+            background: #F7F8F8 !important;
+        }
+
+/* @qingtuan-order:001352 */
+
+
+        /* 语速滑杆：凹槽加方形凸起滑块 */
+
+/* @qingtuan-order:001353 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range {
+            height: 20px;
+        }
+
+/* @qingtuan-order:001354 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-runnable-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #F4F6F6;
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001355 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-thumb {
+            width: 10px;
+            height: 18px;
+            margin-top: -7px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+        }
+
+/* @qingtuan-order:001356 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-track {
+            height: 6px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #F4F6F6;
+        }
+
+/* @qingtuan-order:001357 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-progress {
+            height: 6px;
+            border-radius: 1px;
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:001358 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-thumb {
+            width: 10px;
+            height: 18px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001359 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-range-value {
+            color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:001360 */
+
+
+        /* 试听：LO-FI 小播放器，播放键是凸起方块，进度是凹槽 */
+
+/* @qingtuan-order:001361 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-preview {
+            margin-top: 10px;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: var(--win-bar) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001362 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player {
+            height: 46px;
+            padding: 0 10px;
+            background: transparent;
+        }
+
+/* @qingtuan-order:001363 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume {
+            background: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:001364 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player.is-playing .vi-audio-play,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted{
+            background: color-mix(in srgb, var(--theme-color) 14%, #F4F6F6) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, rgba(75, 90, 98, 0.35)), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001365 */
+
+/* 按下凹进去；播放中的播放键、静音时的音量键保持按下的样子 */
+
+/* @qingtuan-order:001366 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active{;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, rgba(75, 90, 98, 0.35)), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001367 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted svg {
+            opacity: 0.45;
+        }
+
+/* @qingtuan-order:001368 */
+
+
+        /* 剧情与画面上方原有一条实线，和角色提示下的虚线叠在一起，去掉 */
+
+/* @qingtuan-order:001369 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-scene-field {
+            border-top: 0 !important;
+        }
+
+/* @qingtuan-order:001370 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play svg,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume svg {
+            width: 14px;
+            height: 14px;
+        }
+
+/* @qingtuan-order:001371 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play .icon-play path {
+            fill: currentColor;
+        }
+
+/* @qingtuan-order:001372 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-time {
+            font-size: 9.5px;
+        }
+
+/* @qingtuan-order:001373 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-runnable-track {
+            height: 8px;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), #FFFFFF var(--progress, 0%), #FFFFFF 100%);
+            box-shadow: inset 1px 1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001374 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-thumb {
+            width: 8px;
+            height: 14px;
+            margin-top: -4px;
+            border: 1px solid var(--win-line);
+            border-radius: 1px;
+            background: #FFFFFF;
+            box-shadow: inset -1px -1px 0 var(--win-lo);
+        }
+
+/* @qingtuan-order:001375 */
+
+
+        /* 试听 / 测试生图按钮前一个小播放三角 */
+
+/* @qingtuan-order:001376 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage #voiceTestBtn::before,
+        #voiceImageSettingsPage#voiceImageSettingsPage #imageTestBtn::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            /* 三角挂在文字左边，不占宽度，文字本身保持居中 */
+            margin-left: -14px;
+            margin-right: 6px;
+            vertical-align: 0;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M1.5%20.8%209%205l-7.5%204.2z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M1.5%20.8%209%205l-7.5%204.2z%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
+        }
+
+/* @qingtuan-order:001377 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-actions {
+            margin-top: 12px;
+        }
+
+/* @qingtuan-order:001400 */
+
+
+        /* 生图结果：一扇 PoolOS 关于窗那样的小窗。双线窗框、左上角一个装饰小方块；
+           图片四周留白，下面模型名居中、底下一条细实线，再下面描述靠左，「重新生成」是右下角的下划线链接字 */
+
+/* @qingtuan-order:001401 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview {
+            position: relative;
+            display: flex !important;
+            flex-direction: column;
+            margin-top: 12px !important;
+            background: #FFFFFF !important;
+            overflow: visible;
+        }
+
+/* @qingtuan-order:001402 */
+
+
+        /* 里层框线：左右上隔 5px，下面隔 9px，像老式对话框和相纸，下边更厚一点 */
+
+/* @qingtuan-order:001403 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001404 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview:not(.show) {
+            display: none !important;
+        }
+
+/* @qingtuan-order:001405 */
+
+
+        /* 标题栏左边一个小图片图标，像老系统窗口标题前的程序图标；用主题色 */
+
+/* @qingtuan-order:001406 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta-top::before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            width: 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20width%3D%2718%27%20height%3D%2718%27%20x%3D%273%27%20y%3D%273%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Ccircle%20cx%3D%279%27%20cy%3D%279%27%20r%3D%272%27/%3E%3Cpath%20d%3D%27m21%2015-3.086-3.086a2%202%200%200%200-2.828%200L6%2021%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20width%3D%2718%27%20height%3D%2718%27%20x%3D%273%27%20y%3D%273%27%20rx%3D%272%27%20ry%3D%272%27/%3E%3Ccircle%20cx%3D%279%27%20cy%3D%279%27%20r%3D%272%27/%3E%3Cpath%20d%3D%27m21%2015-3.086-3.086a2%202%200%200%200-2.828%200L6%2021%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001407 */
+
+
+        /* 右上角关闭小方块：方框里一个小叉，和各窗标题栏的关闭按钮同一套，放右边，只是装饰 */
+
+/* @qingtuan-order:001408 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            width: 11px;
+            height: 11px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2711%27%20height%3D%2711%27%20viewBox%3D%270%200%2011%2011%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2710%27%20height%3D%2710%27/%3E%3Cpath%20d%3D%27M3%203l5%205M8%203l-5%205%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2711%27%20height%3D%2711%27%20viewBox%3D%270%200%2011%2011%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2710%27%20height%3D%2710%27/%3E%3Cpath%20d%3D%27M3%203l5%205M8%203l-5%205%27/%3E%3C/svg%3E") no-repeat center / 11px 11px;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001409 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta-top {
+            display: contents;
+        }
+
+/* @qingtuan-order:001410 */
+
+
+        /* 图片像一张放在桌面上的照片：细框加右下 2px 硬投影；上方一行窗口名，像 System 7 的看图窗 */
+
+/* @qingtuan-order:001411 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
+            order: 1;
+            position: relative;
+            overflow: visible !important;
+            border-radius: 0 !important;
+        }
+
+/* @qingtuan-order:001412 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::before {
+            content: 'preview.bmp';
+            position: absolute;
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            letter-spacing: 1px;
+            line-height: 16px;
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001413 */
+
+
+        /* 窗口名下一条细线横贯里层框，隔出标题栏 */
+
+/* @qingtuan-order:001414 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::after {
+            content: '';
+            position: absolute;
+            left: -14px;
+            right: -14px;
+            top: -9px;
+            height: 1px;
+            background: var(--win-line);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001415 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview img {
+            border-radius: 0 !important;
+        }
+
+/* @qingtuan-order:001416 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-model {
+            order: 2;
+            margin-top: 10px;
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--win-line);
+            color: var(--win-ink) !important;
+            font-size: 10.5px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px !important;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+/* @qingtuan-order:001417 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc {
+            order: 3;
+            padding: 8px 0 0;
+            color: var(--win-ink) !important;
+            font-size: 11px !important;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+/* @qingtuan-order:001418 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-image-desc:empty {
+            display: none;
+        }
+
+/* @qingtuan-order:001419 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn {
+            order: 4;
+            align-self: flex-end;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--win-ink) !important;
+            font-size: 10px !important;
+            letter-spacing: 0.5px;
+            text-underline-offset: 2px;
+        }
+
+/* @qingtuan-order:001420 */
+
+
+        /* 中文字的字形偏上，图标跟着往上提一点，两者看起来才在一条线上 */
+
+/* @qingtuan-order:001421 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn svg {
+            display: block;
+            flex: 0 0 10px;
+            width: 10px;
+            height: 10px;
+            transform: translateY(-0.75px);
+        }
+
+/* @qingtuan-order:001422 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn:active {
+            transform: none !important;
+        }
+
+/* @qingtuan-order:001550 */
+
+
+        #voiceImageSettingsPage .vi-image-preview img {
+            border-radius: 8px !important;
+        }
+
+/* @qingtuan-order:002559 */
+
+
+        /* 语音与生图设置：主操作按钮参考 API 设置页配色 */
+
+/* @qingtuan-order:002560 */
+
+        #voiceImageSettingsPage .vi-actions .vi-btn:not(.primary) {
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:002561 */
+
+
+        #voiceImageSettingsPage .vi-actions .vi-btn.primary.ui-cyan-btn {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:002562 */
+
+
+        #voiceImageSettingsPage .vi-actions .vi-btn:active,        #voiceImageSettingsPage .vi-actions .vi-btn:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002563 */
+
+
+        #voiceImageSettingsPage .vi-actions .vi-btn:not(.primary):focus-visible{
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+        }
+
+/* @qingtuan-order:002564 */
+
+
+        #voiceImageSettingsPage .vi-actions .vi-btn.primary.ui-cyan-btn:focus-visible{
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003027 */
+
+
+        /* ---------------- 语音与生图设置 · 古早升级：98 式斜面统一；五扇窗换成录音机、媒体播放器、胶卷、相机、横线笔记本 ---------------- */
+
+/* @qingtuan-order:003028 */
+
+
+        /* ===== 通用 ===== */
+
+/* @qingtuan-order:003029 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:003030 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-label {
+            border-bottom-color: var(--win-deep) !important;
+        }
+
+/* @qingtuan-order:003031 */
+
+
+        #voiceImageSettingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:003032 */
+
+
+        /* 分页标签：凸起的标签页，选中那页和下面连成一片 */
+
+/* @qingtuan-order:003033 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .retro-tab {
+            border-color: var(--win-deep) !important;
+            border-radius: 3px 3px 0 0 !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px 0 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:003034 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .retro-tab.active {
+            background: var(--set-bg, #F9F9F7) !important;
+            border-bottom-color: #F9F9F7 !important;
+        }
+
+/* @qingtuan-order:003035 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .retro-tabs {
+            border-bottom-color: var(--win-deep) !important;
+        }
+
+/* @qingtuan-order:003036 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-row > .vi-input,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-secret-wrap,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-model-picker,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-builder-textarea {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003037 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-eye,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-fetch-arrow,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-character-add {
+            border: 1px solid var(--win-deep) !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:003038 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-choice-btn:active::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-eye:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-fetch-arrow:active,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-character-add:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003039 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-switch {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+        }
+
+/* @qingtuan-order:003040 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-switch:checked {
+            background: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:003041 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-switch::after {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 1px !important;
+            background: var(--win-face) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+        }
+
+/* @qingtuan-order:003042 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn,        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:focus-visible {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:003043 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary,        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary:focus-visible {
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+        }
+
+/* @qingtuan-order:003044 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:active {
+            box-shadow: var(--bevel-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:003045 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary:active {
+            box-shadow: var(--bevel-solid-in) !important;
+        }
+
+/* @qingtuan-order:003046 */
+
+
+        /* 两扇服务开关窗换掉「浏览器三颗点」，标题栏回到普通样式，标题前放各自的小图标 */
+
+/* @qingtuan-order:003047 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label {
+            justify-content: flex-start;
+            gap: 7px;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-weight: 600;
+        }
+
+/* @qingtuan-order:003048 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label::after,
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label::after {
+            position: static;
+            margin: 0 0 0 auto;
+            width: auto;
+            flex: 0 0 46px;
+            height: 12px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:003049 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:is(:nth-child(1), :nth-child(3)) .vi-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 12px;
+            background: var(--set-fill, var(--win-deep));
+        }
+
+/* @qingtuan-order:003050 */
+
+
+        /* ===== 1 语音服务：标题前一个小喇叭 ===== */
+
+/* @qingtuan-order:003051 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(1) .vi-label::before {
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M1%204h3l4-3v10L4%208H1z%27/%3E%3Cpath%20d%3D%27M10%203.5q2%202.5%200%205M11.5%201.5q3.5%204.5%200%209%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M1%204h3l4-3v10L4%208H1z%27/%3E%3Cpath%20d%3D%27M10%203.5q2%202.5%200%205M11.5%201.5q3.5%204.5%200%209%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+        }
+
+/* @qingtuan-order:003052 */
+
+
+        /* ===== 2 语音连接：媒体播放器，标题前一个播放三角；语速做成音量推子，下面一排刻度 ===== */
+
+/* @qingtuan-order:003053 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(2) .vi-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:003054 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(2) .vi-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            background: var(--set-fill, var(--win-deep));
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h12v12H0zM4%203v6l5-3z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h12v12H0zM4%203v6l5-3z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:003055 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(2) .vi-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:003056 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range-wrap {
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+/* @qingtuan-order:003057 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range-wrap::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            right: 58px;
+            bottom: 0;
+            height: 5px;
+            background: repeating-linear-gradient(90deg, var(--win-line) 0 1px, transparent 1px 10%) left / calc(100% + 1px) 100% no-repeat;
+        }
+
+/* @qingtuan-order:003058 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-runnable-track {
+            height: 6px;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-shade);
+        }
+
+/* @qingtuan-order:003059 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-webkit-slider-thumb {
+            width: 11px;
+            height: 20px;
+            margin-top: -8px;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+            clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
+        }
+
+/* @qingtuan-order:003060 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:003061 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player {
+            border: 1px solid var(--win-deep) !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:003062 */
+
+
+        /* ===== 3 生图服务：标题前一个小相框 ===== */
+
+/* @qingtuan-order:003063 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label::before {
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h14v12H0zM2%203v6h10V3z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%200h14v12H0zM2%203v6h10V3z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+        }
+
+/* @qingtuan-order:003064 */
+
+
+        /* ===== 4 生图连接：相机窗，标题前一台小相机；底下那行提示变成窗口的状态栏 ===== */
+
+/* @qingtuan-order:003065 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) .vi-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:003066 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) .vi-label::before {
+            content: '';
+            flex: 0 0 14px;
+            height: 12px;
+            background: var(--set-fill, var(--win-deep));
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%203h3.5l1.5-2h4l1.5%202H14v9H0zM7%204.5a2.8%202.8%200%201%200%200%205.6a2.8%202.8%200%201%200%200-5.6z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2712%27%3E%3Cpath%20d%3D%27M0%203h3.5l1.5-2h4l1.5%202H14v9H0zM7%204.5a2.8%202.8%200%201%200%200%205.6a2.8%202.8%200%201%200%200-5.6z%27%20fill-rule%3D%27evenodd%27/%3E%3C/svg%3E") no-repeat center / 14px 12px;
+        }
+
+/* @qingtuan-order:003067 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) .vi-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:003068 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) {
+            padding-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:003069 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) > .vi-note {
+            margin: 12px 0 0 !important;
+            padding: 4px 22px 4px 10px !important;
+            border-top: 1px solid var(--win-deep) !important;
+            background:
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
+                var(--win-bar) !important;
+            color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:003070 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(4) > .vi-note::before {
+            display: none !important;
+        }
+
+/* @qingtuan-order:003071 */
+
+
+        /* ===== 5 生图提示设置：横线笔记本，输入框是一页有横线的纸，左边一条红线换成主题色 ===== */
+
+/* @qingtuan-order:003072 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-label {
+            justify-content: flex-start;
+            gap: 7px;
+        }
+
+/* @qingtuan-order:003073 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-label::before {
+            content: '';
+            flex: 0 0 11px;
+            height: 13px;
+            border: 1px solid var(--win-deep);
+            background: repeating-linear-gradient(#FFFFFF 0 2px, var(--win-line) 2px 3px);
+        }
+
+/* @qingtuan-order:003074 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-label::after {
+            margin-left: auto;
+        }
+
+/* @qingtuan-order:003075 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(5) .vi-builder-textarea {
+            padding-left: 16px !important;
+            line-height: 22px !important;
+            background:
+                linear-gradient(90deg, transparent 9px, rgba(var(--theme-rgb), 0.9) 9px 10px, transparent 10px),
+                repeating-linear-gradient(transparent 0 21px, rgba(var(--theme-rgb), 0.45) 21px 22px) 0 6px,
+                #FFFFFF !important;
+            background-attachment: local !important;
+        }
+
+/* @qingtuan-order:003076 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-character-list > * {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:003092 */
+
+
+        /* ---------------- 语音与生图 · 语音条和生图结果窗跟上 98 式斜面 ---------------- */
+
+/* @qingtuan-order:003093 */
+
+        /* 语音条：播放 / 音量是凸起方钮，播放中保持按下；时间是深底读数小屏；进度是直角凹槽 */
+
+/* @qingtuan-order:003094 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play,
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: var(--win-face) !important;
+            color: var(--win-deep) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:003095 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player.is-playing .vi-audio-play,#voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted{
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003096 */
+
+#voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,#voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active{;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003097 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-time {
+            padding: 2px 6px;
+            background: var(--set-fill, var(--win-deep));
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.28);
+        }
+
+/* @qingtuan-order:003098 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-runnable-track {
+            height: 8px;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.18);
+        }
+
+/* @qingtuan-order:003099 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-webkit-slider-thumb {
+            width: 9px;
+            height: 16px;
+            margin-top: -5px;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:003100 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-moz-range-thumb {
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            background: var(--win-face);
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:003101 */
+
+
+        /* 生图结果窗：深外框 + 凸起斜面 + 硬投影，上面一条浅色标题栏，图片放进凹陷相框 */
+
+/* @qingtuan-order:003102 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview {
+            padding: 38px 16px 14px !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out), var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:003103 */
+
+
+        /* 原来的里层框线改成标题栏 */
+
+/* @qingtuan-order:003104 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::after {
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: auto;
+            height: 23px;
+            border: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 1px 1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:003105 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-meta-top::before {
+            top: 9px;
+            left: 10px;
+            background: var(--set-fill, var(--win-deep));
+        }
+
+/* @qingtuan-order:003106 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::before {
+            top: 9px;
+            right: 10px;
+        }
+
+/* @qingtuan-order:003107 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
+            padding: 3px !important;
+            border: 1px solid var(--win-deep) !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003108 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::before {
+            top: -32px;
+            left: 12px;
+            right: auto;
+            z-index: 2;
+            font-weight: 600;
+            text-align: left;
+        }
+
+/* @qingtuan-order:003109 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame::after {
+            display: none;
+        }
+
+/* @qingtuan-order:003110 */
+
+
+        /* 重新生成：凸起的小按钮 */
+
+/* @qingtuan-order:003111 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn {
+            margin-top: 10px;
+            padding: 4px 10px !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            text-decoration: none;
+            box-shadow: var(--bevel-out) !important;
+        }
+
+/* @qingtuan-order:003112 */
+
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-regenerate-btn:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:003113 */
+
+
+        /* 语音条外面那层旧容器比语音条高 6px，底下露出一截浅青底，去掉这层外框，只留语音条自己的窗框 */
+
+/* @qingtuan-order:003114 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage #voicePreview.vi-preview {
+            min-height: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:003657 */
+
+        /* 生图结果 preview.bmp 标题前的小图示：跟旁边的字一样深青灰 */
+
+/* @qingtuan-order:003658 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-preview::before { background: var(--sb-title) !important; }
+
+/* @qingtuan-order:003659 */
+
+        /* 重新生成：大小不动，配色立体感跟其他白色按钮一样 */
+
+/* @qingtuan-order:003660 */
+
+        #imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--sb-line) !important;
+            border-radius: 3px !important;
+            color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
+                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
+                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+        }
+
+/* @qingtuan-order:003661 */
+
+        #imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn:active {
+            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+        }
+
+/* @qingtuan-order:003662 */
+
+        /* 语音时间标签：青灰底 + 主题青字（跟访客计数器一样） */
+
+/* @qingtuan-order:003663 */
+
+        #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-time {
+            color: var(--theme-color) !important; -webkit-text-fill-color: var(--theme-color) !important;
+        }
+
+/* @qingtuan-order:003970 */
+
+
+        /* 下拉框：整颗不凹，只有右边那颗小方钮（::after）凹进去，里面的小三角（::before）跟着往下沉 1px */
+
+/* @qingtuan-order:003971 */
+
+        :is(html, #_#_#_#_#_) :is(.api-model-select-btn, .vi-choice-btn, .mcp-select-btn, .world-select-btn):active::after {
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+        }
+
+/* @qingtuan-order:003972 */
+
+        :is(html, #_#_#_#_#_) :is(.api-model-select-btn, .vi-choice-btn, .mcp-select-btn, .world-select-btn):active::before {
+            translate: 0 1px;
+        }

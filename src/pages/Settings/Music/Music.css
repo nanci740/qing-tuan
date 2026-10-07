@@ -1,0 +1,1228 @@
+/* @qingtuan-order:000431 */
+
+
+        /* ============ 音乐设置二级页面 ============ */
+
+/* @qingtuan-order:000432 */
+
+        #musicSettingsPage:not(.active) { display: none !important; }
+
+/* @qingtuan-order:000433 */
+
+        #musicSettingsPage.active { display: flex !important; }
+
+/* @qingtuan-order:000437 */
+
+
+        .music-settings-content {
+            flex: 1;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 12px 16px 28px;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+/* @qingtuan-order:000438 */
+
+        .music-settings-content::-webkit-scrollbar { display: none; }
+
+/* @qingtuan-order:000439 */
+
+        .music-setting-group { margin-bottom: 14px; }
+
+/* @qingtuan-order:000440 */
+
+        .music-setting-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-color);
+            letter-spacing: .8px;
+            margin-bottom: 6px;
+            padding-left: 6px;
+            border-left: 2px solid var(--theme-color);
+            line-height: 1.2;
+        }
+
+/* @qingtuan-order:000441 */
+
+        .music-setting-card {
+            background: #fff;
+            border: .5px solid #DDDDE2;
+            border-radius: var(--ui-radius);
+            padding: 13px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.02);
+        }
+
+/* @qingtuan-order:000442 */
+
+        .music-setting-card + .music-setting-card { margin-top: 8px; }
+
+/* @qingtuan-order:000443 */
+
+        .music-row {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: .5px solid #ECEDEF;
+        }
+
+/* @qingtuan-order:000444 */
+
+        .music-row:last-child { border-bottom: 0; }
+
+/* @qingtuan-order:000445 */
+
+        .music-row-copy { min-width: 0; }
+
+/* @qingtuan-order:000446 */
+
+        .music-row-title { font-size: 12.5px; font-weight: 600; color: var(--ui-text-primary); }
+
+/* @qingtuan-order:000447 */
+
+        .music-row-desc { margin-top: 2px; font-size: 10.5px; color: #98A2AE; line-height: 1.35; }
+
+/* @qingtuan-order:000448 */
+
+
+        .music-source-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* @qingtuan-order:000449 */
+
+        .music-action-btn {
+            min-height: 36px;
+            border: 1px solid rgba(var(--theme-rgb), .24);
+            border-radius: var(--ui-radius);
+            background: rgba(var(--theme-rgb), .10);
+            color: var(--ui-text-primary);
+            font-size: 11px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+/* @qingtuan-order:000450 */
+
+        .music-action-btn.secondary { background: #F5F6F7; border-color: #E6E8EB; color: #727C88; }
+
+/* @qingtuan-order:000451 */
+
+        .music-url-box { display: none; gap: 7px; margin-top: 9px; }
+
+/* @qingtuan-order:000452 */
+
+        .music-url-box.show { display: flex; }
+
+/* @qingtuan-order:000453 */
+
+        .music-url-input,
+        .music-meta-input {
+            min-width: 0;
+            flex: 1;
+            height: 34px;
+            border: 1px solid #E2E5E8;
+            border-radius: var(--ui-radius);
+            padding: 0 10px;
+            outline: none;
+            color: var(--ui-text-primary);
+            font-size: 11px;
+        }
+
+/* @qingtuan-order:000454 */
+
+        /* 输入框点进去不要变（古早风） */
+
+/* @qingtuan-order:000455 */
+
+        .music-url-save { flex: 0 0 auto; padding: 0 13px; }
+
+/* @qingtuan-order:000456 */
+
+
+        .music-playlist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+
+/* @qingtuan-order:000467 */
+
+
+        .music-mode-segment {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            padding: 4px;
+            background: #F4F5F6;
+            border-radius: var(--ui-radius);
+        }
+
+/* @qingtuan-order:000468 */
+
+        .music-mode-btn {
+            height: 30px; border: 0; border-radius: var(--ui-radius); background: transparent;
+            color: #8A949F; font-size: 10.5px; cursor: pointer;
+        }
+
+/* @qingtuan-order:000469 */
+
+        .music-mode-btn.active { background: #fff; color: var(--theme-deep); box-shadow: 0 1px 4px rgba(62,70,81,.08); }
+
+/* @qingtuan-order:000470 */
+
+
+        .music-switch {
+            width: 38px; height: 22px; flex: 0 0 auto; position: relative; border: 0; padding: 0;
+            border-radius: 999px; background: #E1E5E8; cursor: pointer; transition: background .2s ease;
+        }
+
+/* @qingtuan-order:000471 */
+
+        .music-switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
+            border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.12); transition: transform .2s ease;
+        }
+
+/* @qingtuan-order:000472 */
+
+        .music-switch.on { background: rgba(var(--theme-rgb), .72); }
+
+/* @qingtuan-order:000473 */
+
+        .music-switch.on::after { transform: translateX(16px); }
+
+/* @qingtuan-order:000474 */
+
+
+        .music-meta-grid { display: grid; gap: 8px; }
+
+/* @qingtuan-order:000475 */
+
+        .music-meta-field { display: grid; grid-template-columns: 58px 1fr; align-items: center; gap: 8px; }
+
+/* @qingtuan-order:000476 */
+
+        .music-meta-field label { font-size: 10.5px; color: #7F8994; }
+
+/* @qingtuan-order:000477 */
+
+        .music-cover-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+
+/* @qingtuan-order:000478 */
+
+        .music-cover-preview {
+            border-radius: var(--ui-radius); overflow: hidden;
+            border: 1px solid #E4E7EA; display: flex; align-items: center; justify-content: center;
+            font-size: 9px; flex: 0 0 auto;
+        }
+
+/* @qingtuan-order:000479 */
+
+        .music-cover-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* @qingtuan-order:000480 */
+
+        .music-cover-actions { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+
+/* @qingtuan-order:000481 */
+
+        .music-save-meta { margin-top: 10px; width: 100%; }
+
+/* @qingtuan-order:000482 */
+
+        .music-note { display: block; margin-top: 8px; font-size: 9.5px; color: #A2ABB5; line-height: 1.5; }
+
+/* @qingtuan-order:000500 */
+
+
+        .music-editor-target {
+            margin-top: 8px;
+            padding: 8px 10px;
+            border: 1px solid rgba(var(--theme-rgb), .24);
+            border-radius: var(--ui-radius);
+            background: rgba(var(--theme-rgb), .08);
+            color: var(--ui-text-primary);
+            font-size: 10.5px;
+        }
+
+/* @qingtuan-order:000501 */
+
+        .music-editor-target strong {
+            color: var(--theme-dark);
+            font-weight: 400;
+        }
+
+/* @qingtuan-order:000506 */
+
+        .music-cover-preview {
+            color: #B6BEC7 !important;
+        
+            width: 64px;
+            height: 64px;
+        }
+
+/* @qingtuan-order:000512 */
+
+        .music-cover-preview,
+        #musicToggleUrlBtn,
+        #musicRemoveCoverBtn,
+        .music-url-input,
+        .music-meta-input {
+            background: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:000637 */
+
+
+        /* ===== 音乐设置信息区按钮边框最终统一 ===== */
+
+/* @qingtuan-order:000638 */
+
+        .music-editor-target {
+            border-width: 1px !important;
+            border-color: rgba(var(--theme-rgb), .24) !important;
+        }
+
+/* @qingtuan-order:000639 */
+
+
+        /* ===== 音乐设置页：组件边框统一为 0.5px ===== */
+
+/* @qingtuan-order:000640 */
+
+        #musicSettingsPage .music-setting-card,
+        #musicSettingsPage .music-action-btn,
+        #musicSettingsPage .music-url-input,
+        #musicSettingsPage .music-meta-input,
+        #musicSettingsPage .music-track-item,
+        #musicSettingsPage .music-track-thumb,
+        #musicSettingsPage .music-cover-preview,
+        #musicSettingsPage .music-editor-target {
+            border-width: 0.5px !important;
+        }
+
+/* @qingtuan-order:000641 */
+
+
+        #musicSettingsPage .music-row {
+            border-bottom-width: 0.5px !important;
+        }
+
+/* @qingtuan-order:000642 */
+
+
+        #musicSettingsPage .music-track-item.active {
+            border-width: 0.5px !important;
+        }
+
+/* @qingtuan-order:000646 */
+
+
+        /* ===== 音乐设置页：浅青边框再深一点点 ===== */
+
+/* @qingtuan-order:000647 */
+
+        #musicSettingsPage .music-action-btn:not(.secondary):not(.ui-cyan-btn),
+        #musicSettingsPage .music-editor-target,
+        #musicSettingsPage .music-track-item.active,
+        #musicSettingsPage .music-url-save:not(.ui-cyan-btn),
+        #musicSettingsPage .music-save-meta:not(.ui-cyan-btn) {
+            border-color: rgba(var(--theme-rgb), .34) !important;
+        }
+
+/* @qingtuan-order:000661 */
+
+
+        /* 音乐信息里的提示条也按美化页浅青控件 */
+
+/* @qingtuan-order:000662 */
+
+        #musicSettingsPage .music-editor-target,
+        #musicSettingsPage .music-track-item.active {
+            border: .5px solid rgba(var(--theme-rgb), .42) !important;
+            background: rgba(var(--theme-rgb), .08) !important;
+        }
+
+/* @qingtuan-order:001197 */
+
+
+        /* ---------------- 音乐设置 · 古早小窗口：播放列表窗、iPod 屏、属性对话框 ---------------- */
+
+/* @qingtuan-order:001198 */
+
+        #musicSettingsPage {
+            background: var(--set-bg, #F9F9F7);
+        }
+
+/* @qingtuan-order:001199 */
+
+
+        /* 顶栏：程序标题栏「音乐设置.exe」，下接地址栏 */
+
+/* @qingtuan-order:001200 */
+
+        #musicSettingsPage .settings-header {
+            background: var(--set-fill, var(--win-deep));
+            border-bottom: 1px solid var(--win-line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+/* @qingtuan-order:001201 */
+
+
+        #musicSettingsPage .settings-header h2,
+        #musicSettingsPage .settings-header .back-btn {
+            color: #FFFFFF;
+        }
+
+/* @qingtuan-order:001202 */
+
+
+        #musicSettingsPage .settings-header h2::after {
+            content: '.exe';
+            margin-left: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+/* @qingtuan-order:001203 */
+
+
+        #musicSettingsPage .settings-header::after {
+            content: '';
+            width: 46px;
+            height: 12px;
+            background: #FFFFFF;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001204 */
+
+
+        #musicSettingsPage .retro-address-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px 6px;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001205 */
+
+
+        #musicSettingsPage .retro-address-label {
+            color: var(--win-ink);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:001206 */
+
+
+        #musicSettingsPage .retro-address-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 2px;
+            background: #FFFFFF;
+            color: var(--win-ink);
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001207 */
+
+
+        #musicSettingsPage .retro-address-icon {
+            flex: 0 0 13px;
+            height: 10px;
+            background: var(--theme-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2711%27%20viewBox%3D%270%200%2014%2011%27%3E%3Cpath%20d%3D%27M0%201.5A1.5%201.5%200%200%201%201.5%200h3.2l1.3%201.6h6.5A1.5%201.5%200%200%201%2014%203.1v6.4A1.5%201.5%200%200%201%2012.5%2011h-11A1.5%201.5%200%200%201%200%209.5z%27/%3E%3C/svg%3E") no-repeat center / 13px 10px;
+        }
+
+/* @qingtuan-order:001208 */
+
+
+        #musicSettingsPage .music-settings-content {
+            padding-top: 16px;
+        }
+
+/* @qingtuan-order:001209 */
+
+
+        /* 窗口本体 */
+
+/* @qingtuan-order:001210 */
+
+        #musicSettingsPage .music-settings-content > .music-setting-group {
+            margin-bottom: 16px;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001211 */
+
+
+        /* 标题栏 */
+
+/* @qingtuan-order:001212 */
+
+        #musicSettingsPage .music-settings-content > .music-setting-group .music-setting-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0;
+            padding: 6px 8px 6px 10px;
+            border-left: 0;
+            border-bottom: 1px solid var(--win-line);
+            background: var(--win-bar);
+            color: var(--win-ink);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.2;
+            box-shadow: inset 0 1px 0 var(--win-hi);
+        }
+
+/* @qingtuan-order:001213 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group .music-setting-label::after {
+            content: '';
+            flex: 0 0 46px;
+            height: 12px;
+            margin-left: auto;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
+        }
+
+/* @qingtuan-order:001214 */
+
+
+        /* 内容区：去掉原卡片外框 */
+
+/* @qingtuan-order:001215 */
+
+        #musicSettingsPage .music-settings-content .music-setting-card {
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001216 */
+
+
+        /* 1 音乐来源：播放列表窗，浅色标题栏，标题前一个主题色音符 */
+
+/* @qingtuan-order:001217 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(1) .music-setting-label::before {
+            content: '';
+            flex: 0 0 12px;
+            height: 12px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M9%2018V5l12-2v13%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718%27%20r%3D%273%27/%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2716%27%20r%3D%273%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M9%2018V5l12-2v13%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718%27%20r%3D%273%27/%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2716%27%20r%3D%273%27/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+        }
+
+/* @qingtuan-order:001218 */
+
+
+        /* 播放列表：一格一格的列表框，当前曲目浅主色底 */
+
+/* @qingtuan-order:001219 */
+
+        #musicSettingsPage .music-playlist {
+            gap: 0;
+            margin-top: 12px;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+/* @qingtuan-order:001220 */
+
+
+        #musicSettingsPage .music-playlist:empty {
+            display: none;
+        }
+
+/* @qingtuan-order:001221 */
+
+
+        #musicSettingsPage .music-settings-content .music-track-item,
+        #musicSettingsPage .music-settings-content .music-track-item.active {
+            border: 0 !important;
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+/* @qingtuan-order:001222 */
+
+
+        #musicSettingsPage .music-settings-content .music-track-item:last-child {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:001223 */
+
+
+        #musicSettingsPage .music-settings-content .music-track-item.active {
+            background: color-mix(in srgb, var(--theme-color) 16%, #FFFFFF) !important;
+        }
+
+/* @qingtuan-order:001224 */
+
+
+        #musicSettingsPage .music-settings-content .music-track-thumb {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 2px !important;
+        }
+
+/* @qingtuan-order:001225 */
+
+
+        #musicSettingsPage .music-settings-content .music-track-badge {
+            padding: 0 4px !important;
+            font-size: 8px !important;
+            line-height: 1.5 !important;
+            letter-spacing: 0.5px !important;
+            border: 1px solid var(--win-line);
+            border-radius: 2px;
+            background: var(--win-bar);
+            color: var(--win-ink);
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+        }
+
+/* @qingtuan-order:001226 */
+
+
+        #musicSettingsPage .music-note {
+            padding-top: 8px;
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+        }
+
+/* @qingtuan-order:001227 */
+
+
+        /* 2 播放设置：古早 iPod 屏幕，细灰条，左边均衡器小竖条，右边播放三角和电池 */
+
+/* @qingtuan-order:001228 */
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label {
+            justify-content: center;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            border-bottom-color: var(--win-deep);
+            box-shadow: none;
+        }
+
+/* @qingtuan-order:001229 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label::before {
+            content: '';
+            flex: 0 0 34px;
+            height: 10px;
+            margin-right: auto;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2710%27%20viewBox%3D%270%200%2014%2010%27%3E%3Crect%20x%3D%270%27%20y%3D%274%27%20width%3D%272%27%20height%3D%276%27/%3E%3Crect%20x%3D%274%27%20y%3D%271%27%20width%3D%272%27%20height%3D%279%27/%3E%3Crect%20x%3D%278%27%20y%3D%275%27%20width%3D%272%27%20height%3D%275%27/%3E%3Crect%20x%3D%2712%27%20y%3D%272%27%20width%3D%272%27%20height%3D%278%27/%3E%3C/svg%3E") no-repeat left center / 14px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2714%27%20height%3D%2710%27%20viewBox%3D%270%200%2014%2010%27%3E%3Crect%20x%3D%270%27%20y%3D%274%27%20width%3D%272%27%20height%3D%276%27/%3E%3Crect%20x%3D%274%27%20y%3D%271%27%20width%3D%272%27%20height%3D%279%27/%3E%3Crect%20x%3D%278%27%20y%3D%275%27%20width%3D%272%27%20height%3D%275%27/%3E%3Crect%20x%3D%2712%27%20y%3D%272%27%20width%3D%272%27%20height%3D%278%27/%3E%3C/svg%3E") no-repeat left center / 14px 10px;
+        }
+
+/* @qingtuan-order:001230 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(2) .music-setting-label::after {
+            flex-basis: 34px;
+            height: 10px;
+            background: var(--win-line);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2734%27%20height%3D%2710%27%20viewBox%3D%270%200%2034%2010%27%3E%3Cpath%20d%3D%27M1%201.5l5%203.5-5%203.5z%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2712.5%27%20y%3D%271.5%27%20width%3D%2717%27%20height%3D%277%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2714.5%27%20y%3D%273.5%27%20width%3D%2710%27%20height%3D%273%27%20fill%3D%27black%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M31%204v2%27%20stroke-width%3D%271.5%27/%3E%3C/svg%3E") no-repeat center / 34px 10px;
+        }
+
+/* @qingtuan-order:001231 */
+
+
+        #musicSettingsPage .music-settings-content .music-row {
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+        }
+
+/* @qingtuan-order:001232 */
+
+
+        #musicSettingsPage .music-settings-content .music-row:last-child {
+            border-bottom: 0 !important;
+        }
+
+/* @qingtuan-order:001233 */
+
+
+        /* 播放模式：凹槽里三颗按键，选中的凸起 */
+
+/* @qingtuan-order:001234 */
+
+        #musicSettingsPage .music-mode-segment {
+            background: #F4F6F6;
+        }
+
+/* @qingtuan-order:001235 */
+
+
+        #musicSettingsPage .music-mode-btn {
+            border: 1px solid transparent;
+            border-radius: 2px !important;
+        }
+
+/* @qingtuan-order:001236 */
+
+
+        /* 开关：凹陷的方槽，方形凸起滑块 */
+
+/* @qingtuan-order:001237 */
+
+        #musicSettingsPage .music-switch {
+            width: 38px;
+            height: 20px;
+            background: #EEF1F1;
+        }
+
+/* @qingtuan-order:001238 */
+
+
+        #musicSettingsPage .music-switch::after {
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #FFFFFF;
+            box-sizing: border-box;
+        }
+
+/* @qingtuan-order:001239 */
+
+
+        #musicSettingsPage .music-switch.on::after {
+            transform: translateX(18px);
+        }
+
+/* @qingtuan-order:001240 */
+
+
+        /* 3 音乐信息：属性对话框，右上只有「?」和关闭，底部状态栏带拖拽纹 */
+
+/* @qingtuan-order:001241 */
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-label::after {
+            flex-basis: 29px;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+            mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
+        }
+
+/* @qingtuan-order:001242 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-card {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+/* @qingtuan-order:001243 */
+
+
+        #musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 16px;
+            border-top: 1px solid var(--win-line);
+            background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px, var(--win-bar);
+            box-shadow: inset 0 1px 0 var(--win-hi);
+            pointer-events: none;
+        }
+
+/* @qingtuan-order:001244 */
+
+
+        /* 封面：像一张贴上去的相片 */
+
+/* @qingtuan-order:001245 */
+
+
+        /* 输入框凹陷 */
+
+/* @qingtuan-order:001246 */
+
+
+        /* 按钮：凸起斜面，按下凹陷；主按钮实心主色白字，次按钮白底 */
+
+/* @qingtuan-order:001247 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn,        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:focus-visible {
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+/* @qingtuan-order:001248 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary),        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible {
+            background: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:001249 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary,        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:focus-visible {
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            -webkit-text-fill-color: var(--win-ink) !important;
+        }
+
+/* @qingtuan-order:001250 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:active,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001251 */
+
+
+        /* 歌单行内操作：替换和删除是凸起小方块，图标与文字同色；拖拽纹淡一些 */
+
+/* @qingtuan-order:001252 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-actions {
+            gap: 6px;
+        }
+
+/* @qingtuan-order:001253 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete {
+            width: 26px !important;
+            min-width: 26px !important;
+            height: 26px !important;
+            border: 1px solid var(--win-line) !important;
+            border-radius: 3px !important;
+            background: #FFFFFF !important;
+            color: var(--win-ink) !important;
+            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+        }
+
+/* @qingtuan-order:001254 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit:active,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete:active {
+            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+        }
+
+/* @qingtuan-order:001255 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit svg,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete svg {
+            width: 14px;
+            height: 14px;
+        }
+
+/* @qingtuan-order:001256 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-drag {
+            width: 18px;
+            color: color-mix(in srgb, var(--theme-color) 45%, #9AA3A9);
+        }
+
+/* @qingtuan-order:001567 */
+
+
+        /* 音乐设置：按钮统一到美化页面 */
+
+/* @qingtuan-order:001568 */
+
+        #musicSettingsPage .music-action-btn.ui-cyan-btn:not(.secondary),
+        #musicSettingsPage .music-url-save.ui-cyan-btn,
+        #musicSettingsPage .music-save-meta.ui-cyan-btn {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:001569 */
+
+
+        /* 音乐设置白底按钮：对齐美化页面“恢复默认”按钮 */
+
+/* @qingtuan-order:001570 */
+
+        #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn {
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+            box-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+/* @qingtuan-order:001571 */
+
+
+        /* 触屏下不保留 hover / focus 的青色残留 */
+
+/* @qingtuan-order:001572 */
+
+        #musicSettingsPage .music-action-btn.ui-cyan-btn:active,        #musicSettingsPage .music-action-btn.ui-cyan-btn:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:001573 */
+
+
+        #musicSettingsPage .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible{
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+/* @qingtuan-order:001574 */
+
+
+        #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn:focus-visible{
+            background: #FFFFFF !important;
+            border-color: #E1E6E6 !important;
+            color: var(--ui-text-muted) !important;
+            -webkit-text-fill-color: #9AA3AC !important;
+        }
+
+/* @qingtuan-order:002853 */
+
+
+        /* ---------------- 音乐设置 · 古早升级：和设置主页 / 美化设置同一套 98 式斜面，颜色全部跟随主题色 ---------------- */
+
+/* @qingtuan-order:002854 */
+
+
+        /* 窗口：深外框 + 右下硬投影 */
+
+/* @qingtuan-order:002855 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content > .music-setting-group {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 3px !important;
+            box-shadow: var(--win-drop) !important;
+        }
+
+/* @qingtuan-order:002856 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content > .music-setting-group > .music-setting-label {
+            border-bottom-color: var(--win-deep);
+        }
+
+/* @qingtuan-order:002857 */
+
+
+        #musicSettingsPage .retro-address-field {
+            border: 1px solid var(--win-deep);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002858 */
+
+
+        /* 按钮：白底浅色凸起，主题色实心凸起，按下都凹进去 */
+
+/* @qingtuan-order:002859 */
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary{
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002860 */
+
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:active {
+            box-shadow: var(--bevel-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002861 */
+
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary){
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--theme-color) !important;
+            box-shadow: var(--bevel-solid-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002862 */
+
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):active {
+            box-shadow: var(--bevel-solid-in) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002863 */
+
+
+        /* 输入框：双层凹陷 */
+
+/* @qingtuan-order:002864 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-url-input,
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-meta-input {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002865 */
+
+
+        /* 1 音乐来源：像老播放器的播放列表框，底下一行写着现在有几首 */
+
+/* @qingtuan-order:002866 */
+
+        #musicSettingsPage#musicSettingsPage .music-playlist {
+            counter-reset: retro-track;
+            border: 1px solid var(--win-deep);
+            border-radius: 0;
+            box-shadow: var(--bevel-in);
+            padding: 2px;
+        }
+
+/* @qingtuan-order:002867 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-playlist::after {
+            content: '共 ' counter(retro-track) ' / 3 首';
+            display: block;
+            padding: 3px 8px;
+            border-top: 1px solid var(--win-line);
+            background: var(--win-face);
+            color: var(--win-ink);
+            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+            text-align: right;
+        }
+
+/* @qingtuan-order:002868 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-item {
+            counter-increment: retro-track;
+        }
+
+/* @qingtuan-order:002869 */
+
+
+        /* 当前曲目：像列表里被选中的那一行，主题色底 */
+
+/* @qingtuan-order:002870 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-item.active {
+            background: color-mix(in srgb, var(--theme-color) 35%, #FFFFFF) !important;
+        }
+
+/* @qingtuan-order:002871 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-thumb {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002872 */
+
+
+        /* 拖动 / 更换 / 删除：凸起的小方钮 */
+
+/* @qingtuan-order:002873 */
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit,
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            color: var(--win-deep) !important;
+            box-shadow: var(--bevel-out) !important;
+            transform: none !important;
+        }
+
+/* @qingtuan-order:002874 */
+
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit:active,
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete:active {
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002875 */
+
+
+        #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-track-badge {
+            border: 1px solid var(--sb-line, var(--win-deep)) !important;
+            border-radius: 0 !important;
+            /* 以「导入本地音乐」按钮的青为底：饱和度拉高一点、亮度压低一点点（带一丝灰），小标签才不会太淡 */
+            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            box-shadow: none !important;
+        }
+
+/* @qingtuan-order:002876 */
+
+
+        /* 2 播放设置：播放模式凹槽 + 选中项凸起，开关是凹槽里一个凸起方块 */
+
+/* @qingtuan-order:002877 */
+
+        #musicSettingsPage#musicSettingsPage .music-mode-segment {
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            background: var(--win-face);
+            box-shadow: var(--bevel-in);
+        }
+
+/* @qingtuan-order:002878 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-mode-btn.active {
+            border-color: var(--win-deep);
+            border-radius: 1px !important;
+            background: #FFFFFF;
+            box-shadow: var(--bevel-out);
+        }
+
+/* @qingtuan-order:002879 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-switch {
+            border: 1px solid var(--win-deep);
+            border-radius: 2px;
+            background: var(--win-face);
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+        }
+
+/* @qingtuan-order:002880 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-switch.on {
+            background: var(--theme-color);
+        }
+
+/* @qingtuan-order:002881 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-switch::after {
+            border: 1px solid var(--win-deep);
+            border-radius: 1px;
+            background: var(--win-face);
+            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade);
+        }
+
+/* @qingtuan-order:002882 */
+
+
+        /* 3 音乐信息：当前编辑是一格凹陷的信息栏，封面是凹陷相框 */
+
+/* @qingtuan-order:002883 */
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-editor-target {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: var(--win-face) !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002884 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content .music-cover-preview {
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 2px !important;
+            background: #FFFFFF !important;
+            box-shadow: var(--bevel-in) !important;
+        }
+
+/* @qingtuan-order:002885 */
+
+
+        #musicSettingsPage#musicSettingsPage .music-settings-content > .music-setting-group:nth-child(3) .music-setting-card::after {
+            content: '音乐属性';
+            padding-left: 8px;
+            border-top-color: var(--win-deep);
+            color: var(--win-ink);
+            font-size: 9.5px;
+            line-height: 15px;
+            letter-spacing: 1px;
+        }
+
+/* @qingtuan-order:003653 */
+
+        #musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn:active{;
+            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+        }
+
+/* @qingtuan-order:003869 */
+
+        /* 音乐设置：标题前的小图示、「音乐名称」→ 深青灰 */
+
+/* @qingtuan-order:003870 */
+
+        #musicSettingsPage .music-meta-field label { color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important; }
+
+/* @qingtuan-order:003871 */
+
+        /* 例外：曲目名「未选择音乐」维持点缀色 */
+
+/* @qingtuan-order:003872 */
+
+        #musicSettingsPage .music-editor-target strong { -webkit-text-fill-color: currentColor !important; }
+
+/* @qingtuan-order:003934 */
+
+        .cc-tag.on { background: var(--cc-head); color: #FFFFFF; text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); box-shadow: var(--cc-sunken); }
