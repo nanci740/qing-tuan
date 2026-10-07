@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { useAppearance } from '../../../providers/AppearanceProvider';
 import { hsvToHex } from '../../../utils/appearanceColors';
 import { showToast } from '../../../utils/toast';
+import { ImageStorageSettings } from './components/ImageStorageSettings';
 import { IconEditor } from './components/IconEditor';
 /** 原页面的静态结构；所有页面保持挂载，由原脚本切换显示状态。 */
 export function Appearance() {
@@ -686,6 +687,7 @@ export function Appearance() {
           </div>
           {"\n            "}
         </section>
+        <ImageStorageSettings open={appearance.pageOpen} />
         {"\n        "}
       </div>
       {"\n    "}

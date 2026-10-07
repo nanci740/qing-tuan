@@ -26,7 +26,7 @@ export function ImportPreviewModal({state,choose}:{state:ImportPreviewState|null
       <div className="world-confirm-title">{state.title}</div>
       <div className="world-confirm-message">{state.message}</div>
       <ul className="import-preview-list" aria-label="待导入内容">{state.rows.map((row,index)=><li key={index}><strong>{row.name}</strong><span>{row.detail}</span>{row.conflict&&<span className="import-preview-conflict">{row.conflict}</span>}</li>)}</ul>
-      <div className="world-import-choices">{columns.map((choices,index)=><div className="import-preview-actions-column" key={index}>{choices.map(choice=><PressedButton key={choice.value} type="button" className={'world-confirm-btn'+(choice.primary||choice.danger?' primary':'')+(choice.danger?' is-danger':'')} {...(state.kind==='world'?{'data-world-import':choice.value}:{'data-dossier-import':choice.value})} onClick={()=>choose(choice.value)}>{choice.label}</PressedButton>)}</div>)}</div>
+      <div className="world-import-choices">{columns.map((choices,index)=><div className="import-preview-actions-column" key={index}>{choices.map(choice=><PressedButton key={choice.value} type="button" className={'world-confirm-btn'+(choice.value==='merge'?' import-preview-merge':'')+(choice.primary||choice.danger?' primary':'')+(choice.danger?' is-danger':'')} {...(state.kind==='world'?{'data-world-import':choice.value}:{'data-dossier-import':choice.value})} onClick={()=>choose(choice.value)}>{choice.label}</PressedButton>)}</div>)}</div>
     </div>
   </div>,document.body);
 }

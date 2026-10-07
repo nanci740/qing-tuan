@@ -9034,8 +9034,8 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             color: var(--wcf-title) !important;
             -webkit-text-fill-color: var(--wcf-title) !important;
             text-shadow: none !important;
-            font-size: 12px !important;
-            letter-spacing: 1px !important;
+            font-size: var(--import-button-font-size, 12px) !important;
+            letter-spacing: var(--import-button-letter-spacing, 1px) !important;
         }
 
 /* @qingtuan-order:003999 */
@@ -9644,3 +9644,10 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 .import-preview-actions-column{display:flex;flex-direction:column;gap:9px;min-width:0}
 .import-preview-actions-column .world-confirm-btn{padding:6px 5px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;outline:none}
 .import-preview-actions-column .world-confirm-btn:focus-visible{outline:1px solid var(--wcf-title);outline-offset:3px}
+
+.import-preview-actions-column .import-preview-merge{white-space:nowrap;overflow-wrap:normal;--import-button-letter-spacing:0;--import-button-font-size:11px}
+
+.image-storage-summary{margin:0;color:var(--set-title,var(--win-ink));font-size:12px;line-height:1.7}
+.image-storage-summary div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:.5px solid color-mix(in srgb,var(--set-line,var(--win-line)) 40%,transparent)}
+.image-storage-summary dd{margin:0;text-align:right}
+.image-storage-note{margin:10px 0 0;color:var(--set-line,var(--win-line));font-size:11px;line-height:1.7}
