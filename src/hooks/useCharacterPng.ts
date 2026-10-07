@@ -35,9 +35,13 @@ export function useCharacterPng() {
     } catch { showToast('PNG 导出失败，请稍后再试'); }
   }
 
+  const importing=useRef(false);
   async function importPng(file?: File) {
     if (!file || !editor) return;
+    if(importing.current)return showToast('正在处理导入，请稍候');
+    importing.current=true;
     try {
+      if(file.size>20*1024*1024)throw Error('PNG 档案不可超过 20 MB');
       const imported = readDossierFromPng(await file.arrayBuffer());
       if (!imported.photoUrl) {
         imported.photoUrl = await new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -50,10 +54,11 @@ export function useCharacterPng() {
         imported.photoPositionY = 50;
       }
       const restored = await editor.commitImport(imported);
+      if(!restored)return;
       showToast('已从 PNG 导入 ' + (restored.name || restored.nickname || '新角色'));
     } catch (error) {
       showToast((error as { message?: string } | null)?.message || 'PNG 档案读取失败');
-    }
+    } finally {importing.current=false;}
   }
   return { editor, input, download, downloadLink, exportPng, importPng };
 }

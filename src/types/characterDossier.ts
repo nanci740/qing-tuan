@@ -30,7 +30,7 @@ export type ImportedDossier = Record<string, unknown>;
 export interface CharacterPngEditorBridge {
   container: HTMLElement | null;
   readCurrent: () => CharacterDossier;
-  commitImport: (record: ImportedDossier) => Promise<CharacterDossier>;
+  commitImport: (record: ImportedDossier) => Promise<CharacterDossier | null>;
 }
 export interface CharacterRelationship {
   id: string;
