@@ -23,7 +23,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
  const target=window as Window&{smallphoneApi?:ApiService};
  function later(callback:()=>void,delay:number){const timer=setTimeout(()=>{timers.current.delete(timer);callback();},delay);timers.current.add(timer);return timer;}
  const notice=(detail:string)=>window.dispatchEvent(new CustomEvent('qingtuan:toast',{detail}));
- function scroll(){const list=nodes.container();if(list)list.scrollTop=list.scrollHeight;}
+ function scroll(){nodes.scrollLatest();}
  function setChatReplyTyping(isTyping:boolean,chatKey=services.current!.currentKey()){
   if(!isActiveReplyChat(chatKey))return;const value=statusRef.current;
   if(isTyping){if(!preferences.current?.typingIndicator)return;update({resting:value.typing!=='true'?value.text.trim()||'陪着你':value.resting,typing:'true',key:String(chatKey),text:'对方正在输入…'});return;}

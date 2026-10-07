@@ -12,8 +12,8 @@ export function ChatComposerProvider({children}:{children:ReactNode}){
  function resize(){const input=field.current;if(!input)return;
   // 先以 auto 测量内容高度，再把测量结果交给 React；保留原 36–92px 范围。
   input.style.height='auto';const height=Math.min(Math.max(input.scrollHeight,36),92)+'px';input.style.height=height;
-  const next={text:input.value,height,disabled:!input.value.trim()&&!service.current?.voiceReady()};
-  const update=()=>setView(next);if(ready.current)flushSync(update);else update();
+  const next={text:'',height,disabled:!input.value.trim()&&!service.current?.voiceReady()};
+  const update=()=>setView(previous=>previous.text===next.text&&previous.height===next.height&&previous.disabled===next.disabled?previous:next);if(ready.current)flushSync(update);else update();
  }
  function read(key=currentKey()){return readChatDraft(key);}
  function load(){if(!field.current)return;field.current.value=read();resize();}

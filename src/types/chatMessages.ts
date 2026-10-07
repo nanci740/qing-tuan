@@ -9,7 +9,13 @@ export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: 
 export interface PeerMessageDetail { reply: string; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
 export interface MessageNodesApi {
   container(): HTMLDivElement|null;
-  rows(): HTMLElement[];
+  rows(limit?: number): HTMLElement[];
+  html(): string;
+  storedHtml(): string;
+  count(): number;
+  pinned(): HTMLElement | null;
+  scrollTo(row: HTMLElement, options?: ScrollIntoViewOptions): HTMLElement | null;
+  scrollLatest(force?: boolean): void;
   audioElements(): HTMLAudioElement[];
   resolve(element: HTMLElement): HTMLElement;
   attributes(element: HTMLElement, values: Record<string, unknown>): void; id(row: HTMLElement): string; pins(): void;
