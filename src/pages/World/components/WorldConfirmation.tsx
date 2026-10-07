@@ -1,7 +1,13 @@
-import { PressedButton } from '../../../components/shared/PressedButton';
-import { createPortal } from 'react-dom';
-import { useWorld } from '../../../providers/WorldProvider';
-type Confirmation=NonNullable<ReturnType<typeof useWorld>['confirmation']>;
-function ConfirmationView({state}:{state:Confirmation}){const world=useWorld();const imported=state.importCount!==undefined,deleted=/^删除/.test(state.title);return createPortal(<div key={state.revision} className={'world-confirm-overlay'+(imported?' world-json-import-overlay':state.danger?' world-overwrite-confirm':'')+(state.open?' open':'')} onClick={event=>{if(event.target===event.currentTarget)world.finishConfirm(imported?'cancel':false);}}>{imported?<div className="world-confirm-card" role="dialog" aria-modal="true" aria-label="导入世界书">{'\n        '}<div className="world-confirm-title">导入世界书</div>{'\n        '}<div className="world-confirm-message">{state.message}</div>{'\n        '}<div className="world-import-choices">{'\n          '}<PressedButton type="button" className="world-confirm-btn primary" data-world-import="append" onClick={()=>world.finishConfirm('append')}>新增导入</PressedButton>{'\n          '}<PressedButton type="button" className="world-confirm-btn" data-world-import="replace" onClick={()=>world.finishConfirm('replace')}>覆盖全部世界书</PressedButton>{'\n          '}<PressedButton type="button" className="world-confirm-btn" data-world-import="cancel" onClick={()=>world.finishConfirm('cancel')}>取消</PressedButton>{'\n        '}</div></div>:<>{'\n      '}<div className="world-confirm-card" role="dialog" aria-modal="true" aria-label={state.title}>{'\n        '}<div className="world-confirm-title">{state.title}</div>{'\n        '}<div className="world-confirm-message">{state.message}</div>{'\n        '}<div className="world-confirm-actions">{'\n          '}<PressedButton className="world-confirm-btn" type="button" data-world-confirm="cancel" onClick={()=>world.finishConfirm(false)}>取消</PressedButton>{'\n          '}<PressedButton className={'world-confirm-btn primary'+(deleted?' is-danger':'')} type="button" data-world-confirm="ok" onClick={()=>world.finishConfirm(true)}>{deleted?'删除':'确认'}</PressedButton>{'\n        '}</div>{'\n      '}</div></>}</div>,document.body);}
-
-export function WorldConfirmation(){const world=useWorld();return <>{[...world.retiringConfirmations,...(world.confirmation?[world.confirmation]:[])].map(state=><ConfirmationView state={state} key={state.revision}/>)}</>;}
+import {PressedButton} from '../../../components/shared/PressedButton';
+import {ImportPreviewModal} from '../../../components/shared/ImportPreviewModal';
+import {createPortal} from 'react-dom';
+import {useWorld} from '../../../providers/WorldProvider';
+export function WorldConfirmation(){
+  const world=useWorld(),state=world.confirmation;
+  return <><ImportPreviewModal state={world.importPreview.state} choose={world.importPreview.choose}/>{state&&createPortal(<div className={'world-confirm-overlay'+(state.danger?' world-overwrite-confirm':'')+(state.open?' open':'')} onClick={event=>{if(event.target===event.currentTarget)world.finishConfirm(false);}}>
+    <div className="world-confirm-card" role="dialog" aria-modal="true" aria-label={state.title}>
+      <div className="world-confirm-title">{state.title}</div><div className="world-confirm-message">{state.message}</div>
+      <div className="world-confirm-actions"><PressedButton className="world-confirm-btn" type="button" data-world-confirm="cancel" onClick={()=>world.finishConfirm(false)}>取消</PressedButton><PressedButton className={'world-confirm-btn primary'+(state.danger?' is-danger':'')} type="button" data-world-confirm="ok" onClick={()=>world.finishConfirm(true)}>{/^删除/.test(state.title)?'删除':'确认'}</PressedButton></div>
+    </div>
+  </div>,document.body)}</>;
+}

@@ -1,0 +1,82 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import http from 'node:http';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import ts from 'typescript';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const require=createRequire(process.env.QT_TEST_RUNTIME?path.join(process.env.QT_TEST_RUNTIME,'package.json'):import.meta.url);
+const {chromium:pw}=require('playwright');const mod=require('@sparticuz/chromium');const chromium=mod.default||mod;
+const pngCode=ts.transpileModule(fs.readFileSync(path.join(root,'src/utils/characterPng.ts'),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText;
+const server=http.createServer((req,res)=>{
+ if(req.url==='/characterPng.js'){res.setHeader('Content-Type','text/javascript');return res.end(pngCode);}
+ const rel=req.url.split('?')[0].replace(/^\/qing-tuan\//,'');
+ try{const file=path.join(root,'dist',rel||'index.html');res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.webp')?'image/webp':'text/html');res.end(fs.readFileSync(file));}catch{res.statusCode=404;res.end();}
+});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const origin=`http://127.0.0.1:${server.address().port}`;
+const browser=await pw.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||await chromium.executablePath(),args:process.env.QT_DISABLE_GPU?['--no-sandbox','--disable-gpu','--use-gl=disabled']:chromium.args.filter(a=>a!=='--single-process'),headless:true});
+const checks=[];const check=(name,condition)=>{if(!condition)throw Error(name);checks.push(name);};
+try {
+ const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const initial=[{id:'keep-id',name:'已有设定',description:'旧描述',bindId:'bound-role',enabled:true,entries:[{id:'old-entry',title:'旧条目',content:'旧内容'}]},{id:'other-id',name:'其他设定',bindId:'all',enabled:true,entries:[]}];
+ await page.addInitScript(values=>{localStorage.setItem('smallphone_splash_mode','off');if(!localStorage.getItem('smallphone_world_books_v1'))localStorage.setItem('smallphone_world_books_v1',JSON.stringify(values));},initial);
+ await page.goto(origin+'/qing-tuan/');await page.waitForSelector('#worldImportJsonFile',{state:'attached'});
+ await page.evaluate(()=>{window.toasts=[];window.addEventListener('qingtuan:toast',e=>window.toasts.push(e.detail));window.originalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(window.failKey===k)throw Error('simulated quota');return window.originalSet.call(this,k,v);};});
+ const click=s=>page.evaluate(s=>document.querySelector(s).click(),s);
+ const fill=(selector,value)=>page.evaluate(({selector,value})=>{const e=document.querySelector(selector);Object.getOwnPropertyDescriptor(e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,'value').set.call(e,value);e.dispatchEvent(new Event('input',{bubbles:true}));},{selector,value});
+ const ls=key=>page.evaluate(key=>localStorage.getItem(key),key);const worlds=async()=>JSON.parse(await ls('smallphone_world_books_v1'));
+ const importWorld=async books=>{await page.locator('#worldImportJsonFile').setInputFiles({name:'books.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({books}))});await page.waitForSelector('.import-preview-overlay',{state:'attached'});};
+ const incoming=[{name:'已有设定',bindId:'wrong-role',entries:[{title:'新条目',content:'新内容'}]},{name:'新世界书',entries:[{title:'另一条目',content:'另一段设定'}]}];
+ await click('[data-app-icon-key="world"]');await importWorld(incoming);
+ check('world preview lists names, counts and duplicates',await page.locator('.import-preview-list').textContent().then(t=>t.includes('已有设定')&&t.includes('新世界书')&&t.includes('1 个条目')&&t.includes('同名')));
+ check('world preview does not write before confirmation',(await worlds()).length===2);
+ const bounds=await page.locator('.import-preview-overlay .world-confirm-card').boundingBox();check('mobile preview fits viewport',bounds.x>=0&&bounds.x+bounds.width<=390&&bounds.y>=0&&bounds.y+bounds.height<=844);
+ await page.screenshot({path:path.join(root,'..','import-world-preview.png')});
+ await click('[data-world-import="cancel"]');check('cancel leaves world books unchanged',JSON.stringify(await worlds())===JSON.stringify(initial));
+ await importWorld(incoming);await click('[data-world-import="merge"]');await page.waitForSelector('[data-world-confirm="ok"]',{state:'attached'});await click('[data-world-confirm="ok"]');await page.waitForFunction(()=>JSON.parse(localStorage.getItem('smallphone_world_books_v1')).length===3);
+ const merged=await worlds();check('same-name overwrite preserves ID, role binding and unrelated books',merged.find(b=>b.name==='已有设定').id==='keep-id'&&merged.find(b=>b.name==='已有设定').bindId==='bound-role'&&merged.find(b=>b.id==='other-id')&&merged.find(b=>b.id==='keep-id').entries[0].content==='新内容');
+ await importWorld([incoming[0]]);await click('[data-world-import="append"]');await page.waitForFunction(()=>JSON.parse(localStorage.getItem('smallphone_world_books_v1')).length===4);
+ check('append creates distinct IDs',new Set((await worlds()).map(b=>b.id)).size===4);
+ await importWorld([incoming[0]]);check('ambiguous same-name overwrite is not offered',await page.locator('[data-world-import="merge"]').count()===0);await click('[data-world-import="cancel"]');
+ const before=await ls('smallphone_world_books_v1');await importWorld([{name:'覆盖全部测试',entries:[]}]);await click('[data-world-import="replace"]');await page.waitForSelector('[data-world-confirm="cancel"]',{state:'attached'});await click('[data-world-confirm="cancel"]');check('cancel final overwrite preserves all books',await ls('smallphone_world_books_v1')===before);
+ await importWorld([{name:'失败测试',entries:[]}]);await page.evaluate(()=>{window.failKey='smallphone_world_books_v1';window.toasts=[];});await click('[data-world-import="append"]');await page.waitForFunction(()=>window.toasts.some(t=>t.includes('保存失败')));check('world storage failure preserves old data',await ls('smallphone_world_books_v1')===before);await page.evaluate(()=>window.failKey='');
+ await page.locator('#worldImportJsonFile').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({books:[{name:'坏文件',entries:[null]}]}))});await page.waitForFunction(()=>window.toasts.some(t=>t.includes('无效条目')));check('invalid entry does not get silently dropped or imported',await ls('smallphone_world_books_v1')===before);
+ // Build a real PNG with the existing independent encoder; no reference repository code is used.
+ const pngBase=[...fs.readFileSync(path.join(root,'reference/memory-fixture.png'))];
+ const svg='data:image/svg+xml;base64,'+Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="5" height="5"><rect width="5" height="5" fill="red"/></svg>').toString('base64');
+ const makePng=async record=>Buffer.from(await page.evaluate(async({base,record})=>{const api=await import('/characterPng.js');return [...new Uint8Array(await(await api.attachDossierToPng(new Blob([new Uint8Array(base)],{type:'image/png'}),record)).arrayBuffer())];},{base:pngBase,record}));
+ await click('[data-dock-icon-key="chat"]');await click('#chatAddCharacterBtn');await fill('[data-field="name"]','同名角色');await click('.cc-save');
+ const oldCharacters=JSON.parse(await ls('smallphone_chat_characters_v1'));const originalCharacter=oldCharacters.find(c=>c.name==='同名角色');
+ await click(`[data-character-id="${originalCharacter.archiveId}"]`);await fill('#chatComposeField','覆盖档案也要保留的聊天');await click('#chatSendBtn');
+ await page.waitForFunction(async key=>{const db=await new Promise(resolve=>{const r=indexedDB.open('qingtuan_chat_records_v1');r.onsuccess=()=>resolve(r.result);});try{return await new Promise(resolve=>{const r=db.transaction('chats').objectStore('chats').get(key);r.onsuccess=()=>resolve(r.result?.html.includes('覆盖档案也要保留的聊天'));});}finally{db.close();}},originalCharacter.archiveId);
+ await click('#chatRoomBack');await click('#chatAddCharacterBtn');
+ const card={name:'同名角色',secretMemo:'导入的新备忘录',appearanceText:'新外貌',photoUrl:svg};const bytes=await makePng(card);
+ const upload=async buffer=>{await page.locator('.cc-import-input').setInputFiles({name:'角色.png',mimeType:'image/png',buffer});await page.waitForSelector('[data-dossier-import="append"]',{state:'attached'});};
+ const dossierBefore=await ls('smallphone_dossier_records_v1');await upload(bytes);
+ check('dossier preview lists name, settings and duplicate',await page.locator('.import-preview-list').textContent().then(t=>t.includes('同名角色')&&t.includes('2 项非空设定')&&t.includes('同名')));
+ check('dossier preview is above archive and has no horizontal overflow',await page.locator('.import-preview-overlay').evaluate(e=>getComputedStyle(e).zIndex==='6000'&&document.documentElement.scrollWidth<=window.innerWidth));
+ await page.screenshot({path:path.join(root,'..','import-dossier-preview.png')});
+ await page.keyboard.press('Escape');check('escape cancels dossier without modifying storage',await ls('smallphone_dossier_records_v1')===dossierBefore);
+ await upload(bytes);await click('[data-dossier-import="replace"]');await page.waitForSelector('.sp-confirm-btn.is-primary',{state:'attached'});await click('.sp-confirm-btn.is-primary');await page.waitForFunction(()=>JSON.parse(localStorage.getItem('smallphone_dossier_records_v1')).some(r=>r.secretMemo==='导入的新备忘录'));
+ const afterCharacters=JSON.parse(await ls('smallphone_chat_characters_v1'));check('dossier overwrite preserves identity and avoids duplicate chat',afterCharacters.length===oldCharacters.length&&afterCharacters.find(c=>c.name==='同名角色').archiveId===originalCharacter.archiveId&&afterCharacters.find(c=>c.name==='同名角色').dossierId===originalCharacter.dossierId);
+ check('dossier overwrite retains conversation',await page.evaluate(async key=>{const db=await new Promise(resolve=>{const r=indexedDB.open('qingtuan_chat_records_v1');r.onsuccess=()=>resolve(r.result);});try{return await new Promise(resolve=>{const r=db.transaction('chats').objectStore('chats').get(key);r.onsuccess=()=>resolve(r.result.html.includes('覆盖档案也要保留的聊天'));});}finally{db.close();}},originalCharacter.archiveId));
+ const storedDossiers=await ls('smallphone_dossier_records_v1'),storedCharacters=await ls('smallphone_chat_characters_v1');
+ await upload(await makePng({...card,name:'失败的新角色'}));await page.evaluate(()=>{window.failKey='smallphone_chat_characters_v1';window.toasts=[];});await click('[data-dossier-import="append"]');await page.waitForFunction(()=>window.toasts.some(t=>t.includes('聊天角色保存失败')));
+ check('failed chat-list import rolls back dossier and leaves characters unchanged',await ls('smallphone_dossier_records_v1')===storedDossiers&&await ls('smallphone_chat_characters_v1')===storedCharacters&&!await page.evaluate(()=>window.toasts.some(t=>t.includes('已从 PNG 导入'))));
+ await page.evaluate(()=>window.failKey='');await upload(bytes);await click('[data-dossier-import="append"]');await page.waitForFunction(count=>JSON.parse(localStorage.getItem('smallphone_chat_characters_v1')).length===count+1,oldCharacters.length);
+ check('dossier append creates separate IDs',new Set(JSON.parse(await ls('smallphone_chat_characters_v1')).map(c=>c.dossierId)).size===oldCharacters.length+1);
+ await upload(bytes);check('ambiguous dossier overwrite is not offered',await page.locator('[data-dossier-import="replace"]').count()===0);await click('[data-dossier-import="cancel"]');
+ await page.locator('.cc-import-input').setInputFiles({name:'not-card.png',mimeType:'image/png',buffer:Buffer.from('not PNG')});await page.waitForFunction(()=>window.toasts.some(t=>t.includes('不是有效的 PNG')));check('invalid PNG is rejected',true);
+
+ const roleCount=JSON.parse(await ls('smallphone_chat_characters_v1')).length;
+ await page.locator('.cc-import-input').setInputFiles({name:'bad-list.png',mimeType:'image/png',buffer:await makePng({...card,selectedTags:{wrong:'format'}})});await page.waitForFunction(()=>window.toasts.some(t=>t.includes('列表格式异常')));check('malformed dossier list fields are rejected without adding a role',JSON.parse(await ls('smallphone_chat_characters_v1')).length===roleCount);
+ await click('.cc-close');await click('[data-app-icon-key="world"]');
+ await importWorld(Array.from({length:25},(_,i)=>({name:'长列表'+i,entries:[]})));
+ check('large import preview uses a scrolling list',await page.locator('.import-preview-list').evaluate(e=>e.scrollHeight>e.clientHeight));
+ await page.setViewportSize({width:844,height:390});check('landscape import card stays within screen',await page.locator('.import-preview-overlay .world-confirm-card').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=window.innerHeight;}));await click('[data-world-import="cancel"]');
+ await importWorld([{name:'全部替换后唯一世界书',entries:[{title:'完整条目',content:'完整设定'}]}]);await click('[data-world-import="replace"]');await page.waitForSelector('[data-world-confirm="ok"]',{state:'attached'});await click('[data-world-confirm="ok"]');await page.waitForFunction(()=>JSON.parse(localStorage.getItem('smallphone_world_books_v1')).length===1);
+ check('confirmed replace-all imports complete contents',(await worlds())[0].name==='全部替换后唯一世界书'&&(await worlds())[0].entries[0].content==='完整设定');
+ await page.reload();await page.waitForSelector('#worldImportJsonFile',{state:'attached'});check('imported world and dossier data survive refresh',(await worlds())[0].name==='全部替换后唯一世界书'&&JSON.parse(await ls('smallphone_chat_characters_v1')).some(c=>c.secretMemo==='导入的新备忘录'));
+ check('no browser runtime errors',errors.length===0);console.log(JSON.stringify({passed:checks.length,checks},null,2));
+}finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

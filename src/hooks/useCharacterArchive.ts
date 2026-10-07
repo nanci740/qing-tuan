@@ -1,3 +1,5 @@
+import {useImportPreview} from './useImportPreview';
+import {importNameKey} from '../utils/importMatching';
 import { preparePhotoRecords } from '../utils/imageAssets';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -9,6 +11,7 @@ import { showToast } from '../utils/toast';
 
 /** 资料沿用旧档案夹同一份，按保存才写进聊天角色清单；全部档案状态和计时器在 React 内。 */
 export function useCharacterArchive() {
+  const importPreview=useImportPreview(),importCommitBusy=useRef(false);
   const [services, setServices] = useState<CharacterChatServices | null>(null);
   const chat = useRef<CharacterChatServices | null>(null);
   const [dataState, setDataState] = useState<{
@@ -67,6 +70,7 @@ export function useCharacterArchive() {
     window.dispatchEvent(new Event('qingtuan:character-menu-close'));
   }
   function patch(fields: Partial<CharacterDossier>) {
+    if(importCommitBusy.current)return;
     const record = current();
     if (!record) return;
     Object.assign(record, fields);
@@ -77,6 +81,7 @@ export function useCharacterArchive() {
     publish('fields');
   }
   function open(target?: unknown) {
+    if(importCommitBusy.current)return;
     if (!mounted.current) {
       queuedOpen.current = {
         target
@@ -98,6 +103,8 @@ export function useCharacterArchive() {
     flushSync(() => setVisible(true));
   }
   function close() {
+    if(importCommitBusy.current)return showToast('正在导入档案，请稍候');
+    importPreview.choose('cancel');
     window.clearTimeout(saveTimer.current);
     // 完全空白的新草稿不留下来。
     data.current.records = data.current.records.filter(record => record.isStamped || record.name || record.nickname || record.photoUrl);
@@ -109,6 +116,7 @@ export function useCharacterArchive() {
     window.setTimeout(() => chat.current?.syncIdentity(), 250);
   }
   function newRecord() {
+    if(importCommitBusy.current)return;
     let draft = data.current.records.findIndex(record => !record.isStamped && !record.name && !record.nickname && !record.photoUrl);
     if (draft < 0) {
       data.current.records.push(blankCharacterRecord(nextCharacterId(data.current.records)));
@@ -119,10 +127,12 @@ export function useCharacterArchive() {
     panel('profile');
   }
   function selectRecord(index: number) {
+    if(importCommitBusy.current)return;
     data.current.index = index;
     publish('form');
   }
   async function saveRecord() {
+    if(importCommitBusy.current)return;
     const record = current(),
       displayName = (record.name || record.nickname || '').trim();
     if (!displayName) {
@@ -149,6 +159,7 @@ export function useCharacterArchive() {
     }
   }
   async function deleteRecord() {
+    if(importCommitBusy.current)return;
     const record = current(),
       label = (record.name || record.nickname || '').trim() || '这个角色';
     const ok = await chat.current!.confirm({
@@ -171,28 +182,37 @@ export function useCharacterArchive() {
     publish('form');
   }
   async function commitImport(imported: ImportedDossier) {
-    // 正在填的空白草稿直接被导入的角色取代。
-    const record = current();
-    if (record && !record.isStamped && !record.name && !record.nickname && !record.photoUrl) data.current.records.splice(data.current.index, 1);
-    const base = blankCharacterRecord(nextCharacterId(data.current.records));
-    const restored = {
-      ...base,
-      ...imported,
-      id: base.id,
-      fileNo: base.fileNo,
-      tabLabel: base.tabLabel,
-      sealNo: base.sealNo,
-      isStamped: true,
-      stampDate: imported.stampDate || todayStampDate()
-    } as CharacterDossier;
-    data.current.records.push(restored);
-    data.current.index = data.current.records.length - 1;
-    updateOwner();
-    persist();
-    await chat.current!.saveToChat(restored);
-    publish('form');
-    panel('profile');
-    return restored;
+    if(!imported||typeof imported!=='object'||Array.isArray(imported))throw Error('不是有效的角色档案');
+    for(const key of ['name','nickname','photoUrl','quote','appearanceText','memoriesText','otherSettingsText','speechHabitsText','secretMemo','onlineStyle','offlineStyle'])if(imported[key]!==undefined&&typeof imported[key]!=='string')throw Error('角色档案字段格式异常');
+    const label=String(imported.name||imported.nickname||'').trim();if(!label)throw Error('角色档案缺少名字');
+    for(const [key,value] of Object.entries(blankCharacterRecord(1)))if(typeof value==='string'&&imported[key]!==undefined&&typeof imported[key]!=='string')throw Error('角色档案字段格式异常');
+    for(const key of ['selectedTags','customTags','relationships'])if(imported[key]!==undefined&&!Array.isArray(imported[key]))throw Error('角色档案列表格式异常');
+    for(const key of ['selectedTags','customTags'])if(Array.isArray(imported[key])&&(imported[key] as unknown[]).some(value=>typeof value!=='string'))throw Error('角色档案标签格式异常');
+    if(Array.isArray(imported.relationships)&&imported.relationships.some(value=>!value||typeof value!=='object'||Array.isArray(value)))throw Error('角色关系格式异常');
+    const records=data.current.records,before=JSON.stringify(data.current.records);
+    const matches=records.filter(record=>record.isStamped&&importNameKey(record.name||record.nickname)===importNameKey(label));
+    const mode=await importPreview.open({title:'导入角色档案',kind:'dossier',message:'请核对角色资料，再选择导入方式。覆盖只替换档案资料，保留原来的聊天记录。',rows:[{name:label,detail:`${imported.photoUrl?'含角色图片':'无角色图片'} · ${['quote','appearanceText','speechHabitsText','onlineStyle','offlineStyle','memoriesText','otherSettingsText','secretMemo','favoriteThings','dislikes'].filter(key=>typeof imported[key]==='string'&&String(imported[key]).trim()).length} 项非空设定`,conflict:matches.length?`已有 ${matches.length} 份同名档案${matches.length>1?'，请新增或先调整名称':''}`:undefined}],choices:[{value:'append',label:'新增档案',primary:true},...(matches.length===1?[{value:'replace',label:'覆盖同名档案'}]:[]),{value:'cancel',label:'取消'}]});
+    if(mode==='cancel')return null;
+    if(data.current.records!==records||JSON.stringify(data.current.records)!==before)throw Error('档案已发生变化，请重新导入并核对');
+    if(mode==='replace'&&!await chat.current!.confirm({title:'覆盖同名档案',message:`替换「${label}」的资料，聊天记录保留。`,confirmText:'覆盖资料',danger:true}))return null;
+    if(data.current.records!==records||JSON.stringify(data.current.records)!==before)throw Error('档案已发生变化，请重新导入并核对');
+    importCommitBusy.current=true;window.clearTimeout(saveTimer.current);
+    try {
+      const target=mode==='replace'?matches[0]:null;
+      const kept=records.filter(record=>record.isStamped||record.name||record.nickname||record.photoUrl);
+      const base=target||blankCharacterRecord(nextCharacterId(records));
+      const restored={...blankCharacterRecord(Number(base.id)||1),...imported,id:base.id,fileNo:base.fileNo,tabLabel:base.tabLabel,sealNo:base.sealNo,isStamped:true,name:label,stampDate:imported.stampDate||todayStampDate()} as CharacterDossier;
+      await preparePhotoRecords([restored]);
+      if(data.current.records!==records||JSON.stringify(data.current.records)!==before)throw Error('档案已发生变化，请重新导入并核对');
+      const next=target?kept.map(record=>record.id===target.id?restored:record):[...kept,restored];
+      const storedBefore=readCharacterRecords();
+      if(!writeCharacterRecords(next))throw Error('档案保存失败，原数据已保留');
+      if(!await chat.current!.saveToChat(restored)){
+        if(!writeCharacterRecords(storedBefore))throw Error('聊天角色保存失败，原档案恢复失败，请检查存储空间');
+        throw Error('聊天角色保存失败，原档案已保留');
+      }
+      data.current={records:next,index:next.findIndex(record=>record.id===restored.id)};publish('form');panel('profile');return restored;
+    } finally {importCommitBusy.current=false;}
   }
   function captureClick(event: MouseEvent<HTMLDivElement>) {
     const target = event.target;
@@ -258,6 +278,7 @@ export function useCharacterArchive() {
     }
   }, [services]);
   return {
+    importPreview,
     services,
     visible,
     overlay,
