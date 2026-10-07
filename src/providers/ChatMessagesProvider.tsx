@@ -266,7 +266,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   return <BindingsContext.Provider value={bindings}><Context.Provider value={{nodes:windowed.nodes,hidden:windowed.hidden,loadMore,register:registerRef,list:registerList,audio:onAudio,api}}>{children}</Context.Provider></BindingsContext.Provider>;
 }
 export function useChatMessages(){const value=useContext(Context);if(!value)throw Error('ChatMessagesProvider is required');return value;}
-export function ChatMessageContent(){const {nodes,hidden,loadMore}=useChatMessages();return <>{hidden>0&&<button data-chat-load-more type="button" className="chat-date-divider" onClick={loadMore} style={{display:'block',margin:'8px auto',padding:'6px 12px',background:'transparent',border:0,font:'inherit',color:'inherit',cursor:'pointer'}} aria-label="加载更早的聊天记录">查看更多消息</button>}{nodes.map(node=><MessageNodeView key={node.key} node={node}/>)}</>;}
+export function ChatMessageContent(){const {nodes,hidden,loadMore}=useChatMessages();return <>{hidden>0&&<button data-chat-load-more type="button" className="chat-history-load-more" onClick={loadMore} aria-label="加载更早的聊天记录">查看更多消息</button>}{nodes.map(node=><MessageNodeView key={node.key} node={node}/>)}</>;}
 const MessageNodeView=memo(function MessageNodeView({node}:{node:MessageNode}){if(node.kind==='comment')return null;if(node.kind==='text')return <Fragment>{node.text}</Fragment>;return <MessageElementView node={node}/>;});
 function MessageElementView({node}:{node:MessageElement}){
   const {register,audio}=useContext(BindingsContext)!;const prior=useRef<NativeAttribute[]>([]);

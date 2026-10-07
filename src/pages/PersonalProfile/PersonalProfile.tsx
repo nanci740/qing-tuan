@@ -176,7 +176,7 @@ export function PersonalProfile() {
 </div>
 <div className={"mh-mood"}>
 <span className={"mh-mood-label"}>{"TODAY IS… ♪"}</span>
-<EditableText className={"mh-mood-text"} role={"textbox"} aria-label={"编辑今日心情"} spellCheck={"false"} data-placeholder={"想去吹晚风看日落"} value={profile.mood.trim()} onChange={profile.changeMood} />
+<EditableText className={"mh-mood-text"} role={"textbox"} aria-label={"编辑今日心情"} spellCheck={"false"} data-placeholder={"想去吹晚风看日落"} value={profile.todayText} onChange={profile.changeTodayText} />
 </div>
 </div>
 <div className={"mh-win mh-about"}>
