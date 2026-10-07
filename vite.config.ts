@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './',
+  base: '/qing-tuan/',
   build: {
     target: 'es2022',
     cssMinify: false,
