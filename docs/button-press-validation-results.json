@@ -1,0 +1,292 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "closedModalFocus": "Focus in hidden closed modals/pages is canonicalized to BODY; visible focus remains strict. Released pointer is moved to a neutral point to remove incidental hover changes after navigation.",
+  "nativeLegacyPressDelegate": "disabled before initialization to prove React press behavior",
+  "checks": [
+    {
+      "label": "press-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-player-skipped-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-player-skipped-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": []
+    },
+    {
+      "label": "press-pet-feed-skipped-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-pet-feed-skipped-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1073,
+      "differences": []
+    },
+    {
+      "label": "press-pet-bare-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1073,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-pet-bare-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1082,
+      "differences": []
+    },
+    {
+      "label": "press-section-skipped-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-section-skipped-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1476,
+      "differences": []
+    },
+    {
+      "label": "press-section-reopen-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1476,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-section-reopen-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": []
+    },
+    {
+      "label": "press-div-back-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-div-back-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1082,
+      "differences": []
+    },
+    {
+      "label": "press-about-close-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1672,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-about-close-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": []
+    },
+    {
+      "label": "press-picker-skipped-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1672,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-picker-skipped-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1690,
+      "differences": []
+    },
+    {
+      "label": "press-modal-close-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1690,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "press-modal-close-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1690,
+      "differences": []
+    },
+    {
+      "label": "press-api-back-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1690,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-api-back-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1602,
+      "differences": []
+    },
+    {
+      "label": "press-color-skipped-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2307,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-color-skipped-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2345,
+      "differences": []
+    },
+    {
+      "label": "press-modal-bordered-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2345,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-modal-bordered-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2307,
+      "differences": []
+    },
+    {
+      "label": "press-theme-back-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2307,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-theme-back-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1602,
+      "differences": []
+    },
+    {
+      "label": "press-back-again-down",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1602,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "press-back-again-released",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1100,
+      "differences": []
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

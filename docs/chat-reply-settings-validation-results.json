@@ -1,0 +1,395 @@
+{
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "reply-settings-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-defaults",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-segmented-off-disables-range",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-segmented-on",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-delay-200",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-delay-1200",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-delay-2000",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-context-10",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-context-80",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-context-200",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-delay-native-keyboard",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-context-native-keyboard",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-length-short",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-length-detailed",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-length-natural",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-quote-never",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-quote-free",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-quote-necessary",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-time-aware-off",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-time-aware-on",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-model-draft-not-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-model-blur-trims-and-saves",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-model-enter-commit",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-ime-enter-keeps-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-model-uncommitted-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-no-apply-feedback-keeps-model-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-other-control-resets-uncommitted-model",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "reply-settings-model-cleared-follow-default",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-pointer-blur-commits-before-toggle",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-second-character-defaults",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-second-character-independent",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-first-character-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-delay-storage-failure-restores",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-model-storage-failure-restores",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-save-retry",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1337,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-request-and-two-segments",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-request-without-segments",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1127,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-settings-refresh-restores-values",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1363,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

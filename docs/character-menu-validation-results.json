@@ -1,0 +1,244 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "menu-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-new-draft-label",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-one-record-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1344,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-button-toggle-close",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-nickname-label",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-trimmed-escaped-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-two-records-current-active",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1314,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-select-first-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-keyboard-opens",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1296,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-switch-keeps-current-panel",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1293,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-outside-field-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-scroll-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-resize-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-original-escape-behavior",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1314,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-title-outside-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-live-name-rebuild",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1314,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-select-after-name-update",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-new-record-closes-menu",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-many-records-upward-placement",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1340,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-last-record-scroll-selection",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-zoom-position",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1340,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-zoom-resize-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "menu-reload-restores-record-list",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1340,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

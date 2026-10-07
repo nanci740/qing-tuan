@@ -1,0 +1,185 @@
+{
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "dialog-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-open-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-minimize-empty-cleans-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-save-empty-focus-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-close-keeps-named-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-reopen-restores-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-new-button-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-new-reuses-empty-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-save-nickname-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-open-specific-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-save-name-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1260,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-delete-confirm-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1328,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-delete-cancel",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1319,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-delete-confirm-keeps-next-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-backdrop-close",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-backdrop-reopen",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "dialog-refresh-draft-recovery",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

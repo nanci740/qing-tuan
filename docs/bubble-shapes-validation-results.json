@@ -1,0 +1,276 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "bubble-shapes-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-user-consecutive-tail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1114,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-refresh-no-duplicate-svg",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1114,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-multiline-new-message",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1117,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-quote-height-and-tail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1121,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-edit-resizes-frame",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1122,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-delete-regroups-tail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-viewport-320",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-viewport-430",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-viewport-700",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-viewport-390",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-native-resize-observer",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-observer-reset",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-both-directions-markdown",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1113,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-repeated-import-refresh",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1113,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-hidden-room",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1295,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-visible-again",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1113,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-standard-history-attributes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-import-existing-no-extra-observer",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-import-explicit-refresh",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-custom-import-nodes-comments-kept",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-custom-refresh-first-base-only",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-missing-base-keeps-custom-shape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-refresh-history-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-new-after-history-restore",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "bubble-shapes-detached-multiple-rows-serialize-preserved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

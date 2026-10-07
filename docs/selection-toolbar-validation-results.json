@@ -1,0 +1,306 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "selection-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-open-one-and-toolbar",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-two-count",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-unpick-first",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-zero-stays-in-mode",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-zero-copy-notice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-zero-forward-notice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-zero-favorite-notice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-zero-delete-notice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-cancel-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-copy-dom-order-and-close",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-mixed-favorites-set-all",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1113,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-all-favorites-unset-all",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-delete-two-confirm",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1147,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-delete-cancel-keeps-picks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-delete-confirm-clears-and-removes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-forward-one-opens-picker-clears-mode",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1142,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-close-forward-does-not-restore-picks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-forward-two-record-payload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1148,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-forward-send-restores-room",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-search-exits-mode",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1117,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-search-close",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-copy-failure-keeps-picks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-navigation-clears-mode",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1264,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-room-return-empty-selection",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-middle-scroll-anchor",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1174,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-cancel-restores-middle-anchor",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1147,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-bottom-stays-at-bottom",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1174,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "selection-cancel-bottom-stays-at-bottom",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1147,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

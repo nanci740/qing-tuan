@@ -1,0 +1,226 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "pins-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-first-bar-and-svg",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1119,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-last-summary-keeps-html-parsing",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1124,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-multiple-last-row-summary",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1127,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-unpin-last-falls-back",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1124,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-only-middle-remains",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1120,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-none-hidden-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-click-scroll-to-last-highlight",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-highlight-before-1300ms",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-highlight-after-1300ms",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-repeated-click-timers",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-other-role-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-role-return-restores-slots",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-reload-restores-slots-and-summary",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1123,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-delete-last-refreshes-summary",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-old-text-label-normalized-to-native-svg",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-repeat-refresh-no-duplicate-svg",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-custom-legacy-svg-extra-text-preserved-and-prepended",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-missing-time-row-still-visible-bar",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-peer-restore",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pins-peer-unpin-clears-native-svg",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1104,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

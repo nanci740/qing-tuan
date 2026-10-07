@@ -1,0 +1,305 @@
+{
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "search-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-empty-list",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-empty-list-no-extra-message",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-empty-group",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1292,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-empty-chats",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-three-native-cards",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1268,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-chinese-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-case-insensitive-trim",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-special-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-no-results",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1290,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-group-hides-search-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1292,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-all-restores-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1290,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-chats-restores-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1290,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-list-rebuild-reapplies-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-last-message-preview",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1254,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-draft-preview",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1253,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "search-card-context-menu",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1277,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-pin-rebuild-order",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1278,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-favorite-rebuild",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1281,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-deletion-reapplies-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1253,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-card-press-start",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-card-longpress-menu",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-card-longpress-suppresses-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-action-backdrop-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-move-cancels-longpress",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-pointercancel-clears",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-native-value-without-input-event",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1253,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "search-refresh-time-retains-filter",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1253,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "search-refresh-restores-cards-clears-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

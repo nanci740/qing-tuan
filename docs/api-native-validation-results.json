@@ -1,0 +1,824 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "api-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1629,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-provider-picker",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1647,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-provider-selected",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1647,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-provider-confirmed",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1647,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-key-visible",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1647,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-custom-provider",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1647,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-model-list",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1653,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-model-search-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1648,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-model-search-match",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1650,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-model-confirmed",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1650,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-advanced-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1691,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-numeric-filters",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1691,
+      "differences": []
+    },
+    {
+      "label": "api-advanced-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1691,
+      "differences": []
+    },
+    {
+      "label": "api-advanced-reset",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1691,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-fallback-toggle",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1704,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-fallback-provider",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1701,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-fallback-model-list",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1704,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-fallback-model-selected",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1704,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-feature-model-default",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-feature-model-selected",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-model-escape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": []
+    },
+    {
+      "label": "api-all-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-connection-success",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-enter-restores-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api-connection-failure",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1707,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-fallback-off-persisted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "api-context-gpt5-token-key",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    },
+    {
+      "label": "api-claude-request-shape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    },
+    {
+      "label": "api-openai-stream-chunks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    },
+    {
+      "label": "api-claude-stream-chunks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    },
+    {
+      "label": "api-feature-model-routing",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    },
+    {
+      "label": "api-fallback-after-failure",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1694,
+      "differences": []
+    }
+  ],
+  "api-context-gpt5-token-key": {
+    "data": {
+      "model": "model-a",
+      "choices": [
+        {
+          "message": {
+            "content": "OK"
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 2,
+        "completion_tokens": 1,
+        "total_tokens": 3
+      }
+    },
+    "chunks": []
+  },
+  "api-claude-request-shape": {
+    "data": {
+      "model": "model-a",
+      "choices": [
+        {
+          "message": {
+            "content": "OK"
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 2,
+        "completion_tokens": 1,
+        "total_tokens": 3
+      }
+    },
+    "chunks": []
+  },
+  "api-openai-stream-chunks": {
+    "data": {
+      "model": "stream-test",
+      "text": "甲乙",
+      "usage": {
+        "input_tokens": 3,
+        "output_tokens": 2,
+        "total_tokens": 5
+      },
+      "stream": true
+    },
+    "chunks": [
+      [
+        "甲",
+        "甲"
+      ],
+      [
+        "乙",
+        "甲乙"
+      ]
+    ]
+  },
+  "api-claude-stream-chunks": {
+    "data": {
+      "model": "claude-test",
+      "text": "甲乙",
+      "usage": {
+        "input_tokens": 3,
+        "output_tokens": 2,
+        "total_tokens": 5
+      },
+      "stream": true
+    },
+    "chunks": [
+      [
+        "甲",
+        "甲"
+      ],
+      [
+        "乙",
+        "甲乙"
+      ]
+    ]
+  },
+  "api-feature-model-routing": {
+    "data": {
+      "model": "model-a",
+      "choices": [
+        {
+          "message": {
+            "content": "OK"
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 2,
+        "completion_tokens": 1,
+        "total_tokens": 3
+      }
+    },
+    "chunks": []
+  },
+  "api-fallback-after-failure": {
+    "data": {
+      "model": "model-a",
+      "choices": [
+        {
+          "message": {
+            "content": "OK"
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 2,
+        "completion_tokens": 1,
+        "total_tokens": 3
+      }
+    },
+    "chunks": []
+  },
+  "requests": [
+    [
+      "/mock-api/v1/models",
+      null,
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/fallback/models",
+      null,
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer fallback-key",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/v1/models",
+      null,
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/v1/models",
+      null,
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/v1/chat/completions",
+      {
+        "model": "model-b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with OK only."
+          }
+        ],
+        "temperature": 0,
+        "top_p": 1,
+        "max_tokens": 8,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/v1/chat/completions",
+      {
+        "model": "model-b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with OK only."
+          }
+        ],
+        "temperature": 0,
+        "top_p": 1,
+        "max_tokens": 8,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/gpt5/chat/completions",
+      {
+        "model": "gpt-5.1",
+        "messages": [
+          {
+            "role": "system",
+            "content": "系统一"
+          },
+          {
+            "role": "system",
+            "content": "系统二"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 1,
+        "max_completion_tokens": 2048,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/claude/messages",
+      {
+        "model": "claude-test",
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "max_tokens": 2048,
+        "temperature": 0.8,
+        "top_p": 1,
+        "stream": false,
+        "system": "系统一\n\n系统二"
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "anthropic-version": "2023-06-01",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "x-api-key": "key-test"
+      }
+    ],
+    [
+      "/mock-api/stream-openai/chat/completions",
+      {
+        "model": "stream-test",
+        "messages": [
+          {
+            "role": "system",
+            "content": "系统一"
+          },
+          {
+            "role": "system",
+            "content": "系统二"
+          },
+          {
+            "role": "user",
+            "content": "早期消息"
+          },
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 1,
+        "max_tokens": 2048,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/stream-claude/messages",
+      {
+        "model": "claude-test",
+        "messages": [
+          {
+            "role": "user",
+            "content": "早期消息"
+          },
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "max_tokens": 2048,
+        "temperature": 0.8,
+        "top_p": 1,
+        "stream": true,
+        "system": "系统一\n\n系统二"
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "anthropic-version": "2023-06-01",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "x-api-key": "key-test"
+      }
+    ],
+    [
+      "/mock-api/feature/chat/completions",
+      {
+        "model": "model-a",
+        "messages": [
+          {
+            "role": "system",
+            "content": "系统一"
+          },
+          {
+            "role": "system",
+            "content": "系统二"
+          },
+          {
+            "role": "user",
+            "content": "早期消息"
+          },
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 1,
+        "max_tokens": 2048,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/fallback-failure/chat/completions",
+      {
+        "model": "model-b",
+        "messages": [
+          {
+            "role": "system",
+            "content": "系统一"
+          },
+          {
+            "role": "system",
+            "content": "系统二"
+          },
+          {
+            "role": "user",
+            "content": "早期消息"
+          },
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 1,
+        "max_tokens": 2048,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer key-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mock-api/fallback/chat/completions",
+      {
+        "model": "model-a",
+        "messages": [
+          {
+            "role": "system",
+            "content": "系统一"
+          },
+          {
+            "role": "system",
+            "content": "系统二"
+          },
+          {
+            "role": "user",
+            "content": "早期消息"
+          },
+          {
+            "role": "assistant",
+            "content": "先前回答"
+          },
+          {
+            "role": "user",
+            "content": "最新消息"
+          }
+        ],
+        "temperature": 0.8,
+        "top_p": 1,
+        "max_tokens": 2048,
+        "stream": false
+      },
+      {
+        "accept": "*/*",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer fallback-key",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ]
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

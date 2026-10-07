@@ -1,0 +1,143 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "splash",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "home",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-feed-start",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1073,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-feed-end",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1038,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-play-start",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-repeat-play",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1051,
+      "differences": []
+    },
+    {
+      "label": "pet-play-end",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1033,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-sleep",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1033,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-sleep-zzz",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1034,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-wake",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1034,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-delayed-poop",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1052,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-clean-poop",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1034,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "pet-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

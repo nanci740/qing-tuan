@@ -1,0 +1,369 @@
+{
+  "note": "DOM, calculated CSS/bounds, form state and storage passed for these checks. Pixel metrics describe screenshot rasterization differences.",
+  "checks": [
+    {
+      "report": "button-press-validation-results.json",
+      "label": "press-modal-close-down",
+      "differing_pixels": 2,
+      "maximum_channel_difference": 7,
+      "mean_channel_difference": 2.7342325920524974e-05
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-appearance-multiline",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-deselect-tag",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-duplicate-custom-tag",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-delete-custom-tag",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-empty-tag-ignored",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-online-offline",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-relation-rebuild-retains-edits",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-memories",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-other",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-secret",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-draft-autosave",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-editor-validation-results.json",
+      "label": "editor-tag-input-retains-switch",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-wide-compression",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-small-no-upscale",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-large-payload-jpeg-fallback",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-corrupt-file-preserves-image",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-nonimage-ignored",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-avatar-validation-results.json",
+      "label": "avatar-replace-after-error",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "character-archive-validation-results.json",
+      "label": "archive-new-reuses-only-empty-draft",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 1.5190181066958319e-06
+    },
+    {
+      "report": "chat-search-validation-results.json",
+      "label": "search-draft-preview",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "chat-search-validation-results.json",
+      "label": "search-native-value-without-input-event",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "chat-data-validation-results.json",
+      "label": "chat-data-reset-defaults-deletes-assets-keeps-records",
+      "differing_pixels": 266,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0003531717098067809
+    },
+    {
+      "report": "reply-notification-validation-results.json",
+      "label": "notice-unread-storage-failure-original-behavior",
+      "differing_pixels": 14,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 2.430428970713331e-05
+    },
+    {
+      "report": "reply-notification-validation-results.json",
+      "label": "notice-storage-recovery",
+      "differing_pixels": 27,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 4.4051525094179125e-05
+    },
+    {
+      "report": "reply-notification-validation-results.json",
+      "label": "notice-show-over-settings",
+      "differing_pixels": 14,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 2.2785271600437476e-05
+    },
+    {
+      "report": "chat-accordion-validation-results.json",
+      "label": "accordion-open-reply",
+      "differing_pixels": 3444,
+      "maximum_channel_difference": 7,
+      "mean_channel_difference": 0.013590655000607608
+    },
+    {
+      "report": "chat-accordion-validation-results.json",
+      "label": "accordion-open-feedback",
+      "differing_pixels": 49,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 6.759630574796451e-05
+    },
+    {
+      "report": "chat-accordion-validation-results.json",
+      "label": "accordion-reset-fields-when-opening",
+      "differing_pixels": 3444,
+      "maximum_channel_difference": 7,
+      "mean_channel_difference": 0.013590655000607608
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-display-defaults",
+      "differing_pixels": 92,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00011620488516223114
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-time-all",
+      "differing_pixels": 147,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00019443431765706648
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-time-hidden",
+      "differing_pixels": 147,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00019443431765706648
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-time-group",
+      "differing_pixels": 147,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00019443431765706648
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-typing-off",
+      "differing_pixels": 147,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00019443431765706648
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-typing-on",
+      "differing_pixels": 147,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.00019443431765706648
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-sound-enable-preview",
+      "differing_pixels": 125,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0001670919917365415
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-vibration-enable-previews-both",
+      "differing_pixels": 125,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0001670919917365415
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-sound-disable-no-preview",
+      "differing_pixels": 125,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0001670919917365415
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-webkit-fallback",
+      "differing_pixels": 125,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0001670919917365415
+    },
+    {
+      "report": "chat-basic-settings-validation-results.json",
+      "label": "basic-feedback-errors-silent",
+      "differing_pixels": 125,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0001670919917365415
+    },
+    {
+      "report": "chat-reply-settings-validation-results.json",
+      "label": "reply-settings-other-control-resets-uncommitted-model",
+      "differing_pixels": 60,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.59509053347916e-05
+    },
+    {
+      "report": "chat-appearance-validation-results.json",
+      "label": "appearance-css-7",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-6",
+      "differing_pixels": 163,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0002149410620974602
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-7",
+      "differing_pixels": 163,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0002149410620974602
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-8",
+      "differing_pixels": 163,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 0.0002149410620974602
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-9",
+      "differing_pixels": 38,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 4.78490703609187e-05
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-10",
+      "differing_pixels": 38,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 4.78490703609187e-05
+    },
+    {
+      "report": "chat-data-compat-validation-results.json",
+      "label": "chat-data-compat-reset-store-11",
+      "differing_pixels": 38,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 4.78490703609187e-05
+    },
+    {
+      "report": "forward-picker-validation-results.json",
+      "label": "forward-picker-search-trim",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "forward-picker-validation-results.json",
+      "label": "forward-picker-multi-recent-selected",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "forward-picker-validation-results.json",
+      "label": "forward-picker-toggle-target-off",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    },
+    {
+      "report": "forward-picker-validation-results.json",
+      "label": "forward-picker-null-payload-stays-open",
+      "differing_pixels": 1,
+      "maximum_channel_difference": 1,
+      "mean_channel_difference": 7.595090533479159e-07
+    }
+  ]
+}

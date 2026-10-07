@@ -1,0 +1,153 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "player-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-playing",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1040,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-progress-and-notes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1043,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-paused",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-liked",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-starred",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-seek",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-drag-seek",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1042,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-next-reset",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-prev-reset",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": []
+    },
+    {
+      "label": "star-avatar-upload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "moon-avatar-upload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "appearance-home-texts",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "player-avatar-reload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

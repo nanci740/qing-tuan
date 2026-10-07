@@ -1,0 +1,156 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "message-replies-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-markdown-and-quote",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1124,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-segmented-group-and-labels",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1142,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-recall-visible-before-delay",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1153,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-assistant-recall-notice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1151,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-native-voice-quote-transcript",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1172,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-audio-play-native-state",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1172,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-audio-pause-native-state",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1172,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-audio-ended-native-state",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1172,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-transcript-click-collapse",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1171,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-switch-character",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1191,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-restored-native-voice-history",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1191,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-background-update",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1197,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "message-replies-background-history-restores",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1198,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

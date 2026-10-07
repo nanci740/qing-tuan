@@ -1,0 +1,286 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "composer-initial-empty-disabled",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-whitespace-draft-disabled",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-text-enabled-and-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-shift-enter-keeps-multiline-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-height-clamps-at-92",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-height-shrinks-back",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-enter-sends-clears-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-button-send-trims-and-clears",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-middle-edit-caret",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-other-role-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-return-restores-role-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-settings-return-keeps-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-write-failure-keeps-field-and-event",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-write-failure-loads-last-saved-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-refresh-restores-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-broken-storage-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-broken-storage-write",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-array-storage-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-array-storage-write",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-null-storage-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-null-storage-write",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-number-storage-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-number-storage-write",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-restored-long-value-not-truncated",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-public-read-delete-keeps-current",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-public-delete-does-not-clear-field-until-load",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "composer-public-load-clears-deleted-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

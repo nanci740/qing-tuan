@@ -1,0 +1,276 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "forward-record-store-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-empty-items-text-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1104,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-text-mode-no-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1106,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-full-five-items",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-native-detail-reads-all-items",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1158,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-background-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-background-history-restores",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-source-name-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1158,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-35-items-ai-last-30",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1126,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-write-failure-still-creates-card",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-write-failure-session-readable",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1178,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-failed-save-not-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-earlier-saved-record-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1178,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-broken-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1146,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-broken-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1188,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-null-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1156,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-null-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1198,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-number-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1166,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-number-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1208,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-empty-array-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1176,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-empty-array-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1218,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-array-retains-prior-session-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1226,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-old-array-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1194,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-old-array-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1236,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-object-save",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1204,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-record-store-object-session-detail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1246,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

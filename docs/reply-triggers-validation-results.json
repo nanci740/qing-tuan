@@ -1,0 +1,246 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "reply-triggers-initial-no-pending-attribute",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-no-api-unlocks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-empty-context-unlocks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-held-busy",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-duplicate-click-no-request",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-success-unlocks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1113,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-error-unlocks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-retry-after-error",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1116,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-delay-before-deadline",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1127,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-delay-after-deadline",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1135,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-input-restarts-countdown",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1138,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-input-reset-eventually-replies",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1146,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-role-change-flushes-old-reply",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1151,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-list-navigation-keeps-countdown",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1269,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-auto-request-held",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1162,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-manual-queues-behind-auto",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1162,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-queue-finishes-and-manual-unlocks",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1180,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-invalid-delay-default-not-yet",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1182,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-invalid-delay-default-completes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1190,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-unconfigured-auto-skips",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1193,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-flush-same-role-keeps-pending",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1196,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-flush-same-role-eventually-replies",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1209,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "reply-triggers-delay-save-failure-preserves-old",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1209,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

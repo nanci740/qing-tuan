@@ -1,0 +1,286 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "forward-picker-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-open-fallback-recents",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1153,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-search-one",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-search-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1130,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-search-trim",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1137,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "forward-picker-close-clears-query",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-multi-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1159,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-multi-first-selected",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1159,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-multi-recent-selected",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1159,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "forward-picker-hidden-selection-retained",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1140,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-mode-clear-selection",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-two-targets-ready",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1159,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-multi-send-restores-room",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-recents-after-multi-send",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1152,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-recents-still-visible-under-search",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1140,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-single-recent-send",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-toggle-target-off",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1158,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "forward-picker-single-list-send",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1108,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-recents-save-failure-still-closes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1110,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-failed-save-keeps-session-recents",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1157,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-reload-restores-saved-recents",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1154,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-null-payload-stays-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1154,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "forward-picker-recents-broken-json-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1157,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-recents-non-array-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1157,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-old-duplicate-and-missing-recents",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1157,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-duplicate-recents-share-selection",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1163,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "forward-picker-send-deduplicates-recent-key",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1110,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

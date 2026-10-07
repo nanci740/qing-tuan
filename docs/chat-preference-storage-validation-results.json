@@ -1,0 +1,190 @@
+{
+  "scope": "Strict TypeScript preference defaults/load/save compared with untouched original functions; no browser rendering assertions in this suite.",
+  "checks": [
+    {
+      "label": "preference-defaults",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-missing",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-malformed-by-chat",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-malformed-legacy",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-null-by-chat",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-boolean-by-chat",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-string-by-chat",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-array-by-chat",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-legacy-moon-fallback",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-legacy-ignored-for-role",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-legacy-null",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-role-does-not-read-other",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-falsy-saved-role",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-truthy-saved-primitive",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-explicit-booleans",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-nonboolean-values",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-minimum-clamps",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-maximum-clamps",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-numeric-coercions",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-invalid-numbers",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-valid-enums",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-invalid-enums",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-text-normalization",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-invalid-linked-books",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-prototype-key",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-{}",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-[]",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-null",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-true",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-false",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-3",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-\"text\"",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-{",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-{\"other\":{\"soundFeedback\":true}}",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-read-failure",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "save-write-failure",
+      "storageAndResultEqual": true,
+      "differences": []
+    },
+    {
+      "label": "load-read-failure",
+      "storageAndResultEqual": true,
+      "differences": []
+    }
+  ]
+}

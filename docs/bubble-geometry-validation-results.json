@@ -1,0 +1,10 @@
+{
+  "checks": [
+    {
+      "label": "4056-SVG-path-comparisons",
+      "comparisonCount": 4056,
+      "passed": true
+    }
+  ],
+  "migration_complete": false
+}

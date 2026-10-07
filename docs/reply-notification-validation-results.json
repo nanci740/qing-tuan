@@ -1,0 +1,195 @@
+{
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "notice-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-first-and-unread-one",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1266,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-repeat-reset-and-unread-three",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-before-timeout",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-timeout-hidden-retains-content",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-default-content-and-unread-99plus",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1268,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-click-opens-target-and-clears-unread",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1107,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-viewed-does-not-show-or-increment",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-unknown-role-count-without-popup",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1264,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-missing-key-no-popup",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1264,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-negative-count-minimum-one-and-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-unread-storage-failure-original-behavior",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "notice-storage-recovery",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1267,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "notice-show-over-settings",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1547,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "notice-click-leaves-settings-opens-room",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1107,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-role-deleted-while-visible",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1258,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-click-deleted-role-only-hides",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1258,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "notice-reload-restores-unread-not-popup",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1257,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "png-codec-private-full",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-portable-aliases",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-portable-empty-fields",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-portable-data-wrapper",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-v3-wanwan-extra",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-v2-compatible",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-v3-qingtuan-extension",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-priority-private",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-priority-portable",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-priority-v3",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-invalid-base64-fallback",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-wrong-private-app-fallback",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-invalid-private-json",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-invalid-portable-json",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-no-card",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-not-png",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-codec-truncated",
+      "differences": [],
+      "codecEqual": true
+    },
+    {
+      "label": "png-exact-chunks-crc-and-payload",
+      "differences": [],
+      "exportBytesEqual": true
+    },
+    {
+      "label": "png-full-photo-render",
+      "differences": [],
+      "exportBytesEqual": true
+    },
+    {
+      "label": "png-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-empty-editor",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-react-import-button-filechooser",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-export-name-required",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-export-photo-required",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-private-import-replaces-empty-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1316,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "png-ui-download-filename-and-bytes",
+      "differences": [],
+      "downloadFilename": "林_青_测试_角色档案.png",
+      "exportBytesEqual": true
+    },
+    {
+      "label": "png-after-export",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1316,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "png-v3-import-keeps-nonempty-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1321,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-v3-extra-settings-worldbook",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1303,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-v3-author-notes",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1303,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-portable-import",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1332,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-invalid-import-preserves-records",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1332,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-cancel-import",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1332,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "png-reload-editor",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1327,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

@@ -1,0 +1,334 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "editor-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-new-profile",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-profile-fields",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-middle-text-insertion",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-appearance-multiline",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-select-tag",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-deselect-tag",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-custom-tag-enter",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1349,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-duplicate-custom-tag",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1349,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-suggested-tag-custom",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1349,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-delete-custom-tag",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-empty-tag-ignored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-speech",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-online-offline",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1331,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-empty-network",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1331,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-add-relation",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1335,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-edit-relation",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1335,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-relation-rebuild-retains-edits",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1340,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-delete-relation",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1335,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-favorites",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1333,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-memories",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-other",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-secret",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-draft-autosave",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1329,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-old-save-adapter",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-second-draft-quick-links",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1298,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-quick-linked-relation",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1302,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-record-menu",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1323,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-restored-first-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1324,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-restored-relations",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1315,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "editor-tag-input-retains-switch",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1319,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "editor-reload-record-relations",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1315,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "archive-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-open-blank",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-details-only-draft-autosave",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1324,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-close-discards-details-only-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1283,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-corrupt-storage-recovers",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-filter-invalid-and-open-first-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-open-explicit-stamped-record",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-save-trims-and-preserves-unknown-fields",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-unknown-id-opens-existing-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-new-uses-max-id",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-new-reuses-only-empty-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "archive-draft-autosave-storage-error",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-save-dossier-storage-error-stays-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1311,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-save-retry-success",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1260,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-draft-readback-mismatch",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1319,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-save-readback-mismatch-stays-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1319,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-readback-retry-success",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1260,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-chat-storage-error-keeps-stamped-dossier-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1319,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-chat-storage-retry",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1268,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-delete-last-record-closes-and-clears-storage",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1268,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-after-delete-restarts-id",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1327,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "archive-refresh-recovers-native-data",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1327,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

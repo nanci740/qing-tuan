@@ -1,0 +1,214 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "avatar-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-empty-banner",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-nickname-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1342,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-banner-all-fields",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1347,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-banner-hidden-empty-fields",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-react-filechooser-cancel",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-wide-compression",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-tall-compression",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-small-no-upscale",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-jpeg-browser-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-large-payload-jpeg-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-corrupt-file-preserves-image",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-nonimage-ignored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-replace-after-error",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1345,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "avatar-save-sync-chat-thumbnail",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1252,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-sync-room-and-sidebar",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-reload-chat-photo",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1101,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-reload-saved-banner",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1163,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-new-record-clears-photo",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1160,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "avatar-switch-restores-photo",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1163,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

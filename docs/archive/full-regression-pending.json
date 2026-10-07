@@ -1,0 +1,293 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "splash",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "home",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-collapse-click",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1433,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-expand-enter",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-collapse-space",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1433,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-collapse-reopen",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1433,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-avatar-upload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "settings-avatar-invalid-file",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": []
+    },
+    {
+      "label": "about-open-first",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1629,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "about-close-backdrop",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": []
+    },
+    {
+      "label": "about-close-ok",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": []
+    },
+    {
+      "label": "about-close-escape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": []
+    },
+    {
+      "label": "about-close-x",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1541,
+      "differences": []
+    },
+    {
+      "label": "settings-about-group-collapse",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1475,
+      "differences": []
+    },
+    {
+      "label": "settings-avatar-collapse-reload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": []
+    },
+    {
+      "label": "settings-collapse-persisted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1475,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "appearance",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2246,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "theme-change",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 2246,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1597,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "api",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1629,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "voice-image",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1601,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "background-activity",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1589,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "personal-profile",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1645,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "about-modal",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1629,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "home-after-settings",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [
+        {
+          "path": "root.focus[0]",
+          "original": "BODY",
+          "migrated": "DIV"
+        },
+        {
+          "path": "root.focus[2]",
+          "original": "",
+          "migrated": "settings-section-title"
+        },
+        {
+          "path": "root.focus[3]",
+          "original": false,
+          "migrated": true
+        }
+      ]
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ],
+  "failure": "Mismatch at home-after-settings"
+}

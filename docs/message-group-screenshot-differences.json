@@ -1,0 +1,194 @@
+[
+  {
+    "suite": "message-selection",
+    "label": "message-selection-release-click-locked",
+    "different_pixels": 358,
+    "max_channel_difference": 1,
+    "bbox": [
+      8,
+      28,
+      381,
+      747
+    ]
+  },
+  {
+    "suite": "message-selection",
+    "label": "message-selection-699ms-still-locked",
+    "different_pixels": 358,
+    "max_channel_difference": 1,
+    "bbox": [
+      8,
+      28,
+      381,
+      747
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-search-trim",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-multi-first-selected",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-multi-recent-selected",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-hidden-selection-retained",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-toggle-target-off",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "forward-picker",
+    "label": "forward-picker-null-payload-stays-open",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      343,
+      35,
+      344,
+      36
+    ]
+  },
+  {
+    "suite": "chat-search",
+    "label": "search-draft-preview",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      14,
+      330,
+      15,
+      331
+    ]
+  },
+  {
+    "suite": "chat-search",
+    "label": "search-native-value-without-input-event",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      14,
+      330,
+      15,
+      331
+    ]
+  },
+  {
+    "suite": "chat-search",
+    "label": "search-refresh-time-retains-filter",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      14,
+      330,
+      15,
+      331
+    ]
+  },
+  {
+    "suite": "chat-data",
+    "label": "chat-data-reset-defaults-deletes-assets-keeps-records",
+    "different_pixels": 141,
+    "max_channel_difference": 1,
+    "bbox": [
+      28,
+      530,
+      363,
+      686
+    ]
+  },
+  {
+    "suite": "chat-data",
+    "label": "chat-data-import-asset-write-failure",
+    "different_pixels": 38,
+    "max_channel_difference": 1,
+    "bbox": [
+      31,
+      24,
+      366,
+      110
+    ]
+  },
+  {
+    "suite": "chat-appearance",
+    "label": "appearance-bubble-applied",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      199,
+      363,
+      200,
+      364
+    ]
+  },
+  {
+    "suite": "chat-appearance",
+    "label": "appearance-css-7",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      199,
+      363,
+      200,
+      364
+    ]
+  },
+  {
+    "suite": "chat-appearance",
+    "label": "appearance-css-8",
+    "different_pixels": 1,
+    "max_channel_difference": 1,
+    "bbox": [
+      199,
+      363,
+      200,
+      364
+    ]
+  }
+]

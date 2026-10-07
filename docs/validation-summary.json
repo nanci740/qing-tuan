@@ -1,0 +1,412 @@
+{
+  "migration_complete": true,
+  "remaining_runtime_modules": 0,
+  "typecheck": "passed",
+  "production_build": "passed",
+  "css_files_byte_identical": 17,
+  "suites": [
+    {
+      "current_build": true,
+      "report": "full-validation-results.json",
+      "states": 37,
+      "screenshots": 27,
+      "screenshots_byte_identical": 27,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "native-features-validation-results.json",
+      "states": 32,
+      "screenshots": 25,
+      "screenshots_byte_identical": 25,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "player-avatar-validation-results.json",
+      "states": 14,
+      "screenshots": 13,
+      "screenshots_byte_identical": 13,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "pet-validation-results.json",
+      "states": 13,
+      "screenshots": 12,
+      "screenshots_byte_identical": 12,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "api-native-validation-results.json",
+      "states": 32,
+      "screenshots": 23,
+      "screenshots_byte_identical": 13,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "mcp-native-validation-results.json",
+      "states": 25,
+      "screenshots": 21,
+      "screenshots_byte_identical": 18,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "music-native-validation-results.json",
+      "states": 30,
+      "screenshots": 27,
+      "screenshots_byte_identical": 27,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "appearance-validation-results.json",
+      "states": 32,
+      "screenshots": 23,
+      "screenshots_byte_identical": 22,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "voice-image-validation-results.json",
+      "states": 41,
+      "screenshots": 28,
+      "screenshots_byte_identical": 28,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "world-validation-results.json",
+      "states": 39,
+      "screenshots": 34,
+      "screenshots_byte_identical": 34,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "sidebar-validation-results.json",
+      "states": 17,
+      "screenshots": 13,
+      "screenshots_byte_identical": 13,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "button-press-validation-results.json",
+      "states": 29,
+      "screenshots": 15,
+      "screenshots_byte_identical": 14,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "character-png-validation-results.json",
+      "states": 34,
+      "screenshots": 14,
+      "screenshots_byte_identical": 12,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "character-editor-validation-results.json",
+      "states": 32,
+      "screenshots": 32,
+      "screenshots_byte_identical": 20,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "character-avatar-validation-results.json",
+      "states": 20,
+      "screenshots": 20,
+      "screenshots_byte_identical": 14,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "character-menu-validation-results.json",
+      "states": 23,
+      "screenshots": 23,
+      "screenshots_byte_identical": 23,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "character-dialog-validation-results.json",
+      "states": 17,
+      "screenshots": 17,
+      "screenshots_byte_identical": 17,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "character-archive-validation-results.json",
+      "states": 22,
+      "screenshots": 22,
+      "screenshots_byte_identical": 21,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-search-validation-results.json",
+      "states": 29,
+      "screenshots": 29,
+      "screenshots_byte_identical": 27,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-actions-validation-results.json",
+      "states": 22,
+      "screenshots": 22,
+      "screenshots_byte_identical": 22,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-data-validation-results.json",
+      "states": 34,
+      "screenshots": 34,
+      "screenshots_byte_identical": 33,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "reply-notification-validation-results.json",
+      "states": 18,
+      "screenshots": 18,
+      "screenshots_byte_identical": 15,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-navigation-validation-results.json",
+      "states": 22,
+      "screenshots": 22,
+      "screenshots_byte_identical": 22,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-accordion-validation-results.json",
+      "states": 25,
+      "screenshots": 25,
+      "screenshots_byte_identical": 22,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-basic-settings-validation-results.json",
+      "states": 24,
+      "screenshots": 24,
+      "screenshots_byte_identical": 13,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "chat-preference-storage-validation-results.json",
+      "states": 37,
+      "screenshots": 0,
+      "screenshots_byte_identical": 0,
+      "dom_styles_storage_and_form_state": "not applicable: defaults, parsing, storage results and calls compared with original functions",
+      "scope": "TypeScript preferences reference comparison"
+    },
+    {
+      "current_build": true,
+      "report": "chat-reply-settings-validation-results.json",
+      "states": 38,
+      "screenshots": 38,
+      "screenshots_byte_identical": 37,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-voice-opening-validation-results.json",
+      "states": 31,
+      "screenshots": 31,
+      "screenshots_byte_identical": 31,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-appearance-validation-results.json",
+      "states": 39,
+      "screenshots": 39,
+      "screenshots_byte_identical": 38,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-data-compat-validation-results.json",
+      "states": 18,
+      "screenshots": 18,
+      "screenshots_byte_identical": 12,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-pins-validation-results.json",
+      "states": 21,
+      "screenshots": 21,
+      "screenshots_byte_identical": 21,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "forward-picker-validation-results.json",
+      "states": 27,
+      "screenshots": 27,
+      "screenshots_byte_identical": 23,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "selection-toolbar-validation-results.json",
+      "states": 29,
+      "screenshots": 29,
+      "screenshots_byte_identical": 29,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "record-detail-validation-results.json",
+      "states": 23,
+      "screenshots": 23,
+      "screenshots_byte_identical": 23,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "forward-record-store-validation-results.json",
+      "states": 26,
+      "screenshots": 26,
+      "screenshots_byte_identical": 26,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "message-selection-validation-results.json",
+      "states": 41,
+      "screenshots": 41,
+      "screenshots_byte_identical": 41,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "chat-composer-validation-results.json",
+      "states": 27,
+      "screenshots": 27,
+      "screenshots_byte_identical": 27,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "reply-triggers-validation-results.json",
+      "states": 23,
+      "screenshots": 23,
+      "screenshots_byte_identical": 23,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "reply-parser-validation-results.json",
+      "states": 2537,
+      "screenshots": 0,
+      "screenshots_byte_identical": 0,
+      "dom_styles_storage_and_form_state": "not applicable: pure reply parser exact result and error comparison",
+      "scope": "TypeScript reply parser reference comparison"
+    },
+    {
+      "current_build": true,
+      "report": "bubble-shapes-validation-results.json",
+      "states": 26,
+      "screenshots": 26,
+      "screenshots_byte_identical": 26,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": false,
+      "report": "bubble-geometry-validation-results.json",
+      "states": 1,
+      "screenshots": 0,
+      "screenshots_byte_identical": 0,
+      "dom_styles_storage_and_form_state": "not applicable: 4056 exact SVG path string comparisons",
+      "scope": "TypeScript SVG geometry reference comparison"
+    },
+    {
+      "current_build": true,
+      "report": "media-room-validation-results.json",
+      "states": 18,
+      "screenshots": 18,
+      "screenshots_byte_identical": 18,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "world-memory-validation-results.json",
+      "states": 7,
+      "screenshots": 7,
+      "screenshots_byte_identical": 7,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "native-messages-validation-results.json",
+      "states": 60,
+      "screenshots": 60,
+      "screenshots_byte_identical": 60,
+      "dom_styles_storage_and_form_state": "passed"
+    },
+    {
+      "current_build": true,
+      "report": "message-replies-validation-results.json",
+      "states": 14,
+      "screenshots": 14,
+      "screenshots_byte_identical": 14,
+      "dom_styles_storage_and_form_state": "passed"
+    }
+  ],
+  "note": "No runtime.js or ClassicScriptSlot remains. Browser comparisons assert DOM, computed style/bounds, form state and storage. Screenshot equality is reported individually; a few screenshots differ by small rasterized edge pixels despite equal CSS and bounds. External resources are blocked identically; APIs and media interfaces use deterministic mocks.",
+  "latest_group_suites": [
+    "full-validation-results.json",
+    "native-features-validation-results.json",
+    "world-validation-results.json",
+    "sidebar-validation-results.json",
+    "button-press-validation-results.json",
+    "character-editor-validation-results.json",
+    "character-avatar-validation-results.json",
+    "character-menu-validation-results.json",
+    "character-dialog-validation-results.json",
+    "character-archive-validation-results.json",
+    "chat-search-validation-results.json",
+    "chat-actions-validation-results.json",
+    "chat-data-validation-results.json",
+    "reply-notification-validation-results.json",
+    "chat-navigation-validation-results.json",
+    "chat-accordion-validation-results.json",
+    "chat-basic-settings-validation-results.json",
+    "chat-reply-settings-validation-results.json",
+    "chat-voice-opening-validation-results.json",
+    "chat-appearance-validation-results.json",
+    "chat-data-compat-validation-results.json",
+    "chat-pins-validation-results.json",
+    "forward-picker-validation-results.json",
+    "record-detail-validation-results.json",
+    "forward-record-store-validation-results.json",
+    "message-selection-validation-results.json",
+    "chat-composer-validation-results.json",
+    "reply-triggers-validation-results.json",
+    "bubble-shapes-validation-results.json",
+    "media-room-validation-results.json",
+    "world-memory-validation-results.json",
+    "native-messages-validation-results.json",
+    "message-replies-validation-results.json"
+  ],
+  "historical_reports_note": "Other reports were captured in earlier migration stages and are retained as history, not a claim that every old scenario was rerun against this build.",
+  "latest_group_states": 881,
+  "comparison_scaffolding": "SCRIPT nodes are excluded and adjacent text nodes merged. React reflected form defaults are canonicalized; actual form values, content, CSS/bounds and storage remain strict.",
+  "screenshot_pixel_differences_report": "final-screenshot-differences.json"
+}

@@ -1,0 +1,420 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "mcp-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-add-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-validation-missing-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-validation-missing-url",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": []
+    },
+    {
+      "label": "mcp-validation-url",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1567,
+      "differences": []
+    },
+    {
+      "label": "mcp-header-added",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1572,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-transport-choice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1578,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-sse-choice",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1578,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-sse-test-preserved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1578,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "mcp-service-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1595,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-master-on",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1595,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-modern-tools",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1597,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "mcp-tools-modal",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1607,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-tool-permission",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1606,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-tools-refresh-permission",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1606,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-legacy-fallback",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1606,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-description-generated",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1606,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-service-updated",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1606,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-service-disabled",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1584,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "mcp-modal-escape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1590,
+      "differences": []
+    },
+    {
+      "label": "mcp-header-removed",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1585,
+      "differences": []
+    },
+    {
+      "label": "mcp-deleted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1568,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "shared-voice-choice-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1620,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "shared-voice-choice-confirmed",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1620,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "rpcCalls": [
+    [
+      "/mcp-modern",
+      {
+        "jsonrpc": "2.0",
+        "id": 1791224190000,
+        "method": "tools/list",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "Qingtuan Phone",
+              "version": "1.0.0"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "mcp-protocol-version": "2026-07-28",
+        "mcp-method": "tools/list",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mcp-modern",
+      {
+        "jsonrpc": "2.0",
+        "id": 1791224190000,
+        "method": "tools/list",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "Qingtuan Phone",
+              "version": "1.0.0"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "mcp-protocol-version": "2026-07-28",
+        "mcp-method": "tools/list",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mcp-legacy",
+      {
+        "jsonrpc": "2.0",
+        "id": 1791224190000,
+        "method": "tools/list",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "Qingtuan Phone",
+              "version": "1.0.0"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "mcp-protocol-version": "2026-07-28",
+        "mcp-method": "tools/list",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mcp-legacy",
+      {
+        "jsonrpc": "2.0",
+        "id": 1791224190000,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "Qingtuan Phone",
+            "version": "1.0.0"
+          }
+        }
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mcp-legacy",
+      {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized",
+        "params": {}
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "mcp-session-id": "mock-session",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ],
+    [
+      "/mcp-legacy",
+      {
+        "jsonrpc": "2.0",
+        "id": 1791224190001,
+        "method": "tools/list",
+        "params": {}
+      },
+      {
+        "accept": "application/json, text/event-stream",
+        "accept-language": "zh-CN",
+        "authorization": "Bearer token-test",
+        "content-type": "application/json",
+        "mcp-session-id": "mock-session",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36",
+        "x-test": "custom-header",
+        "sec-ch-ua": "\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\""
+      }
+    ]
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

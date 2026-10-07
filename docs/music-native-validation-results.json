@@ -1,0 +1,312 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "music-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1597,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-url-validation",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1600,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-first-url",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1620,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-second-url",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1643,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-third-url",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-three-track-limit",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1669,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-single-mode",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-switches-persisted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-edit-track-meta",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-select-second",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-current-title-updated",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-cover-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-cover-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-cover-removed-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-cover-removal-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-drag-live",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1689,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-order-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1666,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-real-player-play",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1040,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-real-player-pause",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1039,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-real-player-next",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1040,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-real-player-prev",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1040,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-real-audio-seek",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1041,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-single-ended-replay",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": []
+    },
+    {
+      "label": "music-list-ended-next",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": []
+    },
+    {
+      "label": "music-random-ended-next",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": []
+    },
+    {
+      "label": "music-delete-track",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1644,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-add-local-file",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-load-local-file",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-replace-file",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "music-reload-restored",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1667,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "indexedDbBlobsEqual": true,
+  "errors": [
+    [],
+    []
+  ]
+}

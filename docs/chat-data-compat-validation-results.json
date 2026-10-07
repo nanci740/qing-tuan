@@ -1,0 +1,196 @@
+{
+  "dateClock": "Date is fixed at the same value for each action; timers and animation frames still advance. Avoids 1ms RAF date rounding drift between runtimes.",
+  "hiddenCharacterDialogFocus": "canonicalized to BODY while hidden; visible focus remains strict (browser frame timing)",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "chat-data-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-voice-import-six-wave-bars",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-imported-voice-play-event",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-imported-voice-pause-event",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-imported-voice-ended-event",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-reset-store-6",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-reset-store-7",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-reset-store-8",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-reset-store-9",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-reset-store-10",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-reset-store-11",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1287,
+      "differences": [],
+      "screenshotBytesEqual": false
+    },
+    {
+      "label": "chat-data-compat-import-store-12",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-import-store-13",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-import-store-14",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-import-store-15",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1112,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-import-store-16",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1282,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "chat-data-compat-import-store-17",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1282,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}

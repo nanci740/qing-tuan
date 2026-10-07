@@ -1,0 +1,399 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "externalResources": "blocked identically for both versions; original remote URLs retained",
+  "frozenClock": true,
+  "checks": [
+    {
+      "label": "world-initial",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 224,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-empty",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1072,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-menu",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1072,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-menu-escape",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1072,
+      "differences": []
+    },
+    {
+      "label": "world-new-book",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1097,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-missing-name",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1097,
+      "differences": []
+    },
+    {
+      "label": "world-book-draft",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1097,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-picker-wbBind-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1100,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-book-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1083,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-missing-entry-fields",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1133,
+      "differences": []
+    },
+    {
+      "label": "world-entry-advanced",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1133,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-picker-weTrigger-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-picker-weMatch-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1136,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-picker-wePosition-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1145,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-picker-weRole-open",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1139,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-entry-advanced-values",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1139,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-entry-saved",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-three-entries",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1141,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-search",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1144,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-disabled-filter",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1097,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-disabled-filter-item",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1111,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-copy-entry",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1156,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-sort-drag",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1171,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-sort-finished",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1156,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-edit-entry",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1140,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-delete-entry-dialog",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1147,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-entry-deleted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1141,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-edit-book",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1107,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-cover-upload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1103,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-shelf-cover",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1088,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-export",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1088,
+      "differences": []
+    },
+    {
+      "label": "world-reload",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1079,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-import-dialog",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1087,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-import-appended",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1091,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-overwrite-dialog",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1106,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-import-replaced",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1084,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-import-invalid",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1084,
+      "differences": []
+    },
+    {
+      "label": "world-delete-book-dialog",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1105,
+      "differences": [],
+      "screenshotBytesEqual": true
+    },
+    {
+      "label": "world-book-deleted",
+      "domEqual": true,
+      "computedStylesAndBoundsEqual": true,
+      "storageEqual": true,
+      "formStateEqual": true,
+      "visibleElements": 1072,
+      "differences": [],
+      "screenshotBytesEqual": true
+    }
+  ],
+  "errors": [
+    [],
+    []
+  ]
+}
