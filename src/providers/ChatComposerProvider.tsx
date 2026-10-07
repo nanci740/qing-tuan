@@ -1,7 +1,7 @@
 import {createContext,useContext,useEffect,useLayoutEffect,useRef,useState} from 'react';
 import type {FormEvent,KeyboardEvent,ReactNode,RefObject} from 'react';
 import {flushSync} from 'react-dom';
-import {readChatDraft,writeChatDraft} from '../utils/chatDrafts';
+import {readChatDraft,writeChatDraft,clearSentChatDraft} from '../utils/chatDrafts';
 import type {ChatComposerApi,ChatComposerServices} from '../types/chatComposer';
 interface ComposerContext {field:RefObject<HTMLTextAreaElement|null>;view:{text:string;height:string|undefined;disabled:boolean};change(event:FormEvent<HTMLTextAreaElement>):void;keyDown(event:KeyboardEvent<HTMLTextAreaElement>):void;send():void;}
 const Context=createContext<ComposerContext|null>(null);
@@ -17,7 +17,7 @@ export function ChatComposerProvider({children}:{children:ReactNode}){
  }
  function read(key=currentKey()){return readChatDraft(key);}
  function load(){if(!field.current)return;field.current.value=read();resize();}
- function sentText(){if(field.current)field.current.value='';writeChatDraft(currentKey(),'');}
+ function sentText(){if(field.current)field.current.value='';clearSentChatDraft(currentKey());}
  function change(event:FormEvent<HTMLTextAreaElement>){resize();writeChatDraft(currentKey(),event.currentTarget.value);service.current?.inputDelay();}
  function send(){service.current?.send();}
  function keyDown(event:KeyboardEvent<HTMLTextAreaElement>){if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send();}}

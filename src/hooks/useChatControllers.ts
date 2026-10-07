@@ -1,3 +1,4 @@
+import {readChatRecords, saveChatRecords} from '../utils/chatRecords';
 import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
 import {readMyPresence} from '../utils/chatPresence';
 import {useWorld} from '../providers/WorldProvider';
@@ -426,8 +427,6 @@ function initChatApplication(){
 }
 initChatApplication();
     const ACTIVE_KEY = 'smallphone_chat_active_character_v1';
-    const CHAT_HISTORY_KEY = 'smallphone_chat_histories_v1';
-    const CHAT_TIME_KEY = 'smallphone_chat_last_times_v1';
 
     // React 持有角色清单；剩余聊天模块仅从此同步接口读取。
     let characterStore!:ChatCharacterStoreBridge;
@@ -436,23 +435,9 @@ initChatApplication();
     const chatMessageList = messages.container()!;
     const emptyChatHistory = '';
     navigation.activeKey(history.current.activeKey);
-    try {
-        const savedHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
-        history.current.histories = savedHistories && typeof savedHistories === 'object' ? savedHistories : {};
-        if (Object.prototype.hasOwnProperty.call(history.current.histories, 'moon')) {
-            delete history.current.histories.moon;
-            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history.current.histories));
-        }
-    } catch (error) {
-        history.current.histories = {};
-    }
-
-    try {
-        const savedTimes = JSON.parse(localStorage.getItem(CHAT_TIME_KEY) || '{}');
-        history.current.times = savedTimes && typeof savedTimes === 'object' ? savedTimes : {};
-    } catch (error) {
-        history.current.times = {};
-    }
+    const savedChatRecords = readChatRecords();
+    history.current.histories = savedChatRecords.histories;
+    history.current.times = savedChatRecords.times;
 
     let replyBridge!:ReplyNotificationBridge;
     window.dispatchEvent(new CustomEvent<ReplyNotificationServices&{accept(api:ReplyNotificationBridge):void}>('qingtuan:reply-notification-connect', { detail: {
@@ -500,25 +485,21 @@ initChatApplication();
         history.current.counts[key] = template.content.querySelectorAll('.chat-bubble').length;
     });
 
+    let lastHistorySaveError = 0;
     function saveChatHistories() {
-        try {
-            // 将历史中残留的内联头像剔除，重新载入时会自动从角色档案读取。
-            Object.keys(history.current.histories).forEach(key => {
-                const html = history.current.histories[key];
-                if (!html || !html.includes('data:image/')) return;
-                const template = document.createElement('template');
-                template.innerHTML = html;
-                template.content.querySelectorAll('.chat-message-mini-avatar').forEach(img => img.removeAttribute('src'));
-                history.current.histories[key] = template.innerHTML;
-            });
-            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history.current.histories));
-        } catch (error) {
-            showToast('聊天记录保存失败：请检查存储空间');
-        }
-    }
-
-    function saveChatLastTimes() {
-        try { localStorage.setItem(CHAT_TIME_KEY, JSON.stringify(history.current.times)); } catch (error) {}
+        // Avatars are restored from profiles; keep the existing portable message HTML format.
+        Object.keys(history.current.histories).forEach(key => {
+            const html = history.current.histories[key];
+            if (!html || !html.includes('data:image/')) return;
+            const template = document.createElement('template');template.innerHTML = html;
+            template.content.querySelectorAll('.chat-message-mini-avatar').forEach(img => img.removeAttribute('src'));
+            history.current.histories[key] = template.innerHTML;
+        });
+        void saveChatRecords(history.current.histories, history.current.times).catch(() => {
+            if (!lastHistorySaveError || Date.now() - lastHistorySaveError > 8000) {
+                lastHistorySaveError = Date.now();showToast('聊天记录保存失败，记录暂留在本次页面中，请重试');
+            }
+        });
     }
 
     function formatThreadTime(timestamp:unknown) {
@@ -634,7 +615,6 @@ initChatApplication();
 
         if (currentCount > previousCount) {
             history.current.times[history.current.activeKey] = Date.now();
-            saveChatLastTimes();
         }
 
         saveChatHistories();
@@ -664,7 +644,7 @@ initChatApplication();
         const template = document.createElement('template'); template.innerHTML = html;
         history.current.counts[key] = template.content.querySelectorAll('.chat-bubble').length;
         history.current.times[key] = Number(detail.sentAt) || Date.now();
-        saveChatLastTimes();saveChatHistories();updateThreadPreview(key);
+        saveChatHistories();updateThreadPreview(key);
         return true;
     }
     bridge.smallphoneAppendBackgroundReply = appendBackgroundReply;
@@ -680,7 +660,7 @@ initChatApplication();
         if(!targetKey||!text)return;
         const record = mode === 'record' && Array.isArray(items) && items.length ? forwardRecords.create(items,sourceChatName) : null;
         history.current.histories[targetKey] = bridge.smallphoneMessages.forwardHtml(targetKey===history.current.activeKey?messages.html():(history.current.histories[targetKey]||emptyChatHistory),text,items,sourceChatName,mode,record);
-        history.current.times[targetKey]=Date.now();saveChatLastTimes();saveChatHistories();updateThreadPreview(targetKey);
+        history.current.times[targetKey]=Date.now();saveChatHistories();updateThreadPreview(targetKey);
         if(targetKey===history.current.activeKey)restoreHistory(targetKey);
     });
     function restoreHistory(key:string,unreadCount=0) {
@@ -825,6 +805,8 @@ initChatApplication();
 
     function cleanupCharacterChat(character:ChatCharacter) {
         delete history.current.histories[character.archiveId];
+        delete history.current.times[character.archiveId];
+        delete history.current.counts[character.archiveId];
         bridge.smallphoneDeleteChatDraft?.(character.archiveId);
         setUnreadCount(character.archiveId, 0);
     }
