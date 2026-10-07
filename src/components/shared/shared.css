@@ -9023,8 +9023,8 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 /* @qingtuan-order:003998 */
 
         :is(html, #_#_#_) .world-confirm-card .world-confirm-btn {
-            height: 32px !important;
-            min-height: 0 !important;
+            height: var(--import-button-height, 32px) !important;
+            min-height: var(--import-button-min-height, 0) !important;
             border: 1px solid var(--wcf-line) !important;
             border-radius: 3px !important;
             background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--wcf-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--wcf-btn-tint) 30%, #FFFFFF) 100%) !important;
@@ -9630,12 +9630,17 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:004357 */
 
-.import-preview-list{list-style:none;margin:12px 18px 0;padding:0;max-height:min(36vh,260px);overflow-y:auto;color:var(--world-ink,#5F6772);font-size:11.5px;line-height:1.6}
-.import-preview-list li{padding:8px 2px;border-bottom:.5px solid var(--cr-line,#D8DBDE);overflow-wrap:anywhere}
-.import-preview-list li:first-child{border-top:.5px solid var(--cr-line,#D8DBDE)}
+.import-preview-list{list-style:none;margin:12px 18px 0;padding:0;max-height:min(36vh,260px);overflow-y:auto;color:var(--wcf-title);font-size:11.5px;line-height:1.6}
+.import-preview-list li{padding:8px 2px;border-bottom:.5px solid color-mix(in srgb,var(--wcf-line) 35%,transparent);overflow-wrap:anywhere}
+.import-preview-list li:first-child{border-top:.5px solid color-mix(in srgb,var(--wcf-line) 35%,transparent)}
 .import-preview-list strong,.import-preview-list span{display:block}
 .import-preview-list strong{font-weight:600}
-.import-preview-conflict{color:var(--world-ink,#5F6772)}
+.import-preview-conflict{color:var(--wcf-title)}
 
 .import-preview-overlay{z-index:6000}
 .import-preview-overlay .world-confirm-card{max-height:calc(100dvh - 44px);overflow-y:auto!important}
+
+.import-preview-overlay .world-import-choices{grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin:0;padding:14px 18px 16px;--import-button-height:auto;--import-button-min-height:38px}
+.import-preview-actions-column{display:flex;flex-direction:column;gap:9px;min-width:0}
+.import-preview-actions-column .world-confirm-btn{padding:6px 5px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;outline:none}
+.import-preview-actions-column .world-confirm-btn:focus-visible{outline:1px solid var(--wcf-title);outline-offset:3px}
