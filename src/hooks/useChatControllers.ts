@@ -551,6 +551,8 @@ initChatApplication();
         const bubbles = template.content.querySelectorAll('.chat-bubble');
         if (!bubbles.length) return '';
         const lastBubble = bubbles[bubbles.length - 1];
+        // 转发记录卡只显示消息类型，不把卡片标题、预览和页脚拼进聊天列表。
+        if (lastBubble.querySelector('.chat-forward-record-card')) return '[聊天记录]';
         // 语音消息：显示「[语音] 4″」，不要只剩秒数
         if (lastBubble.querySelector('.chat-voice-control')) {
             const seconds = lastBubble.querySelector('.chat-voice-length')?.textContent?.trim() || '';
