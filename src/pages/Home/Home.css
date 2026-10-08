@@ -1412,7 +1412,7 @@
             width: 36px;
             height: 36px;
             margin: -18px 0 0 -18px;
-            border: 1px solid var(--win-deep);
+            border: 1px solid var(--color-accent);
         }
 
 /* @qingtuan-order:003361 */
@@ -1428,13 +1428,13 @@
 
 
         #main-content .mp3-player .btn-prev svg,
-        #main-content .mp3-player .btn-next svg { width: 13px; height: 13px; fill: var(--home-ink); }
+        #main-content .mp3-player .btn-next svg { width: 13px; height: 13px; fill: var(--color-accent); }
 
 /* @qingtuan-order:003363 */
 
 
         #main-content .mp3-player .btn-star svg,
-        #main-content .mp3-player .btn-heart svg { width: 11px; height: 11px; fill: var(--home-ink); }
+        #main-content .mp3-player .btn-heart svg { width: 11px; height: 11px; fill: var(--color-accent); }
 
 /* @qingtuan-order:003364 */
 
@@ -1445,7 +1445,7 @@
 /* @qingtuan-order:003365 */
 
 
-        #main-content .mp3-player .btn-play svg.icon-play { width: 11px; height: 11px; margin-left: 2px; fill: var(--home-ink); }
+        #main-content .mp3-player .btn-play svg.icon-play { width: 11px; height: 11px; margin-left: 2px; fill: var(--color-accent); }
 
 /* @qingtuan-order:003366 */
 
@@ -1453,7 +1453,7 @@
 
 /* @qingtuan-order:003367 */
 
-        #main-content .mp3-player .btn-play .pause-bars span { width: 3px; height: 11px; border-radius: 0 !important; background: var(--home-ink); }
+        #main-content .mp3-player .btn-play .pause-bars span { width: 3px; height: 11px; border-radius: 0 !important; background: var(--color-accent); }
 
 /* @qingtuan-order:003368 */
 
@@ -2618,7 +2618,7 @@
             height: 24px;
             padding: 0;
             border-radius: 50%;
-            border: 0.8px solid var(--win-deep);
+            border: 0.8px solid var(--color-accent);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2642,7 +2642,7 @@
 
 /* @qingtuan-order:003550 */
 
-        #main-content .tama-btn .tb-x { fill: var(--home-ink); }
+        #main-content .tama-btn .tb-x { fill: var(--color-accent); }
 
 /* @qingtuan-order:003551 */
 
@@ -2881,7 +2881,7 @@
 /* @qingtuan-order:003596 */
 
         #main-content .mp3-player .controls {
-            box-shadow: var(--home-rim), var(--effect-drop);
+            box-shadow: var(--home-rim), inset 1px 1px 2px var(--effect-inner-emphasis), var(--effect-drop);
         }
 
 /* @qingtuan-order:003597 */
@@ -3004,7 +3004,7 @@
         #main-content .tama-screen {
             border-color: color-mix(in srgb, var(--color-text) 70%, transparent) !important;
             /* 凹陷阴影只在左上（70%，柔和 2px）；右下不加 */
-            box-shadow: inset 1px 1px 2px var(--effect-inner-soft) !important;
+            box-shadow: inset 1px 1px 2px var(--effect-inner-emphasis) !important;
         }
 
 /* @qingtuan-order:003621 */

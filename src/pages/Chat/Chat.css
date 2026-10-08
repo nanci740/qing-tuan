@@ -373,7 +373,7 @@
 /* @qingtuan-order:004253 */
 
         #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-btn.primary {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
+            background: var(--effect-face-accent) !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;

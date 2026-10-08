@@ -7,20 +7,19 @@ function clock() { const date = new Date(); return `${pad2(date.getHours())}:${p
 
 export function useDeviceStatus() {
   const [time, setTime] = useState(clock);
-  const [status, setStatus] = useState({ batteryWidth: 14, batteryFill: '#5F6772', wifiLevel: 3, cellLevel: 4 });
+  const [status, setStatus] = useState({ batteryWidth: 14, wifiLevel: 3, cellLevel: 4 });
   useEffect(() => {
     let disposed = false;
     const batteries = new Map<Battery, () => void>();
     async function updateNetworkAndBattery() {
       const device = navigator as DeviceNavigator;
-      let batteryWidth: number, batteryFill: string;
+      let batteryWidth: number;
       try {
         if (!device.getBattery) throw new Error('Battery API not supported');
         const battery = await device.getBattery();
         if (disposed) return;
         const level = battery.level * 100;
         batteryWidth = Math.max(1, level / 100 * 14);
-        batteryFill = level <= 20 && !battery.charging ? '#ff3b30' : battery.charging ? '#34c759' : '#5F6772';
         if (!batteries.has(battery)) {
           const changed = () => { void updateNetworkAndBattery(); };
           batteries.set(battery, changed);
@@ -33,7 +32,7 @@ export function useDeviceStatus() {
           currentBattery = Math.random() > 0.8 ? Math.min(100, currentBattery + 1) : Math.max(1, currentBattery - 1);
           localStorage.setItem('simBattery', String(currentBattery));
         }
-        batteryWidth = Math.max(1, currentBattery / 100 * 14); batteryFill = currentBattery <= 20 ? '#ff3b30' : '#5F6772';
+        batteryWidth = Math.max(1, currentBattery / 100 * 14);
       }
       const connection = device.connection || device.mozConnection || device.webkitConnection;
       let wifiLevel = 3, cellLevel = 4;
@@ -48,7 +47,7 @@ export function useDeviceStatus() {
         wifiLevel = Math.random() > 0.8 ? (Math.random() > 0.5 ? 2 : 1) : 3;
         cellLevel = Math.random() > 0.85 ? (Math.random() > 0.5 ? 3 : 2) : 4;
       }
-      if (!disposed) setStatus({ batteryWidth, batteryFill, wifiLevel, cellLevel });
+      if (!disposed) setStatus({ batteryWidth, wifiLevel, cellLevel });
     }
     void updateNetworkAndBattery();
     const networkTimer = setInterval(() => { void updateNetworkAndBattery(); }, 3000);

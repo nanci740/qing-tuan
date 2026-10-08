@@ -1425,7 +1425,7 @@
 
 
         #voiceImageSettingsPage .vi-actions .vi-btn.primary.ui-cyan-btn {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;

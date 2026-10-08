@@ -1,3 +1,4 @@
+import { RetroSelect } from '../../../components/shared/RetroSelect';
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
@@ -7,8 +8,8 @@ export function ChatReplySelect({ id, setting, children }: {
   id: string; setting: 'replyLength' | 'quotePolicy'; children: ReactNode;
 }) {
   const { values, change } = useChatPreferences();
-  return <select className="chat-setting-select" id={id} value={values[setting]}
-    onChange={event => change(setting, event.currentTarget.value as ChatPreferences[typeof setting])}>{children}</select>;
+  return <RetroSelect title={setting === 'replyLength' ? '回复长度' : '引用方式'} className="chat-setting-select" id={id} value={values[setting]}
+    onChange={value => change(setting, value as ChatPreferences[typeof setting])}>{children}</RetroSelect>;
 }
 export function ChatReplyRangeRow({ delayed = false, children }: { delayed?: boolean; children: ReactNode }) {
   const { values } = useChatPreferences();

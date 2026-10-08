@@ -870,7 +870,7 @@
         #musicSettingsPage .music-action-btn.ui-cyan-btn:not(.secondary),
         #musicSettingsPage .music-url-save.ui-cyan-btn,
         #musicSettingsPage .music-save-meta.ui-cyan-btn {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -988,7 +988,7 @@
         #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary){
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             box-shadow: var(--bevel-solid-out) !important;
             transform: none !important;
         }

@@ -13,6 +13,8 @@
 
     /* 四类效果：正面高光、内侧暗边、外侧投影、玻璃反光。
      * 所有色源从七类用途派生；凹凸方向、轮廓和玻璃强度保持原有行为。 */
+    --effect-inner-emphasis: color-mix(in srgb, var(--color-text) 70%, transparent);
+    --effect-face-accent: linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--color-accent) 55%, var(--color-surface)) 42.5%, var(--color-accent) 56.5%, color-mix(in srgb, var(--color-accent) 88%, var(--color-surface)) 100%);
     --effect-face-white: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
     --effect-highlight: color-mix(in srgb, var(--color-surface) 85%, transparent);
     --effect-highlight-soft: color-mix(in srgb, var(--color-surface) 60%, transparent);
@@ -310,7 +312,7 @@
     --wb-face-tint:var(--color-accent-soft);
     --wk-btn-tint:var(--color-tint);
     --wb-face-white:var(--effect-face-white);
-    --wb-face-solid:linear-gradient(180deg,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 0%,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 42.5%,var(--wk-accent) 56.5%,color-mix(in srgb,var(--wk-accent) 88%,var(--color-surface)) 100%);
+    --wb-face-solid:var(--effect-face-accent);
     --wb-white:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
     --wb-solid:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft);
     --wb-shadow:var(--effect-drop);
