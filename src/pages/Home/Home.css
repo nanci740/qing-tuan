@@ -1303,7 +1303,7 @@
 
 
         #main-content .mp3-player .time-stamps span {
-            font-family: 'SF Mono', Menlo, Consolas, monospace !important;
+            font-family: var(--font-active) !important;
             color: var(--mp3-lcd-ink);
             margin: 0;
         }

@@ -1041,7 +1041,7 @@
             border-top: 1px solid var(--win-line);
             background: var(--win-face);
             color: var(--win-ink);
-            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-family: var(--font-active);
             font-size: 9.5px;
             letter-spacing: 0.5px;
             text-align: right;
