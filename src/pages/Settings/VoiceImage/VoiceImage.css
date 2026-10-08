@@ -2137,5 +2137,5 @@
 /* @qingtuan-order:003972 */
 
         :is(html, #_#_#_#_#_) :is(.api-model-select-btn, .vi-choice-btn, .mcp-select-btn, .world-select-btn):active::before {
-            translate: 0 1px;
+
         }
