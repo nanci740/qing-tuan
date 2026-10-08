@@ -1,9 +1,8 @@
 /* @qingtuan-order:004358 */
 /* 老式清理工具：一张凹陷列表、一个释放空间读数，不混用页签和分组框。 */
 .image-storage-tool { border: 1px solid var(--color-muted); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-drop); overflow: hidden; color: var(--color-text); }
-.image-storage-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--color-muted); background: var(--color-page); }
-.image-storage-titlebar h3 { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--color-text); font-size: 11px; font-weight: 600; letter-spacing: .8px; }
-.image-storage-titlebar h3 svg { width: 12px; height: 12px; fill: none; stroke: var(--set-fill, var(--win-deep)); stroke-width: 1.5; }
+.image-storage-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px 6px 10px; border-bottom: 1px solid var(--color-muted); background: var(--color-page); }
+.image-storage-titlebar h3 { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--color-text); font-size: 11px; font-weight: 600; letter-spacing: .8px; line-height: 1.2; }
 .image-storage-title-tools { display: flex; align-items: center; }
 .image-storage-close { width: 12px; height: 12px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 0; background: transparent; color: var(--win-line); box-shadow: none; cursor: pointer; }
 .image-storage-close svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1; }
