@@ -1999,7 +1999,7 @@
             top: 3px;
             left: 3px;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: 0 1px 4px var(--effect-drop-soft);
             transition: transform .2s ease;
         }
@@ -3049,7 +3049,7 @@
             padding: 0;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--win-face);
+            background: var(--effect-face-white-compact);
             color: var(--win-deep);
             cursor: pointer;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
@@ -3766,7 +3766,7 @@
             width: 14px !important;
             height: 14px !important;
             box-sizing: border-box;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
         }
 
 /* @qingtuan-order:001296 */
@@ -3914,7 +3914,7 @@
             padding: 0 !important;
             border: 1px solid rgba(var(--color-surface-rgb), 0.85) !important;
             border-radius: 2px !important;
-            background: rgba(var(--color-surface-rgb), 0.16) !important;
+            background: var(--effect-face-white-compact) !important;
             color: var(--color-surface) !important;
             font-size: 14px !important;
             line-height: 17px !important;
@@ -6195,7 +6195,7 @@
 
 #worldPickerModal#worldPickerModal .api-model-close{
   border:1px solid var(--wt)!important;border-radius:3px!important;
-  background:var(--color-surface)!important;color:var(--wt)!important;
+  background:var(--effect-face-white-compact)!important;color:var(--wt)!important;
   text-shadow:none;
 }
 
@@ -7254,7 +7254,7 @@
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
             line-height: 13px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
@@ -7496,7 +7496,7 @@
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
-            background: var(--effect-face-white) !important;
+            background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
             line-height: 13px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
@@ -7711,7 +7711,7 @@
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
             line-height: 13px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
@@ -9113,8 +9113,7 @@
 
         #mcpTestBtn#mcpTestBtn#mcpTestBtn#mcpTestBtn#mcpTestBtn,
         #mcpDeleteBtn#mcpDeleteBtn#mcpDeleteBtn#mcpDeleteBtn#mcpDeleteBtn {
-            background: var(--color-surface) !important;
-            background-image: none !important;
+            background: var(--effect-face-white) !important;
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;

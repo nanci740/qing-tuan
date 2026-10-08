@@ -122,7 +122,7 @@
             top: 3px;
             left: 3px;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: 0 1px 4px var(--effect-drop-soft);
             transition: transform .2s ease;
         }
@@ -602,7 +602,7 @@
             width: 14px !important;
             height: 14px !important;
             box-sizing: border-box;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
         }
 
 /* @qingtuan-order:001471 */
@@ -740,7 +740,7 @@
         #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-switch::after {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            background: var(--effect-face-white)!important;
+            background: var(--effect-face-white-compact)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -975,7 +975,7 @@
             height: 22px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white-compact) !important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
             cursor: pointer;

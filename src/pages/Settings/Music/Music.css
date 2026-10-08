@@ -712,7 +712,7 @@
             left: 2px;
             width: 14px;
             height: 14px;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-sizing: border-box;
         }
 
@@ -1160,7 +1160,7 @@
         #musicSettingsPage#musicSettingsPage .music-switch::after {
             border: 1px solid var(--win-deep);
             border-radius: 1px;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 

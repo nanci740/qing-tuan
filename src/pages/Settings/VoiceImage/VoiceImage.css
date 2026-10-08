@@ -236,7 +236,7 @@
             margin-top: -3.5px;
             border: 0;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 3.5000000000000004%, transparent);
         }
 
@@ -264,7 +264,7 @@
             height: 10px;
             border: 0;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 3.5000000000000004%, transparent);
         }
 
@@ -456,7 +456,7 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             border: 0;
             margin-top: -3.5px;
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 4%, transparent);
@@ -485,7 +485,7 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             border: 0;
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 4%, transparent);
         }
@@ -1000,7 +1000,7 @@
             margin-top: -7px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
         }
 
@@ -1031,7 +1031,7 @@
             height: 18px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: inset -1px -1px 0 var(--effect-inner-shade);
         }
 
@@ -1153,7 +1153,7 @@
             margin-top: -4px;
             border: 1px solid var(--win-line);
             border-radius: 1px;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: inset -1px -1px 0 var(--effect-inner-shade);
         }
 
@@ -1577,7 +1577,7 @@
         #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-switch::after {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            background: var(--effect-face-white)!important;
+            background: var(--effect-face-white-compact)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -1740,7 +1740,7 @@
             margin-top: -8px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: var(--bevel-out);
             clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
         }
@@ -1751,7 +1751,7 @@
         #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-range::-moz-range-thumb {
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: var(--bevel-out);
         }
 
@@ -1952,7 +1952,7 @@
             margin-top: -5px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: var(--bevel-out);
         }
 
@@ -1962,7 +1962,7 @@
         #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-progress::-moz-range-thumb {
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--effect-face-white);
+            background: var(--effect-face-white-compact);
             box-shadow: var(--bevel-out);
         }
 

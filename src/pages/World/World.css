@@ -307,13 +307,13 @@
 
 .world-page .world-toggle::after{
   left:2px;width:14px;height:14px;box-sizing:border-box;
-  border:1px solid var(--win-line);border-radius:2px;background:var(--effect-face-white);
+  border:1px solid var(--win-line);border-radius:2px;background:var(--effect-face-white-compact);
   box-shadow:inset -1px -1px 0 var(--effect-inner-shade);
 }
 
 /* @qingtuan-order:002061 */
 
-.world-page .world-toggle:checked{background:var(--effect-face-accent)!important;border-color:var(--win-line)}
+.world-page .world-toggle:checked{background:var(--theme-color)!important;border-color:var(--win-line)}
 
 /* @qingtuan-order:002062 */
 
@@ -456,7 +456,7 @@
 
 /* @qingtuan-order:002097 */
 
-.world-page .world-range::-webkit-slider-thumb{width:12px;height:18px;margin-top:-7px;border:1px solid var(--win-line);border-radius:1px;background:var(--win-bar);box-shadow:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade)}
+.world-page .world-range::-webkit-slider-thumb{width:12px;height:18px;margin-top:-7px;border:1px solid var(--win-line);border-radius:1px;background:var(--effect-face-white-compact);box-shadow:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade)}
 
 /* @qingtuan-order:002098 */
 
@@ -468,7 +468,7 @@
 
 /* @qingtuan-order:002100 */
 
-.world-page .world-range::-moz-range-thumb{width:12px;height:18px;border:1px solid var(--win-line);border-radius:1px;background:var(--win-bar)}
+.world-page .world-range::-moz-range-thumb{width:12px;height:18px;border:1px solid var(--win-line);border-radius:1px;background:var(--effect-face-white-compact)}
 
 /* @qingtuan-order:002101 */
 
@@ -1136,17 +1136,17 @@
 
 .world-page [data-toggle-book].world-toggle::after{
   content:'OFF';left:2px;place-items:center;
-  background:var(--effect-face-white);
+  background:var(--effect-face-white-compact);
   color:var(--world-teal,var(--win-line));font-weight:700;letter-spacing:.5px;line-height:1;
 }
 
 /* @qingtuan-order:002258 */
 
-.world-page [data-toggle-book].world-toggle:checked{background:var(--effect-face-accent)!important;border-color:var(--world-teal,var(--win-line))}
+.world-page [data-toggle-book].world-toggle:checked{background:var(--theme-color)!important;border-color:var(--world-teal,var(--win-line))}
 
 /* @qingtuan-order:002259 */
 
-.world-page [data-toggle-book].world-toggle:checked::after{content:'ON';left:18px;background:var(--effect-face-white)}
+.world-page [data-toggle-book].world-toggle:checked::after{content:'ON';left:18px;background:var(--effect-face-white-compact)}
 
 /* @qingtuan-order:002260 */
 
@@ -1339,19 +1339,19 @@
 .world-page [data-toggle-book].world-toggle::after,
 .world-page .world-shelf-toggle.world-toggle::after{
   content:'';display:block;left:2px;width:14px;height:14px;box-sizing:border-box;
-  border:1px solid var(--win-line);border-radius:2px;background:var(--effect-face-white);
+  border:1px solid var(--win-line);border-radius:2px;background:var(--effect-face-white-compact);
   box-shadow:inset -1px -1px 0 var(--effect-inner-shade);font-size:0;
 }
 
 /* @qingtuan-order:002297 */
 
 .world-page [data-toggle-book].world-toggle:checked,
-.world-page .world-shelf-toggle.world-toggle:checked{background:var(--effect-face-accent)!important;border-color:var(--win-line)}
+.world-page .world-shelf-toggle.world-toggle:checked{background:var(--theme-color)!important;border-color:var(--win-line)}
 
 /* @qingtuan-order:002298 */
 
 .world-page [data-toggle-book].world-toggle:checked::after,
-.world-page .world-shelf-toggle.world-toggle:checked::after{content:'';left:20px;background:var(--effect-face-white)}
+.world-page .world-shelf-toggle.world-toggle:checked::after{content:'';left:20px;background:var(--effect-face-white-compact)}
 
 /* @qingtuan-order:002299 */
 
@@ -1996,7 +1996,7 @@
 
 .world-page .world-toggle:checked,
 .world-page [data-toggle-book].world-toggle:checked,
-.world-page .world-shelf-toggle.world-toggle:checked{background:var(--effect-face-accent)!important;border-color:var(--wt)!important}
+.world-page .world-shelf-toggle.world-toggle:checked{background:var(--theme-color)!important;border-color:var(--wt)!important}
 
 /* @qingtuan-order:002494 */
 
@@ -2096,7 +2096,7 @@
 
 .world-page .world-toggle:checked,
 .world-page [data-toggle-book].world-toggle:checked,
-.world-page .world-shelf-toggle.world-toggle:checked{background:var(--effect-face-accent)!important}
+.world-page .world-shelf-toggle.world-toggle:checked{background:var(--theme-color)!important}
 
 /* @qingtuan-order:002527 */
 
