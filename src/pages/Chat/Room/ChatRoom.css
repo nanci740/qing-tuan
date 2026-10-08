@@ -1766,7 +1766,7 @@
 /* @qingtuan-order:004254 */
 
 
-        /* 转发出来的「聊天记录」卡片：白底细框小卡（像古早的文件夹卡），标题深青灰、预览淡一点，
+        /* 转发出来的「聊天记录」卡片：透明底细框小卡（像古早的文件夹卡），标题深青灰、预览淡一点，
            下面一道细线 + 「聊天记录」小字。卡片在讯息里面，要另外设成 block，不然会被「> div 一律 inline」挤成一行 */
 
 /* @qingtuan-order:004255 */
@@ -1778,7 +1778,7 @@
             padding: 6px 9px 5px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: var(--color-surface) !important;
+            background: transparent !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), var(--effect-drop) !important;
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
@@ -1786,7 +1786,7 @@
 
 /* @qingtuan-order:004256 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-card:active { background: color-mix(in srgb, var(--theme-color) 12%, var(--color-surface)) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-card:active { background: color-mix(in srgb, var(--theme-color) 12%, transparent) !important; }
 
 /* @qingtuan-order:004257 */
 
