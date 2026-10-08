@@ -1,4 +1,4 @@
-import { DEFAULT_BIRD_AVATAR } from '../../utils/defaultAvatar';
+import { DEFAULT_PHOTO } from '../../utils/defaultPhoto';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { OriginalComment } from '../../components/shared/OriginalComment';
 import { EditableText } from '../../components/shared/EditableText';
@@ -146,7 +146,7 @@ export function PersonalProfile() {
 {"\n            "}
 <div className={"pp2-polaroid-front"}>
 {"\n              "}
-<div role={"button"} tabIndex={0} aria-label={"点击添加或更换照片"} data-title={"点击添加或更换照片"} className={`pp2-polaroid-photo${profile.photo ? " has-photo" : ""}`} style={{ backgroundImage: `url("${profile.photo || DEFAULT_BIRD_AVATAR}")` }} onClick={profile.choosePhoto} onKeyDown={event => {
+<div role={"button"} tabIndex={0} aria-label={"点击添加或更换照片"} data-title={"点击添加或更换照片"} className={`pp2-polaroid-photo${profile.photo ? " has-photo" : ""}`} style={{ backgroundImage: `url("${profile.photo || DEFAULT_PHOTO}")`, backgroundSize: profile.photo ? "cover" : "contain", backgroundColor: profile.photo ? undefined : "#f3f3f3" }} onClick={profile.choosePhoto} onKeyDown={event => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
                     profile.choosePhoto();

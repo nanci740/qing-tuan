@@ -1,3 +1,4 @@
+import {PhotoImage} from '../../components/shared/PhotoImage';
 import { DEFAULT_BIRD_AVATAR, DEFAULT_FOX_AVATAR } from '../../utils/defaultAvatar';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { useWorld } from '../../providers/WorldProvider';
@@ -301,7 +302,7 @@ export function Home() {
             {"\n"}
             <div className="mp3-track">
               {"\n"}
-              <div className="player-mini-cover" id="playerMiniCover">{player.miniCover ? <img src={player.miniCover} alt="音乐封面" /> : <span>♪</span>}</div>
+              <div className="player-mini-cover" id="playerMiniCover"><PhotoImage src={player.miniCover} alt="音乐封面" /></div>
               {"\n"}
               <div className="mp3-track-text">
                 {"\n"}

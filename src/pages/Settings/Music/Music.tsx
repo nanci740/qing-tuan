@@ -1,3 +1,4 @@
+import {PhotoImage} from '../../../components/shared/PhotoImage';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { useMusic } from '../../../providers/MusicProvider';
 import { MusicPlaylist } from './components/MusicPlaylist';
@@ -188,7 +189,7 @@ export function Music() {
             {"\n                    "}
             <div className="music-cover-row">
               {"\n                        "}
-              <div className="music-cover-preview" id="musicCoverPreview">{music.coverPreview ? <img src={music.coverPreview} alt="音乐封面" /> : <span>封面</span>}</div>
+              <div className="music-cover-preview" id="musicCoverPreview"><PhotoImage src={music.coverPreview} alt="音乐封面" /></div>
               {"\n                        "}
               <div className="music-cover-actions">
                 {"\n                            "}
