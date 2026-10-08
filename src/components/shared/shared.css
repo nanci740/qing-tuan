@@ -7305,6 +7305,7 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check,
+        #apiModelModal#apiModelModal#apiModelModal .api-model-check,
         #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-check {
             border: 1px solid var(--win-deep) !important;
             border-radius: 50% !important;
@@ -7317,6 +7318,9 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check svg,
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check::after,
+        #apiModelModal#apiModelModal#apiModelModal .api-model-check::after,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-check::after,
         #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-check svg {
             display: none !important;
         }
@@ -7325,6 +7329,7 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item.selected .api-model-check,
+        #apiModelModal#apiModelModal#apiModelModal .api-model-item.selected .api-model-check,
         #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item.selected .api-model-check {
             background: radial-gradient(circle, var(--set-fill, var(--win-deep)) 0 3.5px, var(--color-surface) 4px) !important;
         }
@@ -7374,15 +7379,6 @@
 
         #apiModelModal#apiModelModal#apiModelModal .api-model-item.selected {
             background: color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)) !important;
-        }
-
-/* @qingtuan-order:002966 */
-
-
-        #apiModelModal#apiModelModal#apiModelModal .api-model-check {
-            border: 1px solid var(--win-deep) !important;
-            border-radius: 0 !important;
-            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:002967 */
