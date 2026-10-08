@@ -9523,11 +9523,11 @@
 
 /* @qingtuan-order:004332 */
 
-        /* 我的在线（可点）：跟对方那格同款，右边一个小小往下三角 */
+        /* 在线标题保持静止，只让右侧箭头作为切换按钮。 */
 
 /* @qingtuan-order:004333 */
 
-        .cr-panel-head.cr-my-presence { width: 100%; border: 0; border-bottom: 1px solid var(--cr-line); font: inherit; font-size: 10px; font-weight: 600; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .cr-panel-head.cr-my-presence { width: 100%; border: 0; border-bottom: 1px solid var(--cr-line); font: inherit; font-size: 10px; font-weight: 600; text-align: left; }
 
 /* @qingtuan-order:004334 */
 
@@ -9535,7 +9535,9 @@
 
 /* @qingtuan-order:004335 */
 
-        .cr-my-caret { flex: 0 0 auto; border: 3px solid transparent; border-top: 4px solid var(--cr-peer); border-bottom: 0; }
+        .cr-my-caret { display: grid; place-items: center; flex: 0 0 16px; width: 16px; height: 16px; padding: 0; border: 1px solid transparent; border-radius: 1px; background: transparent; color: var(--cr-peer); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .cr-my-caret::after { content: ""; border: 3px solid transparent; border-top: 4px solid currentColor; border-bottom: 0; }
+        .cr-my-caret:is(:active, .sp-is-pressed) { background: var(--effect-face-white); box-shadow: var(--effect-sunken); }
 
 /* @qingtuan-order:004336 */
 

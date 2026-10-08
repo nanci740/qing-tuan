@@ -1119,6 +1119,11 @@
 
 /* @qingtuan-order:004104 */
 
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn:not(:disabled):is(:active, .sp-is-pressed) {
+            background: var(--cr-send) !important;
+            box-shadow: var(--effect-sunken) !important;
+        }
+
         #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn svg { display: none !important; }
 
 /* @qingtuan-order:004105 */
