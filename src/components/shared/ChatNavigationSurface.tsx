@@ -14,7 +14,7 @@ export function useChatNavigationSurface(surface: ChatSurfaceKey, initialClass: 
   const forwardedRef = useRef(elementRef); forwardedRef.current = elementRef;
   const ref = useCallback((node: HTMLElement | null) => {
     element.current = node; forwardedRef.current?.(node);
-    navigation.register(surface, node ? { data(key,value){setData(previous=>({...previous,[key]:value}));},style(key, value) { setStyle(previous=>({...previous,[key]:value})); }, measure() { element.current?.getBoundingClientRect(); }, toggle(token, enabled, hidden) {
+    navigation.register(surface, node ? { data(key,value){setData(previous=>({...previous,[key]:value}));},style(key, value) { setStyle(previous=>({...previous,[key]:value})); }, measure() { element.current?.getBoundingClientRect(); }, async readyWallpaper() { const image=element.current?.querySelector<HTMLImageElement>('.chat-message-wallpaper img');if(image)await image.decode().catch(()=>{}); }, toggle(token, enabled, hidden) {
       setState(previous=>{const tokens=previous.className.split(/\s+/).filter(Boolean),index=tokens.indexOf(token);if(enabled&&index<0)tokens.push(token);if(!enabled&&index>=0)tokens.splice(index,1);return {className:tokens.join(' '),hidden:hidden??previous.hidden};});
     } } : null);
   }, [navigation, surface, initialClass]);

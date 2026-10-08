@@ -11,7 +11,7 @@ export interface ChatNavigationServices {
   syncIdentity(): void;
   prepareSettings(): void;
 }
-export interface ChatSurfaceHandle { data?(key:string,value:string):void; style?(key: string, value: string): void; measure?(): void; toggle(token: string, enabled: boolean, hidden?: boolean): void; }
+export interface ChatSurfaceHandle { data?(key:string,value:string):void; style?(key: string, value: string): void; measure?(): void; readyWallpaper?(): Promise<void>; toggle(token: string, enabled: boolean, hidden?: boolean): void; }
 export interface ChatNavigationApi {
   activeKey(value:string):void;
   selectionMode(enabled:boolean):void;
@@ -67,6 +67,9 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
         const prepared=services.current?.prepareRoom();
         toggle('room', 'is-hidden', false);
         await prepared;
+        if(revision!==entryRevision.current)return;
+        // Decode the image actually mounted in the room, then settle font layout.
+        await surfaces.current.get('room')?.readyWallpaper?.();
         if(revision!==entryRevision.current)return;
         // Force font discovery in the now-laid-out room before its first visible frame.
         surfaces.current.get('room')?.measure?.();
