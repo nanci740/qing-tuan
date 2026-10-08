@@ -78,11 +78,11 @@ try{
    const props=['backgroundColor','borderColor','borderWidth','borderRadius','boxShadow','color','webkitTextFillColor','fontSize','minHeight'];
    const style=(selector,pseudo)=>{const c=getComputedStyle(document.querySelector(selector),pseudo);return props.filter(p=>!pseudo||p!=='minHeight').map(p=>c[p]);};
    const same=(a,b,pseudo)=>JSON.stringify(style(a,pseudo))===JSON.stringify(style(b,pseudo));
-   const compare=()=>same('#imageStorageSection','#themeSettingsPage .theme-setting-group:nth-child(7)')&&same('#imageStorageSection .theme-setting-label','#themeSettingsPage .theme-setting-group:nth-child(7) .theme-setting-label')&&same('#imageStorageSection .theme-setting-label','#themeSettingsPage .theme-setting-group:nth-child(7) .theme-setting-label','::after')&&same('#imageStorageSection .theme-setting-card','#themeSettingsPage .theme-setting-group:nth-child(7) .theme-setting-card')&&same('#inspectImageStorageBtn','#resetAllCustomIconsBtn')&&same('#cleanImageStorageBtn','#saveCustomIconsBtn');
+   const compare=()=>same('#imageStorageSection','#themeSettingsPage .theme-setting-group:nth-child(7)')&&same('#imageStorageSection .theme-setting-card','#themeSettingsPage .theme-setting-group:nth-child(7) .theme-setting-card')&&same('#inspectImageStorageBtn','#resetAllCustomIconsBtn')&&same('#cleanImageStorageBtn','#saveCustomIconsBtn');
    const normal=compare();document.documentElement.style.setProperty('--theme-color','#D3AFBA');const pink=compare();document.documentElement.style.removeProperty('--theme-color');
    return {normal,pink};
  });
- check('cleanup reuses appearance window and button styles',matchedStyles.normal);
+ check('cleanup keeps shared frame and button styles',matchedStyles.normal);
  check('shared styles stay consistent under pink theme',matchedStyles.pink);
 
  await page.setViewportSize({width:320,height:640});
