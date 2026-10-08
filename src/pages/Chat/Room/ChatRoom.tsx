@@ -11,7 +11,7 @@ import {ChatMoonReplyButton} from './ChatReplyTrigger';
 import {ChatComposeField,ChatSendButton} from './ChatComposer';
 import {ChatPinBar} from './ChatPins';
 import {ChatQuotePreview} from './ChatMessageOperations';
-import { ChatWallpaperMessageList } from '../Settings/ChatAppearanceControls';
+import { ChatMessageWallpaper, ChatWallpaperMessageList } from '../Settings/ChatAppearanceControls';
 import { ChatNavigationSurface } from '../../../components/shared/ChatNavigationSurface';
 import { useChatNavigation } from '../../../providers/ChatNavigationProvider';
 import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
@@ -60,7 +60,7 @@ export function ChatRoom() {
         {"\n        "}
       </OriginalElement>
       {"\n\n        "}
-      <ChatPinBar /><ChatWallpaperMessageList />
+      <ChatMessageWallpaper /><ChatPinBar /><ChatWallpaperMessageList />
       {"\n\n        "}
       <ChatQuickActions>
         {"\n            "}
