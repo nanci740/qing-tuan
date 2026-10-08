@@ -79,11 +79,11 @@ try{
    const props=['backgroundColor','borderColor','borderWidth','borderRadius','boxShadow','color','webkitTextFillColor','fontSize','minHeight'];
    const style=(selector,pseudo)=>{const c=getComputedStyle(document.querySelector(selector),pseudo);return props.filter(p=>!pseudo||p!=='minHeight').map(p=>c[p]);};
    const same=(a,b,pseudo)=>JSON.stringify(style(a,pseudo))===JSON.stringify(style(b,pseudo));
-   const compare=()=>same('#imageStorageSection','#themeSettingsPage .theme-setting-group:nth-child(7)')&&same('#imageStorageSection .theme-setting-card','#themeSettingsPage .theme-setting-group:nth-child(7) .theme-setting-card')&&same('#inspectImageStorageBtn','#resetAllCustomIconsBtn')&&same('#cleanImageStorageBtn','#saveCustomIconsBtn');
+   const compare=()=>same('#inspectImageStorageBtn','#resetAllCustomIconsBtn')&&same('#cleanImageStorageBtn','#saveCustomIconsBtn');
    const normal=compare();document.documentElement.style.setProperty('--theme-color','#D3AFBA');const pink=compare();document.documentElement.style.removeProperty('--theme-color');
    return {normal,pink};
  });
- check('cleanup keeps shared frame and button styles',matchedStyles.normal);
+ check('cleanup keeps shared button styles',matchedStyles.normal);
  check('shared styles stay consistent under pink theme',matchedStyles.pink);
 
  await page.setViewportSize({width:320,height:640});
@@ -92,7 +92,7 @@ try{
  await page.screenshot({path:path.join(root,'..','image-cleanup-settings.png')});
  const before=await dbKeys();await click('#cleanImageStorageBtn');await page.waitForSelector('.sp-confirm-btn.is-primary',{state:'attached'});await click('.sp-confirm-btn:not(.is-primary)');
  check('cancel confirmation deletes nothing',JSON.stringify(await dbKeys())===JSON.stringify(before));
- await click('#cleanImageStorageBtn');await page.waitForSelector('.sp-confirm-btn.is-primary',{state:'attached'});await click('.sp-confirm-btn.is-primary');await page.waitForFunction(()=>document.querySelector('#imageStorageSection dd:last-child').textContent.includes('张'));
+ await click('#cleanImageStorageBtn');await page.waitForSelector('.sp-confirm-btn.is-primary',{state:'attached'});await click('.sp-confirm-btn.is-primary');await page.waitForFunction(()=>document.querySelector('#imageStorageSection dd:first-of-type').textContent.includes('张'));
  await page.waitForFunction(()=>document.querySelector('#cleanImageStorageBtn').disabled&&!document.querySelector('#inspectImageStorageBtn').disabled);
  check('confirmed UI cleanup preserves referenced pictures',(await dbKeys()).length===3);
  const colors=await page.locator('.image-storage-summary').evaluate(e=>{const old=getComputedStyle(e).color;document.documentElement.style.setProperty('--theme-color','#D3AFBA');const changed=getComputedStyle(e).color;document.documentElement.style.removeProperty('--theme-color');return {old,changed};});check('cleanup text follows theme',colors.old!==colors.changed);

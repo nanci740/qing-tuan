@@ -2298,7 +2298,7 @@
 
 /* @qingtuan-order:003477 */
 
-        #main-content .tama-meter .tf-x { fill: var(--home-ink); }
+        #main-content .tama-meter .tf-x { fill: var(--color-accent); }
 
 /* @qingtuan-order:003478 */
 
@@ -2843,12 +2843,12 @@
 
 
         /* ---------------- 主画面 · 高光加强：跟 Chat 同一套古早塑胶光泽——机身上半部一道亮面反光（中间有分界）、
-           边缘左上亮白右下暗边两层；小按钮上半截亮、下半截淡主题色（颜色全部跟随主题色） ---------------- */
+           边缘左上亮白右下暗边各一层；小按钮上半截亮、下半截淡主题色（颜色全部跟随主题色） ---------------- */
 
 /* @qingtuan-order:003592 */
 
 
-        /* MP3 机身：两层立体边 + 上半部亮面 */
+        /* MP3 机身：一亮一暗立体边 + 上半部亮面 */
 
 /* @qingtuan-order:003593 */
 
@@ -2876,12 +2876,12 @@
 /* @qingtuan-order:003595 */
 
 
-        /* 转盘：外圈加两层立体边，上半一片弯月亮面；中间播放钮改成上亮下淡的塑胶钮 */
+        /* 转盘：外圈加一亮一暗立体边，上半一片弯月亮面；中间播放钮改成上亮下淡的塑胶钮 */
 
 /* @qingtuan-order:003596 */
 
         #main-content .mp3-player .controls {
-            box-shadow: var(--home-rim), inset 1px 1px 2px var(--effect-inner-emphasis), var(--effect-drop);
+            box-shadow: var(--home-rim), var(--effect-drop);
         }
 
 /* @qingtuan-order:003597 */
@@ -2915,7 +2915,7 @@
 /* @qingtuan-order:003600 */
 
 
-        /* 底部导航：亮面带加强，下缘收成一条清楚的分界；外框也用两层立体边 */
+        /* 底部导航：亮面带加强，下缘收成一条清楚的分界；外框也用一亮一暗立体边 */
 
 /* @qingtuan-order:003601 */
 
@@ -3041,7 +3041,7 @@
 
         #main-content .mp3-player .controls .btn-play,
         #main-content .tama-btn {
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop);
+            box-shadow: var(--effect-button-shadow);
         }
 
 /* @qingtuan-order:003628 */
