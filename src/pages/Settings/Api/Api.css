@@ -1503,7 +1503,7 @@
             align-self: stretch;
             background: var(--win-face);
             color: var(--win-ink);
-            font-family: var(--mono);
+            font-family: var(--font-active);
             font-size: 9.5px;
             border-right: 1px solid var(--win-line);
         }
