@@ -12,7 +12,7 @@ export function RetroSelect({id,className,title,value,children,onChange}: {id?:s
   return [{value:props.value??props.attributes?.find(a=>a.name==='value')?.value??label,label}];
  });
  const selected=options.find(o=>o.value===value);
- const open=()=>choice.openChoice({title,options,selected:value,confirm:onChange});
+ const open=()=>choice.openChoice({style:className?.split(/\s+/).includes('vi-choice-btn')?'settings':undefined,title,options,selected:value,confirm:onChange});
  const label=<span className="retro-select-label">{selected?.label??value}</span>;
  const arrow=<svg viewBox="0 0 8 5" aria-hidden="true"><path d="M0 0h8L4 5z" /></svg>;
  // 聊天设置的凹陷框只显示值，独立方形按钮负责打开与按下反馈。
