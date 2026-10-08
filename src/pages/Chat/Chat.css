@@ -13,7 +13,7 @@
             overflow: hidden;
             padding: 0 14px 14px;
             color: var(--ui-text-primary);
-            background: #F9F9F9;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:001607 */
@@ -44,9 +44,9 @@
             position: fixed;
             align-items: center;
             min-width: 0;
-            border: .5px solid rgba(255,255,255,.82);
+            border: .5px solid rgba(var(--color-surface-rgb), .82);
             border-radius: 10px;
-            background: rgba(255,255,255,.78);
+            background: rgba(var(--color-surface-rgb), .78);
             backdrop-filter: blur(16px) saturate(118%);
             -webkit-backdrop-filter: blur(16px) saturate(118%);
             box-shadow: none;
@@ -56,7 +56,7 @@
 
         .chat-message-menu-panel button {
             background: transparent;
-            color: #5F6772;
+            color: var(--color-text);
             font: inherit;
             white-space: nowrap;
             cursor: pointer;
@@ -68,11 +68,11 @@
 
 /* @qingtuan-order:001738 */
 
-        .chat-app-page.chat-room-open { padding: 0; background: #F9F9F9; }
+        .chat-app-page.chat-room-open { padding: 0; background: var(--color-page); }
 
 /* @qingtuan-order:001910 */
 
-.chat-app-page:not(.chat-room-open){padding-left:0;padding-right:0;background:#F7F7F6}
+.chat-app-page:not(.chat-room-open){padding-left:0;padding-right:0;background:var(--color-page)}
 
 /* @qingtuan-order:002572 */
 
@@ -102,18 +102,18 @@
 
 .chat-edit-overlay {
   position:fixed;inset:0;z-index:5500;display:flex;align-items:center;justify-content:center;
-  padding:22px;background:rgba(214,220,226,.26);
+  padding:22px;background:color-mix(in srgb, var(--color-muted) 26%, transparent);
   backdrop-filter:blur(8px) saturate(112%);-webkit-backdrop-filter:blur(8px) saturate(112%);
 }
 
 /* @qingtuan-order:002578 */
 
 .chat-edit-card {
-  width:min(340px,90vw);border:.5px solid rgba(255,255,255,.72);
-  border-radius:var(--ui-radius);padding:18px 16px 15px;background:rgba(255,255,255,.74);
+  width:min(340px,90vw);border:.5px solid rgba(var(--color-surface-rgb), .72);
+  border-radius:var(--ui-radius);padding:18px 16px 15px;background:rgba(var(--color-surface-rgb), .74);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28);
-  color:#5F6772;
+  box-shadow:inset 0 1px 0 rgba(var(--color-surface-rgb), .28);
+  color:var(--color-text);
 }
 
 /* @qingtuan-order:002579 */
@@ -124,9 +124,9 @@
 
 .chat-edit-input {
   display:block;width:100%;min-height:110px;max-height:min(42vh,280px);resize:vertical;
-  border:.5px solid rgba(95,103,114,.18);border-radius:var(--ui-radius);
-  background:rgba(255,255,255,.64);padding:10px 11px;font:inherit;font-size:12px;
-  line-height:1.65;color:#5F6772;outline:none;box-shadow:none;
+  border:.5px solid color-mix(in srgb, var(--color-muted) 18%, transparent);border-radius:var(--ui-radius);
+  background:rgba(var(--color-surface-rgb), .64);padding:10px 11px;font:inherit;font-size:12px;
+  line-height:1.65;color:var(--color-text);outline:none;box-shadow:none;
 }
 
 /* @qingtuan-order:002581 */
@@ -140,13 +140,13 @@
 /* @qingtuan-order:002583 */
 
 .chat-edit-btn {
-  height:34px;border:.5px solid rgba(255,255,255,.62);border-radius:var(--ui-radius);
-  background:rgba(255,255,255,.54);color:#9AA3AC;font:inherit;font-size:12px;cursor:pointer;
+  height:34px;border:.5px solid rgba(var(--color-surface-rgb), .62);border-radius:var(--ui-radius);
+  background:rgba(var(--color-surface-rgb), .54);color:var(--color-muted);font:inherit;font-size:12px;cursor:pointer;
 }
 
 /* @qingtuan-order:002584 */
 
-.chat-edit-btn.primary {background:rgba(var(--theme-rgb),.78);border-color:rgba(255,255,255,.8);color:#FFFFFF;}
+.chat-edit-btn.primary {background:rgba(var(--theme-rgb),.78);border-color:rgba(var(--color-surface-rgb), .8);color:var(--color-surface);}
 
 /* @qingtuan-order:002585 */
 
@@ -155,11 +155,11 @@
 
 /* @qingtuan-order:002586 */
 
-.chat-recall-description {font-size:12px;line-height:1.7;color:#5F6772;}
+.chat-recall-description {font-size:12px;line-height:1.7;color:var(--color-text);}
 
 /* @qingtuan-order:002588 */
 
-.chat-message-menu-panel button[data-message-action="recall"] {color:#5F6772;}
+.chat-message-menu-panel button[data-message-action="recall"] {color:var(--color-text);}
 
 /* @qingtuan-order:002589 */
 
@@ -179,7 +179,7 @@
 
 /* @qingtuan-order:002593 */
 
-.chat-message-menu-panel button[data-message-action="delete"] {color:#C67878;}
+.chat-message-menu-panel button[data-message-action="delete"] {color:var(--color-danger);}
 
 /* @qingtuan-order:002610 */
 
@@ -220,10 +220,10 @@
             padding: 3px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent),
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
         }
 
@@ -251,8 +251,8 @@
         #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button:active {
             translate: none !important;
             background: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:004198 */
@@ -268,16 +268,16 @@
             left: 2px;
             right: 2px;
             border-top: 1px solid color-mix(in srgb, var(--cr-line) 55%, transparent);
-            border-bottom: 1px solid #FFFFFF;
+            border-bottom: 1px solid var(--color-surface);
         }
 
 /* @qingtuan-order:004200 */
 
-        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"] { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"] { color: var(--color-danger-ink) !important; -webkit-text-fill-color: var(--color-danger-ink) !important; }
 
 /* @qingtuan-order:004201 */
 
-        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"]:active { background: #AD8382 !important; color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"]:active { background: var(--color-danger-ink) !important; color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important; }
 
 /* @qingtuan-order:004244 */
 
@@ -289,7 +289,7 @@
 /* @qingtuan-order:004245 */
 
         #chatAppPage#chatAppPage > .chat-edit-overlay {
-            background: rgba(34, 40, 47, 0.2) !important;
+            background: color-mix(in srgb, var(--color-muted) 20%, transparent) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -302,7 +302,7 @@
             overflow: hidden;
             border: 1px solid var(--cr-line) !important;
             border-radius: 4px !important;
-            background: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF) !important;
+            background: color-mix(in srgb, var(--theme-color) 15%, var(--color-surface)) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
@@ -317,10 +317,10 @@
             height: 26px;
             margin: 0 !important;
             padding: 0 9px !important;
-            background: linear-gradient(180deg, #FFFFFF 0%, var(--cr-head) 12%, var(--cr-head) 100%) !important;
+            background: linear-gradient(180deg, var(--color-surface) 0%, var(--cr-head) 12%, var(--cr-head) 100%) !important;
             border-bottom: 1px solid var(--cr-line);
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             font-size: 12px !important;
             font-weight: 600 !important;
             letter-spacing: 1px;
@@ -346,7 +346,7 @@
             width: calc(100% - 36px) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--cr-sunken) !important;
             color: var(--cr-title) !important;
             font-size: 11.5px !important;
@@ -374,9 +374,9 @@
 /* @qingtuan-order:004253 */
 
         #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-btn.primary {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-head) 55%, #FFFFFF) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
         }

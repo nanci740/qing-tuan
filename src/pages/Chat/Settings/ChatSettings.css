@@ -18,15 +18,15 @@
 
 /* @qingtuan-order:002614 */
 
-.chat-settings-shell {padding:10px 12px 30px!important;background:linear-gradient(180deg,rgba(var(--theme-rgb),.08),#F7F8F9 34%,#F7F8F9);}
+.chat-settings-shell {padding:10px 12px 30px!important;background:linear-gradient(180deg,rgba(var(--theme-rgb),.08),var(--color-page) 34%,var(--color-page));}
 
 /* @qingtuan-order:002615 */
 
-.chat-settings-profile {display:flex;align-items:center;gap:13px;padding:16px;margin-bottom:12px;border:.5px solid rgba(255,255,255,.9);border-radius:18px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(91,105,114,.055);}
+.chat-settings-profile {display:flex;align-items:center;gap:13px;padding:16px;margin-bottom:12px;border:.5px solid rgba(var(--color-surface-rgb), .9);border-radius:18px;background:rgba(var(--color-surface-rgb), .82);box-shadow:0 6px 22px color-mix(in srgb, var(--color-muted) 5.5%, transparent);}
 
 /* @qingtuan-order:002616 */
 
-.chat-settings-profile-avatar {width:58px;height:58px;flex:0 0 auto;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.92);background:#EEF2F3;}
+.chat-settings-profile-avatar {width:58px;height:58px;flex:0 0 auto;border-radius:50%;object-fit:cover;border:2px solid rgba(var(--color-surface-rgb), .92);background:var(--color-page);}
 
 /* @qingtuan-order:002617 */
 
@@ -41,7 +41,7 @@
 
 #chatSettingsPage,
 #chatSettingsPage .settings-header,
-#chatSettingsPage .chat-settings-shell {background:#F9F9F9!important;}
+#chatSettingsPage .chat-settings-shell {background:var(--color-page)!important;}
 
 /* @qingtuan-order:002620 */
 
@@ -61,11 +61,11 @@
 
 /* @qingtuan-order:002624 */
 
-#chatSettingsPage .chat-settings-profile-avatar {width:100%;height:100%;border:0;border-radius:0;outline:0;display:block;object-fit:cover;background:#EEF2F3;}
+#chatSettingsPage .chat-settings-profile-avatar {width:100%;height:100%;border:0;border-radius:0;outline:0;display:block;object-fit:cover;background:var(--color-page);}
 
 /* @qingtuan-order:002625 */
 
-#chatSettingsPage .chat-settings-profile-name {display:block;max-width:100%;font-size:11.5px;line-height:1.22;color:#4E5A64;font-weight:650;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#chatSettingsPage .chat-settings-profile-name {display:block;max-width:100%;font-size:11.5px;line-height:1.22;color:var(--color-text);font-weight:650;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* @qingtuan-order:002626 */
 
@@ -73,19 +73,19 @@
 
 /* @qingtuan-order:002627 */
 
-.chat-settings-menu-label {display:flex;align-items:center;gap:9px;margin:0 2px 8px;color:#87939A;font-size:8px;font-weight:650;letter-spacing:.16em;}
+.chat-settings-menu-label {display:flex;align-items:center;gap:9px;margin:0 2px 8px;color:var(--color-muted);font-size:8px;font-weight:650;letter-spacing:.16em;}
 
 /* @qingtuan-order:002628 */
 
-.chat-settings-menu-label::after {content:'';height:.5px;flex:1;background:rgba(95,103,114,.18);}
+.chat-settings-menu-label::after {content:'';height:.5px;flex:1;background:color-mix(in srgb, var(--color-muted) 18%, transparent);}
 
 /* @qingtuan-order:002629 */
 
-.chat-settings-menu {overflow:hidden;border:.5px solid rgba(95,103,114,.25);border-radius:8px;background:#FFFFFF;}
+.chat-settings-menu {overflow:hidden;border:.5px solid color-mix(in srgb, var(--color-muted) 25%, transparent);border-radius:8px;background:var(--color-surface);}
 
 /* @qingtuan-order:002630 */
 
-.chat-settings-entry {border-bottom:.5px solid rgba(95,103,114,.16);background:#FFFFFF;}
+.chat-settings-entry {border-bottom:.5px solid color-mix(in srgb, var(--color-muted) 16%, transparent);background:var(--color-surface);}
 
 /* @qingtuan-order:002631 */
 
@@ -97,7 +97,7 @@
 
 /* @qingtuan-order:002633 */
 
-.chat-settings-entry-icon {display:flex;width:31px;height:31px;flex:0 0 auto;align-items:center;justify-content:center;border:.5px solid rgba(var(--theme-rgb),.72);border-radius:5px;background:rgba(var(--theme-rgb),.08)!important;color:var(--theme-color,#DDF2F4)!important;}
+.chat-settings-entry-icon {display:flex;width:31px;height:31px;flex:0 0 auto;align-items:center;justify-content:center;border:.5px solid rgba(var(--theme-rgb),.72);border-radius:5px;background:rgba(var(--theme-rgb),.08)!important;color:var(--theme-color,var(--color-muted))!important;}
 
 /* @qingtuan-order:002634 */
 
@@ -109,15 +109,15 @@
 
 /* @qingtuan-order:002636 */
 
-.chat-settings-entry-copy strong {color:#5F6772;font-size:11.5px;font-weight:650;line-height:1.3;letter-spacing:.015em;}
+.chat-settings-entry-copy strong {color:var(--color-text);font-size:11.5px;font-weight:650;line-height:1.3;letter-spacing:.015em;}
 
 /* @qingtuan-order:002637 */
 
-.chat-settings-entry-copy span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9BA4AA;font-size:8.8px;line-height:1.4;}
+.chat-settings-entry-copy span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--color-muted);font-size:8.8px;line-height:1.4;}
 
 /* @qingtuan-order:002638 */
 
-.chat-settings-entry-chevron {width:14px;height:14px;flex:0 0 auto;fill:none;stroke:#8F9BA1;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease;}
+.chat-settings-entry-chevron {width:14px;height:14px;flex:0 0 auto;fill:none;stroke:var(--color-muted);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease;}
 
 /* @qingtuan-order:002639 */
 
@@ -125,7 +125,7 @@
 
 /* @qingtuan-order:002640 */
 
-.chat-settings-entry-panel {display:none;padding:0 18px 12px;border-top:.5px solid rgba(95,103,114,.11);background:#FBFCFC;}
+.chat-settings-entry-panel {display:none;padding:0 18px 12px;border-top:.5px solid color-mix(in srgb, var(--color-muted) 11%, transparent);background:var(--color-page);}
 
 /* @qingtuan-order:002641 */
 
@@ -133,7 +133,7 @@
 
 /* @qingtuan-order:002642 */
 
-.chat-font-card {padding:10px 0 9px;border-bottom:.5px solid rgba(95,103,114,.12);}
+.chat-font-card {padding:10px 0 9px;border-bottom:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);}
 
 /* @qingtuan-order:002643 */
 
@@ -153,7 +153,7 @@
 
 /* @qingtuan-order:002647 */
 
-.chat-setting-row {display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:8px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+.chat-setting-row {display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:8px 0;border-bottom:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);}
 
 /* @qingtuan-order:002648 */
 
@@ -165,11 +165,11 @@
 
 /* @qingtuan-order:002650 */
 
-.chat-setting-copy strong {color:#5F6772;font-size:10.8px;font-weight:600;line-height:1.35;}
+.chat-setting-copy strong {color:var(--color-text);font-size:10.8px;font-weight:600;line-height:1.35;}
 
 /* @qingtuan-order:002651 */
 
-.chat-setting-copy span {color:#9AA3A9;font-size:8.8px;line-height:1.45;}
+.chat-setting-copy span {color:var(--color-muted);font-size:8.8px;line-height:1.45;}
 
 /* @qingtuan-order:002652 */
 
@@ -181,11 +181,11 @@
 
 /* @qingtuan-order:002654 */
 
-.chat-setting-range-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#5F6772;font-size:10.8px;font-weight:600;}
+.chat-setting-range-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--color-text);font-size:10.8px;font-weight:600;}
 
 /* @qingtuan-order:002655 */
 
-.chat-setting-range-value {color:var(--theme-color,#DDF2F4);font-size:9px;font-weight:500;}
+.chat-setting-range-value {color:var(--theme-color,var(--color-muted));font-size:9px;font-weight:500;}
 
 /* @qingtuan-order:002656 */
 
@@ -193,7 +193,7 @@
 
 /* @qingtuan-order:002657 */
 
-.chat-setting-range::-webkit-slider-runnable-track {height:2px;border-radius:999px;background:#DDE3E5;}
+.chat-setting-range::-webkit-slider-runnable-track {height:2px;border-radius:999px;background:var(--color-paper);}
 
 /* @qingtuan-order:002658 */
 
@@ -201,7 +201,7 @@
 
 /* @qingtuan-order:002659 */
 
-.chat-setting-range::-moz-range-track {height:2px;border:0;border-radius:999px;background:#DDE3E5;}
+.chat-setting-range::-moz-range-track {height:2px;border:0;border-radius:999px;background:var(--color-paper);}
 
 /* @qingtuan-order:002660 */
 
@@ -209,7 +209,7 @@
 
 /* @qingtuan-order:002661 */
 
-.chat-setting-field-row {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+.chat-setting-field-row {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 0;border-bottom:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);}
 
 /* @qingtuan-order:002662 */
 
@@ -221,15 +221,15 @@
 
 /* @qingtuan-order:002664 */
 
-.chat-setting-field-label strong {color:#5F6772;font-size:10.8px;font-weight:600;line-height:1.35;}
+.chat-setting-field-label strong {color:var(--color-text);font-size:10.8px;font-weight:600;line-height:1.35;}
 
 /* @qingtuan-order:002665 */
 
-.chat-setting-field-label span {color:#9AA3A9;font-size:8.8px;line-height:1.45;}
+.chat-setting-field-label span {color:var(--color-muted);font-size:8.8px;line-height:1.45;}
 
 /* @qingtuan-order:002666 */
 
-.chat-setting-input,.chat-setting-select {width:min(46%,148px);height:30px;border:.5px solid rgba(95,103,114,.20);border-radius:5px;background:#FFFFFF;padding:0 8px;color:#5F6772;font:inherit;font-size:9.5px;outline:none;box-shadow:none;}
+.chat-setting-input,.chat-setting-select {width:min(46%,148px);height:30px;border:.5px solid color-mix(in srgb, var(--color-muted) 20%, transparent);border-radius:5px;background:var(--color-surface);padding:0 8px;color:var(--color-text);font:inherit;font-size:9.5px;outline:none;box-shadow:none;}
 
 /* @qingtuan-order:002667 */
 
@@ -240,15 +240,15 @@
 
 /* @qingtuan-order:002669 */
 
-.chat-setting-subhead {margin:11px 0 7px;color:#5F6772;font-size:10.8px;font-weight:600;}
+.chat-setting-subhead {margin:11px 0 7px;color:var(--color-text);font-size:10.8px;font-weight:600;}
 
 /* @qingtuan-order:002670 */
 
-.chat-setting-hint {color:#9AA3A9;font-size:8.8px;line-height:1.55;}
+.chat-setting-hint {color:var(--color-muted);font-size:8.8px;line-height:1.55;}
 
 /* @qingtuan-order:002671 */
 
-.chat-setting-empty {padding:11px 8px;border:.5px solid rgba(95,103,114,.12);border-radius:5px;color:#A7AEB4;font-size:9px;text-align:center;}
+.chat-setting-empty {padding:11px 8px;border:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);border-radius:5px;color:var(--color-muted);font-size:9px;text-align:center;}
 
 /* @qingtuan-order:002672 */
 
@@ -256,7 +256,7 @@
 
 /* @qingtuan-order:002676 */
 
-.chat-setting-block {display:block;padding:9px 0;border-bottom:.5px solid rgba(95,103,114,.12);}
+.chat-setting-block {display:block;padding:9px 0;border-bottom:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);}
 
 /* @qingtuan-order:002677 */
 
@@ -264,11 +264,11 @@
 
 /* @qingtuan-order:002678 */
 
-.chat-setting-block-title {display:block;margin-bottom:3px;color:#5F6772;font-size:10.8px;font-weight:600;}
+.chat-setting-block-title {display:block;margin-bottom:3px;color:var(--color-text);font-size:10.8px;font-weight:600;}
 
 /* @qingtuan-order:002679 */
 
-.chat-setting-textarea,.chat-setting-code {display:block;width:100%;min-height:70px;margin-top:8px;resize:vertical;border:.5px solid rgba(95,103,114,.20);border-radius:5px;background:#FFFFFF;padding:8px 9px;color:#5F6772;font:inherit;font-size:9.5px;line-height:1.55;outline:none;box-shadow:none;}
+.chat-setting-textarea,.chat-setting-code {display:block;width:100%;min-height:70px;margin-top:8px;resize:vertical;border:.5px solid color-mix(in srgb, var(--color-muted) 20%, transparent);border-radius:5px;background:var(--color-surface);padding:8px 9px;color:var(--color-text);font:inherit;font-size:9.5px;line-height:1.55;outline:none;box-shadow:none;}
 
 /* @qingtuan-order:002680 */
 
@@ -287,15 +287,15 @@
 
 /* @qingtuan-order:002684 */
 
-.chat-setting-action {min-height:28px;padding:5px 9px;border:.5px solid #DDE2E5;border-radius:5px;background:#FFFFFF;color:#7E8790;font:inherit;font-size:8.8px;cursor:pointer;}
+.chat-setting-action {min-height:28px;padding:5px 9px;border:.5px solid var(--color-divider);border-radius:5px;background:var(--color-surface);color:var(--color-text);font:inherit;font-size:8.8px;cursor:pointer;}
 
 /* @qingtuan-order:002685 */
 
-.chat-setting-action.primary {border-color:rgba(var(--theme-rgb),.50);background:rgba(var(--theme-rgb),.18);color:color-mix(in srgb,var(--theme-color) 70%,#5F6772);}
+.chat-setting-action.primary {border-color:rgba(var(--theme-rgb),.50);background:rgba(var(--theme-rgb),.18);color:color-mix(in srgb,var(--theme-color) 70%,var(--color-text));}
 
 /* @qingtuan-order:002686 */
 
-.chat-setting-action.danger {border-color:rgba(184,74,57,.35);color:#B84A39;}
+.chat-setting-action.danger {border-color:color-mix(in srgb, var(--color-danger-ink) 35%, transparent);color:var(--color-danger-ink);}
 
 /* @qingtuan-order:002687 */
 
@@ -338,25 +338,25 @@
         #chatSettingsPage .idw-bar {
             display: flex; align-items: center; gap: 5px; height: 20px; padding: 0 3px 0 4px;
             background:
-                linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.08) 50%, transparent 52%),
-                linear-gradient(90deg, oklch(from var(--idw-block) calc(l + 0.015) calc(c * 1.3) h) 8%, color-mix(in srgb, var(--theme-color) 50%, #FFFFFF) 82%, color-mix(in srgb, var(--theme-color) 35%, #FFFFFF) 100%);
+                linear-gradient(rgba(var(--color-surface-rgb), .35), rgba(var(--color-surface-rgb), .08) 50%, transparent 52%),
+                linear-gradient(90deg, oklch(from var(--idw-block) calc(l + 0.015) calc(c * 1.3) h) 8%, color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 82%, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 100%);
         }
 
 /* @qingtuan-order:003707 */
 
-        #chatSettingsPage .idw-ico { position: relative; flex: 0 0 auto; width: 13px; height: 10px; border: 1px solid #FFFFFF; border-radius: 1px; }
+        #chatSettingsPage .idw-ico { position: relative; flex: 0 0 auto; width: 13px; height: 10px; border: 1px solid var(--color-surface); border-radius: 1px; }
 
 /* @qingtuan-order:003708 */
 
-        #chatSettingsPage .idw-ico::before { content: ''; position: absolute; left: 1px; top: 1px; width: 4px; height: 6px; background: #FFFFFF; }
+        #chatSettingsPage .idw-ico::before { content: ''; position: absolute; left: 1px; top: 1px; width: 4px; height: 6px; background: var(--color-surface); }
 
 /* @qingtuan-order:003709 */
 
-        #chatSettingsPage .idw-ico::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 1px; background: #FFFFFF; box-shadow: 0 2px 0 #FFFFFF, 0 4px 0 #FFFFFF; }
+        #chatSettingsPage .idw-ico::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 1px; background: var(--color-surface); box-shadow: 0 2px 0 var(--color-surface), 0 4px 0 var(--color-surface); }
 
 /* @qingtuan-order:003710 */
 
-        #chatSettingsPage .idw-bar b { color: #FFFFFF; font-size: 10.5px; font-weight: 600; letter-spacing: .5px; text-shadow: 1px 1px 0 color-mix(in srgb, var(--idw-head) 60%, transparent); }
+        #chatSettingsPage .idw-bar b { color: var(--color-surface); font-size: 10.5px; font-weight: 600; letter-spacing: .5px; text-shadow: 1px 1px 0 color-mix(in srgb, var(--idw-head) 60%, transparent); }
 
 /* @qingtuan-order:003711 */
 
@@ -364,7 +364,7 @@
 
 /* @qingtuan-order:003712 */
 
-        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--idw-btn-face); box-shadow: inset 1px 1px 0 #FFFFFF; }
+        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--idw-btn-face); box-shadow: inset 1px 1px 0 var(--color-surface); }
 
 /* @qingtuan-order:003713 */
 
@@ -376,7 +376,7 @@
 
 /* @qingtuan-order:003715 */
 
-        #chatSettingsPage .idw-menu { display: flex; gap: 12px; padding: 3px 5px 2px; border-bottom: 1px solid var(--idw-soft); box-shadow: 0 1px 0 #FFFFFF; color: var(--idw-title); font-size: 9px; }
+        #chatSettingsPage .idw-menu { display: flex; gap: 12px; padding: 3px 5px 2px; border-bottom: 1px solid var(--idw-soft); box-shadow: 0 1px 0 var(--color-surface); color: var(--idw-title); font-size: 9px; }
 
 /* @qingtuan-order:003716 */
 
@@ -387,8 +387,8 @@
         #chatSettingsPage .idw-page {
             display: grid; grid-template-columns: 31% minmax(0, 1fr); gap: 10px; align-items: stretch;
             margin: 6px 1px 0; padding: 9px 8px 8px;
-            border: 1px solid var(--idw-line); background: #FFFFFF;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--idw-soft);
+            border: 1px solid var(--idw-line); background: var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--idw-soft);
         }
 
 /* @qingtuan-order:003718 */
@@ -441,7 +441,7 @@
 
 /* @qingtuan-order:003730 */
 
-        #chatSettingsPage .idw-row label { color: color-mix(in srgb, var(--idw-title) 80%, #FFFFFF); font-size: 8.5px; letter-spacing: .3px; text-align: right; }
+        #chatSettingsPage .idw-row label { color: color-mix(in srgb, var(--idw-title) 80%, var(--color-surface)); font-size: 8.5px; letter-spacing: .3px; text-align: right; }
 
 /* @qingtuan-order:003731 */
 
@@ -451,7 +451,7 @@
 
         #chatSettingsPage .idw-row strong {
             display: block; height: 17px; padding: 0 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            border: 1px solid var(--idw-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--idw-sunken);
+            border: 1px solid var(--idw-line); border-radius: 1px; background: var(--color-surface); box-shadow: var(--idw-sunken);
             color: var(--idw-title) !important; -webkit-text-fill-color: var(--idw-title) !important;
             font-size: 10.5px !important; font-weight: 400 !important; line-height: 15px !important; letter-spacing: 0 !important;
         }
@@ -498,7 +498,7 @@
 
 /* @qingtuan-order:003742 */
 
-        #chatSettingsPage .idw-dot { display: inline-block; width: 5px; height: 5px; margin-right: 3px; border-radius: 50%; background: oklch(from var(--idw-head) l calc(c * 1.2) h); box-shadow: 0 0 0 1px #FFFFFF; }
+        #chatSettingsPage .idw-dot { display: inline-block; width: 5px; height: 5px; margin-right: 3px; border-radius: 50%; background: oklch(from var(--idw-head) l calc(c * 1.2) h); box-shadow: 0 0 0 1px var(--color-surface); }
 
 /* @qingtuan-order:003743 */
 
@@ -570,7 +570,7 @@
 
 /* @qingtuan-order:003755 */
 
-        #chatSettingsPage#chatSettingsPage .chat-settings-menu-label::after { height: 0; border-top: 1px solid var(--cs-soft); border-bottom: 1px solid #FFFFFF; background: none; }
+        #chatSettingsPage#chatSettingsPage .chat-settings-menu-label::after { height: 0; border-top: 1px solid var(--cs-soft); border-bottom: 1px solid var(--color-surface); background: none; }
 
 /* @qingtuan-order:003756 */
 
@@ -584,8 +584,8 @@
 /* @qingtuan-order:003758 */
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry {
-            border: 1px solid var(--cs-line) !important; border-radius: 2px; background: #FFFFFF;
-            box-shadow: inset 1px 1px 0 #FFFFFF, var(--cs-drop);
+            border: 1px solid var(--cs-line) !important; border-radius: 2px; background: var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--color-surface), var(--cs-drop);
         }
 
 /* @qingtuan-order:003759 */
@@ -594,13 +594,13 @@
 
 /* @qingtuan-order:003760 */
 
-        #chatSettingsPage#chatSettingsPage .chat-settings-entry.is-open > .chat-settings-entry-button { background: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF); }
+        #chatSettingsPage#chatSettingsPage .chat-settings-entry.is-open > .chat-settings-entry-button { background: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface)); }
 
 /* @qingtuan-order:003761 */
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry-icon {
             border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
-            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            background: var(--color-surface) !important; box-shadow: var(--cs-sunken) !important;
             color: var(--cs-head) !important;
         }
 
@@ -628,7 +628,7 @@
 /* @qingtuan-order:003767 */
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry-panel {
-            background: color-mix(in srgb, var(--theme-color) 6%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 6%, var(--color-surface));
         }
 
 /* @qingtuan-order:003768 */
@@ -658,7 +658,7 @@
 
 /* @qingtuan-order:003774 */
 
-        #chatSettingsPage#chatSettingsPage .chat-setting-empty { border: 1px dashed var(--cs-soft); border-radius: 2px; background: #FFFFFF; color: var(--cs-muted); }
+        #chatSettingsPage#chatSettingsPage .chat-setting-empty { border: 1px dashed var(--cs-soft); border-radius: 2px; background: var(--color-surface); color: var(--cs-muted); }
 
 /* @qingtuan-order:003775 */
 
@@ -669,7 +669,7 @@
 
         #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-select, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input) {
             border: 1px solid var(--cs-line) !important; border-radius: 2px !important;
-            background-color: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            background-color: var(--color-surface) !important; box-shadow: var(--cs-sunken) !important;
             color: var(--cs-title) !important; -webkit-text-fill-color: var(--cs-title) !important;
             font-size: 10px !important; outline: none !important;
         }
@@ -680,7 +680,7 @@
 
 /* @qingtuan-order:003778 */
 
-        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input)::placeholder { color: color-mix(in srgb, var(--cs-title) 45%, #FFFFFF); -webkit-text-fill-color: color-mix(in srgb, var(--cs-title) 45%, #FFFFFF); }
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input)::placeholder { color: color-mix(in srgb, var(--cs-title) 45%, var(--color-surface)); -webkit-text-fill-color: color-mix(in srgb, var(--cs-title) 45%, var(--color-surface)); }
 
 /* @qingtuan-order:003779 */
 
@@ -705,7 +705,7 @@
         #chatSettingsPage#chatSettingsPage .api-toggle-input {
             flex: 0 0 auto; width: 34px !important; height: 18px !important;
             border: 1px solid var(--cs-line) !important; border-radius: 2px !important;
-            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            background: var(--color-surface) !important; box-shadow: var(--cs-sunken) !important;
         }
 
 /* @qingtuan-order:003784 */
@@ -717,7 +717,7 @@
         #chatSettingsPage#chatSettingsPage .api-toggle-input::after {
             width: 14px !important; height: 12px !important; top: 2px !important; left: 2px !important;
             border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
-            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 #FFFFFF !important;
+            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 var(--color-surface) !important;
         }
 
 /* @qingtuan-order:003786 */
@@ -731,18 +731,18 @@
 
 /* @qingtuan-order:003788 */
 
-        #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-runnable-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--cs-sunken); }
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-runnable-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: var(--color-surface); box-shadow: var(--cs-sunken); }
 
 /* @qingtuan-order:003789 */
 
-        #chatSettingsPage#chatSettingsPage .chat-setting-range::-moz-range-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; }
+        #chatSettingsPage#chatSettingsPage .chat-setting-range::-moz-range-track { height: 4px; border: 1px solid var(--cs-line); border-radius: 1px; background: var(--color-surface); }
 
 /* @qingtuan-order:003790 */
 
         #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-thumb {
             width: 10px; height: 16px; margin-top: -7px;
             border: 1px solid var(--cs-line); border-radius: 1px;
-            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 60%, transparent), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 60%, transparent), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
         }
 
 /* @qingtuan-order:003791 */
@@ -769,15 +769,15 @@
 /* @qingtuan-order:003794 */
 
         #chatSettingsPage#chatSettingsPage :is(.chat-setting-action.primary, .theme-font-btn.ui-cyan-btn) {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cs-deep) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cs-deep) 55%, #FFFFFF) 42.5%, var(--cs-deep) 56.5%, var(--cs-deep) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(255,255,255,.7), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), var(--cs-drop) !important;
-            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 42.5%, var(--cs-deep) 56.5%, var(--cs-deep) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), var(--cs-drop) !important;
+            color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cs-title), 0 0 2px var(--cs-title);
         }
 
 /* @qingtuan-order:003795 */
 
-        #chatSettingsPage#chatSettingsPage .chat-setting-action.danger { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+        #chatSettingsPage#chatSettingsPage .chat-setting-action.danger { color: var(--color-danger-ink) !important; -webkit-text-fill-color: var(--color-danger-ink) !important; }
 
 /* @qingtuan-order:003796 */
 
@@ -792,7 +792,7 @@
 
         #chatSettingsPage#chatSettingsPage .chat-worldbook-option {
             margin-bottom: 4px; padding: 5px 8px; min-height: 0;
-            border: 1px solid var(--cs-line); border-radius: 2px; background: #FFFFFF;
+            border: 1px solid var(--cs-line); border-radius: 2px; background: var(--color-surface);
             color: var(--cs-title); font-size: 10px;
         }
 
@@ -801,7 +801,7 @@
         #chatSettingsPage#chatSettingsPage .chat-worldbook-option input {
             appearance: none; -webkit-appearance: none; position: relative; flex: 0 0 auto;
             width: 12px; height: 12px; margin: 0;
-            border: 1px solid var(--cs-line); border-radius: 0; background: #FFFFFF; box-shadow: var(--cs-sunken);
+            border: 1px solid var(--cs-line); border-radius: 0; background: var(--color-surface); box-shadow: var(--cs-sunken);
         }
 
 /* @qingtuan-order:003800 */
@@ -820,7 +820,7 @@
 
         #chatSettingsPage#chatSettingsPage .chat-font-card {
             margin: 8px 0; padding: 8px;
-            border: 1px solid var(--cs-line); border-radius: 2px; background: #FFFFFF; box-shadow: none;
+            border: 1px solid var(--cs-line); border-radius: 2px; background: var(--color-surface); box-shadow: none;
         }
 
 /* @qingtuan-order:003803 */
@@ -893,8 +893,8 @@
         #chatSettingsPage#chatSettingsPage .chat-settings-entry-panel {
             margin: 0 8px 8px; padding: 4px 9px 6px;
             border: 1px solid var(--cs-soft) !important; border-top: 1px solid var(--cs-soft) !important;
-            background: #FFFFFF;
-            box-shadow: inset 1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF;
+            background: var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:003818 */
@@ -923,12 +923,12 @@
         #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input {
             order: -1; width: 13px !important; height: 13px !important; margin-top: 1px;
             border: 1px solid var(--cs-line) !important; border-radius: 0 !important;
-            background: #FFFFFF !important; box-shadow: var(--cs-sunken) !important;
+            background: var(--color-surface) !important; box-shadow: var(--cs-sunken) !important;
         }
 
 /* @qingtuan-order:003824 */
 
-        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input:checked { background: #FFFFFF !important; }
+        #chatSettingsPage#chatSettingsPage .chat-setting-row .api-toggle-input:checked { background: var(--color-surface) !important; }
 
 /* @qingtuan-order:003825 */
 
@@ -957,7 +957,7 @@
                 linear-gradient(45deg, transparent 50%, var(--cs-title) 50%),
                 linear-gradient(135deg, var(--cs-title) 50%, transparent 50%),
                 linear-gradient(var(--cs-line), var(--cs-line)),
-                linear-gradient(#FFFFFF, #FFFFFF),
+                linear-gradient(var(--color-surface), var(--color-surface)),
                 var(--cs-btn-face) !important;
             background-size: 4px 4px, 4px 4px, 1px 100%, 1px 100%, 16px 100% !important;
             background-position: calc(100% - 9px) 50%, calc(100% - 5px) 50%, calc(100% - 16px) 0, calc(100% - 15px) 0, 100% 0 !important;
@@ -984,6 +984,6 @@
 
         #chatSettingsPage#chatSettingsPage .chat-setting-range-value {
             min-width: 44px; padding: 0 5px; text-align: right;
-            border: 1px solid var(--cs-line); border-radius: 1px; background: #FFFFFF; box-shadow: var(--cs-sunken);
+            border: 1px solid var(--cs-line); border-radius: 1px; background: var(--color-surface); box-shadow: var(--cs-sunken);
             line-height: 16px;
         }

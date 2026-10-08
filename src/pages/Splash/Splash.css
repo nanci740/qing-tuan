@@ -140,7 +140,7 @@
 
 
         .splash-title .char-qing {
-            color: color-mix(in srgb, var(--theme-color) 45%, #4B5A62);
+            color: color-mix(in srgb, var(--theme-color) 45%, var(--color-text));
         }
 
 /* @qingtuan-order:000029 */
@@ -344,7 +344,7 @@
             width: 68px;
             height: 68px;
             border: 1.5px solid rgba(var(--theme-rgb), 0.65);
-            background: radial-gradient(circle, rgba(var(--theme-rgb), 0.22) 0%, rgba(214, 238, 236, 0.18) 50%, transparent 75%);
+            background: radial-gradient(circle, rgba(var(--theme-rgb), 0.22) 0%, color-mix(in srgb, var(--color-muted) 18%, transparent) 50%, transparent 75%);
             animation: haloPulseWave 2.4s cubic-bezier(0.15, 0.85, 0.35, 1) infinite;
         }
 
@@ -468,7 +468,7 @@
             margin-top: 44px;
             padding: 3px;
             border: 1px solid var(--win-deep);
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--bevel-in);
             box-sizing: border-box;
             overflow: hidden;
@@ -543,7 +543,7 @@
             position: absolute;
             width: 64px;
             height: 24px;
-            background: color-mix(in srgb, var(--theme-color) 30%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface));
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2716%27%20height%3D%276%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M5%200h3v1h2v1h2v1h2v1h2v2H0V4h1V3h2V2h1V1h1z%27/%3E%3C/svg%3E") no-repeat center / 100% 100%;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2716%27%20height%3D%276%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M5%200h3v1h2v1h2v1h2v1h2v2H0V4h1V3h2V2h1V1h1z%27/%3E%3C/svg%3E") no-repeat center / 100% 100%;
             animation: bootCloud 38s linear infinite;
@@ -621,8 +621,8 @@
             right: 0;
             bottom: 0;
             height: calc(46px + env(safe-area-inset-bottom, 0px));
-            background: color-mix(in srgb, var(--theme-color) 34%, #FFFFFF);
-            border-top: 3px solid color-mix(in srgb, var(--theme-color) 78%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 34%, var(--color-surface));
+            border-top: 3px solid color-mix(in srgb, var(--theme-color) 78%, var(--color-surface));
         }
 
 /* @qingtuan-order:003267 */
@@ -639,7 +639,7 @@
             right: 0;
             top: -9px;
             height: 6px;
-            background: color-mix(in srgb, var(--theme-color) 78%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 78%, var(--color-surface));
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%276%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%203h3V6H0zM3%200h3v6H3zM9%204h3v2H9zM15%201h3v5h-3zM18%204h3v2h-3z%27/%3E%3C/svg%3E") repeat-x left bottom / 24px 6px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%276%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%203h3V6H0zM3%200h3v6H3zM9%204h3v2H9zM15%201h3v5h-3zM18%204h3v2h-3z%27/%3E%3C/svg%3E") repeat-x left bottom / 24px 6px;
         }
@@ -655,7 +655,7 @@
             content: '';
             position: absolute;
             inset: 8px 0 0;
-            background: color-mix(in srgb, var(--theme-color) 62%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 62%, var(--color-surface));
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2790%27%20height%3D%2730%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M10%204h3v3h-3zM13%201h3v3h-3zM52%2014h3v3h-3zM55%2011h3v3h-3zM30%2022h3v3h-3zM78%206h3v3h-3z%27/%3E%3C/svg%3E") repeat left top / 90px 30px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2790%27%20height%3D%2730%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M10%204h3v3h-3zM13%201h3v3h-3zM52%2014h3v3h-3zM55%2011h3v3h-3zM30%2022h3v3h-3zM78%206h3v3h-3z%27/%3E%3C/svg%3E") repeat left top / 90px 30px;
         }
@@ -741,7 +741,7 @@
         #splash-screen .boot-hill-back {
             bottom: calc(40px + env(safe-area-inset-bottom, 0px));
             height: 150px;
-            background: color-mix(in srgb, var(--theme-color) 22%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 22%, var(--color-surface));
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%2040%27%20preserveAspectRatio%3D%27none%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%2040%20L0%2026%20L4%2026%20L4%2022%20L8%2022%20L8%2020%20L12%2020%20L12%2020%20L16%2020%20L16%2020%20L20%2020%20L20%2020%20L24%2020%20L24%2020%20L28%2020%20L28%2020%20L32%2020%20L32%2018%20L36%2018%20L36%2018%20L40%2018%20L40%2016%20L44%2016%20L44%2014%20L48%2014%20L48%2014%20L52%2014%20L52%2014%20L56%2014%20L56%2016%20L60%2016%20L60%2020%20L64%2020%20L64%2024%20L68%2024%20L68%2030%20L72%2030%20L72%2034%20L76%2034%20L76%2038%20L80%2038%20L80%2038%20L84%2038%20L84%2038%20L88%2038%20L88%2036%20L92%2036%20L92%2032%20L96%2032%20L96%2030%20L100%2030%20L100%2026%20L104%2026%20L100%2040%20Z%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 100% 100%;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%2040%27%20preserveAspectRatio%3D%27none%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%2040%20L0%2026%20L4%2026%20L4%2022%20L8%2022%20L8%2020%20L12%2020%20L12%2020%20L16%2020%20L16%2020%20L20%2020%20L20%2020%20L24%2020%20L24%2020%20L28%2020%20L28%2020%20L32%2020%20L32%2018%20L36%2018%20L36%2018%20L40%2018%20L40%2016%20L44%2016%20L44%2014%20L48%2014%20L48%2014%20L52%2014%20L52%2014%20L56%2014%20L56%2016%20L60%2016%20L60%2020%20L64%2020%20L64%2024%20L68%2024%20L68%2030%20L72%2030%20L72%2034%20L76%2034%20L76%2038%20L80%2038%20L80%2038%20L84%2038%20L84%2038%20L88%2038%20L88%2036%20L92%2036%20L92%2032%20L96%2032%20L96%2030%20L100%2030%20L100%2026%20L104%2026%20L100%2040%20Z%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 100% 100%;
         }
@@ -752,7 +752,7 @@
         #splash-screen .boot-hill-mid {
             bottom: calc(40px + env(safe-area-inset-bottom, 0px));
             height: 95px;
-            background: color-mix(in srgb, var(--theme-color) 36%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 36%, var(--color-surface));
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%2030%27%20preserveAspectRatio%3D%27none%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%2030%20L0%2012%20L4%2012%20L4%2012%20L8%2012%20L8%2012%20L12%2012%20L12%2014%20L16%2014%20L16%2016%20L20%2016%20L20%2020%20L24%2020%20L24%2024%20L28%2024%20L28%2026%20L32%2026%20L32%2026%20L36%2026%20L36%2026%20L40%2026%20L40%2026%20L44%2026%20L44%2026%20L48%2026%20L48%2026%20L52%2026%20L52%2024%20L56%2024%20L56%2024%20L60%2024%20L60%2024%20L64%2024%20L64%2024%20L68%2024%20L68%2024%20L72%2024%20L72%2022%20L76%2022%20L76%2018%20L80%2018%20L80%2012%20L84%2012%20L84%2010%20L88%2010%20L88%208%20L92%208%20L92%208%20L96%208%20L96%2010%20L100%2010%20L100%2012%20L104%2012%20L100%2030%20Z%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 100% 100%;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%2030%27%20preserveAspectRatio%3D%27none%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%2030%20L0%2012%20L4%2012%20L4%2012%20L8%2012%20L8%2012%20L12%2012%20L12%2014%20L16%2014%20L16%2016%20L20%2016%20L20%2020%20L24%2020%20L24%2024%20L28%2024%20L28%2026%20L32%2026%20L32%2026%20L36%2026%20L36%2026%20L40%2026%20L40%2026%20L44%2026%20L44%2026%20L48%2026%20L48%2026%20L52%2026%20L52%2024%20L56%2024%20L56%2024%20L60%2024%20L60%2024%20L64%2024%20L64%2024%20L68%2024%20L68%2024%20L72%2024%20L72%2022%20L76%2022%20L76%2018%20L80%2018%20L80%2012%20L84%2012%20L84%2010%20L88%2010%20L88%208%20L92%208%20L92%208%20L96%208%20L96%2010%20L100%2010%20L100%2012%20L104%2012%20L100%2030%20Z%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 100% 100%;
         }

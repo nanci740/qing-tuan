@@ -49,10 +49,10 @@
 
         .music-setting-card {
             background: #fff;
-            border: .5px solid #DDDDE2;
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 13px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.02);
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--color-muted) 2%, transparent);
         }
 
 /* @qingtuan-order:000442 */
@@ -67,7 +67,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            border-bottom: .5px solid #ECEDEF;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:000444 */
@@ -84,7 +84,7 @@
 
 /* @qingtuan-order:000447 */
 
-        .music-row-desc { margin-top: 2px; font-size: 10.5px; color: #98A2AE; line-height: 1.35; }
+        .music-row-desc { margin-top: 2px; font-size: 10.5px; color: var(--color-muted); line-height: 1.35; }
 
 /* @qingtuan-order:000448 */
 
@@ -106,7 +106,7 @@
 
 /* @qingtuan-order:000450 */
 
-        .music-action-btn.secondary { background: #F5F6F7; border-color: #E6E8EB; color: #727C88; }
+        .music-action-btn.secondary { background: var(--color-page); border-color: var(--color-divider); color: var(--color-text); }
 
 /* @qingtuan-order:000451 */
 
@@ -123,7 +123,7 @@
             min-width: 0;
             flex: 1;
             height: 34px;
-            border: 1px solid #E2E5E8;
+            border: 1px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 0 10px;
             outline: none;
@@ -152,7 +152,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 5px;
             padding: 4px;
-            background: #F4F5F6;
+            background: var(--color-page);
             border-radius: var(--ui-radius);
         }
 
@@ -160,26 +160,26 @@
 
         .music-mode-btn {
             height: 30px; border: 0; border-radius: var(--ui-radius); background: transparent;
-            color: #8A949F; font-size: 10.5px; cursor: pointer;
+            color: var(--color-muted); font-size: 10.5px; cursor: pointer;
         }
 
 /* @qingtuan-order:000469 */
 
-        .music-mode-btn.active { background: #fff; color: var(--theme-deep); box-shadow: 0 1px 4px rgba(62,70,81,.08); }
+        .music-mode-btn.active { background: #fff; color: var(--theme-deep); box-shadow: 0 1px 4px color-mix(in srgb, var(--color-muted) 8%, transparent); }
 
 /* @qingtuan-order:000470 */
 
 
         .music-switch {
             width: 38px; height: 22px; flex: 0 0 auto; position: relative; border: 0; padding: 0;
-            border-radius: 999px; background: #E1E5E8; cursor: pointer; transition: background .2s ease;
+            border-radius: 999px; background: var(--color-paper); cursor: pointer; transition: background .2s ease;
         }
 
 /* @qingtuan-order:000471 */
 
         .music-switch::after {
             content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
-            border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.12); transition: transform .2s ease;
+            border-radius: 50%; background: #fff; box-shadow: 0 1px 4px color-mix(in srgb, var(--color-muted) 12%, transparent); transition: transform .2s ease;
         }
 
 /* @qingtuan-order:000472 */
@@ -201,7 +201,7 @@
 
 /* @qingtuan-order:000476 */
 
-        .music-meta-field label { font-size: 10.5px; color: #7F8994; }
+        .music-meta-field label { font-size: 10.5px; color: var(--color-muted); }
 
 /* @qingtuan-order:000477 */
 
@@ -211,7 +211,7 @@
 
         .music-cover-preview {
             border-radius: var(--ui-radius); overflow: hidden;
-            border: 1px solid #E4E7EA; display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--color-divider); display: flex; align-items: center; justify-content: center;
             font-size: 9px; flex: 0 0 auto;
         }
 
@@ -229,7 +229,7 @@
 
 /* @qingtuan-order:000482 */
 
-        .music-note { display: block; margin-top: 8px; font-size: 9.5px; color: #A2ABB5; line-height: 1.5; }
+        .music-note { display: block; margin-top: 8px; font-size: 9.5px; color: var(--color-muted); line-height: 1.5; }
 
 /* @qingtuan-order:000500 */
 
@@ -254,7 +254,7 @@
 /* @qingtuan-order:000506 */
 
         .music-cover-preview {
-            color: #B6BEC7 !important;
+            color: var(--color-muted) !important;
         
             width: 64px;
             height: 64px;
@@ -267,7 +267,7 @@
         #musicRemoveCoverBtn,
         .music-url-input,
         .music-meta-input {
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:000637 */
@@ -350,7 +350,7 @@
 /* @qingtuan-order:001198 */
 
         #musicSettingsPage {
-            background: var(--set-bg, #F9F9F7);
+            background: var(--set-bg, var(--color-page));
         }
 
 /* @qingtuan-order:001199 */
@@ -363,7 +363,7 @@
         #musicSettingsPage .settings-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
         }
 
 /* @qingtuan-order:001201 */
@@ -371,7 +371,7 @@
 
         #musicSettingsPage .settings-header h2,
         #musicSettingsPage .settings-header .back-btn {
-            color: #FFFFFF;
+            color: var(--color-surface);
         }
 
 /* @qingtuan-order:001202 */
@@ -393,7 +393,7 @@
             content: '';
             width: 46px;
             height: 12px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
         }
@@ -431,7 +431,7 @@
             height: 22px;
             padding: 0 8px;
             border-radius: 2px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             color: var(--win-ink);
             font-size: 10.5px;
             letter-spacing: 0.3px;
@@ -466,7 +466,7 @@
 
         #musicSettingsPage .music-settings-content > .music-setting-group {
             margin-bottom: 16px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             overflow: hidden;
         }
 
@@ -547,7 +547,7 @@
         #musicSettingsPage .music-playlist {
             gap: 0;
             margin-top: 12px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             overflow: hidden;
         }
 
@@ -564,7 +564,7 @@
         #musicSettingsPage .music-settings-content .music-track-item,
         #musicSettingsPage .music-settings-content .music-track-item.active {
             border: 0 !important;
-            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, var(--color-divider)) !important;
             border-radius: 0 !important;
             background: transparent !important;
         }
@@ -580,7 +580,7 @@
 
 
         #musicSettingsPage .music-settings-content .music-track-item.active {
-            background: color-mix(in srgb, var(--theme-color) 16%, #FFFFFF) !important;
+            background: color-mix(in srgb, var(--theme-color) 16%, var(--color-surface)) !important;
         }
 
 /* @qingtuan-order:001224 */
@@ -612,7 +612,7 @@
 
         #musicSettingsPage .music-note {
             padding-top: 8px;
-            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            border-top: 1px dashed color-mix(in srgb, var(--theme-color) 45%, var(--color-divider));
         }
 
 /* @qingtuan-order:001227 */
@@ -662,7 +662,7 @@
 
 
         #musicSettingsPage .music-settings-content .music-row {
-            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1) !important;
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, var(--color-divider)) !important;
         }
 
 /* @qingtuan-order:001232 */
@@ -680,7 +680,7 @@
 /* @qingtuan-order:001234 */
 
         #musicSettingsPage .music-mode-segment {
-            background: #F4F6F6;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:001235 */
@@ -701,7 +701,7 @@
         #musicSettingsPage .music-switch {
             width: 38px;
             height: 20px;
-            background: #EEF1F1;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:001238 */
@@ -712,7 +712,7 @@
             left: 2px;
             width: 14px;
             height: 14px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-sizing: border-box;
         }
 
@@ -788,15 +788,15 @@
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary),        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible {
             background: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:001249 */
 
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary,        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:focus-visible {
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
         }
@@ -830,7 +830,7 @@
             height: 26px !important;
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             color: var(--win-ink) !important;
             box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
         }
@@ -857,7 +857,7 @@
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-drag {
             width: 18px;
-            color: color-mix(in srgb, var(--theme-color) 45%, #9AA3A9);
+            color: color-mix(in srgb, var(--theme-color) 45%, var(--color-muted));
         }
 
 /* @qingtuan-order:001567 */
@@ -872,8 +872,8 @@
         #musicSettingsPage .music-save-meta.ui-cyan-btn {
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -886,10 +886,10 @@
 /* @qingtuan-order:001570 */
 
         #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn {
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -912,18 +912,18 @@
         #musicSettingsPage .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible{
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:001574 */
 
 
         #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn:focus-visible{
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
         }
 
 /* @qingtuan-order:002853 */
@@ -1012,7 +1012,7 @@
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-meta-input {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -1062,7 +1062,7 @@
 /* @qingtuan-order:002870 */
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-item.active {
-            background: color-mix(in srgb, var(--theme-color) 35%, #FFFFFF) !important;
+            background: color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) !important;
         }
 
 /* @qingtuan-order:002871 */
@@ -1108,8 +1108,8 @@
             border-radius: 0 !important;
             /* 以「导入本地音乐」按钮的青为底：饱和度拉高一点、亮度压低一点点（带一丝灰），小标签才不会太淡 */
             background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;
         }
 
@@ -1133,7 +1133,7 @@
         #musicSettingsPage#musicSettingsPage .music-mode-btn.active {
             border-color: var(--win-deep);
             border-radius: 1px !important;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--bevel-out);
         }
 
@@ -1144,7 +1144,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 2px;
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:002880 */
@@ -1161,7 +1161,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 1px;
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade);
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade);
         }
 
 /* @qingtuan-order:002882 */
@@ -1184,7 +1184,7 @@
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-cover-preview {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -1204,7 +1204,7 @@
 /* @qingtuan-order:003653 */
 
         #musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn:active{;
-            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.6) !important;
         }
 
 /* @qingtuan-order:003869 */
@@ -1225,4 +1225,4 @@
 
 /* @qingtuan-order:003934 */
 
-        .cc-tag.on { background: var(--cc-head); color: #FFFFFF; text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); box-shadow: var(--cc-sunken); }
+        .cc-tag.on { background: var(--cc-head); color: var(--color-surface); text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); box-shadow: var(--cc-sunken); }

@@ -16,7 +16,7 @@ void Promise.all([initializeImageAssets(), initializeChatRecords()]).then(warnin
   flushSync(() => root.render(<App />));
   if (warning) showToast(warning);
 }).catch(() => {
-  flushSync(() => root.render(<main style={{padding:24,color:'#5F6772'}}><p>已保存的数据暂时无法读取，请重试。</p><button onClick={() => window.location.reload()}>重新打开</button></main>));
+  flushSync(() => root.render(<main style={{padding:24,color:'var(--color-text)'}}><p>已保存的数据暂时无法读取，请重试。</p><button onClick={() => window.location.reload()}>重新打开</button></main>));
 });
 
 // 开发时完整重载，保持浏览器状态与持久化初始化一致。

@@ -69,9 +69,9 @@ export function Home() {
                   </radialGradient>
                   {"\n"}
                   <radialGradient id="starBubbleSoft" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(116 62) scale(118 65)">
-                    <stop offset="0%" stopColor="#A4AFBC" stopOpacity="0.28" />
-                    <stop offset="25%" stopColor="#A4AFBC" stopOpacity="0.16" />
-                    <stop offset="80%" stopColor="#A4AFBC" stopOpacity="0" />
+                    <stop offset="0%" stopColor="var(--color-muted)" stopOpacity="0.28" />
+                    <stop offset="25%" stopColor="var(--color-muted)" stopOpacity="0.16" />
+                    <stop offset="80%" stopColor="var(--color-muted)" stopOpacity="0" />
                   </radialGradient>
                   {"\n"}
                 </defs>
@@ -206,9 +206,9 @@ export function Home() {
                   </radialGradient>
                   {"\n"}
                   <radialGradient id="moonBubbleSoft" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(116 62) scale(118 65)">
-                    <stop offset="0%" stopColor="#A4AFBC" stopOpacity="0.28" />
-                    <stop offset="25%" stopColor="#A4AFBC" stopOpacity="0.16" />
-                    <stop offset="80%" stopColor="#A4AFBC" stopOpacity="0" />
+                    <stop offset="0%" stopColor="var(--color-muted)" stopOpacity="0.28" />
+                    <stop offset="25%" stopColor="var(--color-muted)" stopOpacity="0.16" />
+                    <stop offset="80%" stopColor="var(--color-muted)" stopOpacity="0" />
                   </radialGradient>
                   {"\n"}
                 </defs>

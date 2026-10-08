@@ -54,7 +54,7 @@
 
         .vi-card {
             background: #fff;
-            border: .5px solid #DDDDE2;
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 6px 14px;
             box-shadow: none;
@@ -68,7 +68,7 @@
             grid-template-columns: 92px minmax(0,1fr);
             gap: 10px;
             align-items: center;
-            border-bottom: .5px solid #ECEDEF;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:000770 */
@@ -115,14 +115,14 @@
             top: 50%;
             width: 6px;
             height: 6px;
-            border-right: 1.2px solid #A0A8B1;
-            border-bottom: 1.2px solid #A0A8B1;
+            border-right: 1.2px solid var(--color-muted);
+            border-bottom: 1.2px solid var(--color-muted);
             transform: translateY(-65%) rotate(45deg);
         }
 
 /* @qingtuan-order:000775 */
 
-        .vi-input::placeholder { color: #A7AFB8; }
+        .vi-input::placeholder { color: var(--color-muted); }
 
 /* @qingtuan-order:000776 */
 
@@ -144,7 +144,7 @@
             height: 28px;
             border: 0;
             background: transparent;
-            color: #8EA0AA;
+            color: var(--color-muted);
             padding: 0;
             display: grid;
             place-items: center;
@@ -184,7 +184,7 @@
 
         .vi-toggle-copy span {
             display: block;
-            color: #9BA4AE;
+            color: var(--color-muted);
             font-size: 9.5px;
             margin-top: 3px;
         }
@@ -223,7 +223,7 @@
         .vi-range::-webkit-slider-runnable-track {
             height: 3px;
             border-radius: 999px;
-            background: #5F6772;
+            background: var(--color-text);
         }
 
 /* @qingtuan-order:000791 */
@@ -237,7 +237,7 @@
             border: 0;
             border-radius: 50%;
             background: var(--theme-color);
-            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 3.5000000000000004%, transparent);
         }
 
 /* @qingtuan-order:000792 */
@@ -246,7 +246,7 @@
             height: 3px;
             border: 0;
             border-radius: 999px;
-            background: #5F6772;
+            background: var(--color-text);
         }
 
 /* @qingtuan-order:000793 */
@@ -265,21 +265,21 @@
             border: 0;
             border-radius: 50%;
             background: var(--theme-color);
-            box-shadow: 0 0 0 1px rgba(0,0,0,.035);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 3.5000000000000004%, transparent);
         }
 
 /* @qingtuan-order:000795 */
 
         .vi-range-value {
             text-align: right;
-            color: #84909B;
+            color: var(--color-muted);
             font-size: 10px;
         }
 
 /* @qingtuan-order:000796 */
 
         .vi-note {
-            color: #A0A8B1;
+            color: var(--color-muted);
             font-size: 9.2px;
             line-height: 1.5;
             padding: 9px 2px 2px;
@@ -299,7 +299,7 @@
         .vi-status {
             min-height: 18px;
             margin-top: 7px;
-            color: #99A3AD;
+            color: var(--color-muted);
             font-size: 9.3px;
             line-height: 1.45;
         }
@@ -310,7 +310,7 @@
 
 /* @qingtuan-order:000802 */
 
-        .vi-status.error { color: #B38C8C; }
+        .vi-status.error { color: var(--color-danger-ink); }
 
 /* @qingtuan-order:000803 */
 
@@ -328,9 +328,9 @@
         .vi-preview {
             margin-top: 8px;
             min-height: 52px;
-            border: .5px solid #E1E6E6;
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
-            background: #FFFFFF;
+            background: var(--color-surface);
             display: none;
             overflow: hidden;
         }
@@ -353,7 +353,7 @@
             gap: 10px;
             height: 52px;
             padding: 0 13px;
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:000808 */
@@ -412,7 +412,7 @@
         .vi-audio-time {
             flex: 0 0 auto;
             min-width: 54px;
-            color: #7E8894;
+            color: var(--color-muted);
             font-size: 10px;
             line-height: 1;
             text-align: center;
@@ -445,7 +445,7 @@
         .vi-audio-progress::-webkit-slider-runnable-track {
             height: 3px;
             border-radius: 999px;
-            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), #5F6772 var(--progress, 0%), #5F6772 100%);
+            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), var(--color-text) var(--progress, 0%), var(--color-text) 100%);
         }
 
 /* @qingtuan-order:000818 */
@@ -459,7 +459,7 @@
             background: var(--theme-color);
             border: 0;
             margin-top: -3.5px;
-            box-shadow: 0 0 0 1px rgba(0,0,0,.04);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 4%, transparent);
         }
 
 /* @qingtuan-order:000819 */
@@ -468,7 +468,7 @@
             height: 3px;
             border: 0;
             border-radius: 999px;
-            background: #5F6772;
+            background: var(--color-text);
         }
 
 /* @qingtuan-order:000820 */
@@ -487,13 +487,13 @@
             border-radius: 50%;
             background: var(--theme-color);
             border: 0;
-            box-shadow: 0 0 0 1px rgba(0,0,0,.04);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-muted) 4%, transparent);
         }
 
 /* @qingtuan-order:000822 */
 
         .vi-audio-volume.is-muted {
-            color: #A7AFB7;
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:000823 */
@@ -501,8 +501,8 @@
         .vi-image-preview {
             padding: 16px;
             text-align: left;
-            background: rgba(255,255,255,.78);
-            border-color: #E7EBED;
+            background: rgba(var(--color-surface-rgb), .78);
+            border-color: var(--color-divider);
             margin-top: 10px;
             margin-bottom: 10px;
         }
@@ -513,7 +513,7 @@
             width: 100%;
             overflow: hidden;
             border-radius: 0;
-            background: #F5F7F7;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:000825 */
@@ -571,7 +571,7 @@
         .vi-regenerate-btn {
             border: 0;
             background: transparent;
-            color: #A2A9B1;
+            color: var(--color-muted);
             font-size: 10px;
             line-height: 1;
             padding: 2px 1px;
@@ -632,7 +632,7 @@
 /* @qingtuan-order:000853 */
 
         #voiceImageSettingsPage .vi-builder-textarea::placeholder {
-            color: #A7AFB8;
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:000854 */
@@ -738,7 +738,7 @@
         #voiceImageSettingsPage .vi-character-remove {
             border: 0;
             background: transparent;
-            color: #A0A8B1;
+            color: var(--color-muted);
             font-family: var(--font-active);
             font-size: 9.5px;
             cursor: pointer;
@@ -859,7 +859,7 @@
             gap: 3px;
             padding: 8px 12px 0;
             border-bottom: 1px solid var(--win-line);
-            background: var(--set-bg, #F9F9F7);
+            background: var(--set-bg, var(--color-page));
         }
 
 /* @qingtuan-order:001340 */
@@ -905,8 +905,8 @@
         #voiceImageSettingsPage .vi-settings-content > .vi-group:nth-child(3) .vi-label {
             justify-content: center;
             position: relative;
-            background: #F6F7F7;
-            color: #8A949C;
+            background: var(--color-page);
+            color: var(--color-muted);
             font-weight: 500;
         }
 
@@ -962,7 +962,7 @@
             width: 24px;
             height: 24px;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             color: var(--win-ink) !important;
         }
 
@@ -970,7 +970,7 @@
 
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-list > * {
-            background: #F7F8F8 !important;
+            background: var(--color-page) !important;
         }
 
 /* @qingtuan-order:001352 */
@@ -991,7 +991,7 @@
             height: 8px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: #F4F6F6;
+            background: var(--color-page);
             box-shadow: inset 1px 1px 0 var(--win-lo);
         }
 
@@ -1004,8 +1004,8 @@
             margin-top: -7px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: #FFFFFF;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-lo), 1px 1px 0 rgba(0, 0, 0, 0.08);
+            background: var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-lo), 1px 1px 0 color-mix(in srgb, var(--color-muted) 8%, transparent);
         }
 
 /* @qingtuan-order:001356 */
@@ -1015,7 +1015,7 @@
             height: 6px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: #F4F6F6;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:001357 */
@@ -1035,7 +1035,7 @@
             height: 18px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: inset -1px -1px 0 var(--win-lo);
         }
 
@@ -1075,15 +1075,15 @@
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play,
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume {
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:001364 */
 
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player.is-playing .vi-audio-play,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted{
-            background: color-mix(in srgb, var(--theme-color) 14%, #F4F6F6) !important;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, rgba(75, 90, 98, 0.35)), inset -1px -1px 0 var(--win-hi) !important;
+            background: color-mix(in srgb, var(--theme-color) 14%, var(--color-page)) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, color-mix(in srgb, var(--color-muted) 35%, transparent)), inset -1px -1px 0 var(--win-hi) !important;
         }
 
 /* @qingtuan-order:001365 */
@@ -1093,7 +1093,7 @@
 /* @qingtuan-order:001366 */
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active{;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, rgba(75, 90, 98, 0.35)), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, color-mix(in srgb, var(--color-muted) 35%, transparent)), inset -1px -1px 0 var(--win-hi) !important;
         }
 
 /* @qingtuan-order:001367 */
@@ -1144,7 +1144,7 @@
             height: 8px;
             border: 1px solid var(--win-line);
             border-radius: 2px;
-            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), #FFFFFF var(--progress, 0%), #FFFFFF 100%);
+            background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), var(--color-surface) var(--progress, 0%), var(--color-surface) 100%);
             box-shadow: inset 1px 1px 0 var(--win-lo);
         }
 
@@ -1157,7 +1157,7 @@
             margin-top: -4px;
             border: 1px solid var(--win-line);
             border-radius: 1px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: inset -1px -1px 0 var(--win-lo);
         }
 
@@ -1203,7 +1203,7 @@
             display: flex !important;
             flex-direction: column;
             margin-top: 12px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             overflow: visible;
         }
 
@@ -1413,10 +1413,10 @@
 /* @qingtuan-order:002560 */
 
         #voiceImageSettingsPage .vi-actions .vi-btn:not(.primary) {
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -1427,8 +1427,8 @@
         #voiceImageSettingsPage .vi-actions .vi-btn.primary.ui-cyan-btn {
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -1445,10 +1445,10 @@
 
 
         #voiceImageSettingsPage .vi-actions .vi-btn:not(.primary):focus-visible{
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
         }
 
 /* @qingtuan-order:002564 */
@@ -1457,8 +1457,8 @@
         #voiceImageSettingsPage .vi-actions .vi-btn.primary.ui-cyan-btn:focus-visible{
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:003027 */
@@ -1505,15 +1505,15 @@
             border-color: var(--win-deep) !important;
             border-radius: 3px 3px 0 0 !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px 0 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px 0 0 var(--win-shade) !important;
         }
 
 /* @qingtuan-order:003034 */
 
 
         #voiceImageSettingsPage#voiceImageSettingsPage .retro-tab.active {
-            background: var(--set-bg, #F9F9F7) !important;
-            border-bottom-color: #F9F9F7 !important;
+            background: var(--set-bg, var(--color-page)) !important;
+            border-bottom-color: var(--color-divider) !important;
         }
 
 /* @qingtuan-order:003035 */
@@ -1565,7 +1565,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface) !important;
         }
 
 /* @qingtuan-order:003040 */
@@ -1582,7 +1582,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
         }
 
 /* @qingtuan-order:003042 */
@@ -1731,7 +1731,7 @@
             height: 6px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: inset 1px 1px 0 var(--win-shade);
         }
 
@@ -1858,7 +1858,7 @@
             flex: 0 0 11px;
             height: 13px;
             border: 1px solid var(--win-deep);
-            background: repeating-linear-gradient(#FFFFFF 0 2px, var(--win-line) 2px 3px);
+            background: repeating-linear-gradient(var(--color-surface) 0 2px, var(--win-line) 2px 3px);
         }
 
 /* @qingtuan-order:003074 */
@@ -1877,7 +1877,7 @@
             background:
                 linear-gradient(90deg, transparent 9px, rgba(var(--theme-rgb), 0.9) 9px 10px, transparent 10px),
                 repeating-linear-gradient(transparent 0 21px, rgba(var(--theme-rgb), 0.45) 21px 22px) 0 6px,
-                #FFFFFF !important;
+                var(--color-surface) !important;
             background-attachment: local !important;
         }
 
@@ -1934,7 +1934,7 @@
             background: var(--set-fill, var(--win-deep));
             font-weight: 700;
             letter-spacing: 1px;
-            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.28);
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 28.000000000000004%, transparent);
         }
 
 /* @qingtuan-order:003098 */
@@ -1944,7 +1944,7 @@
             height: 8px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.18);
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 18%, transparent);
         }
 
 /* @qingtuan-order:003099 */
@@ -2001,7 +2001,7 @@
             border: 0;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:003105 */
@@ -2027,7 +2027,7 @@
         #voiceImageSettingsPage#voiceImageSettingsPage#voiceImageSettingsPage .vi-image-frame {
             padding: 3px !important;
             border: 1px solid var(--win-deep) !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -2104,19 +2104,19 @@
 /* @qingtuan-order:003660 */
 
         #imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn {
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
         }
 
 /* @qingtuan-order:003661 */
 
         #imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn:active {
-            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(255, 255, 255, 0.6) !important;
+            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.6) !important;
         }
 
 /* @qingtuan-order:003662 */
@@ -2137,7 +2137,7 @@
 /* @qingtuan-order:003971 */
 
         :is(html, #_#_#_#_#_) :is(.api-model-select-btn, .vi-choice-btn, .mcp-select-btn, .world-select-btn):active::after {
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
         }
 
 /* @qingtuan-order:003972 */
