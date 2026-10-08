@@ -232,22 +232,10 @@
 
 /* @qingtuan-order:000223 */
 
-            .pp2-polaroid-photo::after {
-              content: '＋';
-              position: absolute;
-              inset: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: var(--color-muted);
-              font-family: var(--font-active);
-              font-size: 14px;
-              transition: opacity 0.18s ease;
-            }
 
 /* @qingtuan-order:000224 */
 
-            .pp2-polaroid-photo.has-photo::after { opacity: 0; }
+
 
 /* @qingtuan-order:000225 */
 

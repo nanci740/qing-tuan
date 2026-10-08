@@ -1,3 +1,4 @@
+import { DEFAULT_FOX_AVATAR } from '../../../utils/defaultAvatar';
 import { createPortal } from 'react-dom';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { useCharacterAvatar } from '../../../hooks/useCharacterAvatar';
@@ -9,7 +10,7 @@ export function CharacterBanner() {
   const text = (field: 'quote' | 'relationship' | 'mbti' | 'constellation') => rendered ? record[field] || '' : '';
   const hidden = (value: unknown) => rendered ? !value : undefined;
   return bridge ? createPortal(<>
-    {'\n                '}<PressedButton className="cc-avatar" type="button" aria-label="更换头像" onClick={() => input.current?.click()}><img alt="" hidden={hidden(record.photoUrl)} src={record.photoUrl || undefined} /><span className="cc-avatar-empty" hidden={rendered ? Boolean(record.photoUrl) : undefined}>上传<br />头像</span></PressedButton>
+    {'\n                '}<PressedButton className="cc-avatar" type="button" aria-label="更换头像" onClick={() => input.current?.click()}><img alt="角色头像" src={record.photoUrl || DEFAULT_FOX_AVATAR} /></PressedButton>
     {'\n                '}<input className="cc-avatar-input" type="file" accept="image/*" hidden ref={input} onChange={event => { void upload(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
     {'\n                '}<div className="cc-banner-text">
       {'\n                    '}<div className="cc-banner-name"><b data-cc-show="name" hidden={hidden(name)}>{name}</b><span className="cc-status">在线</span></div>

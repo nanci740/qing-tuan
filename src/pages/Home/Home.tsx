@@ -1,3 +1,4 @@
+import { DEFAULT_BIRD_AVATAR, DEFAULT_FOX_AVATAR } from '../../utils/defaultAvatar';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { useWorld } from '../../providers/WorldProvider';
 import { useAppearance } from '../../providers/AppearanceProvider';
@@ -106,7 +107,7 @@ export function Home() {
               {"\n"}
               <div className="avatar-inner-circle">
                 {"\n"}
-                <HomeAvatar id="starAvatarImg" src={starAvatar.src || undefined} className="avatar-missing" alt="" referrerPolicy="no-referrer" />
+                <HomeAvatar id="starAvatarImg" src={starAvatar.src || DEFAULT_BIRD_AVATAR} className="avatar-missing" alt="" referrerPolicy="no-referrer" />
                 {"\n"}
               </div>
               {"\n"}
@@ -243,7 +244,7 @@ export function Home() {
               {"\n"}
               <div className="avatar-inner-circle">
                 {"\n"}
-                <HomeAvatar id="moonAvatarImg" src={moonAvatar.src || undefined} className="avatar-missing" alt="" referrerPolicy="no-referrer" />
+                <HomeAvatar id="moonAvatarImg" src={moonAvatar.src || DEFAULT_FOX_AVATAR} className="avatar-missing" alt="" referrerPolicy="no-referrer" />
                 {"\n"}
               </div>
               {"\n"}

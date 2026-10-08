@@ -1,3 +1,4 @@
+import { DEFAULT_BIRD_AVATAR } from '../../utils/defaultAvatar';
 import { PressedDiv } from '../../components/shared/PressedDiv';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { OriginalComment } from '../../components/shared/OriginalComment';
@@ -70,7 +71,7 @@ export function Settings() {
               {"\n                        "}
               <PressedButton className="settings-profile-avatar" id="settingsProfileAvatarBtn" onClick={home.chooseAvatar} type="button" aria-label="更换个人头像" data-title="点击更换头像">
                 {"\n                            "}
-                <img id="settingsProfileAvatarImg" className={home.avatarMissing ? "avatar-missing" : ""} src={home.avatar || undefined} onLoad={home.avatarLoaded} onError={home.avatarFailed} alt="" />
+                <img id="settingsProfileAvatarImg" src={home.avatarMissing ? DEFAULT_BIRD_AVATAR : home.avatar || DEFAULT_BIRD_AVATAR} onLoad={home.avatarLoaded} onError={home.avatarFailed} alt="" />
                 {"\n                        "}
               </PressedButton>
               {"\n                        "}
