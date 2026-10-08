@@ -96,6 +96,7 @@ try{
  await page.waitForFunction(()=>document.querySelector('#cleanImageStorageBtn').disabled&&!document.querySelector('#inspectImageStorageBtn').disabled);
  check('confirmed UI cleanup preserves referenced pictures',(await dbKeys()).length===3);
  const colors=await page.locator('.image-storage-summary').evaluate(e=>{const old=getComputedStyle(e).color;document.documentElement.style.setProperty('--theme-color','#D3AFBA');const changed=getComputedStyle(e).color;document.documentElement.style.removeProperty('--theme-color');return {old,changed};});check('cleanup text follows theme',colors.old!==colors.changed);
+ await page.locator('#imageStorageCloseBtn').click();check('cleanup title close returns to settings',await page.locator('#dataManagementPage').evaluate(e=>!e.classList.contains('active')));await click('#settingBackup');check('cleanup can reopen after title close',await page.locator('#dataManagementPage').evaluate(e=>e.classList.contains('active')));
  check('no browser runtime errors',errors.length===0);
  await context.close();console.log(JSON.stringify({passed:checks.length,checks},null,2));
 }finally{await browser.close();server.close();}

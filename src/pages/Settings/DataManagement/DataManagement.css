@@ -2,8 +2,11 @@
 /* 老式清理工具：一张凹陷列表、一个释放空间读数，不混用页签和分组框。 */
 .image-storage-tool { border: 1px solid var(--color-muted); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-drop); overflow: hidden; color: var(--color-text); }
 .image-storage-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--color-muted); background: var(--color-page); }
-.image-storage-titlebar h3 { margin: 0; color: var(--color-text); font-size: 11px; font-weight: 600; letter-spacing: .8px; }
-.image-storage-titlebar > span { color: var(--color-muted); font-size: 9px; }
+.image-storage-titlebar h3 { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--color-text); font-size: 11px; font-weight: 600; letter-spacing: .8px; }
+.image-storage-titlebar h3 svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.image-storage-title-tools { display: flex; align-items: center; gap: 8px; color: var(--color-muted); font-size: 9px; }
+.image-storage-close { width: 18px; height: 18px; padding: 0; display: grid; place-items: center; border: 1px solid var(--color-muted); border-radius: 1px; background: var(--effect-face-white); color: var(--color-text); box-shadow: var(--effect-raised); cursor: pointer; }
+.image-storage-close svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.2; }
 .image-storage-content { padding: 16px; }
 .image-storage-intro { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
 .image-storage-icon { width: 32px; height: 32px; flex: 0 0 32px; color: var(--color-accent); }

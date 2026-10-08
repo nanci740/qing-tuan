@@ -4,7 +4,7 @@ import {cleanUnusedImages,getImageLibraryStats,type ImageLibraryStats} from '../
 import {confirmChat} from '../../../utils/chatConfirm';
 import {showToast} from '../../../utils/toast';
 function size(bytes:number){return bytes<1024?`${bytes} B`:bytes<1024*1024?`${(bytes/1024).toFixed(1)} KB`:`${(bytes/1024/1024).toFixed(2)} MB`;}
-export function ImageStorageSettings({open}:{open:boolean}){
+export function ImageStorageSettings({open,onClose}:{open:boolean;onClose:()=>void}){
   const [stats,setStats]=useState<ImageLibraryStats|null>(null);
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState('');
@@ -25,18 +25,13 @@ export function ImageStorageSettings({open}:{open:boolean}){
   const status=busy?'正在检查图片库…':error?'检查未完成':!stats?'等待检查':stats.unusedCount?`可清理 ${stats.unusedCount} 张旧图片`:'图片库很整洁，暂时无需清理';
   return <section className="image-storage-tool" id="imageStorageSection" aria-labelledby="imageStorageTitle">
     <div className="image-storage-titlebar">
-      <h3 id="imageStorageTitle">图片清理</h3>
-      <span>本机图片库</span>
+      <h3 id="imageStorageTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg>图片清理</h3>
+      <div className="image-storage-title-tools"><span>本机图片库</span><PressedButton className="image-storage-close" id="imageStorageCloseBtn" type="button" aria-label="关闭图片清理" onClick={onClose}><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6m0-6-6 6"/></svg></PressedButton></div>
     </div>
     <div className="image-storage-content" aria-busy={busy}>
       <div className="image-storage-intro">
-        <svg className="image-storage-icon" viewBox="0 0 20 20" aria-hidden="true" shapeRendering="crispEdges">
-          <path fill="var(--set-bg)" d="M7 2h10v11H7z"/>
-          <path fill="currentColor" d="M7 1h10v1H7zM17 2h1v11h-1zM7 13h10v1H7zM6 2h1v3H6z"/>
-          <path fill="var(--color-surface)" d="M3 6h11v11H3z"/>
-          <path fill="currentColor" d="M3 5h11v1H3zM2 6h1v11H2zM14 6h1v11h-1zM3 17h11v1H3z"/>
-          <path fill="var(--sb-accent)" d="M5 7h2v2H5zM4 14h2v-2h2v-2h2v2h2v2h1v2H4z"/>
-          <path fill="currentColor" d="M10 3h5v1h-5zM16 16h2v-1h1v3h-3v-1h-1v-2h1z"/>
+        <svg className="image-storage-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 7V3h14v14h-4"/><rect x="3" y="7" width="14" height="14" rx="1"/><circle cx="7" cy="11" r="1"/><path d="m3 17 4-4 4 4 3-3 3 3"/>
         </svg>
         <p>给图片库腾一点空间<span>正在使用的图片会保留。</span></p>
       </div>
