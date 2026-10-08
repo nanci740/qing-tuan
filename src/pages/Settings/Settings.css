@@ -1310,23 +1310,18 @@
             border: 1px solid var(--win-deep);
             border-radius: 2px;
             padding: 2px;
-            /* 照片后面垫人形剪影（跟主画面头像同一款，按 40×40 照片区等比缩小）：头半径 9 底边 23.5，肩膀顶边 25.5 */
-            background:
-                radial-gradient(circle 9px at 50% 14.5px, var(--color-surface) 0 8.5px, transparent 9px) content-box,
-                radial-gradient(ellipse 18px 14.5px at 50% 100%, var(--color-surface) 0 99%, transparent 100%) content-box,
-                linear-gradient(var(--theme-color), var(--theme-color)) content-box,
-                var(--win-face);
+            background: var(--win-face);
             box-shadow: var(--bevel-in), var(--win-drop);
         }
 
 /* @qingtuan-order:001109 */
 
 
-        /* 读不到头像图时把破图藏起来，露出剪影 */
+        /* 默认头像使用小鸟图片。 */
 
 /* @qingtuan-order:001110 */
 
-        #settingsPage .settings-profile-avatar img.avatar-missing { visibility: hidden; }
+
 
 /* @qingtuan-order:001111 */
 

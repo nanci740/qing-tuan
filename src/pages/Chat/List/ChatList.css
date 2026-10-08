@@ -769,7 +769,6 @@ position:relative;
 
 /* @qingtuan-order:001969 */
 
-#chatListView .chat-conversation-panel .chat-avatar[src*="spDefaultAvatar"]{background:var(--theme-color) content-box!important}
 
 /* @qingtuan-order:001970 */
 

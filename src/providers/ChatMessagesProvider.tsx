@@ -5,7 +5,7 @@ import type { MessageElement, MessageNode, MessageNodesApi, MessagesConnection, 
 import type { NativeAttribute } from '../types/dom';
 import * as model from '../utils/chatMessageNodes';
 import { measureChatBubbleShape } from '../utils/chatBubbleGeometry';
-import { DEFAULT_AVATAR } from '../utils/defaultAvatar';
+import { DEFAULT_AVATAR, DEFAULT_BIRD_AVATAR } from '../utils/defaultAvatar';
 import { CHAT_INITIAL_MESSAGES, CHAT_MORE_MESSAGES, isHistoryRow, messageWindow, shareMessageNodes } from '../utils/chatMessageWindow';
 interface MessagesView { nodes: MessageNode[]; hidden: number; loadMore(): void; register(node: MessageElement, element: Element | null): void; list(element: HTMLDivElement | null): void; audio(element: HTMLAudioElement, playing: boolean, ended?: boolean): void; api: MessageNodesApi; }
 const Context = createContext<MessagesView | null>(null);
@@ -36,7 +36,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   const timers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const listeners = useRef(new Set<()=>void>());
   const queued = useRef(false), ready = useRef(false);
-  const identity = () => sources.current?.identity() ?? { peer: '聊天', peerAvatar: DEFAULT_AVATAR, userAvatar: DEFAULT_AVATAR };
+  const identity = () => sources.current?.identity() ?? { peer: '聊天', peerAvatar: DEFAULT_AVATAR, userAvatar: DEFAULT_BIRD_AVATAR };
   const clone = () => structuredClone(current.current);
   function captureAnchor() {
     const list = listRef.current;

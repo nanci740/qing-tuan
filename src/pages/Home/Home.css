@@ -1790,23 +1790,10 @@
 /* @qingtuan-order:003416 */
 
 
-        /* 头像预设图：照片后面垫一张人形剪影（主题色底 + 白色圆头和肩膀）。剪影区 88×88：头半径 20 圆心 y=32（底边 52），肩膀顶边 56，头跟身体隔 4px；
-           没上传头像时图片是藏起来的，露出剪影；上传了头像、图片读到了就会盖住剪影 */
+        /* 默认头像由独立图片文件提供。 */
 
 /* @qingtuan-order:003417 */
 
-        #main-content .avatar-inner-circle::before {
-            content: '';
-            position: absolute;
-            inset: 4px;
-            z-index: 0;
-            border: 1px solid var(--win-shade-soft);
-            border-radius: 1px;
-            background:
-                radial-gradient(circle 20px at 50% 32px, var(--color-surface) 0 19.5px, transparent 20px),
-                radial-gradient(ellipse 40px 32px at 50% 100%, var(--color-surface) 0 99%, transparent 100%),
-                var(--theme-color);
-        }
 
 /* @qingtuan-order:003418 */
 
@@ -1819,7 +1806,7 @@
 /* @qingtuan-order:003419 */
 
 
-        #main-content .avatar-inner-circle img.avatar-missing { visibility: hidden; }
+
 
 /* @qingtuan-order:003420 */
 
