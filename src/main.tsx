@@ -1,3 +1,4 @@
+import { initializeUiFont } from './utils/appearanceStorage';
 import { initializeChatRecords } from './utils/chatRecords';
 import { initializeImageAssets } from './utils/imageAssets';
 import { showToast } from './utils/toast';
@@ -11,7 +12,7 @@ installOriginalStyles(tokensCss, orderedStyleSources, preFontStyleFragmentCount)
 window.qtSettingsPageEntries = {};
 // 原页面直接挂在 body，避免增加包装节点改变既有选择器。
 const root = createRoot(document.body);
-void Promise.all([initializeImageAssets(), initializeChatRecords()]).then(warnings => {
+void Promise.all([initializeImageAssets(), initializeChatRecords(), initializeUiFont()]).then(warnings => {
   const warning = warnings.filter(Boolean).join('；');
   flushSync(() => root.render(<App />));
   if (warning) showToast(warning);

@@ -7,7 +7,7 @@ import { defaultHomeTexts, homeTextStorageKeys, useHomeTexts } from './HomeTexts
 import type { HomeTextId, HomeTextValues } from './HomeTextsProvider';
 import { useMusic } from './MusicProvider';
 import { DEFAULT_THEME_COLOR, normalizeThemeColor, themeColorToRgb, themeFrameRgb, hexToHsv, hsvToHex } from '../utils/appearanceColors';
-import { CUSTOM_FONT_FAMILY, readLocalFontRecord, writeLocalFontRecord } from '../utils/appearanceStorage';
+import { CUSTOM_FONT_FAMILY, getRestoredUiFont, readLocalFontRecord, writeLocalFontRecord } from '../utils/appearanceStorage';
 import type {LocalFontRecord} from '../utils/appearanceStorage';
 import { showToast } from '../utils/toast';
 export const iconConfigs = {app:[{key:'ledger',label:'Ledger'},{key:'memos',label:'Memos'},{key:'world',label:'World'},{key:'memories',label:'Memories'}],dock:[{key:'home',label:'Home'},{key:'chat',label:'Chat'},{key:'diary',label:'Diary'},{key:'space',label:'Space'},{key:'settings',label:'Settings'}]};
@@ -29,7 +29,8 @@ function useAppearanceState(){
  const [texts,setTexts]=useState<HomeTextValues>(()=>Object.fromEntries(Object.keys(defaultHomeTexts).map(key=>[key,''])) as HomeTextValues);
  const [icons,setIcons]=useState(readIcons),[iconDrafts,setIconDrafts]=useState(readIcons),pendingIcon=useRef<{kind:IconKind;key:string}|null>(null);
  const wallpaperInput=useRef<HTMLInputElement>(null),iconInput=useRef<HTMLInputElement>(null),fontInput=useRef<HTMLInputElement>(null);
- const [fontUrl,setFontUrl]=useState(''),[font,setFont]=useState({name:'默认字体',source:'霞鹜圆体 / Georgia',badge:'DEFAULT',active:false});
+ const restoredFont=getRestoredUiFont();
+ const [fontUrl,setFontUrl]=useState(restoredFont?.url||''),[font,setFont]=useState(restoredFont?{name:restoredFont.name,source:restoredFont.source,badge:'CUSTOM',active:true}:{name:'默认字体',source:'霞鹜圆体 / Georgia',badge:'DEFAULT',active:false});
  function persist(values:Record<string,string|null>){try{writeSettingsBatch(values);return true;}catch(error){showToast((error as Error).message);return false;}}
  function applyColor(value:string,save=true){const next=normalizeThemeColor(value);if(save&&!persist({'smallphone_theme_color':next})){setHex(color);return false;}setColor(next);setHex(next);if(save)savedColor.current=next;return true;}
  // body 上的 --theme-rgb 用「框架色」，跟 CSS 里 body 的 --theme-color 对应。
@@ -71,7 +72,7 @@ function useAppearanceState(){
  function resetIcons(){setIconDrafts({app:Object.fromEntries(iconConfigs.app.map(item=>[item.key,''])),dock:Object.fromEntries(iconConfigs.dock.map(item=>[item.key,'']))});}
  const savingIcons=useRef(false);
  async function saveIcons(){if(savingIcons.current)return;savingIcons.current=true;const draft={app:{...iconDrafts.app},dock:{...iconDrafts.dock}};try{const values:Record<string,string>={};for(const kind of ['app','dock'] as const)for(const {key} of iconConfigs[kind])values[`smallphone_${kind}_icon_${key}`]=(draft[kind][key]||'').trim();await saveImageSlots(values);setIcons(draft);showToast('已保存');}catch(error){showToast(error instanceof Error?error.message:'图标保存失败');}finally{savingIcons.current=false;}}
- const activeFont=useRef<FontFace|null>(null),fontRevision=useRef(0),fontBusy=useRef(false);
+ const activeFont=useRef<FontFace|null>(restoredFont?.face||null),fontRevision=useRef(0),fontBusy=useRef(false);
  function deactivateFont(){if(activeFont.current)document.fonts.delete(activeFont.current);activeFont.current=null;setFont({name:'默认字体',source:'霞鹜圆体 / Georgia',badge:'DEFAULT',active:false});setFontUrl('');}
  function activateFont(face:FontFace,name:string,source:string){if(activeFont.current)document.fonts.delete(activeFont.current);document.fonts.add(face);activeFont.current=face;setFont({name,source,badge:'CUSTOM',active:true});}
  async function validateUrl(raw:string,displayName=''){
@@ -83,12 +84,7 @@ function useAppearanceState(){
   const old=await readLocalFontRecord();await writeLocalFontRecord(record);
   try{writeSettingsBatch(metadata);}catch(error){try{await writeLocalFontRecord(old);}catch{throw Error('字体设置保存失败，旧文件恢复失败，请重新选择字体');}throw error;}
  }
- useEffect(()=>{const revision=fontRevision.current;void(async()=>{
-  const type=read('smallphone_custom_font_type'),name=read('smallphone_custom_font_name');
-  try{if(type==='url'){const url=read('smallphone_custom_font_url');if(!url)return;const loaded=await validateUrl(url,name);if(revision!==fontRevision.current)return;setFontUrl(url);activateFont(loaded.face,loaded.name,loaded.source);}
-  else if(type==='file'){const record=await readLocalFontRecord();if(!record)throw Error('找不到已保存的字体文件');const face=await new FontFace(CUSTOM_FONT_FAMILY,await record.blob.arrayBuffer()).load();if(revision!==fontRevision.current)return;activateFont(face,name||record.name,`本地文件 · ${name||record.name}`);}}
-  catch{if(revision===fontRevision.current){deactivateFont();showToast('已保存的字体暂时无法载入，请重试');}}
- })();return()=>{fontRevision.current++;if(activeFont.current)document.fonts.delete(activeFont.current);};},[]);
+ useEffect(()=>()=>{fontRevision.current++;if(activeFont.current)document.fonts.delete(activeFont.current);},[]);
  async function onFont(event:ChangeEvent<HTMLInputElement>){
   const input=event.currentTarget,file=input.files?.[0];input.value='';if(!file)return;
   if(!/\.(ttf|otf|woff|woff2)$/i.test(file.name))return showToast('请选择 TTF、OTF、WOFF 或 WOFF2 字体文件');
