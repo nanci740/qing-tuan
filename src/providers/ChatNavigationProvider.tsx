@@ -11,7 +11,7 @@ export interface ChatNavigationServices {
   syncIdentity(): void;
   prepareSettings(): void;
 }
-export interface ChatSurfaceHandle { data?(key:string,value:string):void; style?(key: string, value: string): void; toggle(token: string, enabled: boolean, hidden?: boolean): void; }
+export interface ChatSurfaceHandle { data?(key:string,value:string):void; style?(key: string, value: string): void; measure?(): void; toggle(token: string, enabled: boolean, hidden?: boolean): void; }
 export interface ChatNavigationApi {
   activeKey(value:string):void;
   selectionMode(enabled:boolean):void;
@@ -69,7 +69,7 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
         await prepared;
         if(revision!==entryRevision.current)return;
         // Force font discovery in the now-laid-out room before its first visible frame.
-        document.getElementById('chatRoomView')?.getBoundingClientRect();
+        surfaces.current.get('room')?.measure?.();
         let timer: ReturnType<typeof setTimeout> | undefined;
         try { await Promise.race([document.fonts.ready,new Promise(resolve=>{timer=setTimeout(resolve,5000);})]); }
         finally {clearTimeout(timer);}
