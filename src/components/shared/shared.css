@@ -1880,7 +1880,8 @@
 /* @qingtuan-order:000595 */
 
 
-        .api-model-item.selected .api-model-check::after {
+        .api-model-item.selected .api-model-check::after,
+        #viChoiceModal.chat-settings-choice .vi-choice-item.selected .api-model-check::after {
             opacity: 1;
         }
 
@@ -6029,7 +6030,8 @@
 
 /* @qingtuan-order:002116 */
 
-#worldPickerModal#worldPickerModal .api-model-check{
+#worldPickerModal#worldPickerModal .api-model-check,
+#viChoiceModal#viChoiceModal.chat-settings-choice .api-model-check{
   background:var(--color-surface)!important;
   color:var(--win-ink)!important;
 }
@@ -6225,7 +6227,8 @@
 
 /* @qingtuan-order:002356 */
 
-#worldPickerModal#worldPickerModal .api-model-check{border:1px solid var(--wt)!important;border-radius:3px!important;box-shadow:none!important}
+#worldPickerModal#worldPickerModal .api-model-check,
+#viChoiceModal#viChoiceModal.chat-settings-choice .api-model-check{border:1px solid var(--wt,var(--color-muted))!important;border-radius:3px!important;box-shadow:none!important}
 
 /* @qingtuan-order:002357 */
 
@@ -6558,11 +6561,13 @@
 
 /* @qingtuan-order:002495 */
 
-#worldPickerModal#worldPickerModal .api-model-item.selected .api-model-check{background:var(--wk-accent)!important;border-color:var(--wt)!important}
+#worldPickerModal#worldPickerModal .api-model-item.selected .api-model-check,
+#viChoiceModal#viChoiceModal.chat-settings-choice .vi-choice-item.selected .api-model-check{background:var(--wk-accent,var(--color-accent))!important;border-color:var(--wt,var(--color-muted))!important}
 
 /* @qingtuan-order:002496 */
 
-#worldPickerModal#worldPickerModal .api-model-item.selected .api-model-check::after{border-color:var(--color-surface)!important}
+#worldPickerModal#worldPickerModal .api-model-item.selected .api-model-check::after,
+#viChoiceModal#viChoiceModal.chat-settings-choice .vi-choice-item.selected .api-model-check::after{border-color:var(--color-surface)!important}
 
 /* @qingtuan-order:002498 */
 

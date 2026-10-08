@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 export interface ChoiceOption { value: string; label: string }
-export interface ChoiceRequest { style?: 'settings'; title?: string; options: (ChoiceOption | string)[]; selected: string; confirm: (value: string) => void }
+export interface ChoiceRequest { style?: 'settings' | 'chat-settings'; title?: string; options: (ChoiceOption | string)[]; selected: string; confirm: (value: string) => void }
 function useChoiceState() {
   const [state, setState] = useState({ open: false, style: undefined as ChoiceRequest['style'], revision: 0, title: '选择', options: [] as ChoiceOption[], selected: '' });
   const modalRef = useRef<HTMLDivElement>(null);

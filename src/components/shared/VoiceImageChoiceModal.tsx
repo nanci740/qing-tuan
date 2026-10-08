@@ -4,8 +4,9 @@ import { useChoice } from '../../providers/ChoiceProvider';
 export function VoiceImageChoiceModal() {
  const choice = useChoice();
  const settings = choice.style === 'settings';
+ const chatSettings = choice.style === 'chat-settings';
  const cls = (legacy:string, setting:string) => settings ? setting : legacy;
-  return <div className={`${cls('vi-choice-modal','api-model-modal settings-choice')}${choice.open ? ' open' : ''}`} id="viChoiceModal" ref={choice.modalRef} aria-hidden={!choice.open} onClick={event=>{if(event.target===event.currentTarget)choice.close();}}>
+  return <div className={`${cls('vi-choice-modal','api-model-modal settings-choice')}${chatSettings ? ' chat-settings-choice' : ''}${choice.open ? ' open' : ''}`} id="viChoiceModal" ref={choice.modalRef} aria-hidden={!choice.open} onClick={event=>{if(event.target===event.currentTarget)choice.close();}}>
       {"\n        "}
       <div className={cls('vi-choice-sheet','api-model-sheet api-provider-sheet')} role="dialog" aria-modal="true" aria-labelledby="viChoiceTitle">
         {"\n            "}
@@ -20,7 +21,7 @@ export function VoiceImageChoiceModal() {
           {"\n            "}
         </div>
         {"\n            "}
-        <div className={cls('vi-choice-list','api-model-list api-provider-list')} id="viChoiceList">{choice.options.map((option,index)=><PressedButton type="button" className={`${cls('vi-choice-item','api-model-item')}${option.value===choice.selected ? ' selected' : ''}`} key={`${choice.revision}-${index}`} onClick={()=>choice.select(option.value)}><span className={cls('vi-choice-check','api-model-check')}>{!settings && option.value===choice.selected ? '✓' : ''}</span><span className={settings ? 'api-model-name' : undefined}>{option.label}</span></PressedButton>)}</div>
+        <div className={cls('vi-choice-list','api-model-list api-provider-list')} id="viChoiceList">{choice.options.map((option,index)=><PressedButton type="button" className={`${cls('vi-choice-item','api-model-item')}${option.value===choice.selected ? ' selected' : ''}`} key={`${choice.revision}-${index}`} onClick={()=>choice.select(option.value)}><span className={chatSettings ? 'api-model-check' : cls('vi-choice-check','api-model-check')}>{!settings && !chatSettings && option.value===choice.selected ? '✓' : ''}</span><span className={settings ? 'api-model-name' : undefined}>{option.label}</span></PressedButton>)}</div>
         {"\n            "}
         <div className={cls('vi-choice-actions','api-model-actions')}>
           {"\n                "}
