@@ -6,6 +6,11 @@ import { useChatNavigation } from '../providers/ChatNavigationProvider';
 import { saveChatPreferences, saveChatPreferencesOrThrow } from '../utils/chatPreferences';
 import { showToast } from '../utils/toast';
 import { readChatWallpaper, writeChatWallpaper, deleteChatWallpaper, readChatFont, writeChatFont, deleteChatFont, scopeChatBubbleCss } from '../utils/chatAppearance';
+async function readyAsset<T>(promise: Promise<T>): Promise<T> {
+ let timer: ReturnType<typeof setTimeout> | undefined;
+ try { return await Promise.race([promise,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(Error('聊天资源加载超时，请重试')),5000);})]); }
+ finally { clearTimeout(timer); }
+}
 export function useChatAppearance(services: MutableRefObject<ChatPreferenceServices | null>) {
  const navigation = useChatNavigation();
  const [view, setView] = useState({wallpaperState:'未设置', wallpaperEnabled:false, backgroundImage:'', fontName:'跟随全站字体',fontSource:'只调整当前聊天室的气泡文字',fontBadge:'DEFAULT',fontStatus:'',fontUrl:'',urlVersion:0,bubbleStyle:''});
@@ -31,7 +36,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             if (!current()) return;
             const next = blob ? URL.createObjectURL(blob) : '';
             if (next) {
-                try { const image = new Image(); image.src = next; await image.decode(); }
+                try { const image = new Image(); image.src = next; await readyAsset(image.decode()); }
                 catch (error) { URL.revokeObjectURL(next); throw error; }
                 if (!current()) { URL.revokeObjectURL(next); return; }
             }
@@ -83,7 +88,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
                 source = objectUrl = URL.createObjectURL(blob);
             }
             if (!source) throw new Error('字体来源为空');
-            const face = await new FontFace('SmallPhoneChatCustomFont', `url(${JSON.stringify(source)})`).load();
+            const face = await readyAsset(new FontFace('SmallPhoneChatCustomFont', `url(${JSON.stringify(source)})`).load());
             if (!current()) return false;
             clearActiveChatFont(); document.fonts.add(face);
             fontFace.current = face; fontObjectUrl.current = objectUrl; objectUrl = '';
@@ -96,9 +101,9 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             return false;
         } finally { if (objectUrl) URL.revokeObjectURL(objectUrl); }
     }
-    function applyChatAppearance() {
+    async function applyChatAppearance() {
         navigation.appearanceStyle('--chat-message-font-size', `${services.current!.readCurrent().fontSize}px`);
-        applyChatFont();
+        const fontReady = applyChatFont();
         try {
             update({bubbleStyle: scopeChatBubbleCss(services.current!.readCurrent().bubbleCss)});
             navigation.appearanceClass('chat-custom-bubble-active', Boolean(services.current!.readCurrent().bubbleCss.trim()));
@@ -106,7 +111,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             update({bubbleStyle: ''});
             navigation.appearanceClass('chat-custom-bubble-active', false);
         }
-        applyChatWallpaper();
+        await Promise.all([fontReady, applyChatWallpaper()]);
     }
     async function changeFont(patch: Pick<ChatPreferences, 'fontType' | 'fontName' | 'fontUrl'>, file?: File) {
         if (assetBusy.current) return showChatFontStatus('正在保存，请稍候');
@@ -170,7 +175,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
         try {
             if (file) {
                 validationUrl = URL.createObjectURL(file);
-                const image = new Image(); image.src = validationUrl; await image.decode();
+                const image = new Image(); image.src = validationUrl; await readyAsset(image.decode());
             }
             if (key !== services.current!.currentKey()) return;
             if (file) await writeChatWallpaper(key, file); else await deleteChatWallpaper(key);
@@ -189,7 +194,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
     }
     async function removeWallpaper() {await changeWallpaper(null);}
 
- function sync() {applyChatWallpaperEffects();updateChatFontSummary(services.current!.readCurrent().fontType==='inherit'?'':services.current!.readCurrent().fontName,services.current!.readCurrent().fontType==='file'?'本地字体文件':services.current!.readCurrent().fontUrl,services.current!.readCurrent().fontType==='inherit'?'DEFAULT':'CUSTOM');applyChatAppearance();}
+ function sync() {applyChatWallpaperEffects();updateChatFontSummary(services.current!.readCurrent().fontType==='inherit'?'':services.current!.readCurrent().fontName,services.current!.readCurrent().fontType==='file'?'本地字体文件':services.current!.readCurrent().fontUrl,services.current!.readCurrent().fontType==='inherit'?'DEFAULT':'CUSTOM');return applyChatAppearance();}
  function range(key: 'wallpaperFade'|'wallpaperBlur', value: number) {services.current!.readCurrent()[key]=value;applyChatWallpaperEffects();save();}
  return {view,sync,range,importFont,applyChatFontUrl,resetFont,applyBubble,resetBubble,importWallpaper,removeWallpaper,applyChatFont,applyChatWallpaper,applyChatWallpaperEffects};
 }

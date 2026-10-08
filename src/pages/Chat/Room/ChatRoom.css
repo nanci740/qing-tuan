@@ -11,6 +11,7 @@
 
         .chat-room-view {
             position: relative;
+            isolation: isolate;
             display: flex;
             flex-direction: column;
         }
@@ -371,15 +372,15 @@
 
 /* @qingtuan-order:002692 */
 
-#chatAppPage .chat-message-list {background-position:center;background-size:cover;background-repeat:no-repeat;}
+#chatAppPage .chat-room-view.chat-room-preparing { position: absolute; inset: 0; visibility: hidden; pointer-events: none; }
 
 /* @qingtuan-order:002693 */
 
-#chatAppPage.chat-wallpaper-on .chat-message-list::before {content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:rgba(249,249,249,var(--chat-wallpaper-fade));backdrop-filter:blur(var(--chat-wallpaper-blur));-webkit-backdrop-filter:blur(var(--chat-wallpaper-blur));}
+#chatAppPage.chat-wallpaper-on .chat-room-view::before {content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade)),rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade))),var(--chat-wallpaper-image);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(var(--chat-wallpaper-blur));}
 
 /* @qingtuan-order:002694 */
 
-#chatAppPage.chat-wallpaper-on .chat-message-list > * {position:relative;z-index:1;}
+#chatAppPage.chat-wallpaper-on .chat-room-view > * {z-index:1;}
 
 /* @qingtuan-order:002710 */
 
@@ -592,7 +593,7 @@
         #chatAppPage#chatAppPage #chatRoomView #chatMessageList {
             margin: 8px 8px 0 !important;
             padding: 8px 0 10px !important;
-            background-color: var(--color-surface) !important;
+            background-color: var(--chat-message-panel-bg, var(--color-surface)) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             box-shadow: var(--cr-sunken) !important;
@@ -600,7 +601,7 @@
 
 /* @qingtuan-order:004031 */
 
-        #chatAppPage#chatAppPage.chat-wallpaper-on #chatRoomView #chatMessageList::before { background: rgba(var(--color-surface-rgb), var(--chat-wallpaper-fade)) !important; }
+        /* 壁纸淡化由聊天室独立背景层处理，不随消息滚动。 */
 
 /* @qingtuan-order:004032 */
 

@@ -28,7 +28,7 @@ export interface ChatPreferenceServices {
   finishImport(): void;
 }
 export interface ChatPreferenceBridge {
-  appearance(): void;
+  appearance(): Promise<void>;
   applyWallpaper(): Promise<void>;
   applyFont(force?: boolean): Promise<boolean>;
   assets: {writeWallpaper(key:string,file:Blob):Promise<void>;readWallpaper(key:string):Promise<Blob|null>;deleteWallpaper(key:string):Promise<void>;writeFont(key:string,file:Blob):Promise<void>;readFont(key:string):Promise<Blob|null>;deleteFont(key:string):Promise<void>};

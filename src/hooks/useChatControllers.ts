@@ -220,8 +220,9 @@ function initChatApplication(){
             },
             prepareRoom() {
                 syncChatIdentity();
-                applyChatRoomPreferences();
+                const prepared = applyChatRoomPreferences();
                 loadCurrentChatDraft();
+                return prepared;
             },
             finishRoom() {
                 requestAnimationFrame(() => {
@@ -331,7 +332,7 @@ function initChatApplication(){
         // 在线状态由角色自身状态控制，聊天设置不再覆盖它。
         navigation.appearanceClass('chat-is-offline',false);
         chatIdentity.summaries(state.current.preferences);
-        preferenceBridge.appearance();
+        return preferenceBridge.appearance();
     }
     bridge.applyChatRoomPreferences = applyChatRoomPreferences;
     function syncChatSettingsIdentity(){let profile=null;try{profile=bridge.smallphoneGetActiveCharacterProfile?.()||null;}catch{}const avatar=refs.get<HTMLImageElement>('chatRoomAvatar');chatIdentity.settings(profile,avatar?.getAttribute('src')||avatar?.currentSrc||avatar?.src||'',refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'当前角色');}
