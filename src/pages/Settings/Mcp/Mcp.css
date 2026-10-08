@@ -953,7 +953,7 @@
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:003672 */

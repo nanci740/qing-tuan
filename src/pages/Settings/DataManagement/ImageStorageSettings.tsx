@@ -23,13 +23,12 @@ export function ImageStorageSettings({open}:{open:boolean}){
   }
   useEffect(()=>{if(open)void run(false);},[open]);
   const status=busy?'正在检查图片库…':error?'检查未完成':!stats?'等待检查':stats.unusedCount?`可清理 ${stats.unusedCount} 张旧图片`:'图片库很整洁，暂时无需清理';
-  const percent=(bytes:number)=>stats?.totalBytes?`${bytes/stats.totalBytes*100}%`:'0%';
-  return <section className="theme-setting-group image-storage-tool" id="imageStorageSection" aria-labelledby="imageStorageTitle">
+  return <section className="image-storage-tool" id="imageStorageSection" aria-labelledby="imageStorageTitle">
     <div className="image-storage-titlebar">
       <h3 id="imageStorageTitle">图片清理</h3>
       <span>本机图片库</span>
     </div>
-    <div className="theme-setting-card" aria-busy={busy}>
+    <div className="image-storage-content" aria-busy={busy}>
       <div className="image-storage-intro">
         <svg className="image-storage-icon" viewBox="0 0 20 20" aria-hidden="true" shapeRendering="crispEdges">
           <path fill="var(--set-bg)" d="M7 2h10v11H7z"/>
@@ -39,34 +38,29 @@ export function ImageStorageSettings({open}:{open:boolean}){
           <path fill="var(--sb-accent)" d="M5 7h2v2H5zM4 14h2v-2h2v-2h2v2h2v2h1v2H4z"/>
           <path fill="currentColor" d="M10 3h5v1h-5zM16 16h2v-1h1v3h-3v-1h-1v-2h1z"/>
         </svg>
-        <p>整理不再使用的图片<span>留下正在使用的，收拾替换下来的。</span></p>
+        <p>给图片库腾一点空间<span>正在使用的图片会保留。</span></p>
       </div>
-      <fieldset className="image-storage-overview">
-        <legend>占用概览</legend>
-        <dl className="image-storage-summary" aria-live="polite">
-          <div><dt>图片库占用</dt><dd>{stats?`${stats.totalCount} 张 · ${size(stats.totalBytes)}`:'待检查'}</dd></div>
-          <div><dt>正在使用</dt><dd>{stats?`${stats.usedCount} 张 · ${size(stats.usedBytes)}`:'—'}</dd></div>
-          <div><dt>可清理</dt><dd>{stats?`${stats.unusedCount} 张 · ${size(stats.unusedBytes)}`:'—'}</dd></div>
-        </dl>
-        <div className="image-storage-meter" aria-hidden="true">
-          <span data-kind="used" style={{width:percent(stats?.usedBytes??0)}}/>
-          <span data-kind="protected" style={{width:percent(stats?.protectedBytes??0)}}/>
-          <span data-kind="unused" style={{width:percent(stats?.unusedBytes??0)}}/>
-        </div>
-        <div className="image-storage-legend" aria-hidden="true"><span data-kind="used">使用中</span>{Boolean(stats?.protectedCount)&&<span data-kind="protected">暂时保留</span>}<span data-kind="unused">可清理</span></div>
-      </fieldset>
-      <fieldset className="image-storage-scope">
-        <legend>清理说明</legend>
-        <p className="image-storage-note">仅清理这台设备中未被引用的旧图片，共用图片只计一次。聊天专属壁纸、字体及外链图片不计入此库。</p>
+      <div className="image-storage-reclaim" aria-live="polite">
+        <span>可释放空间</span>
+        <strong>{stats?size(stats.unusedBytes):'—'}</strong>
+      </div>
+      <dl className="image-storage-summary" aria-label="图片库占用" aria-live="polite">
+        <div><dt>图片库占用</dt><dd>{stats?`${stats.totalCount} 张`:'—'}</dd><dd>{stats?size(stats.totalBytes):'待检查'}</dd></div>
+        <div><dt>正在使用</dt><dd>{stats?`${stats.usedCount} 张`:'—'}</dd><dd>{stats?size(stats.usedBytes):'—'}</dd></div>
+        {Boolean(stats?.protectedCount)&&<div><dt>暂时保留</dt><dd>{stats!.protectedCount} 张</dd><dd>{size(stats!.protectedBytes)}</dd></div>}
+        <div data-kind="unused"><dt>可清理</dt><dd>{stats?`${stats.unusedCount} 张`:'—'}</dd><dd>{stats?size(stats.unusedBytes):'—'}</dd></div>
+      </dl>
+      <p className="image-storage-status" role="status" data-busy={busy} data-error={Boolean(error)}>{status}</p>
+      <div className="image-storage-scope">
+        <p className="image-storage-note">只清理本机未被引用的旧图片，共用图片只计一次。聊天专属壁纸、字体及外链图片不计入此库。</p>
         <p className="image-storage-note">清理前，请关闭其他青团机页面。</p>
         {Boolean(stats?.protectedCount)&&<p className="image-storage-note">本次打开期间用过的 {stats!.protectedCount} 张图片暂时保留，重新打开后可再检查。</p>}
         {error&&<p className="image-storage-note" role="alert">{error}</p>}
-      </fieldset>
+      </div>
       <div className="theme-icon-bottom-actions">
         <PressedButton className="theme-icon-bottom-btn" id="inspectImageStorageBtn" disabled={busy} onClick={()=>void run(false)}>重新检查</PressedButton>
         <PressedButton className="theme-icon-bottom-btn primary ui-cyan-btn" id="cleanImageStorageBtn" disabled={busy||!stats?.unusedCount} onClick={()=>void run(true)}>{busy?'处理中…':'清理旧图片'}</PressedButton>
       </div>
     </div>
-    <div className="image-storage-status" role="status" data-busy={busy} data-error={Boolean(error)}>{status}</div>
   </section>;
 }

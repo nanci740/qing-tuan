@@ -8085,7 +8085,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
             text-shadow: none !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:003652 */
@@ -8118,7 +8118,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
             font-weight: 400 !important;
             text-shadow: none !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:003654 */
@@ -9037,7 +9037,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             border: 1px solid var(--wcf-line) !important;
             border-radius: 3px !important;
             background: var(--effect-face-white) !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
             color: var(--wcf-title) !important;
             -webkit-text-fill-color: var(--wcf-title) !important;
             text-shadow: none !important;
@@ -9083,7 +9083,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
             text-shadow: none !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:004006 */
@@ -9444,7 +9444,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             padding: 0 6px;
             /* 跟世界书白色按钮同一套正面高光：上半截纯白、下半截淡青，两层内斜面 */
             background: var(--cr-btn-face);
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade);
+            box-shadow: var(--effect-raised);
             border-bottom: 1px solid var(--cr-line);
             font-size: 10px;
             font-weight: 600;

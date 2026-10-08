@@ -46,6 +46,8 @@ try{
  const battery=await p.locator('#batteryLevel').evaluate(e=>({fill:getComputedStyle(e).fill,outline:getComputedStyle(e.previousElementSibling).stroke}));check(color+' battery fill equals border',battery.fill===battery.outline);
  const icon=await p.locator('.tama-btn .tb-x').first().evaluate(e=>{const probe=document.createElement('span');probe.style.color='var(--color-accent)';e.closest('.tama-widget').append(probe);const expected=getComputedStyle(probe).color;probe.remove();return {actual:getComputedStyle(e).fill,expected};});check(color+' home button icon uses theme accent',icon.actual===icon.expected);
  const screen=await p.locator('.mp3-screen').evaluate(e=>getComputedStyle(e).boxShadow);check(color+' screen inset is present',screen.includes('inset'));
+ const pet=await p.locator('#tamaHunger .tf-x').first().evaluate(e=>{const probe=document.createElement('span');probe.style.color='var(--color-accent)';e.parentElement.append(probe);const expected=getComputedStyle(probe).color;probe.remove();return {actual:getComputedStyle(e).fill,expected};});check(color+' pet status uses theme accent',pet.actual===pet.expected);
+ for(const selector of ['.btn-play','.tama-btn','#apiSaveBtn','#apiTestBtn','#voiceSaveBtn','#voiceTestBtn','#imageSaveBtn','#chatSendBtn','#inspectImageStorageBtn','#cleanImageStorageBtn']){const shadow=await p.locator(selector).first().evaluate(e=>getComputedStyle(e).boxShadow);check(color+' '+selector+' has one highlight and one shade',(shadow.match(/inset/g)||[]).length===2);}
  await ctx.close();
  }
  check('no runtime errors',errors.length===0);console.log(JSON.stringify({passed:checks.length,checks},null,2));

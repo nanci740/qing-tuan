@@ -23,6 +23,10 @@
     --effect-inner-shade: color-mix(in srgb, var(--color-muted) 55%, transparent);
     --effect-drop-color: color-mix(in srgb, var(--color-muted) 24%, transparent);
     --effect-drop: 2px 2px 0 var(--effect-drop-color);
+    /* 凸起与凹陷各保留一亮一暗；按钮另加一层外投影。 */
+    --effect-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
+    --effect-sunken: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
+    --effect-button-shadow: var(--effect-raised), var(--effect-drop);
     --effect-reflection-edge: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha, 0.4));
     --effect-reflection-shade: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha, 0.14));
     --effect-reflection-bright: color-mix(in srgb, var(--color-surface) 90%, transparent);
@@ -67,10 +71,10 @@
             --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
             --win-shade: var(--color-muted);
             --win-shade-soft: var(--color-divider);
-            --bevel-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
-            --bevel-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-soft), inset -2px -2px 0 var(--effect-highlight-soft);
-            --bevel-solid-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
-            --bevel-solid-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-shade);
+            --bevel-out: var(--effect-raised);
+            --bevel-in: var(--effect-sunken);
+            --bevel-solid-out: var(--effect-raised);
+            --bevel-solid-in: var(--effect-sunken);
             --win-drop: var(--effect-drop);
             --theme-accent: var(--theme-color);
             --font-default-stack: Georgia, "LXGW 975 Yuan SC 400W", "PingFang SC", "Times New Roman", serif;
@@ -111,10 +115,10 @@
             --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
             --win-shade: var(--color-muted);
             --win-shade-soft: var(--color-divider);
-            --bevel-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
-            --bevel-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-soft), inset -2px -2px 0 var(--effect-highlight-soft);
-            --bevel-solid-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
-            --bevel-solid-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-shade);
+            --bevel-out: var(--effect-raised);
+            --bevel-in: var(--effect-sunken);
+            --bevel-solid-out: var(--effect-raised);
+            --bevel-solid-in: var(--effect-sunken);
             --win-drop: var(--effect-drop);--wk-src:var(--theme-color);
             --tx-title: var(--color-text);
             --tx-desc: var(--color-muted);
@@ -249,9 +253,9 @@
 }
         #chatListView{
   --chat-raised:
-    inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+    var(--effect-button-shadow);
   --chat-sunken:
-    inset 1px 1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
+    var(--effect-sunken);
 }
         #chatListView{
   --chat-gloss: linear-gradient(var(--color-surface) 0%, rgba(var(--color-surface-rgb), .96) 45%, color-mix(in srgb, var(--theme-color) 7%, var(--color-page)) 52%, color-mix(in srgb, var(--theme-color) 4%, var(--color-page)) 100%);
@@ -313,8 +317,8 @@
     --wk-btn-tint:var(--color-tint);
     --wb-face-white:var(--effect-face-white);
     --wb-face-solid:var(--effect-face-accent);
-    --wb-white:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
-    --wb-solid:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft);
+    --wb-white:var(--effect-raised);
+    --wb-solid:var(--effect-raised);
     --wb-shadow:var(--effect-drop);
 }
         .world-page .world-intro{
@@ -370,7 +374,7 @@
         #main-content {
             --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
+                var(--effect-raised);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
             #voiceImageSettingsPage, #backgroundActivityPage, #dataManagementPage, #personalProfilePage,
@@ -406,7 +410,7 @@
             --win-ink: var(--home-title);
             --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
+                var(--effect-raised);
         }
         #main-content .player-box,
         #main-content .tama-widget {
@@ -415,7 +419,7 @@
             --win-ink: var(--color-text);
             --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
+                var(--effect-raised);
         }
         #splash-screen {
             --splash-paper: var(--color-page);
@@ -431,7 +435,7 @@
             --idw-tint: var(--color-tint);
             --idw-face: color-mix(in srgb, var(--theme-color) 8%, var(--color-surface));
             --idw-soft: color-mix(in srgb, var(--idw-line) 45%, transparent);
-            --idw-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --idw-raised: var(--effect-raised);
             --idw-sunken: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
             --idw-btn-face: var(--effect-face-white);
         }
@@ -445,7 +449,7 @@
             --cs-muted: var(--color-muted);
             --cs-soft: color-mix(in srgb, var(--cs-line) 45%, transparent);
             --cs-btn-face: var(--effect-face-white);
-            --cs-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --cs-raised: var(--effect-raised);
             --cs-drop: var(--effect-drop);
             --cs-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
@@ -476,7 +480,7 @@
             --cc-btn-tint: var(--color-tint);
             --cc-face-tint: var(--color-accent-soft);
             --cc-btn-face: var(--effect-face-white);
-            --cc-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cc-btn-shadow: var(--effect-button-shadow);
             --cc-head: var(--color-accent-strong);
         }
         .sp-confirm-overlay {
@@ -487,7 +491,7 @@
             --spc-btn-tint: var(--color-tint);
             --spc-face-tint: var(--color-accent-soft);
             --spc-btn-face: var(--effect-face-white);
-            --spc-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --spc-btn-shadow: var(--effect-button-shadow);
             --spc-danger: var(--color-danger);
         }
         :is(html, #_#_) .chat-character-action-overlay {
@@ -514,7 +518,7 @@
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
             --cr-btn-face: var(--effect-face-white);
-            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-btn-shadow: var(--effect-button-shadow);
             --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
             --cr-peer: var(--cr-head);
             --cr-self: var(--cr-head);
@@ -542,7 +546,7 @@
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
             --cr-btn-face: var(--effect-face-white);
-            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), 1px 1px 0 var(--effect-drop-color);
+            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
         }
         body .chat-forward-picker.chat-forward-picker {
             --cr-line: var(--color-muted);
@@ -551,7 +555,7 @@
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
             --cr-btn-face: var(--effect-face-white);
-            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-btn-shadow: var(--effect-button-shadow);
             --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
         body .chat-forward-picker .chat-forward-picker-send {
@@ -564,7 +568,7 @@
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
             --cr-btn-face: var(--effect-face-white);
-            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-btn-shadow: var(--effect-button-shadow);
             --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
         :is(html, #_#_#_) .world-page .world-action-menu {
