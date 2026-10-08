@@ -24,33 +24,14 @@
 /* @qingtuan-order:000277 */
 
 
-        .theme-setting-group {
-            margin-bottom: 18px;
-        }
 
 /* @qingtuan-order:000278 */
 
 
-        .theme-setting-label {
-            margin: 0 0 7px 6px;
-            padding-left: 6px;
-            border-left: 2px solid var(--theme-color);
-            color: var(--theme-color);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            line-height: 1.2;
-        }
 
 /* @qingtuan-order:000279 */
 
 
-        .theme-setting-card {
-            padding: 15px;
-            border: 0.5px solid #DDDDE2;
-            background: #FFFFFF;
-            box-shadow: none;
-        }
 
 /* @qingtuan-order:000280 */
 
@@ -699,12 +680,8 @@
 
 /* @qingtuan-order:000367 */
 
-
         .theme-icon-bottom-btn {
             min-height: 36px;
-            border: 0.5px solid #E1E6E6;
-            background: #FFFFFF;
-            color: #727C88;
             font-size: 11px;
             cursor: pointer;
         }
@@ -712,11 +689,6 @@
 /* @qingtuan-order:000368 */
 
 
-        .theme-icon-bottom-btn.primary {
-            border-color: rgba(var(--theme-rgb), 0.42);
-            background: rgba(var(--theme-rgb), 0.16);
-            color: var(--beautify-button-text);
-        }
 
 /* @qingtuan-order:000369 */
 
@@ -972,12 +944,13 @@
 
 /* @qingtuan-order:000938 */
 
-        #themeSettingsPage .theme-setting-group {
+        /* 美化与数据管理共用当前窗口样式；旧边框、圆角和阴影已合并。 */
+        :is(#themeSettingsPage, #dataManagementPage) .theme-settings-content > .theme-setting-group {
             margin-bottom: 16px;
-            border: 1px solid var(--win-line);
-            border-radius: 4px;
+            border: 1px solid var(--win-deep);
+            border-radius: 3px;
             background: #FFFFFF;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: var(--win-drop);
             overflow: hidden;
         }
 
@@ -988,26 +961,26 @@
 
 /* @qingtuan-order:000940 */
 
-        #themeSettingsPage .theme-setting-label {
+:is(#themeSettingsPage, #dataManagementPage) .theme-settings-content > .theme-setting-group > .theme-setting-label {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin: 0;
             padding: 6px 8px 6px 10px;
             border-left: 0;
-            border-bottom: 1px solid var(--win-line);
+            border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
             color: var(--win-ink);
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 1.2px;
+            line-height: 1.2;
             box-shadow: inset 0 1px 0 var(--win-hi);
         }
 
 /* @qingtuan-order:000941 */
 
-
-        #themeSettingsPage .theme-setting-label::after {
+:is(#themeSettingsPage, #dataManagementPage) .theme-setting-label::after {
             content: '';
             flex: 0 0 46px;
             height: 12px;
@@ -1024,10 +997,12 @@
 
 /* @qingtuan-order:000943 */
 
-        #themeSettingsPage .theme-setting-card {
+        :is(#themeSettingsPage, #dataManagementPage) .theme-setting-card {
+            padding: 15px;
             border: 0;
             border-radius: 0 !important;
             background: transparent;
+            box-shadow: none;
         }
 
 /* @qingtuan-order:000944 */
@@ -1048,12 +1023,11 @@
 
 /* @qingtuan-order:000947 */
 
-        #themeSettingsPage .theme-settings-content .theme-action-btn,
+#themeSettingsPage .theme-settings-content .theme-action-btn,
         #themeSettingsPage .theme-settings-content .theme-text-btn,
         #themeSettingsPage .theme-settings-content .theme-custom-color-btn,
         #themeSettingsPage .theme-settings-content .theme-font-btn,
         #themeSettingsPage .theme-settings-content .theme-font-url-btn,
-        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn,
         #themeSettingsPage .theme-settings-content .ui-cyan-btn {
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
@@ -1062,13 +1036,11 @@
 
 /* @qingtuan-order:000948 */
 
-
-        #themeSettingsPage .theme-settings-content .theme-action-btn:active,
+#themeSettingsPage .theme-settings-content .theme-action-btn:active,
         #themeSettingsPage .theme-settings-content .theme-text-btn:active,
         #themeSettingsPage .theme-settings-content .theme-custom-color-btn:active,
         #themeSettingsPage .theme-settings-content .theme-font-btn:active,
         #themeSettingsPage .theme-settings-content .theme-font-url-btn:active,
-        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:active,
         #themeSettingsPage .theme-settings-content .ui-cyan-btn:active {
             box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
         }
@@ -1942,18 +1914,11 @@
 
 /* @qingtuan-order:002785 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group {
-            border: 1px solid var(--win-deep);
-            border-radius: 3px;
-            box-shadow: var(--win-drop);
-        }
+
 
 /* @qingtuan-order:002786 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group > .theme-setting-label {
-            border-bottom-color: var(--win-deep);
-        }
 
 /* @qingtuan-order:002787 */
 
@@ -1974,10 +1939,9 @@
 
 /* @qingtuan-order:002790 */
 
-        #themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn),
+#themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn),
         #themeSettingsPage .theme-settings-content .theme-text-btn:not(.ui-cyan-btn),
         #themeSettingsPage .theme-settings-content .theme-font-btn:not(.ui-cyan-btn),
-        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:not(.ui-cyan-btn) {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
@@ -1987,11 +1951,9 @@
 
 /* @qingtuan-order:002791 */
 
-
-        #themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn):active,
+#themeSettingsPage .theme-settings-content .theme-action-btn:not(.ui-cyan-btn):active,
         #themeSettingsPage .theme-settings-content .theme-text-btn:not(.ui-cyan-btn):active,
         #themeSettingsPage .theme-settings-content .theme-font-btn:not(.ui-cyan-btn):active,
-        #themeSettingsPage .theme-settings-content .theme-icon-bottom-btn:not(.ui-cyan-btn):active {
             box-shadow: var(--bevel-in) !important;
         }
 
