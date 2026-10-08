@@ -1429,7 +1429,7 @@
 /* @qingtuan-order:004147 */
 
         #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row.is-selected {
-            background: var(--cr-check-box), color-mix(in srgb, var(--theme-color) 14%, var(--color-surface)) !important;
+            background: var(--cr-check-box) !important;
             outline: 0 !important;
         }
 
