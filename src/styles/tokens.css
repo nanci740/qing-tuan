@@ -387,7 +387,7 @@
                 inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, #8D9AA2), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
-            #voiceImageSettingsPage, #backgroundActivityPage, #personalProfilePage,
+            #voiceImageSettingsPage, #backgroundActivityPage, #dataManagementPage, #personalProfilePage,
             #apiProviderModal, #apiModelModal, #viChoiceModal, #mcpToolsModal, #mcpServiceModal, #aboutAppModal) {
             --set-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
             --set-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
@@ -401,7 +401,7 @@
             --set-fill: var(--set-block);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
-            #voiceImageSettingsPage, #backgroundActivityPage, #personalProfilePage) :is(.settings-header, .retro-marquee, .retro-counter, .retro-badge.is-dark) {
+            #voiceImageSettingsPage, #backgroundActivityPage, #dataManagementPage, #personalProfilePage) :is(.settings-header, .retro-marquee, .retro-counter, .retro-badge.is-dark) {
             --win-deep: var(--set-block);
         }
         #main-content > .ios-status-bar,

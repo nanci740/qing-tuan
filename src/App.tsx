@@ -51,6 +51,7 @@ import { McpToolsModal } from "./components/shared/McpToolsModal";
 import { Api } from "./pages/Settings/Api/Api";
 import { ApiProviderModal } from "./components/shared/ApiProviderModal";
 import { ApiModelModal } from "./components/shared/ApiModelModal";
+import { DataManagement } from './pages/Settings/DataManagement/DataManagement';
 import { Appearance } from "./pages/Settings/Appearance/Appearance";
 import { Music } from "./pages/Settings/Music/Music";
 import { PersonalProfile } from "./pages/PersonalProfile/PersonalProfile";
@@ -106,6 +107,7 @@ export function App() {
       <OriginalComment text={" 美化设置二级页面 "} />
       {"\n    "}
       <Appearance />
+      <DataManagement />
       {"\n\n    "}
       <OriginalComment text={" 音乐设置二级页面 "} />
       {"\n    "}
