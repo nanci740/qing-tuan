@@ -123,7 +123,7 @@
             left: 3px;
             border-radius: 50%;
             background: var(--color-surface);
-            box-shadow: 0 1px 4px color-mix(in srgb, var(--color-muted) 12%, transparent);
+            box-shadow: 0 1px 4px var(--effect-drop-soft);
             transition: transform .2s ease;
         }
 
@@ -176,7 +176,7 @@
         #mcpSettingsPage .settings-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001426 */
@@ -221,7 +221,7 @@
             padding: 5px 12px 6px;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001430 */
@@ -318,7 +318,7 @@
             font-weight: 600;
             letter-spacing: 1.2px;
             line-height: 1.2;
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001439 */
@@ -404,7 +404,7 @@
             border-radius: 3px !important;
             background: var(--color-surface) !important;
             color: var(--win-ink) !important;
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001448 */
@@ -419,7 +419,7 @@
             font-size: 8px !important;
             line-height: 1.5;
             letter-spacing: 1px;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: var(--effect-drop);
         }
 
 /* @qingtuan-order:001449 */
@@ -433,7 +433,7 @@
             border: 1px solid var(--win-line) !important;
             border-radius: 2px !important;
             background: var(--color-page) !important;
-            box-shadow: inset 1px 1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001451 */
@@ -453,7 +453,7 @@
 
 
         #mcpSettingsPage#mcpSettingsPage .mcp-edit-btn:active {
-            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001453 */
@@ -509,7 +509,7 @@
             border-top: 1px solid var(--win-line);
             border-radius: 0 0 3px 3px;
             background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27%237E8C94%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px, var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
             color: var(--win-ink);
             font-size: 9.5px;
             letter-spacing: 0.5px;
@@ -575,7 +575,7 @@
             border-radius: 3px !important;
             background: var(--color-surface) !important;
             color: var(--win-ink) !important;
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:001468 */
@@ -722,7 +722,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:002982 */
@@ -741,7 +741,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:002984 */
@@ -794,7 +794,7 @@
             padding: 4px 6px 4px 8px;
             border: 1px solid var(--win-line);
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:002990 */
@@ -808,7 +808,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 50%;
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 12%, transparent);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:002991 */
@@ -862,7 +862,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:002997 */
@@ -919,7 +919,7 @@
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-service-status {
             flex: 1;
             padding: 2px 6px;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
             font-family: var(--mono);
         }
 
@@ -953,15 +953,13 @@
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
         }
 
 /* @qingtuan-order:003672 */
 
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn:active {
-            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.6) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003673 */

@@ -112,7 +112,7 @@
   width:min(340px,90vw);border:.5px solid rgba(var(--color-surface-rgb), .72);
   border-radius:var(--ui-radius);padding:18px 16px 15px;background:rgba(var(--color-surface-rgb), .74);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  box-shadow:inset 0 1px 0 rgba(var(--color-surface-rgb), .28);
+  box-shadow:inset 0 1px 0 var(--effect-highlight);
   color:var(--color-text);
 }
 
@@ -223,8 +223,7 @@
             background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
         }
 
 /* @qingtuan-order:004196 */
@@ -305,7 +304,7 @@
             background: color-mix(in srgb, var(--theme-color) 15%, var(--color-surface)) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: var(--effect-drop) !important;
             color: var(--cr-title) !important;
         }
 
@@ -375,7 +374,7 @@
 
         #chatAppPage#chatAppPage > .chat-edit-overlay .chat-edit-btn.primary {
             background: linear-gradient(180deg, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-head) 55%, var(--color-surface)) 42.5%, var(--cr-head) 56.5%, var(--cr-head) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);

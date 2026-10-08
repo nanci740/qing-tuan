@@ -22,7 +22,7 @@
 
 /* @qingtuan-order:002615 */
 
-.chat-settings-profile {display:flex;align-items:center;gap:13px;padding:16px;margin-bottom:12px;border:.5px solid rgba(var(--color-surface-rgb), .9);border-radius:18px;background:rgba(var(--color-surface-rgb), .82);box-shadow:0 6px 22px color-mix(in srgb, var(--color-muted) 5.5%, transparent);}
+.chat-settings-profile {display:flex;align-items:center;gap:13px;padding:16px;margin-bottom:12px;border:.5px solid rgba(var(--color-surface-rgb), .9);border-radius:18px;background:rgba(var(--color-surface-rgb), .82);box-shadow:0 6px 22px var(--effect-drop-soft);}
 
 /* @qingtuan-order:002616 */
 
@@ -325,7 +325,7 @@
             border: 1px solid var(--idw-line) !important;
             border-radius: 3px !important;
             background: var(--idw-face) !important;
-            box-shadow: var(--idw-raised), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: var(--idw-raised), var(--effect-drop) !important;
             color: var(--idw-title);
         }
 
@@ -352,7 +352,7 @@
 
 /* @qingtuan-order:003709 */
 
-        #chatSettingsPage .idw-ico::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 1px; background: var(--color-surface); box-shadow: 0 2px 0 var(--color-surface), 0 4px 0 var(--color-surface); }
+        #chatSettingsPage .idw-ico::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 1px; background: var(--color-surface); box-shadow: 0 2px 0 var(--effect-reflection-edge), 0 4px 0 var(--effect-reflection-edge); }
 
 /* @qingtuan-order:003710 */
 
@@ -364,7 +364,7 @@
 
 /* @qingtuan-order:003712 */
 
-        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--idw-btn-face); box-shadow: inset 1px 1px 0 var(--color-surface); }
+        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--idw-btn-face); box-shadow: inset 1px 1px 0 var(--effect-highlight); }
 
 /* @qingtuan-order:003713 */
 
@@ -376,7 +376,7 @@
 
 /* @qingtuan-order:003715 */
 
-        #chatSettingsPage .idw-menu { display: flex; gap: 12px; padding: 3px 5px 2px; border-bottom: 1px solid var(--idw-soft); box-shadow: 0 1px 0 var(--color-surface); color: var(--idw-title); font-size: 9px; }
+        #chatSettingsPage .idw-menu { display: flex; gap: 12px; padding: 3px 5px 2px; border-bottom: 1px solid var(--idw-soft); box-shadow: 0 1px 0 var(--effect-reflection-edge); color: var(--idw-title); font-size: 9px; }
 
 /* @qingtuan-order:003716 */
 
@@ -388,7 +388,7 @@
             display: grid; grid-template-columns: 31% minmax(0, 1fr); gap: 10px; align-items: stretch;
             margin: 6px 1px 0; padding: 9px 8px 8px;
             border: 1px solid var(--idw-line); background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--idw-soft);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:003718 */
@@ -476,7 +476,7 @@
 
         #chatSettingsPage .idw-detail {
             height: 20px; padding: 0 10px; border: 1px solid var(--idw-line); border-radius: 2px;
-            background: var(--idw-btn-face); box-shadow: var(--idw-raised), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            background: var(--idw-btn-face); box-shadow: var(--idw-raised), 1px 1px 0 var(--effect-drop-color);
             color: var(--idw-title); font: inherit; font-size: 9.5px; letter-spacing: .5px; cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
 
@@ -585,7 +585,7 @@
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry {
             border: 1px solid var(--cs-line) !important; border-radius: 2px; background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--color-surface), var(--cs-drop);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), var(--cs-drop);
         }
 
 /* @qingtuan-order:003759 */
@@ -717,7 +717,7 @@
         #chatSettingsPage#chatSettingsPage .api-toggle-input::after {
             width: 14px !important; height: 12px !important; top: 2px !important; left: 2px !important;
             border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
-            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 var(--color-surface) !important;
+            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003786 */
@@ -742,7 +742,7 @@
         #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-thumb {
             width: 10px; height: 16px; margin-top: -7px;
             border: 1px solid var(--cs-line); border-radius: 1px;
-            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 60%, transparent), 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
         }
 
 /* @qingtuan-order:003791 */
@@ -770,7 +770,7 @@
 
         #chatSettingsPage#chatSettingsPage :is(.chat-setting-action.primary, .theme-font-btn.ui-cyan-btn) {
             background: linear-gradient(180deg, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 42.5%, var(--cs-deep) 56.5%, var(--cs-deep) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), var(--cs-drop) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--cs-drop) !important;
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cs-title), 0 0 2px var(--cs-title);
         }
@@ -781,7 +781,7 @@
 
 /* @qingtuan-order:003796 */
 
-        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn):active { translate: 1px 1px; box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 45%, transparent) !important; }
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn):active { translate: 1px 1px; box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important; }
 
 /* @qingtuan-order:003797 */
 
@@ -881,7 +881,7 @@
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry:has(> .chat-settings-entry-button:active) {
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003816 */
@@ -894,7 +894,7 @@
             margin: 0 8px 8px; padding: 4px 9px 6px;
             border: 1px solid var(--cs-soft) !important; border-top: 1px solid var(--cs-soft) !important;
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), 1px 1px 0 var(--effect-reflection-edge);
         }
 
 /* @qingtuan-order:003818 */

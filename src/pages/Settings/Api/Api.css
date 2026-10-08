@@ -982,7 +982,7 @@
             background:
                 repeating-linear-gradient(90deg, var(--theme-color) 0 7px, transparent 7px 9px) left 2px center / 0 6px no-repeat,
                 var(--color-page);
-            box-shadow: inset 1px 1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
             animation: retroProgress 1.6s steps(8) infinite;
         }
 
@@ -1193,7 +1193,7 @@
   content:''!important;position:absolute;top:2px!important;right:2px!important;bottom:2px;
   width:22px!important;height:auto!important;
   border:1px solid var(--win-line)!important;border-radius:1px;
-  background:var(--win-bar);box-shadow:inset 1px 1px 0 var(--win-hi),inset -1px -1px 0 var(--win-lo);
+  background:var(--win-bar);box-shadow:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
   transform:none!important;box-sizing:border-box;
 }
 
@@ -1292,7 +1292,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:002895 */
@@ -1309,7 +1309,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:002897 */
@@ -1422,7 +1422,7 @@
             border-bottom: 0;
             border-radius: 4px 4px 0 0;
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
             transform: none;
             color: var(--win-ink);
             font-weight: 600;
@@ -1733,5 +1733,5 @@
             background: var(--set-block) !important;
             border-color: var(--set-block) !important;
             color: var(--theme-color) !important; -webkit-text-fill-color: var(--theme-color) !important;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 12%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }

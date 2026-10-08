@@ -992,7 +992,7 @@
             border: 1px solid var(--win-line);
             border-radius: 2px;
             background: var(--color-page);
-            box-shadow: inset 1px 1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001355 */
@@ -1005,7 +1005,7 @@
             border: 1px solid var(--win-line);
             border-radius: 2px;
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-lo), 1px 1px 0 color-mix(in srgb, var(--color-muted) 8%, transparent);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
         }
 
 /* @qingtuan-order:001356 */
@@ -1036,7 +1036,7 @@
             border: 1px solid var(--win-line);
             border-radius: 2px;
             background: var(--color-surface);
-            box-shadow: inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001359 */
@@ -1058,7 +1058,7 @@
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
             background: var(--win-bar) !important;
-            box-shadow: inset 1px 1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001362 */
@@ -1083,7 +1083,7 @@
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player.is-playing .vi-audio-play,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume.is-muted{
             background: color-mix(in srgb, var(--theme-color) 14%, var(--color-page)) !important;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, color-mix(in srgb, var(--color-muted) 35%, transparent)), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001365 */
@@ -1093,7 +1093,7 @@
 /* @qingtuan-order:001366 */
 
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-play:active,#voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-volume:active{;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 40%, color-mix(in srgb, var(--color-muted) 35%, transparent)), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001367 */
@@ -1145,7 +1145,7 @@
             border: 1px solid var(--win-line);
             border-radius: 2px;
             background: linear-gradient(90deg, var(--theme-color) 0%, var(--theme-color) var(--progress, 0%), var(--color-surface) var(--progress, 0%), var(--color-surface) 100%);
-            box-shadow: inset 1px 1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001374 */
@@ -1158,7 +1158,7 @@
             border: 1px solid var(--win-line);
             border-radius: 1px;
             background: var(--color-surface);
-            box-shadow: inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001375 */
@@ -1505,7 +1505,7 @@
             border-color: var(--win-deep) !important;
             border-radius: 3px 3px 0 0 !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px 0 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px 0 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003034 */
@@ -1565,7 +1565,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003040 */
@@ -1582,7 +1582,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003042 */
@@ -1732,7 +1732,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0;
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--win-shade);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:003059 */
@@ -1934,7 +1934,7 @@
             background: var(--set-fill, var(--win-deep));
             font-weight: 700;
             letter-spacing: 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 28.000000000000004%, transparent);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:003098 */
@@ -1944,7 +1944,7 @@
             height: 8px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 18%, transparent);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:003099 */
@@ -2001,7 +2001,7 @@
             border: 0;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:003105 */
@@ -2108,15 +2108,13 @@
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--sb-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.6), inset -2px -2px 0 color-mix(in srgb, var(--sb-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop) !important;
         }
 
 /* @qingtuan-order:003661 */
 
         #imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn#imageRegenerateBtn:active {
-            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.6) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003662 */
@@ -2137,7 +2135,7 @@
 /* @qingtuan-order:003971 */
 
         :is(html, #_#_#_#_#_) :is(.api-model-select-btn, .vi-choice-btn, .mcp-select-btn, .world-select-btn):active::after {
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003972 */
