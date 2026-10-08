@@ -167,7 +167,7 @@ export function VoiceImage() {
             {"\n                    "}
             <div className="vi-row">
               <span className="vi-row-label">转写类型</span>
-              <RetroSelect id="voiceTranscriptionProvider" title="转写类型" className="vi-input" value={vi.voice.transcriptionProvider || ''} onChange={value => vi.setVoiceField('transcriptionProvider', value)}>
+              <RetroSelect id="voiceTranscriptionProvider" title="转写类型" className="vi-choice-btn" value={vi.voice.transcriptionProvider || ''} onChange={value => vi.setVoiceField('transcriptionProvider', value)}>
                 <option value="">沿用语音连接</option>
                 <option value="openai-compatible">OpenAI 兼容转写</option>
                 <option value="gemini">Gemini 音频理解</option>
@@ -457,7 +457,7 @@ export function VoiceImage() {
                 </div>
                 {"\n                            "}
                 <PressedButton className="vi-character-add" id="imageAddCharacterBtn" type="button" aria-label="添加角色提示" data-title="添加角色提示" disabled={vi.image.characters.length >= 3} onClick={vi.addCharacter}>
-                  {"＋"}
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M8 2v12M2 8h12" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>
                 </PressedButton>
                 {"\n                        "}
               </div>

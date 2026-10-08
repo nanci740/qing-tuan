@@ -953,15 +953,7 @@
 
         #chatSettingsPage#chatSettingsPage .chat-setting-select {
             padding: 0 22px 0 7px !important;
-            background-image:
-                linear-gradient(45deg, transparent 50%, var(--cs-title) 50%),
-                linear-gradient(135deg, var(--cs-title) 50%, transparent 50%),
-                linear-gradient(var(--cs-line), var(--cs-line)),
-                linear-gradient(var(--color-surface), var(--color-surface)),
-                var(--cs-btn-face) !important;
-            background-size: 4px 4px, 4px 4px, 1px 100%, 1px 100%, 16px 100% !important;
-            background-position: calc(100% - 9px) 50%, calc(100% - 5px) 50%, calc(100% - 16px) 0, calc(100% - 15px) 0, 100% 0 !important;
-            background-repeat: no-repeat !important;
+            background: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:003829 */
