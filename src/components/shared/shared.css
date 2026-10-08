@@ -3698,7 +3698,7 @@
             box-sizing: border-box;
             min-height: 30px;
             padding: 6px 34px 6px 8px !important;
-            background: var(--effect-face-white)!important;
+            background: var(--color-surface)!important;
         }
 
 /* @qingtuan-order:001291 */
@@ -5588,7 +5588,7 @@
 
 /* @qingtuan-order:001831 */
 
-.world-input,.world-textarea,.world-select-btn{width:100%;min-width:0;border:.6px solid var(--world-line);border-radius:8px;background: var(--effect-face-white);padding:11px 12px;outline:0;font-size:12px;color:var(--world-ink);line-height:1.65}
+.world-input,.world-textarea,.world-select-btn{width:100%;min-width:0;border:.6px solid var(--world-line);border-radius:8px;background: var(--color-surface);padding:11px 12px;outline:0;font-size:12px;color:var(--world-ink);line-height:1.65}
 
 /* @qingtuan-order:001832 */
 
@@ -6140,7 +6140,7 @@
 .world-page .world-select-btn,
 .world-page .world-select-btn.api-model-select-btn,
 .world-page .world-entry-search{
-  border:1px solid var(--wt);background: var(--effect-face-white);box-shadow:none;
+  border:1px solid var(--wt);background: var(--color-surface);box-shadow:none;
 }
 
 /* @qingtuan-order:002346 */
@@ -7458,7 +7458,7 @@
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white) !important;
             color: var(--win-deep) !important;
             line-height: 13px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
@@ -7481,7 +7481,7 @@
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-select-btn {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--effect-face-white)!important;
+            background: var(--color-surface)!important;
             box-shadow: var(--bevel-in) !important;
         }
 

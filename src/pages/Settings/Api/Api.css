@@ -1153,7 +1153,7 @@
   color:var(--world-ink);
   border:.6px solid var(--world-line);
   border-radius:8px;
-  background: var(--effect-face-white);
+  background: var(--color-surface);
   text-align:left;
 }
 
