@@ -576,7 +576,7 @@ export function ChatSettings() {
                 {"\n                            "}
                 <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-url-row"}]}>
                   <ChatAppearanceDraft />
-                  <ChatAppearanceAction id="chatFontUrlApply" className="theme-font-url-btn ui-cyan-btn">
+                  <ChatAppearanceAction id="chatFontUrlApply" className="theme-font-url-btn theme-font-btn ui-cyan-btn">
                     {"载入"}
                   </ChatAppearanceAction>
                 </OriginalElement>

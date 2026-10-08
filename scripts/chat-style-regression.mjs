@@ -1,0 +1,36 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import http from 'node:http';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import postcss from 'postcss';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const require=createRequire(process.env.QT_TEST_RUNTIME?path.join(process.env.QT_TEST_RUNTIME,'package.json'):import.meta.url);
+const {chromium}=require('playwright');
+const checks=[];const check=(name,value)=>{if(!value)throw Error(name);checks.push(name);};
+function cssFiles(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(f=>f.isDirectory()?cssFiles(path.join(dir,f.name)):f.name.endsWith('.css')?[path.join(dir,f.name)]:[]);}
+for(const file of cssFiles(path.join(root,'src')))postcss.parse(fs.readFileSync(file,'utf8'),{from:file});
+check('all source CSS parses, including repaired appearance selectors',true);
+async function serve(dist){const server=http.createServer((req,res)=>{const rel=req.url.split('?')[0].replace(/^\/qing-tuan\//,'');try{const file=path.join(dist,rel||'index.html');res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.webp')?'image/webp':'text/html');res.end(fs.readFileSync(file));}catch{res.statusCode=404;res.end();}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));return {server,url:`http://127.0.0.1:${server.address().port}/qing-tuan/`};}
+const current=await serve(path.join(root,'dist')),baseline=process.env.QT_COLOR_BASELINE?await serve(process.env.QT_COLOR_BASELINE):null;
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-gpu','--use-gl=disabled'],headless:true});
+const views=[['home',null,'#main-content'],['settings',null,'#settingsPage'],['appearance','settingTheme','#themeSettingsPage'],['music','settingMusic','#musicSettingsPage'],['api','settingApi','#apiSettingsPage'],['voice','settingVoiceAi','#voiceImageSettingsPage'],['mcp','settingMcp','#mcpSettingsPage'],['background','settingBackground','#backgroundActivityPage'],['cleanup','settingBackup','#dataManagementPage'],['profile','settingPersonal','#personalProfilePage'],['world',null,'.world-page'],['chat',null,'#chatListView'],['character',null,'#characterCard']];
+const errors=[];
+async function view(url,color,item){const [name,destination,selector]=item;const context=await browser.newContext({viewport:{width:390,height:844},locale:'zh-CN',timezoneId:'Asia/Taipei'});const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>r.request().url().startsWith(url.split('/qing-tuan/')[0])?r.continue():r.abort());await page.addInitScript(color=>{localStorage.setItem('smallphone_splash_mode','off');if(!localStorage.getItem('smallphone_theme_color'))localStorage.setItem('smallphone_theme_color',color);Math.random=()=>.37;},color);await page.goto(url);await page.waitForSelector('#imageStorageSection',{state:'attached'});await page.addStyleTag({content:'*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}'});
+ const click=sel=>page.evaluate(sel=>document.querySelector(sel).click(),sel);
+ if(destination||name==='settings'){await click('[data-dock-icon-key="settings"]');if(destination)await click('#'+destination);}
+ else if(name==='world')await click('[data-app-icon-key="world"]');
+ else if(name==='chat'||name==='character'){await click('[data-dock-icon-key="chat"]');if(name==='character')await click('#chatAddCharacterBtn');}
+ await page.waitForSelector(selector,{state:'visible'});
+ return {context,page,selector};}
+const style=(p,sel,props)=>p.locator(sel).evaluate((e,props)=>Object.fromEntries(props.map(x=>[x,getComputedStyle(e).getPropertyValue(x)])),props);
+try{
+ for(const color of ['#B5D9DC','#D7A6C1','#86AEB9']){
+ const ctx=await browser.newContext({viewport:{width:390,height:844}});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route('**/*',r=>r.request().url().startsWith(current.url.split('/qing-tuan/')[0])?r.continue():r.abort());await p.addInitScript(color=>{localStorage.setItem('smallphone_splash_mode','off');localStorage.setItem('smallphone_theme_color',color);localStorage.setItem('smallphone_chat_characters_v1',JSON.stringify([{id:'qa',archiveId:'qa',dossierId:'qa',name:'测试',photoUrl:'',archivedAt:Date.now(),pinned:false,favorite:false}]));},color);await p.goto(current.url);await p.waitForSelector('#imageStorageSection',{state:'attached'});await p.addStyleTag({content:'*,*::before,*::after{transition:none!important;animation:none!important}'});await p.locator('[data-dock-icon-key="chat"]').click();await p.locator('[data-character-id="qa"]').first().click();await p.locator('#chatComposeField').fill('配色测试');await p.locator('#chatSendBtn').click();await p.locator('.chat-bubble').last().click({button:'right'});await p.locator('[data-message-action="forward"]').click();await p.locator('.chat-forward-picker').waitFor({state:'visible'});
+ const props=['background-image','border-bottom-color','height'];check(color+' forward uses chat header material',JSON.stringify(await style(p,'.chat-forward-picker-header',props))===JSON.stringify(await style(p,'.chat-room-header',props)));const title=await style(p,'.chat-forward-picker-title',['color','text-shadow']);check(color+' forward title has white text without outline',title['text-shadow']==='none'&&title.color==='rgb(255, 255, 255)');check(color+' forward back matches room button size',JSON.stringify(await style(p,'.chat-forward-picker-close',['width','height','border-radius']))===JSON.stringify(await style(p,'.chat-room-back',['width','height','border-radius'])));
+ await p.locator('.chat-forward-picker-mode').click();check(color+' multi-select still works',await p.locator('.chat-forward-picker').evaluate(e=>e.classList.contains('is-multi')));await p.locator('.chat-forward-picker-close').click();check(color+' back closes picker',await p.locator('.chat-forward-picker').isHidden());await p.locator('#chatRoomMore').click();await p.locator('[data-room-action="settings"]').click();await p.locator('#chatSettingsPage').waitFor({state:'visible'});await p.locator('[data-chat-settings-entry="appearance"] .chat-settings-entry-button').click();await p.locator('#chatFontBadge').waitFor({state:'visible'});
+ const badge=await style(p,'#chatFontBadge',['border-radius','border-top-width','box-shadow']);check(color+' font badge is framed stamp',badge['border-radius']==='0px'&&badge['border-top-width']==='1px'&&badge['box-shadow']!=='none');const buttonProps=['border-radius','border-top-width','background-image','box-shadow','color'];check(color+' font load uses existing retro font button',JSON.stringify(await style(p,'#chatFontUrlApply',buttonProps))===JSON.stringify(await style(p,'#chatFontChoose',buttonProps)));
+ await p.setViewportSize({width:320,height:640});check(color+' font controls fit narrow screen',await p.locator('.chat-font-card').evaluate(e=>e.scrollWidth<=e.clientWidth));await ctx.close();
+ }
+ check('no runtime errors',errors.length===0);console.log(JSON.stringify({passed:checks.length,checks},null,2));
+}finally{await browser.close();current.server.close()}

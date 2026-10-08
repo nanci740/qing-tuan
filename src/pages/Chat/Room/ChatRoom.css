@@ -873,8 +873,8 @@
             content: '已编辑' !important;
             order: 2;
             margin: 0 0 0 5px !important;
-            color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
+            color: var(--color-muted) !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             font-size: 9px !important;
             font-weight: 400;
             line-height: 1;
@@ -936,8 +936,8 @@
             margin: 3px 0 4px !important;
             padding: 0 0 0 6px !important;
             border-left: 2px solid rgba(var(--theme-rgb), .65) !important; /* 竖线、字号、空隙沿用原本的 */
-            color: color-mix(in srgb, var(--cr-title) 70%, var(--color-surface)) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 70%, var(--color-surface)) !important;
+            color: var(--color-muted) !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             font-size: 9.5px !important;
             line-height: 1.1 !important; /* 竖线高度跟行高走：压低行高，竖线就只比字高一点点 */
         }
@@ -960,8 +960,8 @@
             border-radius: 0 !important;
             background: none !important;
             box-shadow: none !important;
-            color: color-mix(in srgb, var(--cr-title) 75%, var(--color-surface)) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 75%, var(--color-surface)) !important;
+            color: var(--color-muted) !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             font-size: 10.5px !important;
             line-height: 1.6 !important;
             text-align: left !important;
@@ -1580,7 +1580,7 @@
 
 /* @qingtuan-order:004172 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::placeholder { color: color-mix(in srgb, var(--cr-title) 50%, var(--color-surface)) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 50%, var(--color-surface)) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::placeholder { color: var(--color-muted) !important; -webkit-text-fill-color: var(--color-muted) !important; }
 
 /* @qingtuan-order:004173 */
 
@@ -1711,8 +1711,8 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-history-result-time {
             flex: 0 0 auto;
-            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
+            color: var(--color-muted);
+            -webkit-text-fill-color: var(--color-muted);
             font-size: 9px;
             font-variant-numeric: lining-nums tabular-nums;
         }
@@ -1750,8 +1750,8 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-history-result-empty {
             padding: 28px 0;
             text-align: center;
-            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
+            color: var(--color-muted);
+            -webkit-text-fill-color: var(--color-muted);
             font-size: 10.5px;
         }
 
@@ -1786,7 +1786,7 @@
 
 /* @qingtuan-order:004258 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-preview { margin-top: 3px !important; color: color-mix(in srgb, var(--cr-title) 65%, var(--color-surface)) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 65%, var(--color-surface)) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-preview { margin-top: 3px !important; color: var(--color-muted) !important; -webkit-text-fill-color: var(--color-muted) !important; }
 
 /* @qingtuan-order:004259 */
 
@@ -1947,8 +1947,8 @@
 /* @qingtuan-order:004278 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-record-item-time {
-            color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
+            color: var(--color-muted) !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             font-size: 9px !important;
             font-weight: 400 !important;
             font-variant-numeric: lining-nums tabular-nums;
@@ -2007,8 +2007,8 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-recall-notice {
             margin: 4px auto 8px !important;
             padding: 0 !important;
-            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface)) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface)) !important;
+            color: var(--color-muted) !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             font-size: 9.5px !important;
             line-height: 1.5 !important;
         }

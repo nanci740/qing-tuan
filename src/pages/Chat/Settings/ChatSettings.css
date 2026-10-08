@@ -441,7 +441,7 @@
 
 /* @qingtuan-order:003730 */
 
-        #chatSettingsPage .idw-row label { color: color-mix(in srgb, var(--idw-title) 80%, var(--color-surface)); font-size: 8.5px; letter-spacing: .3px; text-align: right; }
+        #chatSettingsPage .idw-row label { color: var(--color-muted); font-size: 8.5px; letter-spacing: .3px; text-align: right; }
 
 /* @qingtuan-order:003731 */
 
@@ -680,7 +680,7 @@
 
 /* @qingtuan-order:003778 */
 
-        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input)::placeholder { color: color-mix(in srgb, var(--cs-title) 45%, var(--color-surface)); -webkit-text-fill-color: color-mix(in srgb, var(--cs-title) 45%, var(--color-surface)); }
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-input, .chat-setting-textarea, .chat-setting-code, .theme-font-url-input)::placeholder { color: var(--color-muted); -webkit-text-fill-color: var(--color-muted); }
 
 /* @qingtuan-order:003779 */
 

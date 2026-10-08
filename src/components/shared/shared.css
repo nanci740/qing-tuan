@@ -8535,7 +8535,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:003929 */
 
-        .cc-overlay input::placeholder, .cc-overlay textarea::placeholder { color: color-mix(in srgb, var(--cc-line) 80%, var(--color-surface)); opacity: 1; }
+        .cc-overlay input::placeholder, .cc-overlay textarea::placeholder { color: var(--color-muted); opacity: 1; }
 
 /* @qingtuan-order:003930 */
 
@@ -9112,7 +9112,8 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
         #chatAppPage#chatAppPage #chatListView#chatListView .chat-app-header,
         #chatAppPage#chatAppPage #chatRoomView#chatRoomView :is(.chat-room-header, .chat-message-selection-header, .chat-history-searchbar, .chat-record-view-header),
-        #chatSettingsPage#chatSettingsPage .settings-header {
+        #chatSettingsPage#chatSettingsPage .settings-header,
+        body .chat-forward-picker .chat-forward-picker-header {
             background:
                 linear-gradient(rgba(var(--color-surface-rgb), 0.85), rgba(var(--color-surface-rgb), 0.85)) top / 100% 1px no-repeat,
                 linear-gradient(180deg,
@@ -9133,7 +9134,8 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
         #chatAppPage#chatAppPage #chatListView#chatListView .chat-app-title,
         #chatAppPage#chatAppPage #chatRoomView#chatRoomView :is(.chat-room-title, .chat-message-selection-title, .chat-history-search-count, .chat-record-view-title, .chat-record-view-subtitle),
-        #chatSettingsPage#chatSettingsPage .settings-header h2 {
+        #chatSettingsPage#chatSettingsPage .settings-header h2,
+        body .chat-forward-picker .chat-forward-picker-title {
             text-shadow: none !important;
             color: var(--color-surface) !important; /* 白字：跟 XP / QQ2006 标题栏一样 */
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -9143,7 +9145,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 
         /* ===== 转发「选择聊天」页（挂在 body 下，颜色变量自己再写一次）：跟 Chat 列表同一套古早风 =====
-           顶栏青色渐层 + 白描边标题，关闭 / 多选是凸起小白钮；搜索是白色凹陷框；
+           顶栏复用聊天页渐层与白字，返回 / 多选是凸起小白钮；搜索是白色凹陷框；
            每个聊天是白底细框小卡、方形头像框；多选的勾选框跟聊天室多选一样（方框 + 两条边转出来的勾） */
 
 /* @qingtuan-order:004203 */
@@ -9155,22 +9157,21 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 /* @qingtuan-order:004204 */
 
         body .chat-forward-picker .chat-forward-picker-header {
+            box-sizing: border-box !important;
             height: 52px !important;
-            background:
-                linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.32) 0%, rgba(var(--color-surface-rgb), 0.16) 30%, rgba(var(--color-surface-rgb), 0.04) 62%, transparent 80%),
-                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)) 0%, var(--theme-color) 45%, var(--color-accent-strong) 100%) !important;
-            border-bottom: 1px solid var(--cr-line) !important;
+            min-height: 52px !important;
+            padding: 6px max(12px, calc((100% - 430px) / 2 + 12px)) !important;
+            gap: 9px !important;
+            justify-content: flex-start !important;
         }
 
 /* @qingtuan-order:004205 */
 
         body .chat-forward-picker .chat-forward-picker-title {
-            color: var(--cr-title) !important;
-            -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 12.5px !important;
-            text-shadow:
-                -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
-                2px 2px 0 var(--color-surface), 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent);
+            flex: 1 1 auto;
+            text-align: left;
+            padding-right: 43px;
         }
 
 /* @qingtuan-order:004206 */
@@ -9179,7 +9180,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
             display: inline-flex !important;
             align-items: center;
             justify-content: center;
-            height: 24px !important;
+            height: 28px !important;
             min-width: 28px;
             padding: 0 9px !important;
             border: 1px solid var(--cr-line) !important;
@@ -9194,11 +9195,11 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:004207 */
 
-        body .chat-forward-picker .chat-forward-picker-close { width: 28px !important; padding: 0 !important; }
+        body .chat-forward-picker .chat-forward-picker-close { width: 34px !important; padding: 0 !important; position: static !important; transform: none !important; flex: 0 0 auto; }
 
 /* @qingtuan-order:004208 */
 
-        body .chat-forward-picker .chat-forward-picker-close svg { width: 14px !important; height: 14px !important; }
+        body .chat-forward-picker .chat-forward-picker-close svg { width: 15px !important; height: 15px !important; }
 
 /* @qingtuan-order:004209 */
 
@@ -9230,7 +9231,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:004213 */
 
-        body .chat-forward-picker .chat-forward-picker-search input::placeholder { color: color-mix(in srgb, var(--cr-title) 50%, var(--color-surface)) !important; }
+        body .chat-forward-picker .chat-forward-picker-search input::placeholder { color: var(--color-muted) !important; }
 
 /* @qingtuan-order:004214 */
 
@@ -9310,15 +9311,15 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:004227 */
 
-        body .chat-forward-picker .chat-forward-target-preview { color: color-mix(in srgb, var(--cr-title) 65%, var(--color-surface)) !important; }
+        body .chat-forward-picker .chat-forward-target-preview { color: var(--color-muted) !important; }
 
 /* @qingtuan-order:004228 */
 
-        body .chat-forward-picker .chat-forward-target-time { color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important; font-variant-numeric: lining-nums; }
+        body .chat-forward-picker .chat-forward-target-time { color: var(--color-muted) !important; font-variant-numeric: lining-nums; }
 
 /* @qingtuan-order:004229 */
 
-        body .chat-forward-picker .chat-forward-picker-empty { color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface)) !important; }
+        body .chat-forward-picker .chat-forward-picker-empty { color: var(--color-muted) !important; }
 
 /* @qingtuan-order:004230 */
 
@@ -9532,7 +9533,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 /* @qingtuan-order:004337 */
 
-        .cr-status { flex: 0 0 auto; margin: 0 6px 6px; padding: 2px 5px; border: 1px dotted color-mix(in srgb, var(--cr-line) 60%, transparent); background: var(--color-surface); color: color-mix(in srgb, var(--cr-title) 75%, var(--color-surface)); font-size: 9px; line-height: 1.45; word-break: break-word; }
+        .cr-status { flex: 0 0 auto; margin: 0 6px 6px; padding: 2px 5px; border: 1px dotted color-mix(in srgb, var(--cr-line) 60%, transparent); background: var(--color-surface); color: var(--color-muted); font-size: 9px; line-height: 1.45; word-break: break-word; }
 
 /* @qingtuan-order:004338 */
 
