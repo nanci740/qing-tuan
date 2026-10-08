@@ -26,7 +26,7 @@ export function ImageStorageSettings({open,onClose}:{open:boolean;onClose:()=>vo
   return <section className="image-storage-tool" id="imageStorageSection" aria-labelledby="imageStorageTitle">
     <div className="image-storage-titlebar">
       <h3 id="imageStorageTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg>图片清理</h3>
-      <div className="image-storage-title-tools"><span>本机图片库</span><PressedButton className="image-storage-close" id="imageStorageCloseBtn" type="button" aria-label="关闭图片清理" onClick={onClose}><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6m0-6-6 6"/></svg></PressedButton></div>
+      <div className="image-storage-title-tools"><span>本机图片库</span><PressedButton className="image-storage-close" id="imageStorageCloseBtn" type="button" aria-label="关闭图片清理" onClick={onClose}><svg viewBox="0 0 12 12" aria-hidden="true"><rect x=".5" y=".5" width="11" height="11"/><path d="m3.5 3.5 5 5m0-5-5 5"/></svg></PressedButton></div>
     </div>
     <div className="image-storage-content" aria-busy={busy}>
       <div className="image-storage-intro">

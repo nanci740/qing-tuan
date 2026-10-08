@@ -210,22 +210,7 @@
 
 /* @qingtuan-order:001768 */
 
-        .chat-memory-photo-wrap:not(.has-photo)::after {
-            content: '+';
-            position: absolute;
-            left: 50%;
-            top: 43%;
-            transform: translate(-50%, -50%);
-            font-size: 23px;
-            font-weight: 300;
-            line-height: 1;
-            color: var(--color-muted);
-            pointer-events: none;
-        }
-
 /* @qingtuan-order:001769 */
-
-        .chat-memory-photo-wrap:not(.has-photo) .chat-memory-photo { display: none; }
 
 /* @qingtuan-order:001770 */
 
@@ -612,19 +597,7 @@
 
 /* @qingtuan-order:001943 */
 
-#chatListView .chat-memory-photo-wrap:not(.has-photo)::after{
-  content:'＋  点击添加照片';top:50%;white-space:pre;padding:3px 10px;background:var(--color-surface);
-  color:var(--win-line);font-size:11px;letter-spacing:1px;font-weight:400;
-}
-
 /* @qingtuan-order:001944 */
-
-#chatListView .chat-memory-photo-wrap:not(.has-photo){
-  /* 两层错开的点点各往内挪 3.5px：原本有一排圆心刚好落在框的上缘，只露出半颗，看起来像一条虚线 */
-  background:
-    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 42%,transparent) 0 1.6px,transparent 2.1px) 3.5px 3.5px / 14px 14px,
-    radial-gradient(circle,color-mix(in srgb,var(--theme-color) 42%,transparent) 0 1.6px,transparent 2.1px) 10.5px 10.5px / 14px 14px!important;
-}
 
 /* @qingtuan-order:001945 */
 
