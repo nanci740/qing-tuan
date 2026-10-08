@@ -2132,7 +2132,7 @@
         #main-content .home-notice-time {
             flex-shrink: 0;
             font: 9px/1 'SF Mono', Menlo, Consolas, monospace;
-            color: color-mix(in srgb, var(--win-ink) 60%, var(--color-surface));
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:003460 */
@@ -2826,7 +2826,7 @@
 /* @qingtuan-order:003589 */
 
         #main-content .dock-item span {
-            color: color-mix(in srgb, var(--win-ink) 65%, var(--color-surface)); /* 文字色淡一点，当前页才突出 */
+            color: var(--color-muted); /* 文字色淡一点，当前页才突出 */
             font-size: 8px;
             font-weight: 700;
             letter-spacing: 1px;

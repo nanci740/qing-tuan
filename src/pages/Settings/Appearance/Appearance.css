@@ -1570,7 +1570,7 @@
 
 /* @qingtuan-order:001014 */
 
-        #themeSettingsPage .theme-font-badge {
+        :is(#themeSettingsPage, #chatSettingsPage) .theme-font-badge {
             padding: 3px 6px;
             font-size: 8.5px;
             font-weight: 600;
@@ -2138,7 +2138,7 @@
 
 /* @qingtuan-order:002816 */
 
-        #themeSettingsPage .theme-font-badge {
+        :is(#themeSettingsPage, #chatSettingsPage) .theme-font-badge {
             border: 1px solid var(--win-deep);
             border-radius: 0 !important;
             background: var(--set-fill, var(--win-deep));

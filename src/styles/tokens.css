@@ -352,7 +352,7 @@
             --mh-dislike: #CFA3AF;
         }
         #main-content {
-            --home-ink: var(--win-deep);
+            --home-ink: var(--color-text);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
             --win-hi: var(--effect-highlight);
@@ -362,8 +362,8 @@
         }
         #main-content .player-box.mp3-player {
             --mp3-lcd: color-mix(in srgb, var(--theme-color) 32%, var(--color-page));
-            --mp3-lcd-ink: var(--win-deep);
-            --mp3-lcd-dim: var(--win-deep);
+            --mp3-lcd-ink: var(--color-text);
+            --mp3-lcd-dim: var(--color-muted);
         }
         #main-content {
             --home-gloss-btn: var(--effect-face-white);
@@ -400,7 +400,7 @@
             --home-title: var(--color-text);
             --home-btn-tint: var(--color-tint);
             --win-deep: var(--home-line);
-            --home-ink: var(--home-line);
+            --home-ink: var(--color-text);
             --win-ink: var(--home-title);
             --home-gloss-btn: var(--effect-face-white);
             --home-rim:
@@ -409,7 +409,7 @@
         #main-content .player-box,
         #main-content .tama-widget {
             --win-deep: var(--home-device);
-            --home-ink: var(--win-deep);
+            --home-ink: var(--color-text);
             --win-ink: var(--color-text);
             --home-gloss-btn: var(--effect-face-white);
             --home-rim:
@@ -440,7 +440,7 @@
             --cs-head: var(--color-accent-strong);
             --cs-deep: var(--color-accent-strong);
             --cs-tint: var(--color-tint);
-            --cs-muted: color-mix(in srgb, var(--cs-title) 62%, var(--color-surface));
+            --cs-muted: var(--color-muted);
             --cs-soft: color-mix(in srgb, var(--cs-line) 45%, transparent);
             --cs-btn-face: var(--effect-face-white);
             --cs-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
