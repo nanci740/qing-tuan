@@ -722,8 +722,8 @@ position:relative;
 
 /* @qingtuan-order:001965 */
 
-#chatListView .chat-conversation-panel .chat-thread-card:active,
-#chatListView .chat-thread-card.is-long-pressing{transform:translate(.5px,.5px);box-shadow:var(--chat-sunken)!important;background:var(--win-face)!important}
+#chatListView .chat-conversation-panel .chat-thread-card:is(:active, .sp-is-pressed),
+#chatListView .chat-thread-card.is-long-pressing{box-shadow:var(--chat-sunken)!important;background:var(--win-face)!important}
 
 /* @qingtuan-order:001966 */
 

@@ -8754,14 +8754,14 @@
 
 /* @qingtuan-order:003964 */
 
-        :is(html, #_#_#_#_#_) .sp-press:active {
+        :is(html, #_#_#_#_#_) .sp-press:is(:active, .sp-is-pressed) {
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
+            box-shadow: var(--effect-sunken) !important;
         }
 
 /* @qingtuan-order:003965 */
 
-        :is(html, #_#_#_#_#_) .sp-press-bare:active { translate: 1px 1px; }
+        :is(html, #_#_#_#_#_) .sp-press-bare:is(:active, .sp-is-pressed) { translate: 1px 1px; }
 
 /* @qingtuan-order:003966 */
 
