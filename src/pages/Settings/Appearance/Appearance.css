@@ -2021,7 +2021,7 @@
         #themeSettingsPage .theme-swatch {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:002801 */

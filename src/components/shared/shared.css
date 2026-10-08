@@ -6212,7 +6212,7 @@
 
 #worldPickerModal#worldPickerModal .api-model-action,.world-confirm-btn{border:1px solid var(--wt)!important;background:var(--color-surface)!important;
   color:var(--wt)!important;-webkit-text-fill-color:var(--wt)!important;letter-spacing:1px;
-  box-shadow:var(--effect-drop)!important;
+  box-shadow:var(--effect-button-drop)!important;
 }
 
 /* @qingtuan-order:002359 */
@@ -8433,7 +8433,7 @@
             background: var(--effect-face-accent);
             color: var(--color-surface);
             text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title);
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop);
+            box-shadow: var(--effect-button-shadow);
         }
 
 /* @qingtuan-order:003912 */
@@ -8888,7 +8888,7 @@
             background: var(--effect-face-accent);
             color: var(--color-surface);
             text-shadow: 0 0 1px var(--spc-title), 0 0 2px var(--spc-title);
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop);
+            box-shadow: var(--effect-button-shadow);
         }
 
 /* @qingtuan-order:003984 */
@@ -8901,7 +8901,7 @@
             background: linear-gradient(180deg, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 42.5%, var(--spc-danger) 56.5%, var(--spc-danger) 100%);
             border-color: color-mix(in srgb, var(--spc-danger) 70%, var(--color-danger-ink));
             text-shadow: 0 0 1px var(--color-danger-ink), 0 0 2px var(--color-danger-ink);
-            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 2px 2px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent);
+            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent);
         }
 
 /* @qingtuan-order:003986 */
@@ -9051,7 +9051,7 @@
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--wcf-title), 0 0 2px var(--wcf-title) !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
         }
 
 /* @qingtuan-order:004000 */
@@ -9060,7 +9060,7 @@
             background: linear-gradient(180deg, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 42.5%, var(--wcf-danger) 56.5%, var(--wcf-danger) 100%) !important;
             border-color: color-mix(in srgb, var(--wcf-danger) 70%, var(--color-danger-ink)) !important;
             text-shadow: 0 0 1px var(--color-danger-ink), 0 0 2px var(--color-danger-ink) !important;
-            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 2px 2px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent) !important;
+            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent) !important;
         }
 
 /* @qingtuan-order:004003 */
@@ -9413,7 +9413,7 @@
             border-radius: 3px !important;
             /* 顶栏最下面那个深青（--win-deep）；正面跟「发送(S)」同一种高光：上半截掺白的淡色、下半截实色 */
             background: linear-gradient(180deg, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 42.5%, var(--fw-send) 56.5%, var(--fw-send) 100%) !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
+            box-shadow: var(--effect-button-shadow) !important;
             color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title); /* 跟发送(S)一样的深青灰描边 */
             font-size: 11px !important;

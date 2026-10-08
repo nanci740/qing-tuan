@@ -26,7 +26,8 @@
     /* 凸起与凹陷各保留一亮一暗；按钮另加一层外投影。 */
     --effect-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
     --effect-sunken: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
-    --effect-button-shadow: var(--effect-raised), var(--effect-drop);
+    --effect-button-drop: 1px 1px 0 var(--effect-drop-color);
+    --effect-button-shadow: var(--effect-raised), var(--effect-button-drop);
     --effect-reflection-edge: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha, 0.4));
     --effect-reflection-shade: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha, 0.14));
     --effect-reflection-bright: color-mix(in srgb, var(--color-surface) 90%, transparent);
