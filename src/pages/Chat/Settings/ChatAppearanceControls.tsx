@@ -5,6 +5,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
+import { useChatRoomRevision } from '../../../providers/ChatNavigationProvider';
 import { PressedButton } from '../../../components/shared/PressedButton';
 export function ChatAppearanceText({id,tag='span',className}:{id:string;tag?:'span'|'strong'|'div';className?:string}) {
  const {values,appearance:{view}}=useChatPreferences();
@@ -36,6 +37,8 @@ export function ChatBubbleStyle() {const {appearance:{view}}=useChatPreferences(
 /** 壁纸层只覆盖消息框的内侧，不参与消息滚动或页面布局。 */
 export function ChatMessageWallpaper() {
  const layer=useRef<HTMLDivElement>(null);
+ const revision=useChatRoomRevision(),{appearance:{view}}=useChatPreferences();
+ const source=view.backgroundImage?JSON.parse(view.backgroundImage.slice(4,-1)) as string:'';
  useLayoutEffect(()=>{
   // 壁纸层与消息框都是聊天室的直接子元素，从自身父元素取得，避免全局 ID 查找。
   const room=layer.current?.parentElement,panel=room?.querySelector<HTMLElement>(':scope > .chat-message-list');
@@ -43,7 +46,7 @@ export function ChatMessageWallpaper() {
   const sync=()=>{if(!layer.current)return;const p=panel.getBoundingClientRect(),r=room.getBoundingClientRect();Object.assign(layer.current.style,{left:`${p.left-r.left+panel.clientLeft}px`,top:`${p.top-r.top+panel.clientTop}px`,width:`${panel.clientWidth}px`,height:`${panel.clientHeight}px`});};
   sync();const observer=new ResizeObserver(sync);observer.observe(panel);observer.observe(room);window.addEventListener('resize',sync);
   return()=>{observer.disconnect();window.removeEventListener('resize',sync);};
- },[]);
- return <div ref={layer} className="chat-message-wallpaper" aria-hidden="true"/>;
+ },[revision,source]);
+ return <div ref={layer} className="chat-message-wallpaper" aria-hidden="true">{source&&<img src={source} alt="" decoding="sync"/>}</div>;
 }
 export function ChatWallpaperMessageList() {const operations=useMessageOperations();const selection=useChatSelection();const messages=useChatMessages();return <div ref={messages.list} onClickCapture={selection.clickCapture} onKeyDown={event=>messages.api.keyDown(event.nativeEvent)} onClick={event=>{messages.api.click(event.nativeEvent);const card=(event.target as Element).closest('[data-forward-record-id]');const id=card?.getAttribute('data-forward-record-id');if(id)window.dispatchEvent(new CustomEvent('qingtuan:record-detail-open',{detail:id}));}} onPointerDown={operations.pointerDown} onPointerMove={operations.pointerMove} onPointerUp={operations.cancelLongPress} onPointerCancel={operations.cancelLongPress} onContextMenu={operations.contextMenu} onScroll={operations.closeMenu} className="chat-message-list" id="chatMessageList" aria-live="polite"><ChatMessageContent/></div>;}
