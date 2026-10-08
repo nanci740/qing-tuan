@@ -7212,8 +7212,8 @@
         #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-sheet {
             border: 1px solid var(--win-deep) !important;
             border-radius: 3px !important;
-            background: var(--win-face) !important;
-            box-shadow: var(--bevel-out), var(--win-drop) !important;
+            background: var(--color-surface) !important;
+            box-shadow: inset 2px 2px 0 var(--color-surface), inset -2px -2px 0 var(--effect-inner-shade), var(--win-drop) !important;
         }
 
 /* @qingtuan-order:002949 */
@@ -7222,12 +7222,12 @@
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-sheet-head,
         #apiModelModal#apiModelModal#apiModelModal .api-model-sheet-head,
         #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-sheet-head {
-            margin: 0 0 10px !important;
+            margin: 3px 3px 10px !important;
             height: 26px;
             padding: 0 4px 0 9px !important;
             border: 0 !important;
-            border-bottom: 1px solid var(--color-text) !important;
-            background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-accent-strong) 12%, var(--color-accent-strong) 100%) !important;
+            border-bottom: 0 !important;
+            background: var(--set-fill, var(--color-accent-strong)) !important;
             box-shadow: none !important;
         }
 
@@ -7462,8 +7462,8 @@
         #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-card {
             border: 1px solid var(--win-deep) !important;
             border-radius: 3px !important;
-            background: var(--win-face) !important;
-            box-shadow: var(--bevel-out), var(--win-drop) !important;
+            background: var(--color-surface) !important;
+            box-shadow: inset 2px 2px 0 var(--color-surface), inset -2px -2px 0 var(--effect-inner-shade), var(--win-drop) !important;
         }
 
 /* @qingtuan-order:003006 */
@@ -7474,7 +7474,7 @@
             margin: 3px 3px 0 !important;
             padding: 4px 4px 4px 8px !important;
             border: 0 !important;
-            background: var(--set-fill, var(--win-deep)) !important;
+            background: var(--set-fill, var(--color-accent-strong)) !important;
             box-shadow: none !important;
         }
 
