@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import ts from 'typescript';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const require=createRequire(process.env.QT_TEST_RUNTIME?path.join(process.env.QT_TEST_RUNTIME,'package.json'):import.meta.url);
-const {chromium:pw}=require('playwright');const mod=require('@sparticuz/chromium');const chromium=mod.default||mod;
+const {chromium:pw}=require('playwright');const mod=process.env.CHROMIUM_EXECUTABLE?null:require('@sparticuz/chromium');const chromium=mod?.default||mod;
 const code=ts.transpileModule(fs.readFileSync(path.join(root,'src/utils/imageAssets.ts'),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText;
 const server=http.createServer((req,res)=>{
  if(req.url.startsWith('/imageAssets.js')){res.setHeader('Content-Type','text/javascript');return res.end(code);}
@@ -15,7 +15,7 @@ const server=http.createServer((req,res)=>{
  try{const file=path.join(root,'dist',rel||'index.html');res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.webp')?'image/webp':'text/html');res.end(fs.readFileSync(file));}catch{res.statusCode=404;res.end();}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin=`http://127.0.0.1:${server.address().port}`;
-const browser=await pw.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||await chromium.executablePath(),args:process.env.QT_DISABLE_GPU?['--no-sandbox','--disable-gpu','--use-gl=disabled']:chromium.args.filter(a=>a!=='--single-process'),headless:true});
+const browser=await pw.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||await chromium.executablePath(),args:process.env.QT_DISABLE_GPU?['--no-sandbox','--disable-gpu','--use-gl=disabled']:chromium?chromium.args.filter(a=>a!=='--single-process'):['--no-sandbox'],headless:true});
 const checks=[];const check=(name,condition)=>{if(!condition)throw Error(name);checks.push(name);};
 try{
  const context=await browser.newContext({viewport:{width:390,height:844}});
@@ -71,9 +71,9 @@ try{
  const click=selector=>page.evaluate(selector=>document.querySelector(selector).click(),selector);
  await click('#inspectImageStorageBtn');await page.waitForFunction(()=>!document.querySelector('#cleanImageStorageBtn').disabled);
  check('only one settings cleanup card',await page.locator('#imageStorageSection').count()===1);
- await click('[data-dock-icon-key="settings"]');await click('#settingTheme');await page.waitForSelector('#themeSettingsPage.active');
+ await click('[data-dock-icon-key="settings"]');await click('#settingBackup');await page.waitForSelector('#dataManagementPage.active');
  await page.locator('#imageStorageSection').scrollIntoViewIfNeeded();
- check('cleanup entry is visible in appearance settings',await page.locator('#imageStorageSection').isVisible());
+ check('cleanup entry is visible in data management',await page.locator('#imageStorageSection').isVisible());
  await page.setViewportSize({width:320,height:640});
  check('cleanup card fits narrow mobile',await page.locator('#imageStorageSection').evaluate(e=>e.scrollWidth<=e.clientWidth));
  await page.setViewportSize({width:390,height:844});await page.locator('#imageStorageSection').scrollIntoViewIfNeeded();
