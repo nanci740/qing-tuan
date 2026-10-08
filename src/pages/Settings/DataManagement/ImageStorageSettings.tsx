@@ -25,7 +25,7 @@ export function ImageStorageSettings({open,onClose}:{open:boolean;onClose:()=>vo
   const status=busy?'正在检查图片库…':error?'检查未完成':!stats?'等待检查':stats.unusedCount?`可清理 ${stats.unusedCount} 张旧图片`:'图片库很整洁，暂时无需清理';
   return <section className="image-storage-tool" id="imageStorageSection" aria-labelledby="imageStorageTitle">
     <div className="image-storage-titlebar">
-      <h3 id="imageStorageTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg>图片清理</h3>
+      <h3 id="imageStorageTitle">图片清理</h3>
       <div className="image-storage-title-tools"><PressedButton className="image-storage-close" id="imageStorageCloseBtn" type="button" aria-label="关闭图片清理" onClick={onClose}><svg viewBox="0 0 12 12" aria-hidden="true"><rect x=".5" y=".5" width="11" height="11"/><path d="m3.5 3.5 5 5m0-5-5 5"/></svg></PressedButton></div>
     </div>
     <div className="image-storage-content" aria-busy={busy}>

@@ -364,7 +364,7 @@
 
 /* @qingtuan-order:003712 */
 
-        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: var(--color-surface); box-shadow: none; }
+        #chatSettingsPage .idw-btns i { display: grid; place-items: center; width: 16px; height: 14px; border: 1px solid var(--idw-line); border-radius: 1px; background: transparent; box-shadow: none; }
 
 /* @qingtuan-order:003713 */
 
