@@ -10,17 +10,19 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
  const navigation = useChatNavigation();
  const [view, setView] = useState({wallpaperState:'未设置', wallpaperEnabled:false, backgroundImage:'', fontName:'跟随全站字体',fontSource:'只调整当前聊天室的气泡文字',fontBadge:'DEFAULT',fontStatus:'',fontUrl:'',urlVersion:0,bubbleStyle:''});
  const state = useRef(view);
- const wallpaperRequest=useRef(0), fontRequest=useRef(0), wallpaperOwner=useRef(''), fontOwner=useRef(''), assetBusy=useRef(false);
+ const wallpaperRequest=useRef(0), fontRequest=useRef(0), wallpaperOwner=useRef(''), wallpaperLoaded=useRef(false), fontOwner=useRef(''), assetBusy=useRef(false);
  const wallpaperUrl=useRef(''),fontObjectUrl=useRef(''),fontLoadKey=useRef(''),fontFace=useRef<FontFace|null>(null);
  function update(patch: Partial<typeof view>) {state.current={...state.current,...patch};flushSync(()=>setView(state.current));}
  function save() {saveChatPreferences(services.current!.currentKey(), services.current!.readCurrent());}
  useLayoutEffect(()=>()=>{wallpaperRequest.current++;fontRequest.current++;if(wallpaperUrl.current)URL.revokeObjectURL(wallpaperUrl.current);if(fontObjectUrl.current)URL.revokeObjectURL(fontObjectUrl.current);if(fontFace.current)document.fonts.delete(fontFace.current);},[]);
-    async function applyChatWallpaper() {
-        const key = services.current!.currentKey(), request = ++wallpaperRequest.current;
+    async function applyChatWallpaper(force = false) {
+        const key = services.current!.currentKey();
+        if (!force && wallpaperOwner.current === key && wallpaperLoaded.current) return;
+        const request = ++wallpaperRequest.current;
         const current = () => request === wallpaperRequest.current && key === services.current!.currentKey();
         if (wallpaperOwner.current !== key) {
             if (wallpaperUrl.current) URL.revokeObjectURL(wallpaperUrl.current);
-            wallpaperUrl.current = ''; wallpaperOwner.current = key;
+            wallpaperUrl.current = ''; wallpaperOwner.current = key; wallpaperLoaded.current = false;
             update({backgroundImage: '', wallpaperEnabled: false});
             navigation.appearanceClass('chat-wallpaper-on', false);
         }
@@ -28,6 +30,12 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             const blob = await readChatWallpaper(key);
             if (!current()) return;
             const next = blob ? URL.createObjectURL(blob) : '';
+            if (next) {
+                try { const image = new Image(); image.src = next; await image.decode(); }
+                catch (error) { URL.revokeObjectURL(next); throw error; }
+                if (!current()) { URL.revokeObjectURL(next); return; }
+            }
+            wallpaperLoaded.current = true;
             if (wallpaperUrl.current) URL.revokeObjectURL(wallpaperUrl.current);
             wallpaperUrl.current = next;
             update({backgroundImage: next ? `url("${next}")` : '', wallpaperState: blob ? '已设置当前角色壁纸' : '未设置'});
@@ -167,7 +175,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             if (key !== services.current!.currentKey()) return;
             if (file) await writeChatWallpaper(key, file); else await deleteChatWallpaper(key);
             if (key !== services.current!.currentKey()) return;
-            await applyChatWallpaper();
+            await applyChatWallpaper(true);
             showToast(file ? '当前角色壁纸已保存' : '已移除当前角色壁纸');
         } catch (error) {
             if (key === services.current!.currentKey()) showToast((error as Error).message || '壁纸保存失败，请重试');

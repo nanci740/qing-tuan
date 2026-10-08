@@ -32,3 +32,38 @@ export function readLocalFontRecord(): Promise<LocalFontRecord | null> {
   return fontTransaction('readonly', (store, result) => {const request = store.get(CUSTOM_FONT_RECORD);request.onsuccess = () => result(request.result || null);});
 }
 export const clearLocalFontRecord = () => writeLocalFontRecord(null);
+
+export interface RestoredUiFont { face: FontFace; name: string; source: string; url: string; }
+let restoredUiFont: RestoredUiFont | null = null;
+export const getRestoredUiFont = () => restoredUiFont;
+
+/** Restore before mounting the opening screen, so its first frame uses the saved font. */
+export async function initializeUiFont(): Promise<string> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const type = localStorage.getItem('smallphone_custom_font_type');
+    if (type !== 'url' && type !== 'file') return '';
+    const savedName = localStorage.getItem('smallphone_custom_font_name') || '';
+    const load = async (): Promise<RestoredUiFont> => {
+      if (type === 'url') {
+        const url = new URL(localStorage.getItem('smallphone_custom_font_url') || '', window.location.href);
+        if (!/^https?:$/.test(url.protocol)) throw Error('无效的字体地址');
+        const face = await new FontFace(CUSTOM_FONT_FAMILY, `url(${JSON.stringify(url.href)})`).load();
+        return { face, name: savedName || decodeURIComponent(url.pathname.split('/').pop() || url.hostname), source: `网络直链 · ${url.hostname}`, url: url.href };
+      }
+      const record = await readLocalFontRecord();
+      if (!record) throw Error('找不到已保存的字体文件');
+      const face = await new FontFace(CUSTOM_FONT_FAMILY, await record.blob.arrayBuffer()).load();
+      const name = savedName || record.name;
+      return { face, name, source: `本地文件 · ${name}`, url: '' };
+    };
+    const loaded = await Promise.race([load(), new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(Error('字体加载超时')), 5000);
+    })]);
+    document.fonts.add(loaded.face);
+    restoredUiFont = loaded;
+    return '';
+  } catch {
+    return '已保存的字体暂时无法载入，请重试';
+  } finally { clearTimeout(timer); }
+}
