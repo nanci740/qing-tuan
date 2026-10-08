@@ -1,3 +1,4 @@
+import { RetroSelect } from '../../../components/shared/RetroSelect';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import type { CSSProperties } from 'react';
 import { useVoiceImage } from '../../../providers/VoiceImageProvider';
@@ -166,11 +167,11 @@ export function VoiceImage() {
             {"\n                    "}
             <div className="vi-row">
               <span className="vi-row-label">转写类型</span>
-              <select className="vi-input" value={vi.voice.transcriptionProvider || ''} onChange={event => vi.setVoiceField('transcriptionProvider', event.currentTarget.value)}>
+              <RetroSelect id="voiceTranscriptionProvider" title="转写类型" className="vi-input" value={vi.voice.transcriptionProvider || ''} onChange={value => vi.setVoiceField('transcriptionProvider', value)}>
                 <option value="">沿用语音连接</option>
                 <option value="openai-compatible">OpenAI 兼容转写</option>
                 <option value="gemini">Gemini 音频理解</option>
-              </select>
+              </RetroSelect>
             </div>
             <div className="vi-row">
               <span className="vi-row-label">转写地址</span>

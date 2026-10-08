@@ -5,7 +5,7 @@ export function VoiceImageChoiceModal() {
  const choice = useChoice();
   return <div className={`vi-choice-modal${choice.open ? ' open' : ''}`} id="viChoiceModal" ref={choice.modalRef} aria-hidden={!choice.open} onClick={event=>{if(event.target===event.currentTarget)choice.close();}}>
       {"\n        "}
-      <div className="vi-choice-sheet" role="dialog" aria-modal="true">
+      <div className="vi-choice-sheet" role="dialog" aria-modal="true" aria-labelledby="viChoiceTitle">
         {"\n            "}
         <div className="vi-choice-head">
           {"\n                "}

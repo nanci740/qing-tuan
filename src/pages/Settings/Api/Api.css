@@ -1085,7 +1085,7 @@
 
         #apiSettingsPage .api-action-btn.primary.ui-cyan-btn,
         #apiSettingsPage .api-model-action.primary.ui-cyan-btn {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;

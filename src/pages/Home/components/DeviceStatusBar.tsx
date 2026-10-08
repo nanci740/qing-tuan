@@ -61,7 +61,7 @@ export function DeviceStatusBar() {
             {"\n                    "}
             <rect x="1" y="1" width="20" height="10" rx="3.5" fill="none" stroke="var(--color-text)" strokeWidth="1.5" />
             {"\n                    "}
-            <rect id="batteryLevel" x="3" y="3" width={status.batteryWidth} height="6" rx="1.5" fill={status.batteryFill} stroke="none" />
+            <rect id="batteryLevel" x="3" y="3" width={status.batteryWidth} height="6" rx="1.5" fill="var(--color-text)" stroke="none" />
             {"\n                    "}
             <path d="M22 4.5 L22 7.5" stroke="var(--color-text)" strokeWidth="1.5" strokeLinecap="round" />
             {"\n                "}

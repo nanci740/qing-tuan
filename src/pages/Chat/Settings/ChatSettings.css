@@ -769,7 +769,7 @@
 /* @qingtuan-order:003794 */
 
         #chatSettingsPage#chatSettingsPage :is(.chat-setting-action.primary, .theme-font-btn.ui-cyan-btn) {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cs-deep) 55%, var(--color-surface)) 42.5%, var(--cs-deep) 56.5%, var(--cs-deep) 100%) !important;
+            background: var(--effect-face-accent) !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--cs-drop) !important;
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--cs-title), 0 0 2px var(--cs-title);

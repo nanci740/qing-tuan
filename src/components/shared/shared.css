@@ -7377,7 +7377,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action.primary,        #apiModelModal#apiModelModal#apiModelModal .api-model-action.primary{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             box-shadow: var(--bevel-solid-out) !important;
         }
 
@@ -7502,7 +7502,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-btn.primary,        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-btn.primary{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: var(--bevel-solid-out) !important;
@@ -7734,7 +7734,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 
         #viChoiceModal#viChoiceModal#viChoiceModal .vi-btn.primary{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent) !important;
             box-shadow: var(--bevel-solid-out) !important;
         }
 
@@ -8099,8 +8099,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
         #apiProviderConfirm#apiProviderConfirm#apiProviderConfirm#apiProviderConfirm,
         #apiModelConfirm#apiModelConfirm#apiModelConfirm#apiModelConfirm,
         #viChoiceConfirm#viChoiceConfirm#viChoiceConfirm#viChoiceConfirm {
-            background: var(--sb-accent) !important;
-            background-image: none !important;
+            background: var(--effect-face-accent) !important;
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
@@ -8419,7 +8418,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
         .cc-primary {
             /* 跟标题栏同一个青 */
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cc-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cc-head) 55%, var(--color-surface)) 42.5%, var(--cc-head) 56.5%, var(--cc-head) 100%);
+            background: var(--effect-face-accent);
             color: var(--color-surface);
             text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title);
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop);
@@ -8874,7 +8873,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 /* @qingtuan-order:003983 */
 
         .sp-confirm-btn.is-primary {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--spc-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--spc-head) 55%, var(--color-surface)) 42.5%, var(--spc-head) 56.5%, var(--spc-head) 100%);
+            background: var(--effect-face-accent);
             color: var(--color-surface);
             text-shadow: 0 0 1px var(--spc-title), 0 0 2px var(--spc-title);
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop);
@@ -9036,7 +9035,7 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 /* @qingtuan-order:003999 */
 
         :is(html, #_#_#_) .world-confirm-card .world-confirm-btn.primary {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--wcf-head) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--wcf-head) 55%, var(--color-surface)) 42.5%, var(--wcf-head) 56.5%, var(--wcf-head) 100%) !important;
+            background: var(--effect-face-accent) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             text-shadow: 0 0 1px var(--wcf-title), 0 0 2px var(--wcf-title) !important;
@@ -9642,3 +9641,10 @@ img[src*="spDefaultAvatar"] { background-color: var(--theme-color) !important; }
 
 
 #dataManagementPage{background:var(--set-bg);z-index:2050}
+
+/* @qingtuan-order:004359 */
+/* 自定义选项触发器只补按钮排版，框线与凹陷沿用原输入控件。 */
+.retro-select-trigger{position:relative;display:flex;align-items:center;justify-content:space-between;gap:6px;text-align:left;cursor:pointer;font:inherit;min-width:0}
+.retro-select-arrow{flex:0 0 auto;color:var(--color-text)}
+.retro-select-trigger.chat-setting-select .retro-select-arrow{display:none}
+.retro-select-trigger:focus-visible{outline:1px solid var(--color-text);outline-offset:2px}
