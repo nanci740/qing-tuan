@@ -376,11 +376,13 @@
 
 /* @qingtuan-order:002693 */
 
-#chatAppPage.chat-wallpaper-on .chat-room-view::before {content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade)),rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade))),var(--chat-wallpaper-image);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(var(--chat-wallpaper-blur));}
+#chatAppPage .chat-message-wallpaper {position:absolute;z-index:0;pointer-events:none;overflow:hidden;border-radius:1px;display:none;}
+#chatAppPage.chat-wallpaper-on .chat-message-wallpaper {display:block;}
+#chatAppPage.chat-wallpaper-on .chat-message-wallpaper::before {content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade)),rgba(var(--color-surface-rgb),var(--chat-wallpaper-fade))),var(--chat-wallpaper-image);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(var(--chat-wallpaper-blur));}
 
 /* @qingtuan-order:002694 */
 
-#chatAppPage.chat-wallpaper-on .chat-room-view > * {z-index:1;}
+#chatAppPage.chat-wallpaper-on .chat-message-list {z-index:1;}
 
 /* @qingtuan-order:002710 */
 
@@ -601,7 +603,7 @@
 
 /* @qingtuan-order:004031 */
 
-        /* 壁纸淡化由聊天室独立背景层处理，不随消息滚动。 */
+        /* 壁纸淡化和模糊由消息框内的独立背景层处理，裁切在框内，不随消息滚动。 */
 
 /* @qingtuan-order:004032 */
 

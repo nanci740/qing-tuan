@@ -33,4 +33,16 @@ export function ChatAppearanceDraft({bubble=false}:{bubble?:boolean}) {
  return <input ref={input} className="theme-font-url-input" id="chatFontUrlInput" type="url" inputMode="url" placeholder="粘贴 .ttf / .woff2 字体直链" aria-label="当前聊天室字体链接" onInput={e=>setDraft(e.currentTarget.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();void appearance.applyChatFontUrl(e.currentTarget.value);}}}/>;
 }
 export function ChatBubbleStyle() {const {appearance:{view}}=useChatPreferences();return createPortal(<style id="chatCustomBubbleStyle">{view.bubbleStyle}</style>,document.head);}
+/** 壁纸层只覆盖消息框的内侧，不参与消息滚动或页面布局。 */
+export function ChatMessageWallpaper() {
+ const layer=useRef<HTMLDivElement>(null);
+ useLayoutEffect(()=>{
+  const panel=document.getElementById('chatMessageList'),room=document.getElementById('chatRoomView');
+  if(!panel||!room)return;
+  const sync=()=>{if(!layer.current)return;const p=panel.getBoundingClientRect(),r=room.getBoundingClientRect();Object.assign(layer.current.style,{left:`${p.left-r.left+panel.clientLeft}px`,top:`${p.top-r.top+panel.clientTop}px`,width:`${panel.clientWidth}px`,height:`${panel.clientHeight}px`});};
+  sync();const observer=new ResizeObserver(sync);observer.observe(panel);observer.observe(room);window.addEventListener('resize',sync);
+  return()=>{observer.disconnect();window.removeEventListener('resize',sync);};
+ },[]);
+ return <div ref={layer} className="chat-message-wallpaper" aria-hidden="true"/>;
+}
 export function ChatWallpaperMessageList() {const operations=useMessageOperations();const selection=useChatSelection();const messages=useChatMessages();return <div ref={messages.list} onClickCapture={selection.clickCapture} onKeyDown={event=>messages.api.keyDown(event.nativeEvent)} onClick={event=>{messages.api.click(event.nativeEvent);const card=(event.target as Element).closest('[data-forward-record-id]');const id=card?.getAttribute('data-forward-record-id');if(id)window.dispatchEvent(new CustomEvent('qingtuan:record-detail-open',{detail:id}));}} onPointerDown={operations.pointerDown} onPointerMove={operations.pointerMove} onPointerUp={operations.cancelLongPress} onPointerCancel={operations.cancelLongPress} onContextMenu={operations.contextMenu} onScroll={operations.closeMenu} className="chat-message-list" id="chatMessageList" aria-live="polite"><ChatMessageContent/></div>;}
