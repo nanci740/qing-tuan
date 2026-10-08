@@ -236,7 +236,7 @@ export function CharacterEditor() {
       {"\n                    "}
       <section className="cc-panel" data-panel="secret" hidden={panel === null ? undefined : panel !== "secret"}>
         {"\n                        "}
-        <div className="cc-panel-tip cc-lock-tip">
+        <div className="cc-panel-tip">
           {"只有你知道的小秘密"}
         </div>
         {"\n                        "}

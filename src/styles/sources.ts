@@ -16,8 +16,10 @@ import sheet13 from "../pages/Chat/Room/ChatRoom.css?raw";
 import sheet14 from "../pages/Chat/Settings/ChatSettings.css?raw";
 import sheet15 from "../components/shared/shared.css?raw";
 
+import dataManagement from "../pages/Settings/DataManagement/DataManagement.css?raw";
+
 export const tokensCss = tokens;
-export const orderedStyleSources: readonly string[] = [sheet0, sheet1, sheet2, sheet3, sheet4, sheet5, sheet6, sheet7, sheet8, sheet9, sheet10, sheet11, sheet12, sheet13, sheet14, sheet15];
+export const orderedStyleSources: readonly string[] = [sheet0, sheet1, sheet2, sheet3, sheet4, sheet5, sheet6, sheet7, sheet8, sheet9, sheet10, sheet11, sheet12, sheet13, sheet14, sheet15, dataManagement];
 
 // The first original stylesheet precedes the remote font stylesheet.
 export const preFontStyleFragmentCount = 2;
