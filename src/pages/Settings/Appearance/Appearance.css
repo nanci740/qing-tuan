@@ -2219,8 +2219,8 @@
             padding: 0 0 12px;
             border: 1px solid var(--win-deep);
             border-radius: 3px !important;
-            background: var(--win-face);
-            box-shadow: var(--bevel-out), var(--win-drop);
+            background: var(--color-surface);
+            box-shadow: inset 2px 2px 0 var(--color-surface), inset -2px -2px 0 var(--effect-inner-shade), var(--win-drop);
         }
 
 /* @qingtuan-order:002826 */
@@ -2242,7 +2242,7 @@
             margin: 3px 3px 12px;
             padding: 4px 4px 4px 8px;
             border: 0;
-            background: var(--set-fill, var(--win-deep));
+            background: var(--set-fill, var(--color-accent-strong));
             box-shadow: none;
         }
 
