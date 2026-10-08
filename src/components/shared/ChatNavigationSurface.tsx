@@ -20,12 +20,12 @@ export function useChatNavigationSurface(surface: ChatSurfaceKey, initialClass: 
   }, [navigation, surface, initialClass]);
   return { ...data,ref, style, className: state.className, 'aria-hidden': state.hidden };
 }
-export function ChatNavigationSurface({ surface, tag = 'div', id, className, hidden, children, elementRef }: {
+export function ChatNavigationSurface({ surface, tag = 'div', id, className, hidden, children, elementRef, style }: {
   surface: ChatSurfaceKey; tag?: 'div' | 'section'; id: string; className: string; hidden?: boolean;
-  children: ReactNode; elementRef?: (element: HTMLElement | null) => void;
+  style?: CSSProperties; children: ReactNode; elementRef?: (element: HTMLElement | null) => void;
 }) {
   const registry=useNativeRefs();
   const forward=useCallback((element:HTMLElement|null)=>{registry?.register(id,element);elementRef?.(element);},[registry,id,elementRef]);
   const props = useChatNavigationSurface(surface, className, hidden, forward);
-  return createElement(tag, { ...props, id }, children);
+  return createElement(tag, { ...props, style: {...style,...props.style}, id }, children);
 }

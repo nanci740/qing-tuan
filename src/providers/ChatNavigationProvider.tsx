@@ -6,7 +6,7 @@ export type ChatSurfaceKey = 'app' | 'list' | 'room' | 'settings' | 'dock';
 export interface ChatNavigationServices {
   prepareList(): void;
   finishList(): void;
-  prepareRoom(): void;
+  prepareRoom(): Promise<void>;
   finishRoom(): void;
   syncIdentity(): void;
   prepareSettings(): void;
@@ -27,6 +27,7 @@ const RoomRevision=createContext(0);
 const Context = createContext<ChatNavigationApi | null>(null);
 export function ChatNavigationProvider({ children }: { children: ReactNode }) {
   const [roomRevision,setRoomRevision]=useState(0);
+  const entryRevision=useRef(0);
   const services = useRef<ChatNavigationServices | null>(null);
   const surfaces = useRef(new Map<ChatSurfaceKey, ChatSurfaceHandle>());
   const api = useRef<ChatNavigationApi | null>(null);
@@ -36,6 +37,8 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
     };
     const closeSettings = () => toggle('settings', 'active', false, true);
     const showList = () => {
+      ++entryRevision.current;
+      toggle('room', 'chat-room-preparing', false);
       // 回到聊天列表不取消自动回复：倒数完照样回（回复会进背景、算未读）
       services.current?.prepareList();
       closeSettings();
@@ -57,12 +60,28 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
         toggle('list', 'is-hidden', true);
         toggle('room', 'is-hidden', false);
       },
-      showRoom() {
-        services.current?.prepareRoom();
-        toggle('app', 'chat-room-open', true);
-        toggle('list', 'is-hidden', true);
+      async showRoom() {
+        const revision=++entryRevision.current;
+        // Lay out offscreen while assets, message history and scroll position settle.
+        toggle('room','chat-room-preparing',true);
+        const prepared=services.current?.prepareRoom();
         toggle('room', 'is-hidden', false);
+        await prepared;
+        if(revision!==entryRevision.current)return;
+        // Force font discovery in the now-laid-out room before its first visible frame.
+        document.getElementById('chatRoomView')?.getBoundingClientRect();
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        try { await Promise.race([document.fonts.ready,new Promise(resolve=>{timer=setTimeout(resolve,5000);})]); }
+        finally {clearTimeout(timer);}
+        if(revision!==entryRevision.current)return;
+        toggle('app', 'chat-room-open', true);
         services.current?.finishRoom();
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+          if(revision===entryRevision.current){
+            toggle('list','is-hidden',true);
+            toggle('room','chat-room-preparing',false);
+          }
+        }));
       },
       openApp() {
         services.current?.syncIdentity();

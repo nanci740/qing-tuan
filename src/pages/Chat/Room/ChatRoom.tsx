@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 import {ChatSidebar} from './ChatSidebar';
 import {ChatSelectionToolbar} from './ChatSelectionToolbar';
 import {ChatRecordDetail} from './ChatRecordDetail';
@@ -18,8 +20,10 @@ import { OriginalElement } from "../../../components/shared/OriginalElement";
 /** 原页面的静态结构；所有页面保持挂载，由 React 控制显示状态。 */
 export function ChatRoom() {
   const navigation = useChatNavigation();
+  const {appearance:{view}}=useChatPreferences();
+  const wallpaperStyle = {'--chat-wallpaper-image':view.backgroundImage||'none','--chat-message-panel-bg':view.backgroundImage?'transparent':'var(--color-surface)'} as CSSProperties;
   return (
-    <ChatNavigationSurface surface="room" tag="div" id="chatRoomView" className="chat-view chat-room-view is-hidden">
+    <ChatNavigationSurface surface="room" tag="div" style={wallpaperStyle} id="chatRoomView" className="chat-view chat-room-view is-hidden">
       {"\n        "}
       <OriginalElement tag="header" attributes={[{"name":"class","value":"chat-room-header"}]}>
         {"\n            "}
