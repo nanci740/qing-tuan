@@ -296,7 +296,7 @@
             width: 14px !important;
             height: 14px !important;
             box-sizing: border-box;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
         }
 
 /* @qingtuan-order:001533 */
@@ -493,7 +493,7 @@
         #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .vi-switch::after {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 

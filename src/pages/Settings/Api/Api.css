@@ -297,7 +297,7 @@
             min-height: 36px;
             border-radius: var(--ui-radius);
             border: .5px solid var(--color-divider);
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--color-text);
             font-size: 11px;
             cursor: pointer;
@@ -546,7 +546,7 @@
         #apiSettingsPage .api-action-btn,
         #apiSettingsPage .api-model-action {
             border: .5px solid var(--color-divider);
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--color-text);
         }
 
@@ -1092,7 +1092,7 @@
 
         #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary),
         #apiSettingsPage .api-model-action.ui-cyan-btn:not(.primary) {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
@@ -1127,7 +1127,7 @@
 
 
         #apiSettingsPage .api-action-btn.primary.ui-cyan-btn:focus-visible,#apiSettingsPage .api-model-action.primary.ui-cyan-btn:focus-visible{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -1137,7 +1137,7 @@
 
 
         #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary):focus-visible{
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
@@ -1153,7 +1153,7 @@
   color:var(--world-ink);
   border:.6px solid var(--world-line);
   border-radius:8px;
-  background:var(--color-surface);
+  background: var(--effect-face-white);
   text-align:left;
 }
 
@@ -1262,7 +1262,7 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-key-toggle,
         #apiSettingsPage#apiSettingsPage#apiSettingsPage #apiFetchModelsBtn.api-chevron-btn {
             border: 1px solid var(--win-deep) !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
         }
 
@@ -1298,7 +1298,7 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-toggle-input::after {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -1308,7 +1308,7 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn,        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn:focus-visible {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -1317,7 +1317,7 @@
 
 
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn.primary,        #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-action-btn.primary:focus-visible {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             box-shadow: var(--bevel-solid-out) !important;
         }
 

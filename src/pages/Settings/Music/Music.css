@@ -106,7 +106,7 @@
 
 /* @qingtuan-order:000450 */
 
-        .music-action-btn.secondary { background: var(--color-page); border-color: var(--color-divider); color: var(--color-text); }
+        .music-action-btn.secondary { background: var(--effect-face-white); border-color: var(--color-divider); color: var(--color-text); }
 
 /* @qingtuan-order:000451 */
 
@@ -712,7 +712,7 @@
             left: 2px;
             width: 14px;
             height: 14px;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             box-sizing: border-box;
         }
 
@@ -787,7 +787,7 @@
 
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary),        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
         }
@@ -796,7 +796,7 @@
 
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary,        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:focus-visible {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
         }
@@ -886,7 +886,7 @@
 /* @qingtuan-order:001570 */
 
         #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
@@ -910,7 +910,7 @@
 
 
         #musicSettingsPage .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -920,7 +920,7 @@
 
 
         #musicSettingsPage .music-action-btn.secondary.ui-cyan-btn:focus-visible{
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
@@ -969,7 +969,7 @@
         #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary{
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -1133,7 +1133,7 @@
         #musicSettingsPage#musicSettingsPage .music-mode-btn.active {
             border-color: var(--win-deep);
             border-radius: 1px !important;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             box-shadow: var(--bevel-out);
         }
 
@@ -1160,7 +1160,7 @@
         #musicSettingsPage#musicSettingsPage .music-switch::after {
             border: 1px solid var(--win-deep);
             border-radius: 1px;
-            background: var(--win-face);
+            background: var(--effect-face-white);
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
