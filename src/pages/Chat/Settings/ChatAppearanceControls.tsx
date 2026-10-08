@@ -37,7 +37,8 @@ export function ChatBubbleStyle() {const {appearance:{view}}=useChatPreferences(
 export function ChatMessageWallpaper() {
  const layer=useRef<HTMLDivElement>(null);
  useLayoutEffect(()=>{
-  const panel=document.getElementById('chatMessageList'),room=document.getElementById('chatRoomView');
+  // 壁纸层与消息框都是聊天室的直接子元素，从自身父元素取得，避免全局 ID 查找。
+  const room=layer.current?.parentElement,panel=room?.querySelector<HTMLElement>(':scope > .chat-message-list');
   if(!panel||!room)return;
   const sync=()=>{if(!layer.current)return;const p=panel.getBoundingClientRect(),r=room.getBoundingClientRect();Object.assign(layer.current.style,{left:`${p.left-r.left+panel.clientLeft}px`,top:`${p.top-r.top+panel.clientTop}px`,width:`${panel.clientWidth}px`,height:`${panel.clientHeight}px`});};
   sync();const observer=new ResizeObserver(sync);observer.observe(panel);observer.observe(room);window.addEventListener('resize',sync);
