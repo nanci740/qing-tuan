@@ -1288,7 +1288,7 @@
             content: 'preview.bmp';
             position: absolute;
             color: var(--win-ink);
-            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-family: var(--font-active);
             font-size: 9.5px;
             letter-spacing: 1px;
             line-height: 16px;

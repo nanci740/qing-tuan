@@ -2163,10 +2163,10 @@
             height: 9px;
             margin-right: 6px;
             border: 1px solid var(--win-deep);
-            background: var(--theme-color);
+            background: var(--color-surface);
             -webkit-mask: none;
             mask: none;
-            box-shadow: 4px 4px 0 -1px var(--effect-reflection-edge), 4px 4px 0 0 var(--effect-drop-color);
+            box-shadow: 4px 4px 0 -1px var(--color-surface), 4px 4px 0 0 var(--win-deep);
             transform: translateY(-2px);
         }
 
@@ -2181,7 +2181,7 @@
             content: '主画面背景.bmp';
             padding-left: 8px;
             color: var(--win-ink);
-            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-family: var(--font-active);
             font-size: 9.5px;
             line-height: 17px;
             letter-spacing: 0.3px;
@@ -2203,7 +2203,7 @@
             border-bottom: 1px solid var(--win-line);
             background: var(--win-face);
             color: var(--win-ink);
-            font-family: 'SF Mono', Menlo, Consolas, monospace;
+            font-family: var(--font-active);
             font-size: 10px;
             letter-spacing: 0.3px;
         }
