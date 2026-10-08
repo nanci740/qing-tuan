@@ -717,7 +717,7 @@
         #chatSettingsPage#chatSettingsPage .api-toggle-input::after {
             width: 14px !important; height: 12px !important; top: 2px !important; left: 2px !important;
             border: 1px solid var(--cs-line) !important; border-radius: 1px !important;
-            background: var(--cs-btn-face) !important; box-shadow: inset 1px 1px 0 var(--effect-highlight) !important;
+            background: var(--effect-face-white-compact) !important; box-shadow: inset 1px 1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003786 */
@@ -742,13 +742,13 @@
         #chatSettingsPage#chatSettingsPage .chat-setting-range::-webkit-slider-thumb {
             width: 10px; height: 16px; margin-top: -7px;
             border: 1px solid var(--cs-line); border-radius: 1px;
-            background: var(--cs-btn-face); box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
+            background: var(--effect-face-white-compact); box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), 1px 1px 0 var(--effect-drop-color);
         }
 
 /* @qingtuan-order:003791 */
 
         #chatSettingsPage#chatSettingsPage .chat-setting-range::-moz-range-thumb {
-            width: 10px; height: 16px; border: 1px solid var(--cs-line); border-radius: 1px; background: var(--cs-btn-face);
+            width: 10px; height: 16px; border: 1px solid var(--cs-line); border-radius: 1px; background: var(--effect-face-white-compact);
         }
 
 /* @qingtuan-order:003792 */
