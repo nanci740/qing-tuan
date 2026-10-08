@@ -121,7 +121,7 @@
             --glass-edge-highlight: rgba(255, 255, 255, var(--ui-glass-edge-highlight-alpha, 0.4));
             --glass-edge-soft: rgba(132, 141, 152, var(--ui-glass-edge-soft-alpha, 0.14));
         }
-        #themeSettingsPage {
+        :is(#themeSettingsPage, #dataManagementPage) {
             --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
             --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);

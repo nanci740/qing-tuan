@@ -24,6 +24,6 @@ export function DataManagement(){
       <span className="retro-address-label">地址</span>
       <span className="retro-address-field"><span className="retro-address-icon"/>{'C:\\青团\\设置\\数据管理\\'}</span>
     </div>
-    <div className="data-management-content"><ImageStorageSettings open={open}/></div>
+    <div className="theme-settings-content"><ImageStorageSettings open={open}/></div>
   </div>;
 }
