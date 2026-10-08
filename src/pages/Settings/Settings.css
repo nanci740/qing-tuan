@@ -658,7 +658,7 @@
             font-weight: 600;
             letter-spacing: 1.2px;
             text-transform: none;
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001035 */
@@ -730,7 +730,7 @@
             flex: 0 0 29px;
             border: 1px solid var(--win-line);
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001043 */
@@ -791,7 +791,7 @@
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 1.2px;
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
             -webkit-mask: none;
             mask: none;
             z-index: 2;
@@ -822,7 +822,7 @@
 
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-avatar {
             border: 1px solid var(--win-line);
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: var(--effect-drop);
         }
 
 /* @qingtuan-order:001051 */
@@ -841,7 +841,7 @@
             border: 1px solid var(--win-line);
             border-radius: 3px;
             background: var(--color-surface);
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001053 */
@@ -886,7 +886,7 @@
             background:
                 url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.2%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 5px bottom 4px / 9px 9px,
                 var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
             color: var(--win-ink);
             font-size: 9.5px;
             letter-spacing: 0.5px;
@@ -960,7 +960,7 @@
         #settingsPage .settings-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001069 */
@@ -1009,7 +1009,7 @@
             padding: 5px 12px 6px;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001074 */
@@ -1187,7 +1187,7 @@
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
             color: var(--win-ink);
-            box-shadow: inset 1px 1px 0 var(--win-hi);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001094 */
@@ -1280,7 +1280,7 @@
 
         #settingsPage .settings-content > .settings-section .settings-item-action,
         #settingsPage .settings-content > .settings-section.settings-section-personal .settings-item-action {
-            background: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
+            background: var(--effect-face-white);
         
             display: flex;
             align-items: center;
@@ -1505,7 +1505,7 @@
             margin-top: 18px;
             padding: 3px 18px 3px 3px;
             border: 1px solid var(--win-deep);
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001131 */
@@ -1517,7 +1517,7 @@
             align-items: center;
             min-height: 18px;
             padding: 1px 6px;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001132 */
@@ -1544,7 +1544,7 @@
             -webkit-text-fill-color: var(--theme-color);
             font-weight: 700;
             letter-spacing: 2px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 12%, transparent);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:001135 */
@@ -1582,7 +1582,7 @@
             height: 13px;
             border: 1px solid var(--win-deep);
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
             -webkit-mask: none;
             mask: none;
             transition: none;
@@ -1624,7 +1624,7 @@
 
         #settingsPage .settings-content > .settings-section .retro-sec-toggle:active {
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:003606 */

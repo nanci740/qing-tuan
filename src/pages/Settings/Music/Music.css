@@ -52,7 +52,7 @@
             border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 13px;
-            box-shadow: 0 1px 3px color-mix(in srgb, var(--color-muted) 2%, transparent);
+            box-shadow: 0 1px 3px var(--effect-drop-soft);
         }
 
 /* @qingtuan-order:000442 */
@@ -165,7 +165,7 @@
 
 /* @qingtuan-order:000469 */
 
-        .music-mode-btn.active { background: #fff; color: var(--theme-deep); box-shadow: 0 1px 4px color-mix(in srgb, var(--color-muted) 8%, transparent); }
+        .music-mode-btn.active { background: #fff; color: var(--theme-deep); box-shadow: 0 1px 4px var(--effect-drop-soft); }
 
 /* @qingtuan-order:000470 */
 
@@ -179,7 +179,7 @@
 
         .music-switch::after {
             content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
-            border-radius: 50%; background: #fff; box-shadow: 0 1px 4px color-mix(in srgb, var(--color-muted) 12%, transparent); transition: transform .2s ease;
+            border-radius: 50%; background: #fff; box-shadow: 0 1px 4px var(--effect-drop-soft); transition: transform .2s ease;
         }
 
 /* @qingtuan-order:000472 */
@@ -363,7 +363,7 @@
         #musicSettingsPage .settings-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001201 */
@@ -408,7 +408,7 @@
             padding: 5px 12px 6px;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001205 */
@@ -491,7 +491,7 @@
             font-weight: 600;
             letter-spacing: 1.2px;
             line-height: 1.2;
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:001213 */
@@ -604,7 +604,7 @@
             background: var(--win-bar);
             color: var(--win-ink);
             letter-spacing: 1px;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: var(--effect-drop);
         }
 
 /* @qingtuan-order:001226 */
@@ -756,7 +756,7 @@
             height: 16px;
             border-top: 1px solid var(--win-line);
             background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2710%27%20height%3D%2710%27%20viewBox%3D%270%200%2010%2010%27%3E%3Cpath%20d%3D%27M9.5%202.5l-7%207M9.5%205.5l-4%204M9.5%208.5l-1%201%27/%3E%3C/svg%3E") no-repeat right 4px bottom 3px / 10px 10px, var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
             pointer-events: none;
         }
 
@@ -780,7 +780,7 @@
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn,        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:focus-visible {
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:001248 */
@@ -806,7 +806,7 @@
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:active,
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn.secondary:active {
-            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001251 */
@@ -832,7 +832,7 @@
             border-radius: 3px !important;
             background: var(--color-surface) !important;
             color: var(--win-ink) !important;
-            box-shadow: inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 var(--win-lo) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:001254 */
@@ -840,7 +840,7 @@
 
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-edit:active,
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-track-delete:active {
-            box-shadow: inset 1px 1px 0 var(--win-lo), inset -1px -1px 0 var(--win-hi) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:001255 */
@@ -1144,7 +1144,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 2px;
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:002880 */
@@ -1161,7 +1161,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 1px;
             background: var(--win-face);
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
         }
 
 /* @qingtuan-order:002882 */
@@ -1204,7 +1204,7 @@
 /* @qingtuan-order:003653 */
 
         #musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn#musicToggleUrlBtn:active{;
-            box-shadow: inset 1px 1px 0 var(--sb-press-line), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.6) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:003869 */

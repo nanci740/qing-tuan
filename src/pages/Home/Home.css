@@ -231,7 +231,7 @@
             border-radius: 50%;
             overflow: hidden;
             background: var(--color-surface);
-            box-shadow: 0 6px 16px color-mix(in srgb, var(--color-muted) 4%, transparent);
+            box-shadow: 0 6px 16px var(--effect-drop-soft);
             position: relative;
             z-index: 1;
         }
@@ -1073,7 +1073,7 @@
                 radial-gradient(circle, color-mix(in srgb, var(--mp3-lcd-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 5px 5px / 10px 10px,
                 radial-gradient(ellipse at 30% 20%, rgba(var(--color-surface-rgb), 0.55), transparent 60%),
                 var(--mp3-lcd);
-            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-muted) 14.000000000000002%, transparent), 0 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 2px var(--effect-inner-soft), 0 1px 0 var(--effect-reflection-edge);
             color: var(--mp3-lcd-ink);
         }
 
@@ -1421,7 +1421,7 @@
         #main-content .mp3-player .controls .btn-play:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003362 */
@@ -1516,7 +1516,7 @@
             background:
                 linear-gradient(155deg, rgba(var(--color-surface-rgb), 0.38) 0%, rgba(var(--color-surface-rgb), 0.08) 45%, color-mix(in srgb, var(--color-text) 6%, transparent) 100%),
                 var(--win-deep);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.45), 1px 1px 0 rgba(var(--color-surface-rgb), 0.8);
+            box-shadow: inset 0 1px 0 var(--effect-highlight), 1px 1px 0 var(--effect-reflection-edge);
         }
 
 /* @qingtuan-order:003378 */
@@ -1990,7 +1990,7 @@
             padding: 0 4px 0 6px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 var(--win-hi);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
             font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 0.4px;
@@ -2191,10 +2191,7 @@
             backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
             -webkit-backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
             box-shadow:
-                inset 0 0 0 1.5px rgba(var(--color-surface-rgb), 0.45),
-                inset -8px -12px 18px rgba(var(--theme-rgb), 0.35),
-                inset 6px 8px 14px rgba(var(--color-surface-rgb), 0.45),
-                var(--win-drop); /* 外面的投影跟全站同一个硬投影；里面那几层柔光是果冻质感，保留 */
+                inset 0 0 0 1.5px var(--effect-highlight), inset -8px -12px 18px var(--effect-inner-soft), inset 6px 8px 14px var(--effect-highlight), var(--win-drop); /* 外面的投影跟全站同一个硬投影；里面那几层柔光是果冻质感，保留 */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -2254,7 +2251,7 @@
             background:
                 linear-gradient(155deg, rgba(var(--color-surface-rgb), 0.38) 0%, rgba(var(--color-surface-rgb), 0.08) 45%, color-mix(in srgb, var(--color-text) 6%, transparent) 100%),
                 var(--win-deep);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.45), 1px 1px 0 rgba(var(--color-surface-rgb), 0.6);
+            box-shadow: inset 0 1px 0 var(--effect-highlight), 1px 1px 0 var(--effect-reflection-edge);
         }
 
 /* @qingtuan-order:003471 */
@@ -2635,7 +2632,7 @@
         #main-content .tama-btn:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003549 */
@@ -2793,7 +2790,7 @@
                 radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 4px 4px / 8px 8px,
                 color-mix(in srgb, var(--theme-color) 32%, var(--color-page));
             border-color: var(--home-ink);
-            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-muted) 16%, transparent), 0 1px 0 rgba(var(--color-surface-rgb), 0.9);
+            box-shadow: inset 1px 1px 2px var(--effect-inner-soft), 0 1px 0 var(--effect-reflection-edge);
         }
 
 /* @qingtuan-order:003583 */
@@ -2801,7 +2798,7 @@
 
         #main-content .dock-item:active {
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003584 */
@@ -2872,7 +2869,7 @@
             inset: 3px 14px auto 14px;
             height: 46%;
             border-radius: 15px 15px 40% 40% / 15px 15px 10px 10px;
-            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.95) 0%, rgba(var(--color-surface-rgb), 0.55) 88%, rgba(var(--color-surface-rgb), 0) 100%);
+            background: linear-gradient(180deg, var(--effect-reflection-bright) 0%, var(--effect-reflection-soft) 88%, rgba(var(--color-surface-rgb), 0) 100%);
             pointer-events: none;
         }
 
@@ -2884,7 +2881,7 @@
 /* @qingtuan-order:003596 */
 
         #main-content .mp3-player .controls {
-            box-shadow: var(--home-rim), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: var(--home-rim), var(--effect-drop);
         }
 
 /* @qingtuan-order:003597 */
@@ -2895,7 +2892,7 @@
             inset: 3px 12px auto 12px;
             height: 42%;
             border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
-            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.9), rgba(var(--color-surface-rgb), 0.35) 85%, rgba(var(--color-surface-rgb), 0));
+            background: linear-gradient(180deg, var(--effect-reflection-bright), var(--effect-reflection-soft) 85%, rgba(var(--color-surface-rgb), 0));
             pointer-events: none;
         }
 
@@ -2912,7 +2909,7 @@
         #main-content .tama-btn:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
 /* @qingtuan-order:003600 */
@@ -2924,7 +2921,7 @@
 
         #main-content .dock-bar {
             background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, var(--color-surface)) 100%) !important;
-            box-shadow: var(--home-rim), inset 0 -6px 12px rgba(var(--theme-rgb), 0.1), var(--win-drop);
+            box-shadow: var(--home-rim), inset 0 -6px 12px var(--effect-inner-soft), var(--win-drop);
         
             padding: 6px 7px;
             gap: 2px;
@@ -2934,7 +2931,7 @@
 
         #main-content .dock-bar::before {
             height: 44%;
-            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.95) 0%, rgba(var(--color-surface-rgb), 0.5) 88%, rgba(var(--color-surface-rgb), 0) 100%);
+            background: linear-gradient(180deg, var(--effect-reflection-bright) 0%, var(--effect-reflection-soft) 88%, rgba(var(--color-surface-rgb), 0) 100%);
         }
 
 /* @qingtuan-order:003608 */
@@ -3007,7 +3004,7 @@
         #main-content .tama-screen {
             border-color: color-mix(in srgb, var(--color-text) 70%, transparent) !important;
             /* 凹陷阴影只在左上（70%，柔和 2px）；右下不加 */
-            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-text) 70%, transparent) !important;
+            box-shadow: inset 1px 1px 2px var(--effect-inner-soft) !important;
         }
 
 /* @qingtuan-order:003621 */
@@ -3044,9 +3041,7 @@
 
         #main-content .mp3-player .controls .btn-play,
         #main-content .tama-btn {
-            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.6), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-shade), var(--effect-drop);
         }
 
 /* @qingtuan-order:003628 */

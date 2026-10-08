@@ -11,6 +11,21 @@
     --color-surface: #FFFFFF;
     --color-danger: #D08F88;
 
+    /* 四类效果：正面高光、内侧暗边、外侧投影、玻璃反光。
+     * 所有色源从七类用途派生；凹凸方向、轮廓和玻璃强度保持原有行为。 */
+    --effect-face-white: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
+    --effect-highlight: color-mix(in srgb, var(--color-surface) 85%, transparent);
+    --effect-highlight-soft: color-mix(in srgb, var(--color-surface) 60%, transparent);
+    --effect-inner-soft: color-mix(in srgb, var(--color-muted) 22%, transparent);
+    --effect-drop-soft: color-mix(in srgb, var(--color-muted) 12%, transparent);
+    --effect-inner-shade: color-mix(in srgb, var(--color-muted) 55%, transparent);
+    --effect-drop-color: color-mix(in srgb, var(--color-muted) 24%, transparent);
+    --effect-drop: 2px 2px 0 var(--effect-drop-color);
+    --effect-reflection-edge: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha, 0.4));
+    --effect-reflection-shade: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha, 0.14));
+    --effect-reflection-bright: color-mix(in srgb, var(--color-surface) 90%, transparent);
+    --effect-reflection-soft: color-mix(in srgb, var(--color-surface) 45%, transparent);
+
     /* 材质用色从七类派生：保留明暗层次，不另设页面专属色板。 */
     --color-surface-rgb: 255, 255, 255;
     --color-accent-strong: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
@@ -50,11 +65,11 @@
             --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
             --win-shade: var(--color-muted);
             --win-shade-soft: var(--color-divider);
-            --bevel-out: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
-            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface), inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
-            --bevel-solid-out: inset 1px 1px 0 rgba(var(--color-surface-rgb), 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.22), inset -2px -2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
-            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.5), inset 2px 2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
-            --win-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            --bevel-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --bevel-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-soft), inset -2px -2px 0 var(--effect-highlight-soft);
+            --bevel-solid-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --bevel-solid-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-shade);
+            --win-drop: var(--effect-drop);
             --theme-accent: var(--theme-color);
             --font-default-stack: Georgia, "LXGW 975 Yuan SC 400W", "PingFang SC", "Times New Roman", serif;
             --font-active: var(--font-default-stack);
@@ -94,11 +109,11 @@
             --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
             --win-shade: var(--color-muted);
             --win-shade-soft: var(--color-divider);
-            --bevel-out: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
-            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface), inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
-            --bevel-solid-out: inset 1px 1px 0 rgba(var(--color-surface-rgb), 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.22), inset -2px -2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
-            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.5), inset 2px 2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
-            --win-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);--wk-src:var(--theme-color);
+            --bevel-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --bevel-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-soft), inset -2px -2px 0 var(--effect-highlight-soft);
+            --bevel-solid-out: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --bevel-solid-in: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-inner-shade);
+            --win-drop: var(--effect-drop);--wk-src:var(--theme-color);
             --tx-title: var(--color-text);
             --tx-desc: var(--color-muted);
             --sb-line: var(--color-muted);
@@ -127,19 +142,19 @@
         .player-box,
         .app-card,
         .dock-bar {
-            --glass-edge-highlight: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha));
-            --glass-edge-soft: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha));
+            --glass-edge-highlight: var(--effect-reflection-edge);
+            --glass-edge-soft: var(--effect-reflection-shade);
         }
         #settingsPage .settings-section-personal .settings-profile-card {
-            --glass-edge-highlight: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha, 0.4));
-            --glass-edge-soft: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha, 0.14));
+            --glass-edge-highlight: var(--effect-reflection-edge);
+            --glass-edge-soft: var(--effect-reflection-shade);
         }
         :is(#themeSettingsPage, #dataManagementPage) {
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
         }
         #themeSettingsPage {
             --win-deep: var(--color-accent-strong);
@@ -148,8 +163,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-deep: var(--color-accent-strong);
         }
         #aboutAppModal {
@@ -162,8 +177,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-deep: var(--color-accent-strong);
         }
         #apiSettingsPage,
@@ -171,8 +186,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-dash: var(--color-divider);
             --win-deep: var(--color-accent-strong);
         }
@@ -180,8 +195,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-dash: var(--color-divider);
             --win-deep: var(--color-accent-strong);
         }
@@ -191,8 +206,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-dash: var(--color-divider);
             --win-deep: var(--color-accent-strong);
         }
@@ -200,8 +215,8 @@
             --win-line: var(--color-muted);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-hi: var(--effect-highlight);
+            --win-lo: var(--effect-inner-shade);
             --win-dash: var(--color-divider);
             --win-deep: var(--color-accent-strong);
         }
@@ -222,8 +237,8 @@
         #chatListView{
   --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
   --win-ink: var(--color-text);
-  --win-hi: rgba(var(--color-surface-rgb), 0.9);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-hi: var(--effect-highlight);
+  --win-lo: var(--effect-inner-shade);
   --win-dash: var(--color-divider);
   --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
   --chat-teal: var(--color-accent-strong);
@@ -232,20 +247,17 @@
 }
         #chatListView{
   --chat-raised:
-    inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), .75),
-    inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 color-mix(in srgb,var(--theme-color) 35%,transparent),
-    2px 2px 0 rgba(var(--theme-rgb), 0.3);
+    inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
   --chat-sunken:
-    inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset 2px 2px 0 color-mix(in srgb,var(--theme-color) 30%,transparent),
-    inset -1px -1px 0 var(--color-surface);
+    inset 1px 1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
 }
         #chatListView{
   --chat-gloss: linear-gradient(var(--color-surface) 0%, rgba(var(--color-surface-rgb), .96) 45%, color-mix(in srgb, var(--theme-color) 7%, var(--color-page)) 52%, color-mix(in srgb, var(--theme-color) 4%, var(--color-page)) 100%);
 }
         .world-page{
   --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
-  --win-hi: rgba(var(--color-surface-rgb), 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-hi: var(--effect-highlight);
+  --win-lo: var(--effect-inner-shade);
   --win-dash: var(--color-divider);
   --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
   --world-line: var(--win-line);
@@ -259,14 +271,14 @@
 }
         #worldPickerModal{
   --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
-  --win-hi: rgba(var(--color-surface-rgb), 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-hi: var(--effect-highlight);
+  --win-lo: var(--effect-inner-shade);
   --win-dash: var(--color-divider);
 }
         .world-confirm-card{
   --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
-  --win-hi: rgba(var(--color-surface-rgb), 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-hi: var(--effect-highlight);
+  --win-lo: var(--effect-inner-shade);
 }
         #worldPickerModal,
 .world-confirm-card{
@@ -297,11 +309,11 @@
     --win-ink:var(--world-title);
     --wb-face-tint:var(--color-accent-soft);
     --wk-btn-tint:var(--color-tint);
-    --wb-face-white:linear-gradient(180deg,var(--color-surface) 0%,var(--color-surface) 42.5%,color-mix(in srgb,var(--wk-btn-tint) 42%,var(--color-surface)) 56.5%,color-mix(in srgb,var(--wk-btn-tint) 30%,var(--color-surface)) 100%);
+    --wb-face-white:var(--effect-face-white);
     --wb-face-solid:linear-gradient(180deg,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 0%,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 42.5%,var(--wk-accent) 56.5%,color-mix(in srgb,var(--wk-accent) 88%,var(--color-surface)) 100%);
-    --wb-white:inset 1px 1px 0 var(--color-surface),inset -1px -1px 0 color-mix(in srgb,var(--world-teal) 70%,transparent),inset 2px 2px 0 rgba(var(--color-surface-rgb), .6),inset -2px -2px 0 color-mix(in srgb,var(--wk-btn-tint) 45%,transparent);
-    --wb-solid:inset 1px 1px 0 rgba(var(--color-surface-rgb), .55),inset -1px -1px 0 color-mix(in srgb,var(--wk-accent-ink) 35%,transparent),inset 2px 2px 0 rgba(var(--color-surface-rgb), .2);
-    --wb-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
+    --wb-white:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+    --wb-solid:inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft);
+    --wb-shadow:var(--effect-drop);
 }
         .world-page .world-intro{
   --sc-v: radial-gradient(closest-side,#000 calc(100% - .4px),transparent 100%);
@@ -335,7 +347,7 @@
         #personalProfilePage {
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-hi: var(--effect-highlight);
             --mono: 'SF Mono', Menlo, Consolas, monospace;
             --mh-dislike: #CFA3AF;
         }
@@ -343,7 +355,7 @@
             --home-ink: var(--win-deep);
             --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
             --win-ink: var(--color-text);
-            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-hi: var(--effect-highlight);
         }
         #main-content .speech-bubble-container {
             --bub-line: var(--win-deep);
@@ -354,10 +366,9 @@
             --mp3-lcd-dim: var(--win-deep);
         }
         #main-content {
-            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
+            --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
-                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
+                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
             #voiceImageSettingsPage, #backgroundActivityPage, #dataManagementPage, #personalProfilePage,
@@ -391,20 +402,18 @@
             --win-deep: var(--home-line);
             --home-ink: var(--home-line);
             --win-ink: var(--home-title);
-            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--home-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--home-btn-tint) 30%, var(--color-surface)) 100%);
+            --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
-                inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent);
+                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
         }
         #main-content .player-box,
         #main-content .tama-widget {
             --win-deep: var(--home-device);
             --home-ink: var(--win-deep);
             --win-ink: var(--color-text);
-            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
+            --home-gloss-btn: var(--effect-face-white);
             --home-rim:
-                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
-                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
+                inset 1px 1px 0 var(--effect-highlight), inset 2px 2px 0 var(--effect-highlight-soft), inset -1px -1px 0 var(--effect-inner-shade), inset -2px -2px 0 var(--effect-inner-soft);
         }
         #splash-screen {
             --splash-paper: var(--color-page);
@@ -420,9 +429,9 @@
             --idw-tint: var(--color-tint);
             --idw-face: color-mix(in srgb, var(--theme-color) 8%, var(--color-surface));
             --idw-soft: color-mix(in srgb, var(--idw-line) 45%, transparent);
-            --idw-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--idw-line) 70%, transparent), inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--idw-tint) 60%, transparent);
-            --idw-sunken: inset 1px 1px 0 color-mix(in srgb, var(--idw-line) 55%, transparent), inset -1px -1px 0 var(--color-surface);
-            --idw-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--idw-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--idw-tint) 30%, var(--color-surface)) 100%);
+            --idw-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --idw-sunken: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
+            --idw-btn-face: var(--effect-face-white);
         }
         #chatSettingsPage#chatSettingsPage {
             --cs-bg: var(--color-page);
@@ -433,10 +442,10 @@
             --cs-tint: var(--color-tint);
             --cs-muted: color-mix(in srgb, var(--cs-title) 62%, var(--color-surface));
             --cs-soft: color-mix(in srgb, var(--cs-line) 45%, transparent);
-            --cs-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cs-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cs-tint) 30%, var(--color-surface)) 100%);
-            --cs-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cs-tint) 45%, transparent);
-            --cs-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cs-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 50%, transparent);
+            --cs-btn-face: var(--effect-face-white);
+            --cs-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft);
+            --cs-drop: var(--effect-drop);
+            --cs-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
         #chatAppPage#chatAppPage {
             --ch-bg: var(--color-page);
@@ -459,15 +468,13 @@
             --cc-line: var(--color-muted);
             --cc-title: var(--color-text);
             --cc-block: var(--color-accent-strong);
-            --cc-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cc-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 55%, transparent);
-            --cc-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cc-line) 45%, transparent);
+            --cc-drop: var(--effect-drop);
+            --cc-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
+            --cc-sunken: inset 1px 1px 0 var(--effect-inner-shade);
             --cc-btn-tint: var(--color-tint);
             --cc-face-tint: var(--color-accent-soft);
-            --cc-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cc-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cc-btn-tint) 30%, var(--color-surface)) 100%);
-            --cc-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cc-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            --cc-btn-face: var(--effect-face-white);
+            --cc-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
             --cc-head: var(--color-accent-strong);
         }
         .sp-confirm-overlay {
@@ -477,10 +484,8 @@
             --spc-head: var(--color-accent-strong);
             --spc-btn-tint: var(--color-tint);
             --spc-face-tint: var(--color-accent-soft);
-            --spc-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--spc-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--spc-btn-tint) 30%, var(--color-surface)) 100%);
-            --spc-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--spc-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--spc-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            --spc-btn-face: var(--effect-face-white);
+            --spc-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
             --spc-danger: var(--color-danger);
         }
         :is(html, #_#_) .chat-character-action-overlay {
@@ -506,11 +511,9 @@
             --cr-head: var(--color-accent-strong);
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
-            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
+            --cr-btn-face: var(--effect-face-white);
+            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
             --cr-peer: var(--cr-head);
             --cr-self: var(--cr-head);
         }
@@ -536,10 +539,8 @@
             --cr-title: var(--color-text);
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
-            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
-                1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            --cr-btn-face: var(--effect-face-white);
+            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), 1px 1px 0 var(--effect-drop-color);
         }
         body .chat-forward-picker.chat-forward-picker {
             --cr-line: var(--color-muted);
@@ -547,11 +548,9 @@
             --cr-head: var(--color-accent-strong);
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
-            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
+            --cr-btn-face: var(--effect-face-white);
+            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
         body .chat-forward-picker .chat-forward-picker-send {
             --fw-send: var(--color-accent-strong);
@@ -562,11 +561,9 @@
             --cr-head: var(--color-accent-strong);
             --cr-btn-tint: var(--color-tint);
             --cr-face-tint: var(--color-accent-soft);
-            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
-                2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
+            --cr-btn-face: var(--effect-face-white);
+            --cr-btn-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), inset 2px 2px 0 var(--effect-highlight-soft), inset -2px -2px 0 var(--effect-inner-soft), var(--effect-drop);
+            --cr-sunken: inset 1px 1px 0 var(--effect-inner-shade);
         }
         :is(html, #_#_#_) .world-page .world-action-menu {
             --wm-line: var(--color-muted);

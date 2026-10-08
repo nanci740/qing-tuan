@@ -185,7 +185,7 @@
               border: 0.5px solid var(--color-divider);
               border-radius: 2px;
               transform: rotate(-5.8deg);
-              box-shadow: 1px 1px 4px color-mix(in srgb, var(--color-muted) 6%, transparent);
+              box-shadow: 1px 1px 4px var(--effect-drop-soft);
             }
 
 /* @qingtuan-order:000219 */
@@ -205,7 +205,7 @@
               border: 0.5px solid var(--color-divider);
               border-radius: 2px;
               transform: rotate(1.9deg);
-              box-shadow: 1px 2px 6px color-mix(in srgb, var(--color-muted) 7.000000000000001%, transparent);
+              box-shadow: 1px 2px 6px var(--effect-drop-soft);
               display: flex;
               flex-direction: column;
               overflow: hidden;
@@ -367,7 +367,7 @@
               background: var(--theme-light-14);
               border: 0.5px solid var(--color-divider);
               border-radius: 1px;
-              box-shadow: 1px 1px 4px color-mix(in srgb, var(--color-muted) 5%, transparent);
+              box-shadow: 1px 1px 4px var(--effect-drop-soft);
               padding: 9px 8px 7px 8px;
               display: flex;
               flex-direction: column;
@@ -710,7 +710,7 @@
         #personalProfilePage#personalProfilePage .pp2-page-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:003146 */
@@ -765,7 +765,7 @@
             padding: 5px 12px 6px;
             border-bottom: 1px solid var(--win-line);
             background: var(--win-bar);
-            box-shadow: inset 0 1px 0 var(--win-hi);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:003151 */
@@ -1097,7 +1097,7 @@
             padding: 4px 6px 4px 8px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:003185 */
@@ -1339,7 +1339,7 @@
             letter-spacing: 1px;
             text-align: center;
             writing-mode: vertical-rl;
-            box-shadow: inset -1px 1px 0 var(--color-surface), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: inset -1px 1px 0 var(--effect-highlight), var(--effect-drop);
         }
 
 /* @qingtuan-order:003211 */
@@ -1390,7 +1390,7 @@
             padding: 4px 6px 4px 8px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 var(--color-surface);
+            box-shadow: inset 1px 1px 0 var(--effect-highlight);
             color: var(--win-ink);
             font-size: 10px;
             font-weight: 600;

@@ -551,7 +551,7 @@
             border-radius: 0 !important;
             /* 白色卡纸边 + 里面主题青底（预设头像是白色剪影，要有青底才看得到；上传的照片会盖住） */
             background: linear-gradient(var(--theme-color), var(--theme-color)) content-box, var(--color-surface) !important;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: var(--effect-drop) !important;
             object-fit: cover;
             margin: 0 !important;
         }
@@ -1037,7 +1037,7 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording {
             background: color-mix(in srgb, var(--theme-color) 22%, var(--color-surface)) !important;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), inset -1px -1px 0 var(--color-surface) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
 /* @qingtuan-order:004096 */
@@ -1107,7 +1107,7 @@
             border-radius: 3px !important;
             /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度提两成：上半截淡、下半截 --cr-send */ /* 改用顶栏最下面那个深青（--win-deep），跟转发钮同色 */
             background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
             color: var(--color-surface) !important;
         
             grid-area: send;
@@ -1252,7 +1252,7 @@
             border: 0 !important;
             border-bottom: 1px solid var(--cr-line) !important;
             border-radius: 0 !important;
-            box-shadow: inset 0 -1px 0 var(--color-surface) !important;
+            box-shadow: inset 0 -1px 0 var(--effect-highlight) !important;
             opacity: 1 !important;
             visibility: visible !important;
             transform: none !important;
@@ -1678,7 +1678,7 @@
             box-sizing: border-box;
             border: 1px solid var(--cr-line);
             background: var(--theme-color) center / cover no-repeat;
-            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: 1px 1px 0 var(--effect-drop-color);
         }
 
 /* @qingtuan-order:004185 */
@@ -1771,7 +1771,7 @@
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             background: var(--color-surface) !important;
-            box-shadow: inset 1px 1px 0 var(--color-surface), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), var(--effect-drop) !important;
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
         }
@@ -1916,7 +1916,7 @@
             box-sizing: border-box;
             border: 1px solid var(--cr-line);
             background: var(--theme-color) center / cover no-repeat;
-            box-shadow: 1px 1px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: 1px 1px 0 var(--effect-drop-color);
         }
 
 /* @qingtuan-order:004273 */
@@ -2031,7 +2031,7 @@
             background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            box-shadow: var(--effect-drop) !important;
         }
 
 /* @qingtuan-order:004296 */
@@ -2053,7 +2053,7 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button + button {
             margin-top: 3px;
             border-top: 1px solid color-mix(in srgb, var(--cr-line) 55%, transparent) !important;
-            box-shadow: inset 0 1px 0 var(--color-surface);
+            box-shadow: inset 0 1px 0 var(--effect-highlight);
         }
 
 /* @qingtuan-order:004298 */
