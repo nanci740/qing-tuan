@@ -49,8 +49,8 @@
 /* @qingtuan-order:000536 */
 
         .api-setting-card {
-            background: #FFFFFF;
-            border: .5px solid #DDDDE2;
+            background: var(--color-surface);
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 6px 14px;
         }
@@ -63,7 +63,7 @@
             grid-template-columns: 90px minmax(0,1fr);
             gap: 10px;
             align-items: center;
-            border-bottom: .5px solid #ECEDEF;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:000538 */
@@ -129,8 +129,8 @@
             top: 50%;
             width: 6px;
             height: 6px;
-            border-right: 1.3px solid #939CA6;
-            border-bottom: 1.3px solid #939CA6;
+            border-right: 1.3px solid var(--color-muted);
+            border-bottom: 1.3px solid var(--color-muted);
             transform: translateY(-65%) rotate(-45deg);
         }
 
@@ -147,7 +147,7 @@
         .api-select {
             appearance: none;
             -webkit-appearance: none;
-            background-image: linear-gradient(45deg, transparent 50%, #8A949F 50%), linear-gradient(135deg, #8A949F 50%, transparent 50%);
+            background-image: linear-gradient(45deg, transparent 50%, var(--color-muted) 50%), linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
             background-position: calc(100% - 10px) 50%, calc(100% - 6px) 50%;
             background-size: 4px 4px, 4px 4px;
             background-repeat: no-repeat;
@@ -196,7 +196,7 @@
 
         .api-hint {
             display: block;
-            color: #9AA4AE;
+            color: var(--color-muted);
             font-size: 9.8px;
             line-height: 1.5;
             padding: 8px 0 5px;
@@ -211,8 +211,8 @@
             justify-content: space-between;
             gap: 12px;
             min-height: 62px;
-            background: #FFFFFF;
-            border: .5px solid #DDDDE2;
+            background: var(--color-surface);
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 11px 14px;
         }
@@ -238,8 +238,8 @@
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #B8C0C8;
-            box-shadow: 0 0 0 3px rgba(184,192,200,.12);
+            background: var(--color-divider);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-muted) 12%, transparent);
             flex: 0 0 auto;
         }
 
@@ -253,15 +253,15 @@
 /* @qingtuan-order:000557 */
 
         .api-status-card.is-error .api-status-dot {
-            background: #B98C8C;
-            box-shadow: 0 0 0 3px rgba(185,140,140,.12);
+            background: var(--color-danger);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-ink) 12%, transparent);
         }
 
 /* @qingtuan-order:000558 */
 
         .api-status-desc {
             margin-top: 4px;
-            color: #929CA7;
+            color: var(--color-muted);
             font-size: 10px;
             line-height: 1.35;
             overflow: hidden;
@@ -274,8 +274,8 @@
 
         .api-status-badge {
             font-size: 9px;
-            color: #87919C;
-            border: .5px solid #E1E4E7;
+            color: var(--color-muted);
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
             padding: 3px 7px;
             white-space: nowrap;
@@ -296,9 +296,9 @@
         .api-action-btn {
             min-height: 36px;
             border-radius: var(--ui-radius);
-            border: .5px solid #E1E6E6;
-            background: #FFFFFF;
-            color: #727C88;
+            border: .5px solid var(--color-divider);
+            background: var(--color-surface);
+            color: var(--color-text);
             font-size: 11px;
             cursor: pointer;
         }
@@ -334,8 +334,8 @@
         .api-advanced-arrow {
             width: 8px;
             height: 8px;
-            border-right: 1.5px solid #919AA4;
-            border-bottom: 1.5px solid #919AA4;
+            border-right: 1.5px solid var(--color-muted);
+            border-bottom: 1.5px solid var(--color-muted);
             transform: rotate(45deg) translateY(-2px);
             transition: transform .2s ease;
         }
@@ -348,7 +348,7 @@
 
 /* @qingtuan-order:000567 */
 
-        .api-advanced-body { display: none; border-top: .5px solid #ECEDEF; }
+        .api-advanced-body { display: none; border-top: .5px solid var(--color-divider); }
 
 /* @qingtuan-order:000568 */
 
@@ -362,7 +362,7 @@
             grid-template-columns: 92px minmax(0,1fr);
             align-items: center;
             gap: 8px;
-            border-bottom: .5px solid #ECEDEF;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:000570 */
@@ -383,7 +383,7 @@
         .api-param-copy span {
             display: block;
             font-size: 9px;
-            color: #A0A8B1;
+            color: var(--color-muted);
             margin-top: 1px;
         }
 
@@ -391,7 +391,7 @@
 
         .api-number-input {
             text-align: right;
-            border-bottom: 1px solid #E3E6E8;
+            border-bottom: 1px solid var(--color-divider);
             padding: 4px 2px;
         }
 
@@ -428,7 +428,7 @@
 /* @qingtuan-order:000607 */
 
         .api-subsection-title:not(:first-child) {
-            border-top: .5px solid #ECEDEF;
+            border-top: .5px solid var(--color-divider);
             margin-top: 2px;
         }
 
@@ -463,9 +463,9 @@
         .api-stat-chip {
             min-width: 0;
             padding: 9px 8px;
-            border: .5px solid #E1E4E7;
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
-            background: rgba(255,255,255,.62);
+            background: rgba(var(--color-surface-rgb), .62);
         }
 
 /* @qingtuan-order:000617 */
@@ -482,7 +482,7 @@
 
         .api-stat-chip span {
             display: block;
-            color: #A0A8B1;
+            color: var(--color-muted);
             font-size: 8.8px;
             margin-top: 3px;
             white-space: nowrap;
@@ -495,10 +495,10 @@
         .api-last-request {
             margin-top: 8px;
             padding: 9px 10px;
-            border: .5px solid #E1E4E7;
+            border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
-            background: rgba(255,255,255,.62);
-            color: #7A8590;
+            background: rgba(var(--color-surface-rgb), .62);
+            color: var(--color-text);
             font-size: 9.5px;
             line-height: 1.45;
         }
@@ -513,7 +513,7 @@
         #apiSettingsPage .api-input::placeholder,
         #apiSettingsPage .api-number-input::placeholder,
         #apiSettingsPage .api-model-search::placeholder {
-            color: #A2ABB5;
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:000622 */
@@ -545,15 +545,15 @@
 
         #apiSettingsPage .api-action-btn,
         #apiSettingsPage .api-model-action {
-            border: .5px solid #E6E8EB;
-            background: #FFFFFF;
-            color: #727C88;
+            border: .5px solid var(--color-divider);
+            background: var(--color-surface);
+            color: var(--color-text);
         }
 
 /* @qingtuan-order:000626 */
 
         #apiSettingsPage .api-status-badge {
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:000627 */
@@ -565,19 +565,19 @@
 /* @qingtuan-order:000628 */
 
         #apiSettingsPage .api-status-card.is-error .api-status-badge {
-            color: #AE7775;
+            color: var(--color-danger-ink);
         }
 
 /* @qingtuan-order:000629 */
 
         #apiSettingsPage .api-status-badge.is-saved {
-            color: #A0BDC2;
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:000630 */
 
         #apiSettingsPage .api-model-modal {
-            background: rgba(43, 50, 58, .18);
+            background: color-mix(in srgb, var(--color-muted) 18%, transparent);
             backdrop-filter: blur(12px) saturate(120%);
             -webkit-backdrop-filter: blur(12px) saturate(120%);
         }
@@ -586,7 +586,7 @@
 
         #apiSettingsPage .api-model-sheet::before {
             border-width: .5px;
-            border-color: rgba(255,255,255,.34);
+            border-color: rgba(var(--color-surface-rgb), .34);
         }
 
 /* @qingtuan-order:000632 */
@@ -599,14 +599,14 @@
 
         #apiSettingsPage .api-model-item {
             color: var(--ui-text-primary);
-            border-bottom: .5px solid #ECEDEF;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:000634 */
 
         #apiSettingsPage .api-model-check {
-            border: .5px solid #AAB3BC;
-            background: #FFFFFF;
+            border: .5px solid var(--color-muted);
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:000635 */
@@ -671,7 +671,7 @@
 /* @qingtuan-order:000652 */
 
         #apiSettingsPage .api-model-action.primary {
-            border: .5px solid rgba(255, 255, 255, 0.96) !important;
+            border: .5px solid rgba(var(--color-surface-rgb), 0.96) !important;
             background: rgba(var(--theme-rgb), 0.14) !important;
             color: var(--ui-text-primary) !important;
             box-shadow: none !important;
@@ -680,7 +680,7 @@
 /* @qingtuan-order:000653 */
 
         #apiSettingsPage .api-model-action.primary:disabled {
-            border: .5px solid rgba(255, 255, 255, 0.96) !important;
+            border: .5px solid rgba(var(--color-surface-rgb), 0.96) !important;
         }
 
 /* @qingtuan-order:000669 */
@@ -706,7 +706,7 @@
         #apiFetchModelsBtn.api-chevron-btn {
             border: 0 !important;
             background: transparent !important;
-            color: #939CA6 !important;
+            color: var(--color-muted) !important;
         
             padding: 0;
             margin: 0;
@@ -853,7 +853,7 @@
 /* @qingtuan-order:001317 */
 
         #apiSettingsPage .api-settings-content > .api-setting-group:nth-child(3) {
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:001318 */
@@ -867,7 +867,7 @@
             margin: 0;
             padding: 0 6px;
             border: 0;
-            background: linear-gradient(var(--set-bg, #F9F9F7) 50%, #FFFFFF 50%);
+            background: linear-gradient(var(--set-bg, var(--color-page)) 50%, var(--color-surface) 50%);
             box-shadow: none;
             font-weight: 500;
         }
@@ -921,7 +921,7 @@
             width: 13px !important;
             height: 13px !important;
             border-radius: 0 !important;
-            background: #A9B3B9 !important;
+            background: var(--color-divider) !important;
             box-shadow: none !important;
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cpath%20d%3D%27M12%2016v-4M12%208h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
@@ -940,7 +940,7 @@
 
 
         #apiSettingsPage#apiSettingsPage .api-status-card.is-error .api-status-dot {
-            background: #B08A8A !important;
+            background: var(--color-divider) !important;
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27m21.73%2018-8-14a2%202%200%200%200-3.48%200l-8%2014A2%202%200%200%200%204%2021h16a2%202%200%200%200%201.73-3%27/%3E%3Cpath%20d%3D%27M12%209v4%27/%3E%3Cpath%20d%3D%27M12%2017h.01%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
         }
@@ -981,7 +981,7 @@
             border-radius: 2px;
             background:
                 repeating-linear-gradient(90deg, var(--theme-color) 0 7px, transparent 7px 9px) left 2px center / 0 6px no-repeat,
-                #F4F6F6;
+                var(--color-page);
             box-shadow: inset 1px 1px 0 var(--win-lo);
             animation: retroProgress 1.6s steps(8) infinite;
         }
@@ -1087,8 +1087,8 @@
         #apiSettingsPage .api-model-action.primary.ui-cyan-btn {
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -1102,10 +1102,10 @@
 
         #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary),
         #apiSettingsPage .api-model-action.ui-cyan-btn:not(.primary) {
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -1118,10 +1118,10 @@
 /* @qingtuan-order:001563 */
 
         #apiSettingsPage #apiTestBtn {
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
             box-shadow: none !important;
         }
 
@@ -1139,18 +1139,18 @@
         #apiSettingsPage .api-action-btn.primary.ui-cyan-btn:focus-visible,#apiSettingsPage .api-model-action.primary.ui-cyan-btn:focus-visible{
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:001566 */
 
 
         #apiSettingsPage .api-action-btn.ui-cyan-btn:not(.primary):focus-visible{
-            background: #FFFFFF !important;
-            border-color: #E1E6E6 !important;
+            background: var(--color-surface) !important;
+            border-color: var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
-            -webkit-text-fill-color: #9AA3AC !important;
+            -webkit-text-fill-color: var(--color-muted) !important;
         }
 
 /* @qingtuan-order:001833 */
@@ -1163,7 +1163,7 @@
   color:var(--world-ink);
   border:.6px solid var(--world-line);
   border-radius:8px;
-  background:#FFFFFF;
+  background:var(--color-surface);
   text-align:left;
 }
 
@@ -1292,7 +1292,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF !important;
+            box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface) !important;
         }
 
 /* @qingtuan-order:002895 */
@@ -1309,7 +1309,7 @@
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
             background: var(--win-face) !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade) !important;
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade) !important;
         }
 
 /* @qingtuan-order:002897 */
@@ -1383,7 +1383,7 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-stat-chip {
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -1422,7 +1422,7 @@
             border-bottom: 0;
             border-radius: 4px 4px 0 0;
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--color-surface);
             transform: none;
             color: var(--win-ink);
             font-weight: 600;
@@ -1578,7 +1578,7 @@
             margin: 10px 12px 0;
             padding: 8px 10px 6px !important;
             border: 1px solid var(--win-deep) !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -1668,7 +1668,7 @@
             width: 11px;
             height: 11px;
             border: 1px solid var(--win-line);
-            background: #FFFFFF;
+            background: var(--color-surface);
             color: var(--win-deep);
             font-family: var(--mono);
             font-size: 10px;
@@ -1733,5 +1733,5 @@
             background: var(--set-block) !important;
             border-color: var(--set-block) !important;
             color: var(--theme-color) !important; -webkit-text-fill-color: var(--theme-color) !important;
-            box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 12%, transparent) !important;
         }

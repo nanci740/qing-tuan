@@ -74,6 +74,7 @@ try{
  await click('[data-dock-icon-key="settings"]');await click('#settingBackup');await page.waitForSelector('#dataManagementPage.active');
  await page.locator('#imageStorageSection').scrollIntoViewIfNeeded();
  check('cleanup entry is visible in data management',await page.locator('#imageStorageSection').isVisible());
+ await page.addStyleTag({content:'*,*::before,*::after{transition:none!important}'});
  const matchedStyles=await page.evaluate(()=>{
    const props=['backgroundColor','borderColor','borderWidth','borderRadius','boxShadow','color','webkitTextFillColor','fontSize','minHeight'];
    const style=(selector,pseudo)=>{const c=getComputedStyle(document.querySelector(selector),pseudo);return props.filter(p=>!pseudo||p!=='minHeight').map(p=>c[p]);};

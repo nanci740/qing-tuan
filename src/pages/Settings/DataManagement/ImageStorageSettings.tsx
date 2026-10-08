@@ -34,7 +34,7 @@ export function ImageStorageSettings({open}:{open:boolean}){
         <svg className="image-storage-icon" viewBox="0 0 20 20" aria-hidden="true" shapeRendering="crispEdges">
           <path fill="var(--set-bg)" d="M7 2h10v11H7z"/>
           <path fill="currentColor" d="M7 1h10v1H7zM17 2h1v11h-1zM7 13h10v1H7zM6 2h1v3H6z"/>
-          <path fill="#FFFFFF" d="M3 6h11v11H3z"/>
+          <path fill="var(--color-surface)" d="M3 6h11v11H3z"/>
           <path fill="currentColor" d="M3 5h11v1H3zM2 6h1v11H2zM14 6h1v11h-1zM3 17h11v1H3z"/>
           <path fill="var(--sb-accent)" d="M5 7h2v2H5zM4 14h2v-2h2v-2h2v2h2v2h1v2H4z"/>
           <path fill="currentColor" d="M10 3h5v1h-5zM16 16h2v-1h1v3h-3v-1h-1v-2h1z"/>

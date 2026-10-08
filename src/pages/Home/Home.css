@@ -78,7 +78,7 @@
 
         .status-right svg {
             fill: none;
-            stroke: #5F6772;
+            stroke: var(--color-text);
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -230,8 +230,8 @@
             height: 98px;
             border-radius: 50%;
             overflow: hidden;
-            background: #ffffff;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+            background: var(--color-surface);
+            box-shadow: 0 6px 16px color-mix(in srgb, var(--color-muted) 4%, transparent);
             position: relative;
             z-index: 1;
         }
@@ -276,11 +276,11 @@
 
 
         .subtitle {
-            color: #7E8894; /* 改回灰色 */
+            color: var(--color-muted); /* 改回灰色 */
             font-size: 11px; /* 调小字体 */
             font-style: italic;
             margin: 14px 0 8px;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.6); /* 改回原来的白色光晕 */
+            text-shadow: 0 1px 2px rgba(var(--color-surface-rgb), 0.6); /* 改回原来的白色光晕 */
             z-index: 2;
         }
 
@@ -289,7 +289,7 @@
 
         .player-box {
             width: 330px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(var(--color-surface-rgb), 0.08);
             -webkit-backdrop-filter: blur(3px) saturate(105%);
             border: none;
             padding: 6px 16px 4px;
@@ -343,7 +343,7 @@
         .sound-wave span {
             display: block;
             width: 2.5px;
-            background-color: #5F6772; /* 改回灰色 */
+            background-color: var(--color-text); /* 改回灰色 */
             transition: height 0.2s ease;
         }
 
@@ -415,7 +415,7 @@
         .progress-bar-bg {
             width: 100%;
             height: 6px;
-            background: color-mix(in srgb, var(--theme-color) 34%, #FFFFFF); /* 未播放部分：淡青 */
+            background: color-mix(in srgb, var(--theme-color) 34%, var(--color-surface)); /* 未播放部分：淡青 */
             position: relative;
             cursor: pointer;
             overflow: hidden;
@@ -447,7 +447,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 11px;
-            color: #727c88;
+            color: var(--color-text);
             margin-top: 4px;
             font-weight: 500;
             user-select: none;
@@ -486,7 +486,7 @@
         .btn-star svg, .btn-heart svg {
             width: 18px;
             height: 18px;
-            fill: #5F6772;
+            fill: var(--color-text);
             transition: fill 0.3s ease;
         }
 
@@ -507,7 +507,7 @@
         .btn-prev svg, .btn-next svg {
             width: 28px;
             height: 28px;
-            fill: #5F6772;
+            fill: var(--color-text);
         }
 
 /* @qingtuan-order:000117 */
@@ -538,7 +538,7 @@
         .btn-play .pause-bars span {
             width: 4.5px;
             height: 15px;
-            background: #5F6772;
+            background: var(--color-text);
         }
 
 /* @qingtuan-order:000120 */
@@ -548,7 +548,7 @@
             display: none;
             width: 15px;
             height: 15px;
-            fill: #5F6772;
+            fill: var(--color-text);
             margin-left: 2px;
         }
 
@@ -673,7 +673,7 @@
         .icon-box svg {
             width: 32px;
             height: 32px;
-            stroke: #5F6772;
+            stroke: var(--color-text);
             fill: none;
             stroke-width: 1.2;
             stroke-linecap: round;
@@ -756,8 +756,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.18);
-            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(var(--color-surface-rgb), 0.18);
+            border: 1px solid rgba(var(--color-surface-rgb), 0.18);
             backdrop-filter: blur(3px) saturate(105%);
             -webkit-backdrop-filter: blur(3px) saturate(105%);
             box-sizing: border-box;
@@ -776,7 +776,7 @@
 
         .player-mini-cover span {
             font-size: 16px;
-            color: rgba(62,70,81,.55);
+            color: color-mix(in srgb, var(--color-muted) 55.00000000000001%, transparent);
             line-height: 1;
         }
 
@@ -845,7 +845,7 @@
             border-radius: 0;
             border: 1px solid var(--win-deep);
             padding: 4px;
-            background: #FFFFFF; /* 实色白卡纸边，像拍立得 */
+            background: var(--color-surface); /* 实色白卡纸边，像拍立得 */
             box-shadow: var(--win-drop); /* 跟其他页面窗口同一个右下硬投影 */
         }
 
@@ -873,7 +873,7 @@
             width: auto;
             min-width: 96px;
             height: 26px;
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:003295 */
@@ -936,7 +936,7 @@
                 linear-gradient(var(--bub-line), var(--bub-line)) 100% 0 / 1px 1px no-repeat,
                 linear-gradient(var(--bub-line), var(--bub-line)) 0 100% / 1px 1px no-repeat,
                 linear-gradient(var(--bub-line), var(--bub-line)) 100% 100% / 1px 1px no-repeat,
-                #FFFFFF;
+                var(--color-surface);
             /* 硬阴影用 drop-shadow，像素角和尖角都会跟着有阴影 */
             filter: drop-shadow(2px 2px 0 rgba(var(--theme-rgb), 0.3)); /* 跟 --win-drop 同一个硬投影 */
         
@@ -980,7 +980,7 @@
 /* @qingtuan-order:003308 */
 
         #main-content .speech-bubble-container::after {
-            background: #FFFFFF;
+            background: var(--color-surface);
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='8'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='10'%20shape-rendering='crispEdges'%3E%3Crect%20x='0'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='0'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='11'%20y='1'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='9'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='10'%20y='3'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='4'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='7'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='8'%20y='5'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='6'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='7'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='8'%20width='1'%20height='1'/%3E%3Crect%20x='6'%20y='8'%20width='1'%20height='1'/%3E%3C/svg%3E") no-repeat 0 0 / 12px 10px;
         }
@@ -1002,7 +1002,7 @@
             color: oklch(from var(--theme-color) calc(l - 0.05) calc(c * 1.4) h); /* 彩度收一点点，带一丝灰调 */
             background: transparent;
             border: 0;
-            text-shadow: 0 0 4px rgba(255, 255, 255, 0.55); /* 只留一点点柔和的白光 */
+            text-shadow: 0 0 4px rgba(var(--color-surface-rgb), 0.55); /* 只留一点点柔和的白光 */
             position: relative;
         }
 
@@ -1071,9 +1071,9 @@
                 /* 交错波点：两层同样的小圆点，第二层错开半格，排成斜斜的菱形；颜色取屏幕文字色的淡版 */
                 radial-gradient(circle, color-mix(in srgb, var(--mp3-lcd-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 10px 10px,
                 radial-gradient(circle, color-mix(in srgb, var(--mp3-lcd-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 5px 5px / 10px 10px,
-                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
+                radial-gradient(ellipse at 30% 20%, rgba(var(--color-surface-rgb), 0.55), transparent 60%),
                 var(--mp3-lcd);
-            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.14), 0 1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-muted) 14.000000000000002%, transparent), 0 1px 0 var(--color-surface);
             color: var(--mp3-lcd-ink);
         }
 
@@ -1196,7 +1196,7 @@
             padding: 0;
             border-radius: 2px;
             border: 1px solid var(--mp3-lcd-ink);
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(var(--color-surface-rgb), 0.35);
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
             box-shadow: none;
@@ -1331,8 +1331,8 @@
             font-size: 8.5px;
             font-weight: 700;
             letter-spacing: 1.6px;
-            color: color-mix(in srgb, var(--win-deep) 60%, #FFFFFF); /* 刻字比图标描边再淡一级 */
-            text-shadow: 0 1px 0 #FFFFFF;
+            color: color-mix(in srgb, var(--win-deep) 60%, var(--color-surface)); /* 刻字比图标描边再淡一级 */
+            text-shadow: 0 1px 0 var(--color-surface);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1357,7 +1357,7 @@
             display: block;
             border-radius: 50%;
             border: 1px solid var(--win-deep);
-            background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, var(--theme-light-18) 55%, var(--theme-light-42) 100%);
+            background: radial-gradient(circle at 35% 30%, var(--color-surface) 0%, var(--theme-light-18) 55%, var(--theme-light-42) 100%);
         }
 
 /* @qingtuan-order:003353 */
@@ -1421,7 +1421,7 @@
         #main-content .mp3-player .controls .btn-play:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
         }
 
 /* @qingtuan-order:003362 */
@@ -1499,7 +1499,7 @@
 
         #main-content .mp3-player .mp3-screen {
             margin: 5px 5px 0 5px;
-            border: 1px solid rgba(0, 0, 0, 0.22);
+            border: 1px solid color-mix(in srgb, var(--color-text) 22%, transparent);
             border-radius: 3px;
         }
 
@@ -1514,9 +1514,9 @@
             border-radius: 8px;
             border: 1px solid var(--win-deep);
             background:
-                linear-gradient(155deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(0, 0, 0, 0.06) 100%),
+                linear-gradient(155deg, rgba(var(--color-surface-rgb), 0.38) 0%, rgba(var(--color-surface-rgb), 0.08) 45%, color-mix(in srgb, var(--color-text) 6%, transparent) 100%),
                 var(--win-deep);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.45), 1px 1px 0 rgba(var(--color-surface-rgb), 0.8);
         }
 
 /* @qingtuan-order:003378 */
@@ -1531,7 +1531,7 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 34%, rgba(255, 255, 255, 0) 34.5%);
+            background: linear-gradient(115deg, rgba(var(--color-surface-rgb), 0.16) 0%, rgba(var(--color-surface-rgb), 0.05) 34%, rgba(var(--color-surface-rgb), 0) 34.5%);
             pointer-events: none;
         }
 
@@ -1661,7 +1661,7 @@
         #main-content .app-item:hover .app-label-cn,
         #main-content .app-item:active .app-label-cn {
             background: var(--theme-color);
-            color: #FFFFFF;
+            color: var(--color-surface);
             border-color: var(--win-deep);
             text-shadow: none;
         }
@@ -1803,8 +1803,8 @@
             border: 1px solid var(--win-shade-soft);
             border-radius: 1px;
             background:
-                radial-gradient(circle 20px at 50% 32px, #FFFFFF 0 19.5px, transparent 20px),
-                radial-gradient(ellipse 40px 32px at 50% 100%, #FFFFFF 0 99%, transparent 100%),
+                radial-gradient(circle 20px at 50% 32px, var(--color-surface) 0 19.5px, transparent 20px),
+                radial-gradient(ellipse 40px 32px at 50% 100%, var(--color-surface) 0 99%, transparent 100%),
                 var(--theme-color);
         }
 
@@ -1909,8 +1909,8 @@
             width: 6px;
             height: 6px;
             padding: 0;
-            border: 1px solid color-mix(in srgb, var(--home-ink) 75%, #FFFFFF); /* 比图标描边淡一点点 */
-            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid color-mix(in srgb, var(--home-ink) 75%, var(--color-surface)); /* 比图标描边淡一点点 */
+            background: rgba(var(--color-surface-rgb), 0.7);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
@@ -1925,7 +1925,7 @@
 
 /* @qingtuan-order:003434 */
 
-        #main-content .home-dot.active { background: color-mix(in srgb, var(--home-ink) 75%, #FFFFFF); }
+        #main-content .home-dot.active { background: color-mix(in srgb, var(--home-ink) 75%, var(--color-surface)); }
 
 /* @qingtuan-order:003435 */
 
@@ -1955,13 +1955,13 @@
             padding: 0;
             border: 1px solid var(--win-deep);
             border-radius: 3px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             /* 后面叠着两扇空白小窗，往右上各错开一次，像一叠古早弹窗 */
             box-shadow:
                 var(--win-drop),
-                5px -6px 0 -1px #FFFFFF,
+                5px -6px 0 -1px var(--color-surface),
                 5px -6px 0 0 var(--win-deep),
-                10px -12px 0 -1px #FFFFFF,
+                10px -12px 0 -1px var(--color-surface),
                 10px -12px 0 0 var(--win-deep);
             text-align: left;
             font: inherit;
@@ -2016,7 +2016,7 @@
             padding: 0 3px;
             border: 1px solid var(--win-deep);
             background: var(--home-ink);
-            color: #FFFFFF;
+            color: var(--color-surface);
             font: 700 8px/9px 'SF Mono', Menlo, Consolas, monospace;
             text-align: center;
         }
@@ -2095,7 +2095,7 @@
 
 /* @qingtuan-order:003455 */
 
-        #main-content .home-notice-avatar .na-fg { fill: #FFFFFF; }
+        #main-content .home-notice-avatar .na-fg { fill: var(--color-surface); }
 
 /* @qingtuan-order:003456 */
 
@@ -2132,7 +2132,7 @@
         #main-content .home-notice-time {
             flex-shrink: 0;
             font: 9px/1 'SF Mono', Menlo, Consolas, monospace;
-            color: color-mix(in srgb, var(--win-ink) 60%, #FFFFFF);
+            color: color-mix(in srgb, var(--win-ink) 60%, var(--color-surface));
         }
 
 /* @qingtuan-order:003460 */
@@ -2186,14 +2186,14 @@
             /* 果冻塑料：半透明主题色，左上一片亮光 */
             /* 玻璃感强度（美化设置的滑杆）：--tama-jelly 0 最清透、1 最饱满磨砂，0.5 是原本的样子 */
             background:
-                radial-gradient(ellipse 55% 35% at 32% 16%, rgba(255, 255, 255, calc(0.4 + 0.6 * var(--tama-jelly, 0.5))), rgba(255, 255, 255, 0) 70%),
+                radial-gradient(ellipse 55% 35% at 32% 16%, rgba(var(--color-surface-rgb), calc(0.4 + 0.6 * var(--tama-jelly, 0.5))), rgba(var(--color-surface-rgb), 0) 70%),
                 linear-gradient(165deg, rgba(var(--theme-rgb), calc(0.06 + 0.44 * var(--tama-jelly, 0.5))) 0%, rgba(var(--theme-rgb), calc(0.16 + 0.68 * var(--tama-jelly, 0.5))) 100%);
             backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
             -webkit-backdrop-filter: blur(calc(6px * var(--tama-jelly, 0.5))) saturate(120%);
             box-shadow:
-                inset 0 0 0 1.5px rgba(255, 255, 255, 0.45),
+                inset 0 0 0 1.5px rgba(var(--color-surface-rgb), 0.45),
                 inset -8px -12px 18px rgba(var(--theme-rgb), 0.35),
-                inset 6px 8px 14px rgba(255, 255, 255, 0.45),
+                inset 6px 8px 14px rgba(var(--color-surface-rgb), 0.45),
                 var(--win-drop); /* 外面的投影跟全站同一个硬投影；里面那几层柔光是果冻质感，保留 */
             user-select: none;
             -webkit-user-select: none;
@@ -2212,8 +2212,8 @@
             inset: 3px;
             border-radius: inherit;
             border: 2px solid transparent;
-            border-right-color: rgba(255, 255, 255, 0.7);
-            border-bottom-color: rgba(255, 255, 255, 0.7);
+            border-right-color: rgba(var(--color-surface-rgb), 0.7);
+            border-bottom-color: rgba(var(--color-surface-rgb), 0.7);
             -webkit-mask-image: linear-gradient(135deg, transparent 58%, #000 70%, #000 80%, transparent 92%);
             mask-image: linear-gradient(135deg, transparent 58%, #000 70%, #000 80%, transparent 92%);
             pointer-events: none;
@@ -2231,13 +2231,13 @@
             flex-shrink: 0;
             width: 96px;
             height: 70px;
-            border: 1px solid rgba(0, 0, 0, 0.18);
+            border: 1px solid color-mix(in srgb, var(--color-text) 18%, transparent);
             border-radius: 3px;
             background:
                 radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 10px 10px,
                 radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 5px 5px / 10px 10px,
-                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
-                color-mix(in srgb, var(--theme-color) 32%, #F9FBFB);
+                radial-gradient(ellipse at 30% 20%, rgba(var(--color-surface-rgb), 0.55), transparent 60%),
+                color-mix(in srgb, var(--theme-color) 32%, var(--color-page));
             color: var(--home-ink);
         }
 
@@ -2252,9 +2252,9 @@
             border-radius: 9px;
             border: 1px solid var(--win-deep);
             background:
-                linear-gradient(155deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(0, 0, 0, 0.06) 100%),
+                linear-gradient(155deg, rgba(var(--color-surface-rgb), 0.38) 0%, rgba(var(--color-surface-rgb), 0.08) 45%, color-mix(in srgb, var(--color-text) 6%, transparent) 100%),
                 var(--win-deep);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 1px 1px 0 rgba(255, 255, 255, 0.6);
+            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.45), 1px 1px 0 rgba(var(--color-surface-rgb), 0.6);
         }
 
 /* @qingtuan-order:003471 */
@@ -2305,7 +2305,7 @@
 
 /* @qingtuan-order:003478 */
 
-        #main-content .tama-meter .tf-w { fill: #FFFFFF; }
+        #main-content .tama-meter .tf-w { fill: var(--color-surface); }
 
 /* @qingtuan-order:003479 */
 
@@ -2397,11 +2397,11 @@
 
 /* @qingtuan-order:003496 */
 
-        #main-content .tama-pet .tq-o { fill: #FFFFFF; }
+        #main-content .tama-pet .tq-o { fill: var(--color-surface); }
 
 /* @qingtuan-order:003497 */
 
-        #main-content .tama-pet .tq-h { fill: #FFFFFF; }
+        #main-content .tama-pet .tq-h { fill: var(--color-surface); }
 
 /* @qingtuan-order:003498 */
 
@@ -2473,7 +2473,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.26); /* 睡觉：屏幕像关灯一样盖一层半透明黑，青团还看得到 */
+            background: color-mix(in srgb, var(--color-text) 26%, transparent); /* 睡觉：屏幕像关灯一样盖一层半透明黑，青团还看得到 */
             pointer-events: none;
             z-index: 3;
         }
@@ -2544,7 +2544,7 @@
 
 /* @qingtuan-order:003534 */
 
-        #main-content .tama-fx .tf-w { fill: #FFFFFF; }
+        #main-content .tama-fx .tf-w { fill: var(--color-surface); }
 
 /* @qingtuan-order:003535 */
 
@@ -2576,7 +2576,7 @@
 
 /* @qingtuan-order:003539 */
 
-        #main-content .tama-poop .tf-w { fill: color-mix(in srgb, var(--theme-color) 32%, #F9FBFB); }
+        #main-content .tama-poop .tf-w { fill: color-mix(in srgb, var(--theme-color) 32%, var(--color-muted)); }
 
 /* @qingtuan-order:003540 */
 
@@ -2635,7 +2635,7 @@
         #main-content .tama-btn:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
         }
 
 /* @qingtuan-order:003549 */
@@ -2649,7 +2649,7 @@
 
 /* @qingtuan-order:003551 */
 
-        #main-content .tama-btn .tb-w { fill: #FFFFFF; }
+        #main-content .tama-btn .tb-w { fill: var(--color-surface); }
 
 /* @qingtuan-order:003552 */
 
@@ -2791,9 +2791,9 @@
                 /* 格子小，波点比 MP3 屏幕密一点 */
                 radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 0 0 / 8px 8px,
                 radial-gradient(circle, color-mix(in srgb, var(--home-ink) 30%, transparent) 0 0.9px, transparent 1.3px) 4px 4px / 8px 8px,
-                color-mix(in srgb, var(--theme-color) 32%, #F9FBFB);
+                color-mix(in srgb, var(--theme-color) 32%, var(--color-page));
             border-color: var(--home-ink);
-            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.16), 0 1px 0 rgba(255, 255, 255, 0.9);
+            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-muted) 16%, transparent), 0 1px 0 rgba(var(--color-surface-rgb), 0.9);
         }
 
 /* @qingtuan-order:003583 */
@@ -2801,7 +2801,7 @@
 
         #main-content .dock-item:active {
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
         }
 
 /* @qingtuan-order:003584 */
@@ -2829,12 +2829,12 @@
 /* @qingtuan-order:003589 */
 
         #main-content .dock-item span {
-            color: color-mix(in srgb, var(--win-ink) 65%, #FFFFFF); /* 文字色淡一点，当前页才突出 */
+            color: color-mix(in srgb, var(--win-ink) 65%, var(--color-surface)); /* 文字色淡一点，当前页才突出 */
             font-size: 8px;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 0 rgba(var(--color-surface-rgb), 0.9);
         }
 
 /* @qingtuan-order:003590 */
@@ -2858,7 +2858,7 @@
         #main-content .player-box.mp3-player {
             isolation: isolate;
             /* 机身整体带一点淡主题色，上半部的白色亮面才浮得出来 */
-            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, #FFFFFF) 100%) !important;
+            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, var(--color-surface)) 100%) !important;
             box-shadow: var(--home-rim), var(--win-drop);
         }
 
@@ -2872,7 +2872,7 @@
             inset: 3px 14px auto 14px;
             height: 46%;
             border-radius: 15px 15px 40% 40% / 15px 15px 10px 10px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.55) 88%, rgba(255, 255, 255, 0) 100%);
+            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.95) 0%, rgba(var(--color-surface-rgb), 0.55) 88%, rgba(var(--color-surface-rgb), 0) 100%);
             pointer-events: none;
         }
 
@@ -2895,7 +2895,7 @@
             inset: 3px 12px auto 12px;
             height: 42%;
             border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.35) 85%, rgba(255, 255, 255, 0));
+            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.9), rgba(var(--color-surface-rgb), 0.35) 85%, rgba(var(--color-surface-rgb), 0));
             pointer-events: none;
         }
 
@@ -2912,7 +2912,7 @@
         #main-content .tama-btn:active {
             /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
             translate: 1px 1px;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, #A9BEC3) 45%, transparent) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-line, var(--color-muted)) 45%, transparent) !important;
         }
 
 /* @qingtuan-order:003600 */
@@ -2923,7 +2923,7 @@
 /* @qingtuan-order:003601 */
 
         #main-content .dock-bar {
-            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, #FFFFFF) 100%) !important;
+            background: linear-gradient(180deg, var(--theme-light-14) 0%, color-mix(in srgb, var(--theme-color) 24%, var(--color-surface)) 100%) !important;
             box-shadow: var(--home-rim), inset 0 -6px 12px rgba(var(--theme-rgb), 0.1), var(--win-drop);
         
             padding: 6px 7px;
@@ -2934,7 +2934,7 @@
 
         #main-content .dock-bar::before {
             height: 44%;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.5) 88%, rgba(255, 255, 255, 0) 100%);
+            background: linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.95) 0%, rgba(var(--color-surface-rgb), 0.5) 88%, rgba(var(--color-surface-rgb), 0) 100%);
         }
 
 /* @qingtuan-order:003608 */
@@ -2949,7 +2949,7 @@
 
 /* @qingtuan-order:003609 */
 
-        #main-content { background-color: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF); }
+        #main-content { background-color: color-mix(in srgb, var(--theme-color) 15%, var(--color-surface)); }
 
 /* @qingtuan-order:003610 */
 
@@ -2970,11 +2970,9 @@
 
 /* @qingtuan-order:003612 */
 
-        #main-content > .ios-status-bar svg [fill="#5F6772"] { fill: var(--home-title); }
 
 /* @qingtuan-order:003613 */
 
-        #main-content > .ios-status-bar svg [stroke="#5F6772"] { stroke: var(--home-title); }
 
 /* @qingtuan-order:003614 */
 
@@ -2988,7 +2986,7 @@
 /* @qingtuan-order:003616 */
 
         #main-content .app-item svg.px-icon .px-x,
-        #main-content .dock-bar svg.px-icon .px-x { fill: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h); }
+        #main-content .dock-bar svg.px-icon .px-x { fill: var(--color-muted); }
 
 /* @qingtuan-order:003617 */
 
@@ -2997,7 +2995,7 @@
 /* @qingtuan-order:003618 */
 
         #main-content .app-item svg.px-icon .px-l,
-        #main-content .dock-bar svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)); }
+        #main-content .dock-bar svg.px-icon .px-l { fill: color-mix(in srgb, var(--color-muted) 70%, var(--theme-color)); }
 
 /* @qingtuan-order:003619 */
 
@@ -3007,9 +3005,9 @@
 
         #main-content .mp3-player .mp3-screen,
         #main-content .tama-screen {
-            border-color: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h) 70%, transparent) !important;
+            border-color: color-mix(in srgb, var(--color-text) 70%, transparent) !important;
             /* 凹陷阴影只在左上（70%，柔和 2px）；右下不加 */
-            box-shadow: inset 1px 1px 2px color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h) 70%, transparent) !important;
+            box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--color-text) 70%, transparent) !important;
         }
 
 /* @qingtuan-order:003621 */
@@ -3046,8 +3044,8 @@
 
         #main-content .mp3-player .controls .btn-play,
         #main-content .tama-btn {
-            box-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent),
+            box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.6), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
         }
 
@@ -3069,8 +3067,8 @@
 
 /* @qingtuan-order:003691 */
 
-        #themeSettingsPage svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)) !important; }
+        #themeSettingsPage svg.px-icon .px-l { fill: color-mix(in srgb, var(--color-muted) 70%, var(--theme-color)) !important; }
 
 /* @qingtuan-order:003840 */
 
-        #chatAppPage#chatAppPage #chatListView svg.px-icon .px-l { fill: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h) 70%, var(--theme-color)); }
+        #chatAppPage#chatAppPage #chatListView svg.px-icon .px-l { fill: color-mix(in srgb, var(--color-muted) 70%, var(--theme-color)); }

@@ -59,8 +59,8 @@
               display: flex;
               align-items: center;
               justify-content: space-between;
-              background: #F9F9F9;
-              border-bottom: 1px solid #DDDDE2;
+              background: var(--color-page);
+              border-bottom: 1px solid var(--color-divider);
               margin: 0 -16px;
               position: sticky;
               top: 0;
@@ -122,9 +122,9 @@
               position: relative;
               width: 100%;
               max-width: 380px;
-              background: #ffffff;
+              background: var(--color-surface);
               border-radius: 10px;
-              border: 0.5px solid #dddde2;
+              border: 0.5px solid var(--color-divider);
               overflow: visible;
             }
 
@@ -181,11 +181,11 @@
               left: 4px;
               width: 88px;
               height: 100px;
-              background: #f0f2f2;
-              border: 0.5px solid #e1e6e6;
+              background: var(--color-page);
+              border: 0.5px solid var(--color-divider);
               border-radius: 2px;
               transform: rotate(-5.8deg);
-              box-shadow: 1px 1px 4px rgba(0,0,0,0.06);
+              box-shadow: 1px 1px 4px color-mix(in srgb, var(--color-muted) 6%, transparent);
             }
 
 /* @qingtuan-order:000219 */
@@ -201,11 +201,11 @@
               left: 4px;
               width: 88px;
               height: 100px;
-              background: #f6f7f7;
-              border: 0.5px solid #e5e9e9;
+              background: var(--color-page);
+              border: 0.5px solid var(--color-divider);
               border-radius: 2px;
               transform: rotate(1.9deg);
-              box-shadow: 1px 2px 6px rgba(0,0,0,0.07);
+              box-shadow: 1px 2px 6px color-mix(in srgb, var(--color-muted) 7.000000000000001%, transparent);
               display: flex;
               flex-direction: column;
               overflow: hidden;
@@ -220,7 +220,7 @@
 
             .pp2-polaroid-photo {
               flex: 1;
-              background: #e9eded;
+              background: var(--color-paper);
               margin: 7px 7px 4px 7px;
               background-position: center;
               background-repeat: no-repeat;
@@ -239,7 +239,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              color: #b6c2c4;
+              color: var(--color-muted);
               font-family: var(--font-active);
               font-size: 14px;
               transition: opacity 0.18s ease;
@@ -269,7 +269,7 @@
 
             .pp2-polaroid-bottom {
               height: 20px;
-              background: #f6f7f7;
+              background: var(--color-page);
               display: flex;
               align-items: center;
               justify-content: center;
@@ -365,9 +365,9 @@
               width: 100%;
               height: 100%;
               background: var(--theme-light-14);
-              border: 0.5px solid #e1e6e6;
+              border: 0.5px solid var(--color-divider);
               border-radius: 1px;
-              box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+              box-shadow: 1px 1px 4px color-mix(in srgb, var(--color-muted) 5%, transparent);
               padding: 9px 8px 7px 8px;
               display: flex;
               flex-direction: column;
@@ -412,11 +412,11 @@
 /* @qingtuan-order:000241 */
 
 
-            .pp2-title-divider { margin: 0 20px; border-bottom: 0.5px solid #e2e8f0; }
+            .pp2-title-divider { margin: 0 20px; border-bottom: 0.5px solid var(--color-divider); }
 
 /* @qingtuan-order:000242 */
 
-            .pp2-divider { margin: 0 20px; border-bottom: 0.5px solid #d0d8e4; }
+            .pp2-divider { margin: 0 20px; border-bottom: 0.5px solid var(--color-divider); }
 
 /* @qingtuan-order:000243 */
 
@@ -438,7 +438,7 @@
               bottom: 0;
               left: 20px;
               right: 20px;
-              border-bottom: 0.5px solid #d0d8e4;
+              border-bottom: 0.5px solid var(--color-divider);
             }
 
 /* @qingtuan-order:000245 */
@@ -466,7 +466,7 @@
 
             .pp2-editable-text {
               font-size: 12.5px;
-              color: #3a3d48;
+              color: var(--color-text);
               letter-spacing: 0.02em;
               cursor: pointer;
               border: none;
@@ -479,7 +479,7 @@
 /* @qingtuan-order:000249 */
 
             .pp2-editable-text:empty::before,
-            .pp2-editable-text.pp2-is-empty { color: #b4c0cc; content: attr(data-placeholder); }
+            .pp2-editable-text.pp2-is-empty { color: var(--color-muted); content: attr(data-placeholder); }
 
 /* @qingtuan-order:000250 */
 
@@ -561,7 +561,7 @@
 /* @qingtuan-order:000261 */
 
             .pp2-footer-left {
-              font-size: 10px; color: #b0b8c8; letter-spacing: 0.05em;
+              font-size: 10px; color: var(--color-muted); letter-spacing: 0.05em;
               font-style: italic;
               display: flex; align-items: center; gap: 4px;
             }
@@ -569,7 +569,7 @@
 /* @qingtuan-order:000262 */
 
             .pp2-footer-tag {
-              font-size: 10px; color: #b0b8c8; letter-spacing: 0.08em;
+              font-size: 10px; color: var(--color-muted); letter-spacing: 0.08em;
               font-style: italic;
             }
 
@@ -653,7 +653,7 @@
               appearance: none;
               -webkit-appearance: none;
               overflow: hidden;
-              color: #778187;
+              color: var(--color-text);
               font-size: 12px;
               font-weight: 400;
               line-height: 55px;
@@ -666,7 +666,7 @@
 /* @qingtuan-order:000271 */
 
             .pp2-torn-note-text::placeholder {
-              color: #aeb8bb;
+              color: var(--color-muted);
               opacity: 1;
             }
 
@@ -697,7 +697,7 @@
 /* @qingtuan-order:003143 */
 
         #personalProfilePage {
-            background: #F9F9F7;
+            background: var(--color-page);
         }
 
 /* @qingtuan-order:003144 */
@@ -710,7 +710,7 @@
         #personalProfilePage#personalProfilePage .pp2-page-header {
             background: var(--set-fill, var(--win-deep));
             border-bottom: 1px solid var(--win-line);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 0 rgba(var(--color-surface-rgb), 0.25);
         }
 
 /* @qingtuan-order:003146 */
@@ -718,7 +718,7 @@
 
         #personalProfilePage#personalProfilePage .pp2-page-back,
         #personalProfilePage#personalProfilePage .pp2-page-header-title {
-            color: #FFFFFF;
+            color: var(--color-surface);
         }
 
 /* @qingtuan-order:003147 */
@@ -740,7 +740,7 @@
             content: '';
             width: 46px;
             height: 12px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 46px 12px;
         }
@@ -789,7 +789,7 @@
             padding: 0 8px;
             border: 1px solid var(--win-deep);
             border-radius: 2px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--bevel-in);
             color: var(--win-ink);
             font-size: 10.5px;
@@ -824,7 +824,7 @@
             background:
                 linear-gradient(rgba(var(--theme-rgb), 0.14) 1px, transparent 1px) 0 0 / 14px 14px,
                 linear-gradient(90deg, rgba(var(--theme-rgb), 0.14) 1px, transparent 1px) 0 0 / 14px 14px,
-                #FFFFFF;
+                var(--color-surface);
             box-shadow: var(--win-drop);
         }
 
@@ -841,7 +841,7 @@
             border-right: 1px dashed var(--win-line);
             border-radius: 4px 0 0 4px;
             background:
-                radial-gradient(circle at 12px 18px, #F9F9F7 0 4px, var(--win-line) 4px 5px, transparent 5.5px) 0 0 / 24px 36px repeat-y,
+                radial-gradient(circle at 12px 18px, var(--color-page) 0 4px, var(--win-line) 4px 5px, transparent 5.5px) 0 0 / 24px 36px repeat-y,
                 var(--win-face);
         }
 
@@ -951,7 +951,7 @@
             padding: 5px 7px 6px;
             border: 1px solid var(--win-deep);
             border-radius: 2px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--win-drop);
         }
 
@@ -988,7 +988,7 @@
 
         #personalProfilePage .mh-mood-text:empty::before {
             content: attr(data-placeholder);
-            color: #B4C0CC;
+            color: var(--color-muted);
         }
 
 /* @qingtuan-order:003172 */
@@ -1002,7 +1002,7 @@
             transform: none;
             border: 1px solid var(--win-deep);
             border-radius: 2px !important;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--win-drop);
         }
 
@@ -1031,7 +1031,7 @@
 
 
         #personalProfilePage#personalProfilePage .mh-side .pp2-polaroid-bottom {
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:003177 */
@@ -1082,7 +1082,7 @@
             position: relative;
             border: 1px solid var(--win-deep);
             border-radius: 3px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--win-drop);
         }
 
@@ -1097,7 +1097,7 @@
             padding: 4px 6px 4px 8px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:003185 */
@@ -1234,7 +1234,7 @@
         #personalProfilePage#personalProfilePage .mh-dislike .pp2-row::after {
             left: 10px;
             right: 10px;
-            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
+            border-bottom: 1px dashed color-mix(in srgb, var(--theme-color) 45%, var(--color-divider));
         }
 
 /* @qingtuan-order:003200 */
@@ -1339,7 +1339,7 @@
             letter-spacing: 1px;
             text-align: center;
             writing-mode: vertical-rl;
-            box-shadow: inset -1px 1px 0 #FFFFFF, 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+            box-shadow: inset -1px 1px 0 var(--color-surface), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
         }
 
 /* @qingtuan-order:003211 */
@@ -1348,7 +1348,7 @@
         #personalProfilePage .mh-index span.is-active {
             width: 19px;
             margin-left: -1px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             font-weight: 700;
         }
 
@@ -1368,7 +1368,7 @@
             transform: none;
             border: 1px solid var(--win-deep);
             border-radius: 3px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--win-drop);
         }
 
@@ -1390,7 +1390,7 @@
             padding: 4px 6px 4px 8px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--win-bar);
-            box-shadow: inset 1px 1px 0 #FFFFFF;
+            box-shadow: inset 1px 1px 0 var(--color-surface);
             color: var(--win-ink);
             font-size: 10px;
             font-weight: 600;
@@ -1405,7 +1405,7 @@
             flex: 0 0 11px;
             height: 13px;
             border: 1px solid var(--win-deep);
-            background: repeating-linear-gradient(#FFFFFF 0 2px, var(--win-line) 2px 3px);
+            background: repeating-linear-gradient(var(--color-surface) 0 2px, var(--win-line) 2px 3px);
         }
 
 /* @qingtuan-order:003217 */

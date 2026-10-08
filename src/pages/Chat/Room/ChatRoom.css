@@ -25,7 +25,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 2px 8px;
-            border-bottom: .5px solid #DDDDE2;
+            border-bottom: .5px solid var(--color-divider);
         }
 
 /* @qingtuan-order:001641 */
@@ -36,9 +36,9 @@
             height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            background: #EEF1F2;
-            border: 1.5px solid #FFFFFF;
-            outline: .5px solid rgba(62, 70, 81, .12);
+            background: var(--color-page);
+            border: 1.5px solid var(--color-surface);
+            outline: .5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);
         }
 
 /* @qingtuan-order:001642 */
@@ -58,7 +58,7 @@
             align-items: center;
             gap: 4px;
             margin-top: 2px;
-            color: #9DA5AE;
+            color: var(--color-muted);
             font-size: 8.5px;
         }
 
@@ -83,7 +83,7 @@
             min-height: 0;
             overflow-y: auto;
             padding: 14px 4px 12px;
-            background-color: #F9F9F9;
+            background-color: var(--color-page);
         }
 
 /* @qingtuan-order:001677 */
@@ -104,7 +104,7 @@
             touch-action: pan-x;
             scrollbar-width: none;
             padding: 3px 20px 0;
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:001679 */
@@ -156,7 +156,7 @@
             align-items: center;
             gap: 6px;
             padding: 9px 13px calc(10px + env(safe-area-inset-bottom, 0px));
-            background: #FFFFFF;
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:001684 */
@@ -237,10 +237,10 @@
             padding: 10px 12px;
             resize: none;
             overflow-y: auto;
-            border: .5px solid #E1E6E6;
+            border: .5px solid var(--color-divider);
             border-radius: 18px;
             outline: 0;
-            background: #FFFFFF;
+            background: var(--color-surface);
             color: var(--ui-text-primary);
             font: inherit;
             font-size: 11px;
@@ -254,7 +254,7 @@
 /* @qingtuan-order:001692 */
 
         .chat-composer .chat-send-btn:disabled {
-            color: #B5BEC6;
+            color: var(--color-muted);
             opacity: 1;
             cursor: default;
         }
@@ -266,7 +266,7 @@
 /* @qingtuan-order:001694 */
 
         .chat-composer .chat-mic-btn.recording {
-            color: #FFFFFF;
+            color: var(--color-surface);
             /* 青色实心圆直径 26px，按钮点击范围仍保留 32px。 */
             background: radial-gradient(circle at center, var(--theme-color) 0 13px, transparent 13.2px);
         }
@@ -299,8 +299,8 @@
             justify-content: space-between;
             gap: 8px;
             padding: 6px 14px 5px;
-            border-top: .5px solid #EFF1F2;
-            background: #FFFFFF;
+            border-top: .5px solid var(--color-divider);
+            background: var(--color-surface);
         }
 
 /* @qingtuan-order:001729 */
@@ -315,7 +315,7 @@
 
         .chat-compose-quote-text {
             overflow: hidden;
-            color: #9AA3AC;
+            color: var(--color-muted);
             font-size: 9px;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -330,7 +330,7 @@
             padding: 0;
             border: 0;
             background: transparent;
-            color: #9AA3AC;
+            color: var(--color-muted);
             font: inherit;
             font-size: 16px;
             line-height: 1;
@@ -399,7 +399,7 @@
 
 /* @qingtuan-order:002713 */
 
-.chat-room-view.chat-selection-mode .chat-message-row::before {content:'';position:absolute;left:8px;top:var(--chat-select-center,50%);transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:.5px solid #AFB5BC;background:#FFFFFF;box-sizing:border-box;}
+.chat-room-view.chat-selection-mode .chat-message-row::before {content:'';position:absolute;left:8px;top:var(--chat-select-center,50%);transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:.5px solid var(--color-muted);background:var(--color-surface);box-sizing:border-box;}
 
 /* @qingtuan-order:002714 */
 
@@ -407,7 +407,7 @@
 
 /* @qingtuan-order:002715 */
 
-.chat-room-view.chat-selection-mode .chat-message-row.is-selected::after {content:'';position:absolute;left:13px;top:var(--chat-select-center,50%);width:5px;height:9px;border-right:1.8px solid #FFFFFF;border-bottom:1.8px solid #FFFFFF;transform:translateY(-62%) rotate(45deg);}
+.chat-room-view.chat-selection-mode .chat-message-row.is-selected::after {content:'';position:absolute;left:13px;top:var(--chat-select-center,50%);width:5px;height:9px;border-right:1.8px solid var(--color-surface);border-bottom:1.8px solid var(--color-surface);transform:translateY(-62%) rotate(45deg);}
 
 /* @qingtuan-order:002716 */
 
@@ -486,8 +486,8 @@
             padding: 6px max(12px, calc((100% - 430px) / 2 + 12px)) !important;
             /* 跟 Chat 列表顶栏一样：浅青在上、青在下的直向渐层，上半截亮面慢慢淡掉 */
             background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
-                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+                linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.32) 0%, rgba(var(--color-surface-rgb), 0.16) 30%, rgba(var(--color-surface-rgb), 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)) 0%, var(--theme-color) 45%, var(--color-accent-strong) 100%) !important;
             border-bottom: 1px solid var(--cr-line) !important;
             box-shadow: none !important;
             backdrop-filter: none !important;
@@ -550,7 +550,7 @@
             border: 1px solid var(--cr-line) !important;
             border-radius: 0 !important;
             /* 白色卡纸边 + 里面主题青底（预设头像是白色剪影，要有青底才看得到；上传的照片会盖住） */
-            background: linear-gradient(var(--theme-color), var(--theme-color)) content-box, #FFFFFF !important;
+            background: linear-gradient(var(--theme-color), var(--theme-color)) content-box, var(--color-surface) !important;
             box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
             object-fit: cover;
             margin: 0 !important;
@@ -592,7 +592,7 @@
         #chatAppPage#chatAppPage #chatRoomView #chatMessageList {
             margin: 8px 8px 0 !important;
             padding: 8px 0 10px !important;
-            background-color: #FFFFFF !important;
+            background-color: var(--color-surface) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             box-shadow: var(--cr-sunken) !important;
@@ -600,7 +600,7 @@
 
 /* @qingtuan-order:004031 */
 
-        #chatAppPage#chatAppPage.chat-wallpaper-on #chatRoomView #chatMessageList::before { background: rgba(255, 255, 255, var(--chat-wallpaper-fade)) !important; }
+        #chatAppPage#chatAppPage.chat-wallpaper-on #chatRoomView #chatMessageList::before { background: rgba(var(--color-surface-rgb), var(--chat-wallpaper-fade)) !important; }
 
 /* @qingtuan-order:004032 */
 
@@ -630,10 +630,10 @@
             width: fit-content;
             margin: 6px auto 8px !important;
             padding: 0 4px !important;
-            border: 1px solid color-mix(in srgb, var(--cr-peer) 65%, #FFFFFF) !important;
+            border: 1px solid color-mix(in srgb, var(--cr-peer) 65%, var(--color-surface)) !important;
             /* 跟着字一起调淡 */
-            color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
             border-radius: 2px !important;
             line-height: 12px !important;
             /* 行高比字号大一截，字才落在框正中 */
@@ -873,8 +873,8 @@
             content: '已编辑' !important;
             order: 2;
             margin: 0 0 0 5px !important;
-            color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
             font-size: 9px !important;
             font-weight: 400;
             line-height: 1;
@@ -936,8 +936,8 @@
             margin: 3px 0 4px !important;
             padding: 0 0 0 6px !important;
             border-left: 2px solid rgba(var(--theme-rgb), .65) !important; /* 竖线、字号、空隙沿用原本的 */
-            color: color-mix(in srgb, var(--cr-title) 70%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 70%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-title) 70%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 70%, var(--color-surface)) !important;
             font-size: 9.5px !important;
             line-height: 1.1 !important; /* 竖线高度跟行高走：压低行高，竖线就只比字高一点点 */
         }
@@ -960,8 +960,8 @@
             border-radius: 0 !important;
             background: none !important;
             box-shadow: none !important;
-            color: color-mix(in srgb, var(--cr-title) 75%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 75%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-title) 75%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 75%, var(--color-surface)) !important;
             font-size: 10.5px !important;
             line-height: 1.6 !important;
             text-align: left !important;
@@ -1036,8 +1036,8 @@
 /* @qingtuan-order:004095 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatMicBtn.recording {
-            background: color-mix(in srgb, var(--theme-color) 22%, #FFFFFF) !important;
-            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), inset -1px -1px 0 #FFFFFF !important;
+            background: color-mix(in srgb, var(--theme-color) 22%, var(--color-surface)) !important;
+            box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), inset -1px -1px 0 var(--color-surface) !important;
         }
 
 /* @qingtuan-order:004096 */
@@ -1053,8 +1053,8 @@
             width: 5px;
             height: 5px;
             border: 0;
-            background: #C67878;
-            box-shadow: 0 0 3px rgba(198, 120, 120, .7);
+            background: var(--color-danger);
+            box-shadow: 0 0 3px color-mix(in srgb, var(--color-danger-ink) 70%, transparent);
             transform: none;
             opacity: 1;
             animation: chatMicRecBlink 1.8s steps(1) infinite;
@@ -1081,7 +1081,7 @@
             padding: 6px 8px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--cr-sunken) !important;
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
@@ -1106,9 +1106,9 @@
             border: 1px solid var(--cr-line) !important;
             border-radius: 3px !important;
             /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度提两成：上半截淡、下半截 --cr-send */ /* 改用顶栏最下面那个深青（--win-deep），跟转发钮同色 */
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 0%, color-mix(in srgb, var(--cr-send) 55%, #FFFFFF) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
-            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
-            color: #FFFFFF !important;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
+            box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            color: var(--color-surface) !important;
         
             grid-area: send;
         }
@@ -1123,7 +1123,7 @@
             content: '发送(S)';
             font-size: 12px;
             letter-spacing: 1px;
-            color: #FFFFFF;
+            color: var(--color-surface);
             text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
         }
 
@@ -1161,7 +1161,7 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-compose-quote {
             margin: 6px 8px 0 !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             box-shadow: var(--cr-sunken) !important;
@@ -1200,8 +1200,8 @@
 /* 顶栏字：跟 Chat 列表顶栏「Chat」同一套白色描边 + 右下叠一层白 + 淡主题青 */
 
             text-shadow:
-                -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
-                2px 2px 0 #FFFFFF, 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+                -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
+                2px 2px 0 var(--color-surface), 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
         
             overflow: hidden;
             font-size: 12.5px !important;
@@ -1248,11 +1248,11 @@
             padding: 0 8px !important;
             align-items: center !important;
             overflow-x: auto;
-            background: linear-gradient(180deg, #FFFFFF 0%, var(--cr-bg) 100%) !important;
+            background: linear-gradient(180deg, var(--color-surface) 0%, var(--cr-bg) 100%) !important;
             border: 0 !important;
             border-bottom: 1px solid var(--cr-line) !important;
             border-radius: 0 !important;
-            box-shadow: inset 0 -1px 0 #FFFFFF !important;
+            box-shadow: inset 0 -1px 0 var(--color-surface) !important;
             opacity: 1 !important;
             visibility: visible !important;
             transform: none !important;
@@ -1340,7 +1340,7 @@
             margin: 8px calc(var(--cr-side-w) + 8px) 0 8px !important;
             padding: 4px 8px !important;
             gap: 5px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             box-shadow: var(--cr-sunken) !important;
@@ -1421,7 +1421,7 @@
 /* @qingtuan-order:004147 */
 
         #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row.is-selected {
-            background: var(--cr-check-box), color-mix(in srgb, var(--theme-color) 14%, #FFFFFF) !important;
+            background: var(--cr-check-box), color-mix(in srgb, var(--theme-color) 14%, var(--color-surface)) !important;
             outline: 0 !important;
         }
 
@@ -1439,8 +1439,8 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-header {
             padding: 0 max(12px, calc((100% - 430px) / 2 + 12px)) !important;
             background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
-                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+                linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.32) 0%, rgba(var(--color-surface-rgb), 0.16) 30%, rgba(var(--color-surface-rgb), 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)) 0%, var(--theme-color) 45%, var(--color-accent-strong) 100%) !important;
             border-bottom: 1px solid var(--cr-line) !important;
         }
 
@@ -1451,8 +1451,8 @@
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 12px !important;
             text-shadow:
-                -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF,
-                2px 2px 0 #FFFFFF, 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+                -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
+                2px 2px 0 var(--color-surface), 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
         }
 
 /* @qingtuan-order:004156 */
@@ -1521,7 +1521,7 @@
 /* @qingtuan-order:004163 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button[data-select-tool="delete"],
-        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button[data-select-tool="delete"] svg { color: #AD8382 !important; -webkit-text-fill-color: #AD8382 !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-selection-toolbar button[data-select-tool="delete"] svg { color: var(--color-danger-ink) !important; -webkit-text-fill-color: var(--color-danger-ink) !important; }
 
 /* @qingtuan-order:004164 */
  /* 跟世界书「删除」同色 */
@@ -1538,8 +1538,8 @@
             padding: 0 max(12px, calc((100% - 430px) / 2 + 12px)) !important;
             gap: 6px !important;
             background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.04) 62%, transparent 80%),
-                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, #FFFFFF) 0%, var(--theme-color) 45%, oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h) 100%) !important;
+                linear-gradient(180deg, rgba(var(--color-surface-rgb), 0.32) 0%, rgba(var(--color-surface-rgb), 0.16) 30%, rgba(var(--color-surface-rgb), 0.04) 62%, transparent 80%),
+                linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)) 0%, var(--theme-color) 45%, var(--color-accent-strong) 100%) !important;
             border-bottom: 1px solid var(--cr-line) !important;
         }
 
@@ -1570,7 +1570,7 @@
             padding: 0 8px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--cr-sunken) !important;
         }
 
@@ -1580,7 +1580,7 @@
 
 /* @qingtuan-order:004172 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::placeholder { color: color-mix(in srgb, var(--cr-title) 50%, #FFFFFF) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 50%, #FFFFFF) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-search-field input::placeholder { color: color-mix(in srgb, var(--cr-title) 50%, var(--color-surface)) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 50%, var(--color-surface)) !important; }
 
 /* @qingtuan-order:004173 */
 
@@ -1589,7 +1589,7 @@
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 9.5px !important;
-            text-shadow: -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF;
+            text-shadow: -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:004174 */
@@ -1656,7 +1656,7 @@
             padding: 8px 10px;
             border: 1px solid var(--cr-line);
             border-radius: 2px;
-            background: #FFFFFF;
+            background: var(--color-surface);
             box-shadow: var(--cr-sunken);
             color: var(--cr-title);
             font: inherit;
@@ -1667,7 +1667,7 @@
 
 /* @qingtuan-order:004183 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-history-result:active { background: color-mix(in srgb, var(--theme-color) 12%, #FFFFFF); }
+        #chatAppPage#chatAppPage #chatRoomView .chat-history-result:active { background: color-mix(in srgb, var(--theme-color) 12%, var(--color-surface)); }
 
 /* @qingtuan-order:004184 */
 
@@ -1711,8 +1711,8 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-history-result-time {
             flex: 0 0 auto;
-            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
             font-size: 9px;
             font-variant-numeric: lining-nums tabular-nums;
         }
@@ -1739,7 +1739,7 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-history-result-text mark {
             padding: 0 1px;
-            background: color-mix(in srgb, var(--theme-color) 28%, #FFFFFF);
+            background: color-mix(in srgb, var(--theme-color) 28%, var(--color-surface));
             color: var(--cr-peer);
             -webkit-text-fill-color: var(--cr-peer);
             font-weight: 600;
@@ -1750,8 +1750,8 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-history-result-empty {
             padding: 28px 0;
             text-align: center;
-            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF);
+            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface));
             font-size: 10.5px;
         }
 
@@ -1770,15 +1770,15 @@
             padding: 6px 9px 5px !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
-            background: #FFFFFF !important;
-            box-shadow: inset 1px 1px 0 #FFFFFF, 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
+            background: var(--color-surface) !important;
+            box-shadow: inset 1px 1px 0 var(--color-surface), 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
         }
 
 /* @qingtuan-order:004256 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-card:active { background: color-mix(in srgb, var(--theme-color) 12%, #FFFFFF) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-card:active { background: color-mix(in srgb, var(--theme-color) 12%, var(--color-surface)) !important; }
 
 /* @qingtuan-order:004257 */
 
@@ -1786,7 +1786,7 @@
 
 /* @qingtuan-order:004258 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-preview { margin-top: 3px !important; color: color-mix(in srgb, var(--cr-title) 65%, #FFFFFF) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 65%, #FFFFFF) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-forward-record-preview { margin-top: 3px !important; color: color-mix(in srgb, var(--cr-title) 65%, var(--color-surface)) !important; -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 65%, var(--color-surface)) !important; }
 
 /* @qingtuan-order:004259 */
 
@@ -1885,7 +1885,7 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-record-view-list {
             margin: 8px !important;
             padding: 6px 12px 10px !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             box-shadow: var(--cr-sunken) !important;
@@ -1947,8 +1947,8 @@
 /* @qingtuan-order:004278 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-record-item-time {
-            color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 55%, var(--color-surface)) !important;
             font-size: 9px !important;
             font-weight: 400 !important;
             font-variant-numeric: lining-nums tabular-nums;
@@ -1985,7 +1985,7 @@
             height: 0 !important;
             background: none !important;
             border-top: 1px solid color-mix(in srgb, var(--cr-line) 60%, transparent);
-            border-bottom: 1px solid #FFFFFF;
+            border-bottom: 1px solid var(--color-surface);
         }
 
 /* @qingtuan-order:004283 */
@@ -2007,8 +2007,8 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-recall-notice {
             margin: 4px auto 8px !important;
             padding: 0 !important;
-            color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-title) 60%, var(--color-surface)) !important;
             font-size: 9.5px !important;
             line-height: 1.5 !important;
         }
@@ -2028,7 +2028,7 @@
             padding: 2px 0 !important;
             border: 1px solid var(--cr-line) !important;
             border-radius: 0 !important;
-            background: #FFFFFF !important;
+            background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: 2px 2px 0 rgba(var(--theme-rgb), 0.3) !important;
@@ -2053,7 +2053,7 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button + button {
             margin-top: 3px;
             border-top: 1px solid color-mix(in srgb, var(--cr-line) 55%, transparent) !important;
-            box-shadow: inset 0 1px 0 #FFFFFF;
+            box-shadow: inset 0 1px 0 var(--color-surface);
         }
 
 /* @qingtuan-order:004298 */
@@ -2065,13 +2065,13 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active {
             translate: none !important;
             background: var(--theme-color) !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important;
         }
 
 /* @qingtuan-order:004300 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active svg { color: #FFFFFF; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active svg { color: var(--color-surface); }
 
 /* @qingtuan-order:004301 */
 
@@ -2187,8 +2187,8 @@
             font-family: inherit;
             font-size: 9.5px !important;
             line-height: 1.4 !important;
-            color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
-            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, #FFFFFF) !important;
+            color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
             text-align: center !important;
             cursor: pointer;
         }

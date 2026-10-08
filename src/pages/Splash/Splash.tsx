@@ -63,7 +63,7 @@ export function Splash() {
                 {"\n                            "}
                 <radialGradient id="wingShine" cx="45%" cy="30%" r="65%">
                   {"\n                                "}
-                  <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+                  <stop offset="0%" stopColor="var(--color-surface)" stopOpacity="0.9" />
                   {"\n                                "}
                   <stop offset="40%" stopColor="var(--theme-light-40)" stopOpacity="0.8" />
                   {"\n                                "}

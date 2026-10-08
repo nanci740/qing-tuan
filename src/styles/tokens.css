@@ -1,104 +1,66 @@
-/* 所有静态 CSS 自定义属性；原选择器、条件范围、声明顺序和备用写法保持不变。
- * 运行时 setProperty 和导出文档模板继续由原脚本负责。 */
+/* 七类用途：主色、强调色、标题正文、说明边框、页面底色、白色面板、删除错误。
+ * --theme-color / --theme-accent 是现有选色接口；不要改写用户保存的原色。
+ * :root 与 body 都声明，使变量按 body 的柔化主色重新计算。
+ * 页面旧变量只作兼容别名，不再维护独立颜色公式。 */
+:root, body {
+    --color-primary: var(--theme-color);
+    --color-accent: oklch(from var(--theme-accent) min(calc(l - 0.02), 0.925) calc(c * 0.95) h);
+    --color-text: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
+    --color-muted: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
+    --color-page: color-mix(in srgb, var(--color-primary) 15%, #FFFFFF);
+    --color-surface: #FFFFFF;
+    --color-danger: #D08F88;
+
+    /* 材质用色从七类派生：保留明暗层次，不另设页面专属色板。 */
+    --color-surface-rgb: 255, 255, 255;
+    --color-accent-strong: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
+    --color-accent-ink: oklch(from var(--theme-color) 0.6 calc(c * 1.1) h);
+    --color-accent-soft: color-mix(in srgb, var(--color-accent) 35%, var(--color-surface));
+    --color-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
+    --color-divider: color-mix(in srgb, var(--color-muted) 35%, var(--color-surface));
+    --color-paper: color-mix(in srgb, var(--color-muted) 12%, var(--color-surface));
+    --color-danger-ink: color-mix(in srgb, var(--color-danger) 75%, #70504E);
+    --color-danger-soft: color-mix(in srgb, var(--color-danger) 32%, var(--color-surface));
+}
+
+/* 组件兼容别名与非颜色参数。重复的 :root/body 片段及被覆盖的旧色值已合并。
+ * 调色盘、世界书标签和状态色保留各自用途；导出文档不受本次配色整理影响。 */
 
         :root {
-            --ui-text-primary: #5F6772;
-            --ui-text-muted: #9AA3AC;
+            --ui-text-primary: var(--color-text);
+            --ui-text-muted: var(--color-muted);
             --theme-color: #DDF2F4;
             --theme-rgb: 221, 242, 244;
-            --theme-dark: color-mix(in srgb, var(--theme-color) 76%, #5F6772);
-            --theme-dark: oklch(from var(--theme-color) calc(l - 0.08) calc(c * 0.95) h);
-            --theme-deep: color-mix(in srgb, var(--theme-color) 56%, #5F6772);
-            --theme-deep: oklch(from var(--theme-color) 0.66 min(c, 0.075) h);
+            --theme-dark: var(--color-accent-strong);
+            --theme-deep: var(--color-text);
             --ui-cyan-button-bg: rgba(var(--theme-rgb), 0.16);
             --ui-cyan-button-border: rgba(var(--theme-rgb), 0.42);
-            --ui-cyan-button-text: color-mix(in srgb, var(--theme-color) 75%, #5F6772);
-            --ui-cyan-button-text: oklch(from var(--theme-color) 0.74 calc(min(c, 0.075) * 0.9) h);
+            --ui-cyan-button-text: var(--color-muted);
             --theme-button-text: var(--ui-cyan-button-text);
-            --theme-muted: color-mix(in srgb, var(--theme-color) 55%, #727C88);
-            --theme-muted: oklch(from var(--theme-color) 0.74 calc(min(c, 0.075) * 0.85) h);
-            --theme-light-14: color-mix(in srgb, var(--theme-color) 14%, #FFFFFF);
-            --theme-light-18: color-mix(in srgb, var(--theme-color) 18%, #FFFFFF);
-            --theme-light-35: color-mix(in srgb, var(--theme-color) 35%, #FFFFFF);
-            --theme-light-38: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --theme-light-40: color-mix(in srgb, var(--theme-color) 40%, #FFFFFF);
-            --theme-light-42: color-mix(in srgb, var(--theme-color) 42%, #FFFFFF);
-            --theme-light-50: color-mix(in srgb, var(--theme-color) 50%, #FFFFFF);
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
-            --win-face: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF);
-            --win-shade: color-mix(in srgb, var(--theme-color) 60%, #8C9AA1);
-            --win-shade: oklch(from var(--theme-color) 0.79 calc(min(c, 0.075) * 0.8) h);
-            --win-shade-soft: color-mix(in srgb, var(--theme-color) 40%, #D6DDE0);
-            --win-shade-soft: oklch(from var(--theme-color) 0.885 calc(min(c, 0.075) * 0.5) h);
-            --bevel-out: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
-            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF, inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
-            --bevel-solid-out: inset 1px 1px 0 rgba(255, 255, 255, 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.06);
-            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(255, 255, 255, 0.5), inset 2px 2px 0 rgba(0, 0, 0, 0.06);
+            --theme-muted: var(--color-muted);
+            --theme-light-14: color-mix(in srgb, var(--theme-color) 14%, var(--color-surface));
+            --theme-light-18: color-mix(in srgb, var(--theme-color) 18%, var(--color-surface));
+            --theme-light-35: color-mix(in srgb, var(--theme-color) 35%, var(--color-surface));
+            --theme-light-38: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --theme-light-40: color-mix(in srgb, var(--theme-color) 40%, var(--color-surface));
+            --theme-light-42: color-mix(in srgb, var(--theme-color) 42%, var(--color-surface));
+            --theme-light-50: color-mix(in srgb, var(--theme-color) 50%, var(--color-surface));
+            --win-line: var(--color-muted);
+            --win-deep: var(--color-accent-strong);
+            --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
+            --win-shade: var(--color-muted);
+            --win-shade-soft: var(--color-divider);
+            --bevel-out: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
+            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface), inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
+            --bevel-solid-out: inset 1px 1px 0 rgba(var(--color-surface-rgb), 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.22), inset -2px -2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
+            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.5), inset 2px 2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
             --win-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
             --theme-accent: var(--theme-color);
-        }
-        body {
-            --theme-color: oklch(from var(--theme-accent) max(l, calc(0.945 - (0.945 - l) * 0.5)) max(min(c, 0.022), calc(c * 0.6)) h);
-            --theme-dark: color-mix(in srgb, var(--theme-color) 76%, #5F6772);
-            --theme-dark: oklch(from var(--theme-color) calc(l - 0.08) calc(c * 0.95) h);
-            --theme-deep: color-mix(in srgb, var(--theme-color) 56%, #5F6772);
-            --theme-deep: oklch(from var(--theme-color) 0.66 min(c, 0.075) h);
-            --ui-cyan-button-bg: rgba(var(--theme-rgb), 0.16);
-            --ui-cyan-button-border: rgba(var(--theme-rgb), 0.42);
-            --ui-cyan-button-text: color-mix(in srgb, var(--theme-color) 75%, #5F6772);
-            --ui-cyan-button-text: oklch(from var(--theme-color) 0.74 calc(min(c, 0.075) * 0.9) h);
-            --theme-button-text: var(--ui-cyan-button-text);
-            --theme-muted: color-mix(in srgb, var(--theme-color) 55%, #727C88);
-            --theme-muted: oklch(from var(--theme-color) 0.74 calc(min(c, 0.075) * 0.85) h);
-            --theme-light-14: color-mix(in srgb, var(--theme-color) 14%, #FFFFFF);
-            --theme-light-18: color-mix(in srgb, var(--theme-color) 18%, #FFFFFF);
-            --theme-light-35: color-mix(in srgb, var(--theme-color) 35%, #FFFFFF);
-            --theme-light-38: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --theme-light-40: color-mix(in srgb, var(--theme-color) 40%, #FFFFFF);
-            --theme-light-42: color-mix(in srgb, var(--theme-color) 42%, #FFFFFF);
-            --theme-light-50: color-mix(in srgb, var(--theme-color) 50%, #FFFFFF);
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
-            --win-face: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF);
-            --win-shade: color-mix(in srgb, var(--theme-color) 60%, #8C9AA1);
-            --win-shade: oklch(from var(--theme-color) 0.79 calc(min(c, 0.075) * 0.8) h);
-            --win-shade-soft: color-mix(in srgb, var(--theme-color) 40%, #D6DDE0);
-            --win-shade-soft: oklch(from var(--theme-color) 0.885 calc(min(c, 0.075) * 0.5) h);
-            --bevel-out: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
-            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 #FFFFFF, inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
-            --bevel-solid-out: inset 1px 1px 0 rgba(255, 255, 255, 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.06);
-            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(255, 255, 255, 0.5), inset 2px 2px 0 rgba(0, 0, 0, 0.06);
-            --win-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-        }
-        #splash-screen {
-            --splash-paper: #F9F9F7;
-            --splash-ink: color-mix(in srgb, var(--theme-color) 28%, #4B5A62);
-            --splash-ink: oklch(from var(--theme-color) 0.55 calc(min(c, 0.075) * 0.8) h);
-            --splash-teal: color-mix(in srgb, var(--theme-color) 72%, #6FA5AA);
-            --splash-teal: var(--win-deep);
-            --splash-mist: color-mix(in srgb, var(--theme-color) 38%, #F9F9F7);
-            --splash-soft: color-mix(in srgb, var(--theme-color) 55%, #9AA8AE);
-            --splash-soft: oklch(from var(--theme-color) 0.8 calc(min(c, 0.075) * 0.7) h);
-        }
-        #themeSettingsPage {
-            --beautify-button-text: var(--theme-button-text);
-        }
-        #wallpaperOpacity {
-            --wallpaper-fill: 100%;
-        }
-        :root {
             --font-default-stack: Georgia, "LXGW 975 Yuan SC 400W", "PingFang SC", "Times New Roman", serif;
             --font-active: var(--font-default-stack);
             --font-zh-unified: var(--font-active);
             --font-en-unified: var(--font-active);
             --font-mixed-unified: var(--font-active);
-        }
-        :root {
             --ui-radius: 10px;
             --ui-glass-alpha: 0.08;
             --ui-glass-blur: 3px;
@@ -111,114 +73,137 @@
             --beautify-preview-radius: var(--ui-radius);
             --beautify-modal-radius: var(--ui-radius);
         }
+        body {
+            --theme-color: oklch(from var(--theme-accent) max(l, calc(0.945 - (0.945 - l) * 0.5)) max(min(c, 0.022), calc(c * 0.6)) h);
+            --theme-dark: var(--color-accent-strong);
+            --theme-deep: var(--color-text);
+            --ui-cyan-button-bg: rgba(var(--theme-rgb), 0.16);
+            --ui-cyan-button-border: rgba(var(--theme-rgb), 0.42);
+            --ui-cyan-button-text: var(--color-muted);
+            --theme-button-text: var(--ui-cyan-button-text);
+            --theme-muted: var(--color-muted);
+            --theme-light-14: color-mix(in srgb, var(--theme-color) 14%, var(--color-surface));
+            --theme-light-18: color-mix(in srgb, var(--theme-color) 18%, var(--color-surface));
+            --theme-light-35: color-mix(in srgb, var(--theme-color) 35%, var(--color-surface));
+            --theme-light-38: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --theme-light-40: color-mix(in srgb, var(--theme-color) 40%, var(--color-surface));
+            --theme-light-42: color-mix(in srgb, var(--theme-color) 42%, var(--color-surface));
+            --theme-light-50: color-mix(in srgb, var(--theme-color) 50%, var(--color-surface));
+            --win-line: var(--color-muted);
+            --win-deep: var(--color-accent-strong);
+            --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
+            --win-shade: var(--color-muted);
+            --win-shade-soft: var(--color-divider);
+            --bevel-out: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-shade), inset 2px 2px 0 var(--win-face), inset -2px -2px 0 var(--win-shade-soft);
+            --bevel-in: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface), inset 2px 2px 0 var(--win-shade-soft), inset -2px -2px 0 var(--win-face);
+            --bevel-solid-out: inset 1px 1px 0 rgba(var(--color-surface-rgb), 0.6), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.22), inset -2px -2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
+            --bevel-solid-in: inset 1px 1px 0 var(--win-deep), inset -1px -1px 0 rgba(var(--color-surface-rgb), 0.5), inset 2px 2px 0 color-mix(in srgb, var(--color-text) 6%, transparent);
+            --win-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);--wk-src:var(--theme-color);
+            --tx-title: var(--color-text);
+            --tx-desc: var(--color-muted);
+            --sb-line: var(--color-muted);
+            --sb-title: var(--color-text);
+            --sb-accent: var(--color-accent);
+            --sb-accent-ink: var(--color-accent-ink);
+            --sb-tint: var(--color-tint);
+            --sb-press: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 25%, var(--color-surface));
+            --sb-press-line: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 55%, transparent);
+            --ui-text-primary: var(--color-text);
+            --ui-text-muted: var(--color-muted);
+        }
+        #splash-screen {
+            --splash-paper: var(--color-page);
+            --splash-ink: var(--color-text);
+            --splash-teal: var(--win-deep);
+            --splash-mist: color-mix(in srgb, var(--theme-color) 38%, var(--color-page));
+            --splash-soft: var(--color-muted);
+        }
+        #themeSettingsPage {
+            --beautify-button-text: var(--theme-button-text);
+        }
+        #wallpaperOpacity {
+            --wallpaper-fill: 100%;
+        }
         .player-box,
         .app-card,
         .dock-bar {
-            --glass-edge-highlight: rgba(255, 255, 255, var(--ui-glass-edge-highlight-alpha));
-            --glass-edge-soft: rgba(132, 141, 152, var(--ui-glass-edge-soft-alpha));
+            --glass-edge-highlight: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha));
+            --glass-edge-soft: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha));
         }
         #settingsPage .settings-section-personal .settings-profile-card {
-            --glass-edge-highlight: rgba(255, 255, 255, var(--ui-glass-edge-highlight-alpha, 0.4));
-            --glass-edge-soft: rgba(132, 141, 152, var(--ui-glass-edge-soft-alpha, 0.14));
+            --glass-edge-highlight: rgba(var(--color-surface-rgb), var(--ui-glass-edge-highlight-alpha, 0.4));
+            --glass-edge-soft: rgb(from var(--color-muted) r g b / var(--ui-glass-edge-soft-alpha, 0.14));
         }
         :is(#themeSettingsPage, #dataManagementPage) {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
         }
         #themeSettingsPage {
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-deep: var(--color-accent-strong);
         }
         #settingsPage {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-deep: var(--color-accent-strong);
         }
         #aboutAppModal {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-deep: var(--color-accent-strong);
         }
         #musicSettingsPage {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-deep: var(--color-accent-strong);
         }
         #apiSettingsPage,
         #voiceImageSettingsPage {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-            --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-dash: var(--color-divider);
+            --win-deep: var(--color-accent-strong);
         }
         #apiProviderModal, #apiModelModal, #viChoiceModal {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-            --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-dash: var(--color-divider);
+            --win-deep: var(--color-accent-strong);
         }
         #mcpSettingsPage,
         #mcpServiceModal,
         #mcpToolsModal {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-            --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-dash: var(--color-divider);
+            --win-deep: var(--color-accent-strong);
         }
         #backgroundActivityPage {
-            --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-            --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
-            --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-            --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-            --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-            --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-            --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --win-line: var(--color-muted);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
+            --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+            --win-dash: var(--color-divider);
+            --win-deep: var(--color-accent-strong);
         }
         .chat-voice-wave span:nth-child(1) { --voice-rest: .34; }
         .chat-voice-wave span:nth-child(2) { --voice-rest: .52; }
@@ -235,40 +220,34 @@
   --world-accent-line:var(--ui-cyan-button-border);
 }
         #chatListView{
-  --win-line: color-mix(in srgb, var(--theme-color) 55%, #7E8C94);
-  --win-line: oklch(from var(--theme-color) 0.76 calc(min(c, 0.075) * 0.85) h);
-  --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-  --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-  --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-  --win-hi: rgba(255, 255, 255, 0.9);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-  --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-  --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-  --win-face: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF);
-  --chat-teal: color-mix(in srgb, var(--theme-color) 80%, #447480);
-  --chat-teal: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+  --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+  --win-ink: var(--color-text);
+  --win-hi: rgba(var(--color-surface-rgb), 0.9);
+  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-dash: var(--color-divider);
+  --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
+  --chat-teal: var(--color-accent-strong);
   --win-line: var(--chat-teal);
-  --chat-silver: linear-gradient(#FFFFFF, color-mix(in srgb, var(--theme-color) 16%, #F2F4F5));
+  --chat-silver: linear-gradient(var(--color-surface), color-mix(in srgb, var(--theme-color) 16%, var(--color-page)));
 }
         #chatListView{
   --chat-raised:
-    inset 1px 1px 0 #FFFFFF, inset 2px 2px 0 rgba(255,255,255,.75),
-    inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, #8D9AA2), inset -2px -2px 0 color-mix(in srgb,var(--theme-color) 35%,transparent),
+    inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), .75),
+    inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 color-mix(in srgb,var(--theme-color) 35%,transparent),
     2px 2px 0 rgba(var(--theme-rgb), 0.3);
   --chat-sunken:
-    inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 45%, #8D9AA2), inset 2px 2px 0 color-mix(in srgb,var(--theme-color) 30%,transparent),
-    inset -1px -1px 0 #FFFFFF;
+    inset 1px 1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset 2px 2px 0 color-mix(in srgb,var(--theme-color) 30%,transparent),
+    inset -1px -1px 0 var(--color-surface);
 }
         #chatListView{
-  --chat-gloss: linear-gradient(#FFFFFF 0%, rgba(255,255,255,.96) 45%, color-mix(in srgb, var(--theme-color) 7%, #F6F8F8) 52%, color-mix(in srgb, var(--theme-color) 4%, #FAFBFB) 100%);
+  --chat-gloss: linear-gradient(var(--color-surface) 0%, rgba(var(--color-surface-rgb), .96) 45%, color-mix(in srgb, var(--theme-color) 7%, var(--color-page)) 52%, color-mix(in srgb, var(--theme-color) 4%, var(--color-page)) 100%);
 }
         .world-page{
-  --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-  --win-hi: rgba(255, 255, 255, 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-  --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-  --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
-  --win-face: color-mix(in srgb, var(--theme-color) 10%, #FFFFFF);
+  --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+  --win-hi: rgba(var(--color-surface-rgb), 0.85);
+  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-dash: var(--color-divider);
+  --win-face: color-mix(in srgb, var(--theme-color) 10%, var(--color-surface));
   --world-line: var(--win-line);
   --world-divider: var(--win-dash);
   --world-dots:
@@ -276,25 +255,22 @@
     radial-gradient(circle, color-mix(in srgb,var(--theme-color) 42%,transparent) 0 1.6px, transparent 2.1px) 7px 7px / 14px 14px;
 }
         .world-page .world-top{
-  --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-  --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+  --win-deep: var(--color-accent-strong);
 }
         #worldPickerModal{
-  --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-  --win-hi: rgba(255, 255, 255, 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
-  --win-dash: color-mix(in srgb, var(--theme-color) 45%, #D9DEE1);
-  --win-dash: oklch(from var(--theme-color) 0.88 calc(min(c, 0.075) * 0.6) h);
+  --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+  --win-hi: rgba(var(--color-surface-rgb), 0.85);
+  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
+  --win-dash: var(--color-divider);
 }
         .world-confirm-card{
-  --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-  --win-hi: rgba(255, 255, 255, 0.85);
-  --win-lo: color-mix(in srgb, var(--theme-color) 30%, rgba(75, 90, 98, 0.22));
+  --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+  --win-hi: rgba(var(--color-surface-rgb), 0.85);
+  --win-lo: color-mix(in srgb, var(--theme-color) 30%, color-mix(in srgb, var(--color-muted) 22%, transparent));
 }
         #worldPickerModal,
 .world-confirm-card{
-  --win-deep: color-mix(in srgb, var(--theme-color) 80%, #447480);
-  --win-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+  --win-deep: var(--color-accent-strong);
 }
         .world-page .world-intro{
   --sc: radial-gradient(closest-side,#000 calc(100% - .6px),transparent 100%);
@@ -302,30 +278,29 @@
 }
         .world-page{
   --world-box-band:
-    radial-gradient(circle,#FFFFFF 0 1.5px,transparent 2px) 0 0 / 12px 12px,
-    radial-gradient(circle,#FFFFFF 0 1.5px,transparent 2px) 6px 6px / 12px 12px,
-    color-mix(in srgb,var(--theme-color) 50%,#FFFFFF);
+    radial-gradient(circle,var(--color-surface) 0 1.5px,transparent 2px) 0 0 / 12px 12px,
+    radial-gradient(circle,var(--color-surface) 0 1.5px,transparent 2px) 6px 6px / 12px 12px,
+    color-mix(in srgb,var(--theme-color) 50%,var(--color-surface));
 }
         .world-page{
-  --world-page-bg:color-mix(in srgb,var(--wk-src) 15%,#FFFFFF);
+  --world-page-bg:var(--color-page);
 }
-        body{--wk-src:var(--theme-color)}
         .world-page,#worldPickerModal,.world-confirm-card{
     --theme-color:oklch(from var(--wk-src) calc(l - 0.03) calc(c * 1.25) h);
-    --wk-accent:oklch(from var(--theme-accent) min(calc(l - 0.03), 0.915) calc(c * 1.3) h);
-    --wk-accent-ink:oklch(from var(--wk-src) 0.6 calc(c * 1.4) h);
+    --wk-accent:var(--color-accent);
+    --wk-accent-ink:var(--color-accent-ink);
     --world-accent:var(--wk-accent);
-    --world-teal:oklch(from var(--wk-src) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
+    --world-teal:var(--color-muted);
     --win-line:var(--world-teal);
     --wt:var(--world-teal);
-    --world-title:oklch(from var(--wk-src) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
+    --world-title:var(--color-text);
     --win-ink:var(--world-title);
-    --wb-face-tint:oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-    --wk-btn-tint:oklch(from var(--wk-src) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-    --wb-face-white:linear-gradient(180deg,#FFFFFF 0%,#FFFFFF 42.5%,color-mix(in srgb,var(--wk-btn-tint) 42%,#FFFFFF) 56.5%,color-mix(in srgb,var(--wk-btn-tint) 30%,#FFFFFF) 100%);
-    --wb-face-solid:linear-gradient(180deg,color-mix(in srgb,var(--wk-accent) 55%,#FFFFFF) 0%,color-mix(in srgb,var(--wk-accent) 55%,#FFFFFF) 42.5%,var(--wk-accent) 56.5%,color-mix(in srgb,var(--wk-accent) 88%,#FFFFFF) 100%);
-    --wb-white:inset 1px 1px 0 #FFFFFF,inset -1px -1px 0 color-mix(in srgb,var(--world-teal) 70%,transparent),inset 2px 2px 0 rgba(255,255,255,.6),inset -2px -2px 0 color-mix(in srgb,var(--wk-btn-tint) 45%,transparent);
-    --wb-solid:inset 1px 1px 0 rgba(255,255,255,.55),inset -1px -1px 0 color-mix(in srgb,var(--wk-accent-ink) 35%,transparent),inset 2px 2px 0 rgba(255,255,255,.2);
+    --wb-face-tint:var(--color-accent-soft);
+    --wk-btn-tint:var(--color-tint);
+    --wb-face-white:linear-gradient(180deg,var(--color-surface) 0%,var(--color-surface) 42.5%,color-mix(in srgb,var(--wk-btn-tint) 42%,var(--color-surface)) 56.5%,color-mix(in srgb,var(--wk-btn-tint) 30%,var(--color-surface)) 100%);
+    --wb-face-solid:linear-gradient(180deg,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 0%,color-mix(in srgb,var(--wk-accent) 55%,var(--color-surface)) 42.5%,var(--wk-accent) 56.5%,color-mix(in srgb,var(--wk-accent) 88%,var(--color-surface)) 100%);
+    --wb-white:inset 1px 1px 0 var(--color-surface),inset -1px -1px 0 color-mix(in srgb,var(--world-teal) 70%,transparent),inset 2px 2px 0 rgba(var(--color-surface-rgb), .6),inset -2px -2px 0 color-mix(in srgb,var(--wk-btn-tint) 45%,transparent);
+    --wb-solid:inset 1px 1px 0 rgba(var(--color-surface-rgb), .55),inset -1px -1px 0 color-mix(in srgb,var(--wk-accent-ink) 35%,transparent),inset 2px 2px 0 rgba(var(--color-surface-rgb), .2);
     --wb-shadow:2px 2px 0 rgba(var(--theme-rgb), 0.3);
 }
         .world-page .world-intro{
@@ -358,46 +333,44 @@
             --win-btns: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M3%208.5h6%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Crect%20x%3D%2720.5%27%20y%3D%273.5%27%20width%3D%275%27%20height%3D%275%27/%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27/%3E%3C/svg%3E");
         }
         #personalProfilePage {
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
             --mono: 'SF Mono', Menlo, Consolas, monospace;
             --mh-dislike: #CFA3AF;
         }
         #main-content {
             --home-ink: var(--win-deep);
-            --win-bar: color-mix(in srgb, var(--theme-color) 38%, #FFFFFF);
-            --win-ink: color-mix(in srgb, var(--theme-color) 42%, #3E5E67);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --win-hi: rgba(255, 255, 255, 0.85);
+            --win-bar: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface));
+            --win-ink: var(--color-text);
+            --win-hi: rgba(var(--color-surface-rgb), 0.85);
         }
         #main-content .speech-bubble-container {
             --bub-line: var(--win-deep);
         }
         #main-content .player-box.mp3-player {
-            --mp3-lcd: color-mix(in srgb, var(--theme-color) 32%, #F9FBFB);
+            --mp3-lcd: color-mix(in srgb, var(--theme-color) 32%, var(--color-page));
             --mp3-lcd-ink: var(--win-deep);
             --mp3-lcd-dim: var(--win-deep);
         }
         #main-content {
-            --home-gloss-btn: linear-gradient(#FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 42%, #FFFFFF) 56.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 30%, #FFFFFF) 100%);
+            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
             --home-rim:
-                inset 1px 1px 0 #FFFFFF, inset 2px 2px 0 rgba(255, 255, 255, 0.7),
-                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, #8D9AA2), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
+                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
+                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
             #voiceImageSettingsPage, #backgroundActivityPage, #dataManagementPage, #personalProfilePage,
             #apiProviderModal, #apiModelModal, #viChoiceModal, #mcpToolsModal, #mcpServiceModal, #aboutAppModal) {
-            --set-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --set-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --set-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --set-block: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
+            --set-bg: var(--color-page);
+            --set-line: var(--color-muted);
+            --set-title: var(--color-text);
+            --set-block: var(--color-accent-strong);
             --win-deep: var(--set-line);
             --win-line: var(--set-line);
             --win-ink: var(--set-title);
-            --ui-text-primary: var(--set-title);
-            --ui-text-muted: var(--set-line);
+            --ui-text-primary: var(--color-text);
+            --ui-text-muted: var(--color-muted);
             --set-fill: var(--set-block);
         }
         :is(#settingsPage, #themeSettingsPage, #musicSettingsPage, #apiSettingsPage, #mcpSettingsPage,
@@ -411,78 +384,65 @@
         #main-content > .home-dots,
         #main-content .dock-bar {
             --theme-color: var(--wk-src);
-            --home-device: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
-            --home-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --home-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --home-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
+            --home-device: var(--color-accent-strong);
+            --home-line: var(--color-muted);
+            --home-title: var(--color-text);
+            --home-btn-tint: var(--color-tint);
             --win-deep: var(--home-line);
             --home-ink: var(--home-line);
             --win-ink: var(--home-title);
-            --home-gloss-btn: linear-gradient(#FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--home-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--home-btn-tint) 30%, #FFFFFF) 100%);
+            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--home-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--home-btn-tint) 30%, var(--color-surface)) 100%);
             --home-rim:
-                inset 1px 1px 0 #FFFFFF, inset 2px 2px 0 rgba(255, 255, 255, 0.7),
+                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
                 inset -1px -1px 0 color-mix(in srgb, var(--home-line) 70%, transparent), inset -2px -2px 0 color-mix(in srgb, var(--home-btn-tint) 45%, transparent);
         }
         #main-content .player-box,
         #main-content .tama-widget {
             --win-deep: var(--home-device);
             --home-ink: var(--win-deep);
-            --win-ink: oklch(from var(--theme-color) 0.64 min(c, 0.075) h);
-            --home-gloss-btn: linear-gradient(#FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 42%, #FFFFFF) 56.5%, color-mix(in srgb, oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h) 30%, #FFFFFF) 100%);
+            --win-ink: var(--color-text);
+            --home-gloss-btn: linear-gradient(var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
             --home-rim:
-                inset 1px 1px 0 #FFFFFF, inset 2px 2px 0 rgba(255, 255, 255, 0.7),
-                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, #8D9AA2), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
-        }
-        body {
-            --tx-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --tx-desc: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-        }
-        body {
-            --sb-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --sb-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --sb-accent: oklch(from var(--theme-accent) min(calc(l - 0.02), 0.925) calc(c * 0.95) h);
-            --sb-accent-ink: oklch(from var(--theme-color) 0.6 calc(c * 1.1) h);
-            --sb-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --sb-press: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 25%, #FFFFFF);
-            --sb-press-line: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 55%, transparent);
+                inset 1px 1px 0 var(--color-surface), inset 2px 2px 0 rgba(var(--color-surface-rgb), 0.7),
+                inset -1px -1px 0 color-mix(in srgb, var(--theme-color) 45%, var(--color-muted)), inset -2px -2px 0 rgba(var(--theme-rgb), 0.3);
         }
         #splash-screen {
-            --splash-paper: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --sp-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --sp-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --sp-accent: oklch(from var(--theme-accent) min(calc(l - 0.045), 0.9) calc(c * 1.25) h);
+            --splash-paper: var(--color-page);
+            --sp-line: var(--color-muted);
+            --sp-title: var(--color-text);
+            --sp-accent: var(--color-accent);
         }
         #chatSettingsPage .idw {
-            --idw-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --idw-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --idw-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --idw-block: oklch(from var(--theme-accent, var(--theme-color)) min(l, 0.85) calc(c * 1.15) h);
-            --idw-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --idw-face: color-mix(in srgb, var(--theme-color) 8%, #FFFFFF);
+            --idw-line: var(--color-muted);
+            --idw-title: var(--color-text);
+            --idw-head: var(--color-accent-strong);
+            --idw-block: var(--color-accent-strong);
+            --idw-tint: var(--color-tint);
+            --idw-face: color-mix(in srgb, var(--theme-color) 8%, var(--color-surface));
             --idw-soft: color-mix(in srgb, var(--idw-line) 45%, transparent);
-            --idw-raised: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--idw-line) 70%, transparent), inset 2px 2px 0 rgba(255,255,255,.6), inset -2px -2px 0 color-mix(in srgb, var(--idw-tint) 60%, transparent);
-            --idw-sunken: inset 1px 1px 0 color-mix(in srgb, var(--idw-line) 55%, transparent), inset -1px -1px 0 #FFFFFF;
-            --idw-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--idw-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--idw-tint) 30%, #FFFFFF) 100%);
+            --idw-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--idw-line) 70%, transparent), inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--idw-tint) 60%, transparent);
+            --idw-sunken: inset 1px 1px 0 color-mix(in srgb, var(--idw-line) 55%, transparent), inset -1px -1px 0 var(--color-surface);
+            --idw-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--idw-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--idw-tint) 30%, var(--color-surface)) 100%);
         }
         #chatSettingsPage#chatSettingsPage {
-            --cs-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --cs-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cs-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cs-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --cs-deep: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
-            --cs-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cs-muted: color-mix(in srgb, var(--cs-title) 62%, #FFFFFF);
+            --cs-bg: var(--color-page);
+            --cs-line: var(--color-muted);
+            --cs-title: var(--color-text);
+            --cs-head: var(--color-accent-strong);
+            --cs-deep: var(--color-accent-strong);
+            --cs-tint: var(--color-tint);
+            --cs-muted: color-mix(in srgb, var(--cs-title) 62%, var(--color-surface));
             --cs-soft: color-mix(in srgb, var(--cs-line) 45%, transparent);
-            --cs-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cs-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cs-tint) 30%, #FFFFFF) 100%);
-            --cs-raised: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), inset 2px 2px 0 rgba(255,255,255,.6), inset -2px -2px 0 color-mix(in srgb, var(--cs-tint) 45%, transparent);
+            --cs-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cs-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cs-tint) 30%, var(--color-surface)) 100%);
+            --cs-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cs-line) 70%, transparent), inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cs-tint) 45%, transparent);
             --cs-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
             --cs-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cs-line) 50%, transparent);
         }
         #chatAppPage#chatAppPage {
-            --ch-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --ch-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --ch-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --ch-block: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
+            --ch-bg: var(--color-page);
+            --ch-line: var(--color-muted);
+            --ch-title: var(--color-text);
+            --ch-block: var(--color-accent-strong);
         }
         #chatAppPage#chatAppPage #chatListView {
             --win-line: var(--ch-line);
@@ -491,64 +451,64 @@
             --chat-teal: var(--ch-block);
         }
         #chatAppPage#chatAppPage {
-            --ch-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
+            --ch-btn-tint: var(--color-tint);
         }
         .cc-overlay {
-            --cc-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --cc-face: color-mix(in srgb, var(--theme-color) 32%, #FFFFFF);
-            --cc-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cc-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cc-block: oklch(from var(--theme-accent, var(--theme-color)) min(l, 0.85) calc(c * 1.15) h);
+            --cc-bg: var(--color-page);
+            --cc-face: color-mix(in srgb, var(--theme-color) 32%, var(--color-surface));
+            --cc-line: var(--color-muted);
+            --cc-title: var(--color-text);
+            --cc-block: var(--color-accent-strong);
             --cc-drop: 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cc-raised: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 55%, transparent);
+            --cc-raised: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 55%, transparent);
             --cc-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cc-line) 45%, transparent);
-            --cc-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cc-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --cc-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cc-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cc-btn-tint) 30%, #FFFFFF) 100%);
-            --cc-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cc-btn-tint) 45%, transparent),
+            --cc-btn-tint: var(--color-tint);
+            --cc-face-tint: var(--color-accent-soft);
+            --cc-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cc-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cc-btn-tint) 30%, var(--color-surface)) 100%);
+            --cc-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cc-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cc-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --cc-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
+            --cc-head: var(--color-accent-strong);
         }
         .sp-confirm-overlay {
-            --spc-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --spc-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --spc-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --spc-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --spc-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --spc-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --spc-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--spc-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--spc-btn-tint) 30%, #FFFFFF) 100%);
-            --spc-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--spc-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--spc-btn-tint) 45%, transparent),
+            --spc-bg: var(--color-page);
+            --spc-line: var(--color-muted);
+            --spc-title: var(--color-text);
+            --spc-head: var(--color-accent-strong);
+            --spc-btn-tint: var(--color-tint);
+            --spc-face-tint: var(--color-accent-soft);
+            --spc-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--spc-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--spc-btn-tint) 30%, var(--color-surface)) 100%);
+            --spc-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--spc-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--spc-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
-            --spc-danger: #D08F88;
+            --spc-danger: var(--color-danger);
         }
         :is(html, #_#_) .chat-character-action-overlay {
-            --cam-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cam-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
+            --cam-line: var(--color-muted);
+            --cam-title: var(--color-text);
         }
         :is(html, #_#_#_) .world-confirm-card {
-            --wcf-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --wcf-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --wcf-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --wcf-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --wcf-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --wcf-danger: #D08F88;
+            --wcf-line: var(--color-muted);
+            --wcf-title: var(--color-text);
+            --wcf-head: var(--color-accent-strong);
+            --wcf-btn-tint: var(--color-tint);
+            --wcf-face-tint: var(--color-accent-soft);
+            --wcf-danger: var(--color-danger);
         }
         #chatListView#chatListView .chat-conversation-panel .chat-thread-pin {
             --pin-c: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h);
         }
         #chatAppPage#chatAppPage #chatRoomView {
-            --cr-bg: color-mix(in srgb, var(--theme-color) 15%, #FFFFFF);
-            --cr-face: color-mix(in srgb, var(--theme-color) 32%, #FFFFFF);
-            --cr-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cr-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cr-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --cr-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cr-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --cr-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, #FFFFFF) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
+            --cr-bg: var(--color-page);
+            --cr-face: color-mix(in srgb, var(--theme-color) 32%, var(--color-surface));
+            --cr-line: var(--color-muted);
+            --cr-title: var(--color-text);
+            --cr-head: var(--color-accent-strong);
+            --cr-btn-tint: var(--color-tint);
+            --cr-face-tint: var(--color-accent-soft);
+            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
+            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
             --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
             --cr-peer: var(--cr-head);
@@ -561,63 +521,63 @@
         #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-wave span:nth-child(5) { --voice-rest: .55; }
         #chatAppPage#chatAppPage #chatRoomView .chat-bubble--voice .chat-voice-wave span:nth-child(6) { --voice-rest: .75; }
         #chatAppPage#chatAppPage #chatRoomView .chat-composer #chatSendBtn {
-            --cr-send: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --cr-send: var(--color-accent-strong);
         }
         #chatAppPage#chatAppPage #chatRoomView { --cr-side-w: clamp(96px, 27%, 132px); }
         #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row {
             --cr-check-box:
                 linear-gradient(color-mix(in srgb, var(--cr-line) 45%, transparent), color-mix(in srgb, var(--cr-line) 45%, transparent)) 11px 7px / 9px 1px no-repeat,
                 linear-gradient(color-mix(in srgb, var(--cr-line) 45%, transparent), color-mix(in srgb, var(--cr-line) 45%, transparent)) 11px 7px / 1px 9px no-repeat,
-                linear-gradient(#FFFFFF, #FFFFFF) 11px 7px / 9px 9px no-repeat,
+                linear-gradient(var(--color-surface), var(--color-surface)) 11px 7px / 9px 9px no-repeat,
                 linear-gradient(var(--cr-line), var(--cr-line)) 10px 6px / 11px 11px no-repeat;
         }
         #chatAppPage#chatAppPage > .chat-message-menu {
-            --cr-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cr-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cr-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cr-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --cr-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, #FFFFFF) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
+            --cr-line: var(--color-muted);
+            --cr-title: var(--color-text);
+            --cr-btn-tint: var(--color-tint);
+            --cr-face-tint: var(--color-accent-soft);
+            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
+            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
                 1px 1px 0 rgba(var(--theme-rgb), 0.3);
         }
         body .chat-forward-picker.chat-forward-picker {
-            --cr-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cr-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cr-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --cr-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cr-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --cr-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, #FFFFFF) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
+            --cr-line: var(--color-muted);
+            --cr-title: var(--color-text);
+            --cr-head: var(--color-accent-strong);
+            --cr-btn-tint: var(--color-tint);
+            --cr-face-tint: var(--color-accent-soft);
+            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
+            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
             --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
         }
         body .chat-forward-picker .chat-forward-picker-send {
-            --fw-send: oklch(from var(--theme-color) calc(l - 0.07) calc(c * 1.3) h);
+            --fw-send: var(--color-accent-strong);
         }
         #chatAppPage#chatAppPage > .chat-edit-overlay {
-            --cr-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --cr-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --cr-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --cr-btn-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
-            --cr-face-tint: oklch(from var(--theme-color) calc(l - 0.06) calc(c * 3.2) h);
-            --cr-btn-face: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, #FFFFFF) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, #FFFFFF) 100%);
-            --cr-btn-shadow: inset 1px 1px 0 #FFFFFF, inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
-                inset 2px 2px 0 rgba(255, 255, 255, .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
+            --cr-line: var(--color-muted);
+            --cr-title: var(--color-text);
+            --cr-head: var(--color-accent-strong);
+            --cr-btn-tint: var(--color-tint);
+            --cr-face-tint: var(--color-accent-soft);
+            --cr-btn-face: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--cr-btn-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--cr-btn-tint) 30%, var(--color-surface)) 100%);
+            --cr-btn-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 color-mix(in srgb, var(--cr-line) 70%, transparent),
+                inset 2px 2px 0 rgba(var(--color-surface-rgb), .6), inset -2px -2px 0 color-mix(in srgb, var(--cr-btn-tint) 45%, transparent),
                 2px 2px 0 rgba(var(--theme-rgb), 0.3);
             --cr-sunken: inset 1px 1px 0 color-mix(in srgb, var(--cr-line) 45%, transparent);
         }
         :is(html, #_#_#_) .world-page .world-action-menu {
-            --wm-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --wm-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --wm-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
+            --wm-line: var(--color-muted);
+            --wm-title: var(--color-text);
+            --wm-head: var(--color-accent-strong);
         }
         .cr-my-menu {
-            --mm-line: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
-            --mm-title: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-            --mm-head: oklch(from var(--theme-color) calc(l - 0.075) calc(c * 1.3) h);
-            --mm-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
+            --mm-line: var(--color-muted);
+            --mm-title: var(--color-text);
+            --mm-head: var(--color-accent-strong);
+            --mm-tint: var(--color-tint);
         }
         [data-qt-token="inline-000"] {--swatch-color:#B5D9DC;
 }
