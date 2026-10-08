@@ -115,7 +115,7 @@
             min-height: 34px;
             border: 0.5px solid var(--color-divider);
             border-radius: var(--ui-radius);
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--ui-text-primary);
             font-size: 11px;
             cursor: pointer;
@@ -258,7 +258,7 @@
             flex: 0 0 38px;
             border: 2px solid var(--color-surface);
             border-radius: 50%;
-            background: var(--theme-color);
+            background: var(--effect-face-accent);
             box-shadow: 0 0 0 1px rgba(var(--theme-rgb), 0.42);
             overflow: hidden;
             cursor: pointer;
@@ -624,7 +624,7 @@
 
 
         .theme-action-btn.secondary {
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             border: 0.5px solid var(--color-divider);
             color: var(--color-text);
         }
@@ -853,7 +853,7 @@
 
 
         .theme-segment-btn.active {
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--theme-deep);
             box-shadow: 0 1px 4px var(--effect-drop-soft);
         }
@@ -1436,7 +1436,7 @@
 
 
         #themeSettingsPage #themeColorModal .theme-color-modal-btn:not(.primary),        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn{
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--ui-text-primary) !important;
             -webkit-text-fill-color: var(--ui-text-primary) !important;
         }
@@ -1811,7 +1811,7 @@
 
 
         #themeSettingsPage .ui-cyan-btn:focus-visible {
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -1944,7 +1944,7 @@
         #themeSettingsPage .theme-settings-content .theme-font-btn:not(.ui-cyan-btn) {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -1968,7 +1968,7 @@
             position: relative;
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             box-shadow: var(--bevel-solid-out) !important;
             transform: none !important;
         }
@@ -2049,7 +2049,7 @@
         #themeSettingsPage .theme-segment-btn.active {
             border: 1px solid var(--win-deep);
             border-radius: 1px !important;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             box-shadow: var(--bevel-out);
         }
 
@@ -2120,7 +2120,7 @@
         #themeSettingsPage .theme-icon-choice-btn {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
         }
 
@@ -2417,7 +2417,7 @@
         #themeSettingsPage #themeColorModal .theme-color-modal-btn,        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn,        #themeSettingsPage #themeColorModal #cancelThemeColorModal.theme-color-modal-btn:focus-visible {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -2428,7 +2428,7 @@
         #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalHexBtn.theme-color-modal-hex-apply.ui-cyan-btn:focus-visible,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn,        #themeSettingsPage #themeColorModal #applyThemeColorModalBtn.theme-color-modal-btn.primary.ui-cyan-btn:focus-visible {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             box-shadow: var(--bevel-solid-out) !important;
             transform: none !important;
         }

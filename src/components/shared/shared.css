@@ -806,7 +806,7 @@
             width: 54px;
             height: 54px;
             border: 0.5px solid var(--color-divider);
-            background: var(--color-page);
+            background: var(--effect-face-white);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1086,7 +1086,7 @@
 
         .theme-font-btn.secondary {
             border-color: var(--color-divider);
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--color-muted);
         }
 
@@ -1999,7 +1999,7 @@
             top: 3px;
             left: 3px;
             border-radius: 50%;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             box-shadow: 0 1px 4px var(--effect-drop-soft);
             transition: transform .2s ease;
         }
@@ -2063,7 +2063,7 @@
         #apiSettingsPage .api-action-btn:not(.primary):not(.ui-cyan-btn),
         #apiSettingsPage .api-model-action:not(.primary) {
             border: .5px solid var(--color-divider) !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--ui-text-muted) !important;
         }
 
@@ -2359,7 +2359,7 @@
             padding: 0 12px;
             border: .5px solid var(--color-divider);
             border-radius: var(--ui-radius);
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             color: var(--color-muted);
             font-family: var(--font-active);
             font-size: 10px;
@@ -3334,7 +3334,7 @@
             padding: 0 14px;
             border: 1px solid var(--win-deep);
             border-radius: 0;
-            background: var(--win-face);
+            background: var(--effect-face-white);
             color: var(--win-ink);
             font: inherit;
             font-size: 11px;
@@ -3644,7 +3644,7 @@
             width: 24px !important;
             height: 24px !important;
             border-radius: 2px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
         }
 
@@ -3698,7 +3698,7 @@
             box-sizing: border-box;
             min-height: 30px;
             padding: 6px 34px 6px 8px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
         }
 
 /* @qingtuan-order:001291 */
@@ -3760,7 +3760,7 @@
             width: 14px !important;
             height: 14px !important;
             box-sizing: border-box;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
         }
 
 /* @qingtuan-order:001296 */
@@ -3787,7 +3787,7 @@
 /* @qingtuan-order:001299 */
 
         #apiSettingsPage#apiSettingsPage .api-action-btn,        #apiSettingsPage#apiSettingsPage .api-action-btn:focus-visible,        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn,        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn:focus-visible {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
             backdrop-filter: none !important;
@@ -3979,7 +3979,7 @@
 
 
         #apiProviderModal#apiProviderModal .api-model-action,        #apiModelModal#apiModelModal .api-model-action,        #viChoiceModal#viChoiceModal .vi-btn{
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
             backdrop-filter: none !important;
@@ -4036,7 +4036,7 @@
         #mcpSettingsPage#mcpSettingsPage .mcp-add-btn,        #mcpSettingsPage#mcpSettingsPage .mcp-add-btn:focus-visible,        #mcpServiceModal#mcpServiceModal .mcp-modal-btn,        #mcpServiceModal#mcpServiceModal .mcp-modal-tool-btn,        #mcpServiceModal#mcpServiceModal .mcp-ai-desc-btn,        #mcpServiceModal#mcpServiceModal .mcp-header-add-btn,        #mcpToolsModal#mcpToolsModal .mcp-modal-btn{
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -4046,7 +4046,7 @@
 
 
         #mcpSettingsPage#mcpSettingsPage .mcp-add-btn,        #mcpSettingsPage#mcpSettingsPage .mcp-add-btn:focus-visible,        #mcpServiceModal#mcpServiceModal .mcp-modal-btn.primary,        #mcpToolsModal#mcpToolsModal .mcp-modal-btn.primary{
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
         }
@@ -5588,7 +5588,7 @@
 
 /* @qingtuan-order:001831 */
 
-.world-input,.world-textarea,.world-select-btn{width:100%;min-width:0;border:.6px solid var(--world-line);border-radius:8px;background:var(--color-surface);padding:11px 12px;outline:0;font-size:12px;color:var(--world-ink);line-height:1.65}
+.world-input,.world-textarea,.world-select-btn{width:100%;min-width:0;border:.6px solid var(--world-line);border-radius:8px;background: var(--effect-face-white);padding:11px 12px;outline:0;font-size:12px;color:var(--world-ink);line-height:1.65}
 
 /* @qingtuan-order:001832 */
 
@@ -6140,7 +6140,7 @@
 .world-page .world-select-btn,
 .world-page .world-select-btn.api-model-select-btn,
 .world-page .world-entry-search{
-  border:1px solid var(--wt);background:var(--color-surface);box-shadow:none;
+  border:1px solid var(--wt);background: var(--effect-face-white);box-shadow:none;
 }
 
 /* @qingtuan-order:002346 */
@@ -6210,7 +6210,7 @@
 
 /* @qingtuan-order:002358 */
 
-#worldPickerModal#worldPickerModal .api-model-action,.world-confirm-btn{border:1px solid var(--wt)!important;background:var(--color-surface)!important;
+#worldPickerModal#worldPickerModal .api-model-action,.world-confirm-btn{border:1px solid var(--wt)!important;background: var(--effect-face-white)!important;
   color:var(--wt)!important;-webkit-text-fill-color:var(--wt)!important;letter-spacing:1px;
   box-shadow:var(--effect-button-drop)!important;
 }
@@ -7481,7 +7481,7 @@
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-select-btn {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -7490,7 +7490,7 @@
 
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-select-btn::after {
             border: 1px solid var(--win-deep) !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
         }
 
@@ -7500,7 +7500,7 @@
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-btn,        #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-tool-btn,        #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-ai-desc-btn,        #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-header-add-btn,        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-btn{
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
             box-shadow: var(--bevel-out) !important;
@@ -7737,7 +7737,7 @@
         #viChoiceModal#viChoiceModal#viChoiceModal .vi-btn{
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -8078,8 +8078,7 @@
         #apiModelClose#apiModelClose#apiModelClose#apiModelClose,
         #viChoiceCancel#viChoiceCancel#viChoiceCancel#viChoiceCancel,
         #aboutAppModalOk#aboutAppModalOk#aboutAppModalOk#aboutAppModalOk {
-            background: var(--color-surface) !important;
-            background-image: none !important;
+            background: var(--effect-face-white)!important;
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
@@ -8472,7 +8471,7 @@
 
 /* @qingtuan-order:003916 */
 
-        .cc-nav-btn.active { background: var(--color-surface); font-weight: 600; box-shadow: inset 0 1px 0 var(--effect-inner-shade), inset 0 -1px 0 var(--effect-inner-shade); margin-right: -1px; }
+        .cc-nav-btn.active { background: var(--effect-face-white); font-weight: 600; box-shadow: inset 0 1px 0 var(--effect-inner-shade), inset 0 -1px 0 var(--effect-inner-shade); margin-right: -1px; }
 
 /* @qingtuan-order:003917 */
 

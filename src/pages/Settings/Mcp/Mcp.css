@@ -122,7 +122,7 @@
             top: 3px;
             left: 3px;
             border-radius: 50%;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
             box-shadow: 0 1px 4px var(--effect-drop-soft);
             transition: transform .2s ease;
         }
@@ -573,7 +573,7 @@
             min-height: 26px !important;
             border: 1px solid var(--win-line) !important;
             border-radius: 3px !important;
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
@@ -602,7 +602,7 @@
             width: 14px !important;
             height: 14px !important;
             box-sizing: border-box;
-            background: var(--color-surface);
+            background: var(--effect-face-white);
         }
 
 /* @qingtuan-order:001471 */
@@ -650,7 +650,7 @@
 /* @qingtuan-order:002535 */
 
         #mcpSettingsPage .mcp-edit-btn {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border: 0.5px solid var(--color-divider) !important;
             color: var(--ui-text-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
@@ -740,7 +740,7 @@
         #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-switch::after {
             border: 1px solid var(--win-deep) !important;
             border-radius: 1px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -750,7 +750,7 @@
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-add-btn{
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--theme-color) !important;
+            background: var(--effect-face-accent)!important;
             box-shadow: var(--bevel-solid-out) !important;
             transform: none !important;
         }
@@ -768,7 +768,7 @@
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
-            background: var(--win-face) !important;
+            background: var(--effect-face-white)!important;
             box-shadow: var(--bevel-out) !important;
             transform: none !important;
         }
@@ -949,7 +949,7 @@
 /* @qingtuan-order:003671 */
 
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-edit-btn {
-            background: var(--color-surface) !important;
+            background: var(--effect-face-white)!important;
             border: 1px solid var(--sb-line) !important;
             border-radius: 3px !important;
             color: var(--sb-title) !important; -webkit-text-fill-color: var(--sb-title) !important;
