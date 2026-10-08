@@ -2123,7 +2123,8 @@
 
 /* @qingtuan-order:000680 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-provider-sheet {
+        :is(#apiProviderModal, #worldPickerModal) .api-provider-sheet ,
+        #viChoiceModal.settings-choice .api-provider-sheet {
             width: min(92vw, 340px);
             max-width: 340px;
             padding: 0;
@@ -2131,13 +2132,15 @@
 
 /* @qingtuan-order:000681 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-sheet-head {
+        :is(#apiProviderModal, #worldPickerModal) .api-model-sheet-head ,
+        #viChoiceModal.settings-choice .api-model-sheet-head {
             padding: 16px 18px 10px;
         }
 
 /* @qingtuan-order:000682 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-close {
+        :is(#apiProviderModal, #worldPickerModal) .api-model-close ,
+        #viChoiceModal.settings-choice .api-model-close {
             width: 28px;
             height: 28px;
             flex: 0 0 28px;
@@ -2153,7 +2156,8 @@
 
 /* @qingtuan-order:000683 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-provider-list {
+        :is(#apiProviderModal, #worldPickerModal) .api-provider-list ,
+        #viChoiceModal.settings-choice .api-provider-list {
             padding: 2px 18px 6px;
             margin-top: 2px;
             max-height: none;
@@ -2161,7 +2165,8 @@
 
 /* @qingtuan-order:000684 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-actions {
+        :is(#apiProviderModal, #worldPickerModal) .api-model-actions ,
+        #viChoiceModal.settings-choice .api-model-actions {
             position: relative;
             padding: 12px 18px 16px;
             gap: 9px;
@@ -2170,7 +2175,8 @@
 
 /* @qingtuan-order:000685 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-action {
+        :is(#apiProviderModal, #worldPickerModal) .api-model-action ,
+        #viChoiceModal.settings-choice .api-model-action {
             min-height: 36px;
         }
 
@@ -3867,7 +3873,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-sheet,
         #apiModelModal#apiModelModal .api-model-sheet,
-        #viChoiceModal#viChoiceModal .vi-choice-sheet {
+        #viChoiceModal#viChoiceModal .vi-choice-sheet,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-sheet {
             background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -3883,7 +3890,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-sheet-title,
         #apiModelModal#apiModelModal .api-model-sheet-title,
-        #viChoiceModal#viChoiceModal .vi-choice-title {
+        #viChoiceModal#viChoiceModal .vi-choice-title,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-sheet-title {
             color: var(--color-surface) !important;
             font-weight: 600;
             letter-spacing: 1.2px;
@@ -3899,7 +3907,8 @@
         #apiProviderModal#apiProviderModal .api-model-close,
         #apiModelModal#apiModelModal .api-model-close,
         #viChoiceModal#viChoiceModal .vi-choice-close,
-        #apiModelModal#apiModelModal .api-model-refresh {
+        #apiModelModal#apiModelModal .api-model-refresh,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-close {
             width: 20px !important;
             height: 20px !important;
             padding: 0 !important;
@@ -3925,7 +3934,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-close:active,
         #apiModelModal#apiModelModal .api-model-close:active,
-        #viChoiceModal#viChoiceModal .vi-choice-close:active {
+        #viChoiceModal#viChoiceModal .vi-choice-close:active,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-close:active {
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -3939,7 +3949,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-item:last-child,
         #apiModelModal#apiModelModal .api-model-item:last-child,
-        #viChoiceModal#viChoiceModal .vi-choice-item:last-child {
+        #viChoiceModal#viChoiceModal .vi-choice-item:last-child,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-item:last-child {
             border-bottom: 0 !important;
         }
 
@@ -3948,7 +3959,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-check,
         #apiModelModal#apiModelModal .api-model-check,
-        #viChoiceModal#viChoiceModal .vi-choice-check {
+        #viChoiceModal#viChoiceModal .vi-choice-check,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-check {
             background: var(--color-surface) !important;
             color: var(--win-ink) !important;
         }
@@ -3958,7 +3970,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-item.selected .api-model-check,
         #apiModelModal#apiModelModal .api-model-item.selected .api-model-check,
-        #viChoiceModal#viChoiceModal .vi-choice-item.selected .vi-choice-check {
+        #viChoiceModal#viChoiceModal .vi-choice-item.selected .vi-choice-check,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-item.selected .api-model-check {
             background: var(--win-bar) !important;
         }
 
@@ -3978,7 +3991,8 @@
 /* @qingtuan-order:001393 */
 
 
-        #apiProviderModal#apiProviderModal .api-model-action,        #apiModelModal#apiModelModal .api-model-action,        #viChoiceModal#viChoiceModal .vi-btn{
+        #apiProviderModal#apiProviderModal .api-model-action,        #apiModelModal#apiModelModal .api-model-action,        #viChoiceModal#viChoiceModal .vi-btn,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-action {
             background: var(--effect-face-white)!important;
             color: var(--win-ink) !important;
             -webkit-text-fill-color: var(--win-ink) !important;
@@ -3989,7 +4003,9 @@
 /* @qingtuan-order:001394 */
 
 
-        #apiProviderModal#apiProviderModal .api-model-action.primary,        #apiModelModal#apiModelModal .api-model-action.primary,        #viChoiceModal#viChoiceModal .vi-btn.primary,        #apiProviderModal#apiProviderModal .api-model-action.primary:disabled,        #apiModelModal#apiModelModal .api-model-action.primary:disabled,        #viChoiceModal#viChoiceModal .vi-btn.primary:disabled {
+        #apiProviderModal#apiProviderModal .api-model-action.primary,        #apiModelModal#apiModelModal .api-model-action.primary,        #viChoiceModal#viChoiceModal .vi-btn.primary,        #apiProviderModal#apiProviderModal .api-model-action.primary:disabled,        #apiModelModal#apiModelModal .api-model-action.primary:disabled,        #viChoiceModal#viChoiceModal .vi-btn.primary:disabled,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-action.primary,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-action.primary:disabled {
             background: var(--theme-color) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
@@ -4000,7 +4016,8 @@
 
         #apiProviderModal#apiProviderModal .api-model-action:active,
         #apiModelModal#apiModelModal .api-model-action:active,
-        #viChoiceModal#viChoiceModal .vi-btn:active {
+        #viChoiceModal#viChoiceModal .vi-btn:active,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-action:active {
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
@@ -4022,7 +4039,9 @@
         #apiModelModal#apiModelModal .api-model-item,
         #viChoiceModal#viChoiceModal .vi-choice-list,
         #viChoiceModal#viChoiceModal .vi-choice-item,
-        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player {
+        #voiceImageSettingsPage#voiceImageSettingsPage .vi-audio-player,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-list,
+        #viChoiceModal#viChoiceModal.settings-choice .api-model-item {
             border-radius: 0 !important;
         }
 
@@ -4510,7 +4529,8 @@
 
 /* @qingtuan-order:001586 */
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-close {
+        :is(#apiProviderModal, #worldPickerModal) .api-model-close ,
+        #viChoiceModal.settings-choice .api-model-close {
             background: transparent !important;
             border: 0 !important;
             color: var(--color-muted) !important;
@@ -4520,7 +4540,8 @@
 /* @qingtuan-order:001587 */
 
 
-        :is(#apiProviderModal, #worldPickerModal) .api-model-close:focus-visible{
+        :is(#apiProviderModal, #worldPickerModal) .api-model-close:focus-visible,
+        #viChoiceModal.settings-choice .api-model-close:focus-visible{
             color: var(--color-muted) !important;
             background: transparent !important;
             outline: none !important;
@@ -4529,7 +4550,8 @@
 
 /* @qingtuan-order:001588 */
 
-:is(#apiProviderModal, #worldPickerModal) .api-model-close:active{;
+:is(#apiProviderModal, #worldPickerModal) .api-model-close:active,
+        #viChoiceModal.settings-choice .api-model-close:active{;
             outline: none !important;
             box-shadow: none !important;
         }
@@ -7186,7 +7208,8 @@
 /* @qingtuan-order:002948 */
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-sheet,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-sheet {
             border: 1px solid var(--win-deep) !important;
             border-radius: 3px !important;
             background: var(--win-face) !important;
@@ -7197,7 +7220,8 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-sheet-head,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet-head {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet-head,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-sheet-head {
             margin: 0 0 10px !important;
             height: 26px;
             padding: 0 4px 0 9px !important;
@@ -7211,7 +7235,8 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-sheet-title,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet-title {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-sheet-title,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-sheet-title {
             font-size: 11px !important;
         }
 
@@ -7223,7 +7248,8 @@
 /* @qingtuan-order:002952 */
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-close,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-close {
             width: 18px !important;
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
@@ -7239,7 +7265,8 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-close:active,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh:active {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh:active,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-close:active {
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight) !important;
         }
 
@@ -7250,7 +7277,8 @@
 
 /* @qingtuan-order:002955 */
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-list {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-list,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-list {
             margin: 0 12px !important;
             padding: 2px 10px !important;
             border: 1px solid var(--win-line) !important;
@@ -7261,7 +7289,8 @@
 /* @qingtuan-order:002956 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item {
             border-bottom: 0 !important;
             background: transparent !important;
         }
@@ -7269,7 +7298,8 @@
 /* @qingtuan-order:002957 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-check {
             border: 1px solid var(--win-deep) !important;
             border-radius: 50% !important;
             background: var(--color-surface) !important;
@@ -7280,21 +7310,24 @@
 /* @qingtuan-order:002958 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check svg {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-check svg,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-check svg {
             display: none !important;
         }
 
 /* @qingtuan-order:002959 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item.selected .api-model-check {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item.selected .api-model-check,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item.selected .api-model-check {
             background: radial-gradient(circle, var(--set-fill, var(--win-deep)) 0 3.5px, var(--color-surface) 4px) !important;
         }
 
 /* @qingtuan-order:002960 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item.selected .api-model-name {
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-item.selected .api-model-name,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item.selected .api-model-name {
             color: var(--win-ink) !important;
         }
 
@@ -7367,14 +7400,16 @@
 /* @qingtuan-order:002970 */
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-actions,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-actions {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-actions,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-actions {
             border-top: 0 !important;
         }
 
 /* @qingtuan-order:002971 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action,        #apiModelModal#apiModelModal#apiModelModal .api-model-action{
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action,        #apiModelModal#apiModelModal#apiModelModal .api-model-action,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-action {
             border: 1px solid var(--win-deep) !important;
             border-radius: 2px !important;
             background: var(--win-face) !important;
@@ -7385,7 +7420,8 @@
 /* @qingtuan-order:002972 */
 
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action.primary,        #apiModelModal#apiModelModal#apiModelModal .api-model-action.primary{
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action.primary,        #apiModelModal#apiModelModal#apiModelModal .api-model-action.primary,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-action.primary {
             background: var(--effect-face-accent) !important;
             box-shadow: var(--bevel-solid-out) !important;
         }
@@ -7394,7 +7430,8 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action:active,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-action:active {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-action:active,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-action:active {
             box-shadow: var(--bevel-in) !important;
         }
 
@@ -7402,7 +7439,8 @@
 
 
         #apiProviderModal#apiProviderModal#apiProviderModal .api-model-action.primary:active,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-action.primary:active {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-action.primary:active,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-action.primary:active {
             box-shadow: var(--bevel-solid-in) !important;
         }
 
@@ -9537,7 +9575,6 @@
 
         .cr-my-caret { display: grid; place-items: center; flex: 0 0 16px; width: 16px; height: 16px; padding: 0; border: 1px solid transparent; border-radius: 1px; background: transparent; color: var(--cr-peer); cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .cr-my-caret::after { content: ""; border: 3px solid transparent; border-top: 4px solid currentColor; border-bottom: 0; }
-        .cr-my-caret:is(:active, .sp-is-pressed) { background: var(--effect-face-white); box-shadow: var(--effect-sunken); }
 
 /* @qingtuan-order:004336 */
 

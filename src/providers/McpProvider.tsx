@@ -116,7 +116,7 @@ function useMcpState() {
   }
   const field = <K extends keyof McpService>(key: K, value: McpService[K]) => setDraft(current => ({ ...current, [key]: value }));
   function selectTransport() {
-    choice.openChoice({ title: '选择连接类型', options: [{ value: 'streamable-http', label: 'Streamable HTTP' }, { value: 'sse', label: 'SSE（兼容旧服务）' }], selected: draft.transport, confirm: value => field('transport', value === 'sse' ? 'sse' : 'streamable-http') });
+    choice.openChoice({style:'settings', title: '选择连接类型', options: [{ value: 'streamable-http', label: 'Streamable HTTP' }, { value: 'sse', label: 'SSE（兼容旧服务）' }], selected: draft.transport, confirm: value => field('transport', value === 'sse' ? 'sse' : 'streamable-http') });
   }
   return { state, modalRef, toolsRef, pageOpen, closePage: () => setPageOpen(false), modalOpen, modalTitle, deleteVisible, draft, status, testing, generating, refreshing, toolsOpen, toolsRevision, toolPanel,
     openModal, closeModal, saveService, deleteService, testService, generateDescription, openTools, closeTools, refreshTools, toggleTool, field, selectTransport,
