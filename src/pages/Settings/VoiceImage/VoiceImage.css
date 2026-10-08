@@ -822,15 +822,7 @@
 
 /* @qingtuan-order:000876 */
 
-        #voiceImageSettingsPage .vi-fetch-arrow::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 6px;
-            height: 6px;
-            border-right: 1.2px solid currentColor;
-            border-bottom: 1.2px solid currentColor;
-        }
+
 
 /* @qingtuan-order:000877 */
 
@@ -961,6 +953,10 @@
         #voiceImageSettingsPage#voiceImageSettingsPage .vi-character-add {
             width: 24px;
             height: 24px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            line-height: 1;
             border-radius: 2px !important;
             background: var(--color-surface) !important;
             color: var(--win-ink) !important;

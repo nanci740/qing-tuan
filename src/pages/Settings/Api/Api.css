@@ -637,17 +637,7 @@
 
 /* @qingtuan-order:000645 */
 
-        #apiFetchModelsBtn.api-chevron-btn::before {
-            content: '';
-            position: absolute;
-            right: 3px;
-            top: 50%;
-            width: 6px;
-            height: 6px;
-            border-right: 1.3px solid currentColor;
-            border-bottom: 1.3px solid currentColor;
-            transform: translateY(-65%) rotate(-45deg);
-        }
+
 
 /* @qingtuan-order:000648 */
 

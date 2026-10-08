@@ -12,5 +12,5 @@ export function RetroSelect({id,className,title,value,children,onChange}: {id?:s
   return [{value:props.value??props.attributes?.find(a=>a.name==='value')?.value??label,label}];
  });
  const selected=options.find(o=>o.value===value);
- return <PressedButton id={id} className={`${className??''} retro-select-trigger`} type="button" aria-label={title} aria-haspopup="dialog" onClick={()=>choice.openChoice({title,options,selected:value,confirm:onChange})}>{selected?.label??value}<span aria-hidden="true" className="retro-select-arrow">▾</span></PressedButton>;
+ return <PressedButton id={id} className={`${className??''} retro-select-trigger`} type="button" aria-label={title} aria-haspopup="dialog" onClick={()=>choice.openChoice({title,options,selected:value,confirm:onChange})}><span className="retro-select-label">{selected?.label??value}</span><span aria-hidden="true" className="retro-select-arrow"><svg viewBox="0 0 8 5"><path d="M0 0h8L4 5z" /></svg></span></PressedButton>;
 }
