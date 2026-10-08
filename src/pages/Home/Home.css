@@ -633,7 +633,7 @@
 
 
         .app-item:active .app-card {
-            transform: scale(0.95);
+            transform: none;
         }
 
 /* @qingtuan-order:000133 */
@@ -1378,10 +1378,10 @@
 
 
         #main-content .mp3-player .controls .btn:active {
-            /* 按下不换颜色，只往右下挪 1px（跟资料卡按钮一样） */
+            /* 按下保持位置，只改变按钮表面。 */
             transform: none;
             opacity: 1;
-            translate: 1px 1px;
+
         }
 
 /* @qingtuan-order:003355 */
@@ -1419,8 +1419,8 @@
 
 
         #main-content .mp3-player .controls .btn-play:active {
-            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
-            translate: 1px 1px;
+            /* 按下保持位置，边缘呈内凹细线。 */
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -1669,7 +1669,7 @@
 /* @qingtuan-order:003398 */
 
 
-        #main-content .app-item:active .app-card { transform: translate(1px, 1px); }
+        #main-content .app-item:active .app-card { transform: none; }
 
 /* @qingtuan-order:003399 */
 
@@ -1960,7 +1960,7 @@
 /* @qingtuan-order:003439 */
 
 
-        #main-content .home-notice:active { transform: translate(1px, 1px); }
+        #main-content .home-notice:active { transform: none; }
 
 /* @qingtuan-order:003440 */
 
@@ -2617,8 +2617,8 @@
 
 
         #main-content .tama-btn:active {
-            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
-            translate: 1px 1px;
+            /* 按下保持位置，边缘呈内凹细线。 */
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -2784,7 +2784,7 @@
 
 
         #main-content .dock-item:active {
-            translate: 1px 1px;
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
@@ -2894,8 +2894,8 @@
 
         #main-content .mp3-player .controls .btn-play:active,
         #main-content .tama-btn:active {
-            /* 按下不换颜色：往右下挪 1px + 一圈内凹细线（跟资料卡按钮一样） */
-            translate: 1px 1px;
+            /* 按下保持位置，边缘呈内凹细线。 */
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 

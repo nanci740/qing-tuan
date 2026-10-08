@@ -4575,7 +4575,7 @@
 
 
         .chat-thread-card:active {
-            transform: scale(.985);
+            transform: none;
             background: rgba(var(--theme-rgb), .08);
         }
 
@@ -5415,7 +5415,7 @@
 
         .chat-thread-card.is-long-pressing {
             background: rgba(var(--theme-rgb), .08) !important;
-            transform: scale(.985);
+            transform: none;
         }
 
 /* @qingtuan-order:001793 */
@@ -8749,19 +8749,19 @@
 /* @qingtuan-order:003963 */
 
 
-        /* ===== 按钮按下效果统一（跟资料卡一样）：整颗往右下挪 1px，有框的按钮变成一圈内凹细线、投影收掉，阴影不会压到字 =====
-           用 translate 属性叠加，不会弄乱本来靠 transform 定位的按钮；哪颗按钮有框由下面的小程序在按下时判断 */
+        /* ===== 按钮按下效果统一（跟资料卡一样）：按钮保持原位，有框的按钮变成一圈内凹细线、投影收掉，阴影不会压到字 =====
+           无框按钮轻微淡化；哪颗按钮有框由共用按压逻辑判断 */
 
 /* @qingtuan-order:003964 */
 
         :is(html, #_#_#_#_#_) .sp-press:is(:active, .sp-is-pressed) {
-            translate: 1px 1px;
+
             box-shadow: var(--effect-sunken) !important;
         }
 
 /* @qingtuan-order:003965 */
 
-        :is(html, #_#_#_#_#_) .sp-press-bare:is(:active, .sp-is-pressed) { translate: 1px 1px; }
+        :is(html, #_#_#_#_#_) .sp-press-bare:is(:active, .sp-is-pressed) { opacity: .78; }
 
 /* @qingtuan-order:003966 */
 

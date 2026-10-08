@@ -268,7 +268,7 @@
 
 
         #settingsPage .settings-profile-avatar:active {
-            transform: scale(.96);
+            transform: none;
         }
 
 /* @qingtuan-order:000886 */
@@ -1618,7 +1618,7 @@
 /* @qingtuan-order:001144 */
 
         #settingsPage .settings-content > .settings-section .retro-sec-toggle:active {
-            translate: 1px 1px;
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
         }
 

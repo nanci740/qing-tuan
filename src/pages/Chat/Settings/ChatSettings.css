@@ -482,7 +482,7 @@
 
 /* @qingtuan-order:003738 */
 
-        #chatSettingsPage .idw-detail:active { box-shadow: var(--idw-sunken); translate: 1px 1px; }
+        #chatSettingsPage .idw-detail:active { box-shadow: var(--idw-sunken);  }
 
 /* @qingtuan-order:003739 */
 
@@ -781,7 +781,7 @@
 
 /* @qingtuan-order:003796 */
 
-        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn):active { translate: 1px 1px; box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important; }
+        #chatSettingsPage#chatSettingsPage :is(.chat-setting-action, .theme-font-btn):active {  box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important; }
 
 /* @qingtuan-order:003797 */
 
@@ -875,12 +875,12 @@
 /* @qingtuan-order:003814 */
 
 
-        /* 按下：整张卡一起往右下沉 1px、投影收掉、边变凹陷（不只里面的字移动） */
+        /* 按下：保持位置，投影收掉、边变凹陷 */
 
 /* @qingtuan-order:003815 */
 
         #chatSettingsPage#chatSettingsPage .chat-settings-entry:has(> .chat-settings-entry-button:active) {
-            translate: 1px 1px;
+
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }
 
