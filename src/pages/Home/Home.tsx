@@ -7,7 +7,8 @@ import { useHomePlayer, formatPlayerTime } from '../../hooks/useHomePlayer';
 import { useHomeAvatarUpload } from '../../hooks/useHomeAvatarUpload';
 import { DeviceStatusBar } from './components/DeviceStatusBar';
 import { HomeNotice } from './components/HomeNotice';
-import { memo } from 'react';
+import { memo, useState } from 'react';
+import { Memos } from '../Memos/Memos';
 import { HomeAvatar } from './components/HomeAvatar';
 import { useBoot } from '../../providers/BootProvider';
 import { useHomePagination } from '../../hooks/useHomePagination';
@@ -23,6 +24,7 @@ const StableChat = memo(Chat);
 const StableDock = memo(DockBar);
 export function Home() {
  const world=useWorld();
+  const [memosOpen, setMemosOpen] = useState(false);
   const appearance = useAppearance();
   const boot = useBoot();
   const player = useHomePlayer();
@@ -493,7 +495,7 @@ export function Home() {
             {"\n"}
           </div>
           {"\n"}
-          <div className="app-item" data-app-icon-key="memos">
+          <div className="app-item" data-app-icon-key="memos" role="button" tabIndex={0} aria-label="打开备忘录" onClick={event => { event.stopPropagation(); setMemosOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setMemosOpen(true); } }}>
             {"\n"}
             <div className="app-card">
               {"\n"}
@@ -800,6 +802,8 @@ export function Home() {
       <StableChat />
       {"\n\n"}
       <StableDock />
+      {memosOpen && <Memos onClose={() => setMemosOpen(false)} />}
       {"\n"}
     </div>;
 }
+
