@@ -205,7 +205,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-020"}]}>
-                <ChatPixelIcon name="people" />
+                <ChatPixelIcon name="people" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -244,7 +244,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-021"}]}>
-                <ChatPixelIcon name="message" />
+                <ChatPixelIcon name="message" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -433,7 +433,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-022"}]}>
-                <ChatPixelIcon name="document" />
+                <ChatPixelIcon name="document" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -474,7 +474,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-023"}]}>
-                <ChatPixelIcon name="image" />
+                <ChatPixelIcon name="image" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -604,7 +604,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-024"}]}>
-                <ChatPixelIcon name="sound" />
+                <ChatPixelIcon name="sound" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -657,7 +657,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-025"}]}>
-                <ChatPixelIcon name="eye" />
+                <ChatPixelIcon name="eye" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -732,7 +732,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-026"}]}>
-                <ChatPixelIcon name="trash" />
+                <ChatPixelIcon name="trash" uniformSize />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -784,3 +784,4 @@ export function ChatSettings() {
     </ChatNavigationSurface></ChatSettingsAccordion>
   );
 }
+
