@@ -91,13 +91,13 @@ export function Settings() {
               {"\n                    "}
             </div>
             {"\n                    "}
-            <div className="settings-item-action">
+            <PressedButton className="settings-item-action" type="button" aria-label="打开个人信息">
               {"\n                        "}
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
               {"\n                    "}
-            </div>
+            </PressedButton>
             {"\n                "}
           </div>
           {"\n            "}

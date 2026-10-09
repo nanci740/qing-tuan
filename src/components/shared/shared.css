@@ -7251,9 +7251,7 @@
 
 /* @qingtuan-order:002952 */
 
-        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-close,
-        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh,
-        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-close {
+        #apiModelModal#apiModelModal#apiModelModal .api-model-refresh {
             width: 18px !important;
             height: 16px !important;
             border: 1px solid var(--win-deep) !important;
@@ -7261,6 +7259,24 @@
             background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
             line-height: 13px !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
+            transform: none !important;
+        }
+
+        #apiProviderModal#apiProviderModal#apiProviderModal .api-model-close,
+        #viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-close {
+            width: 20px !important;
+            min-width: 0 !important;
+            max-width: 20px !important;
+            flex: 0 0 20px !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            height: 20px !important;
+            border: 1px solid var(--win-deep) !important;
+            border-radius: 0 !important;
+            background: var(--effect-face-white-compact) !important;
+            color: var(--win-deep) !important;
+            line-height: 18px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
             transform: none !important;
         }
@@ -7492,13 +7508,18 @@
 
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-close,
         #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-close {
-            width: 18px !important;
-            height: 16px !important;
+            width: 20px !important;
+            min-width: 0 !important;
+            max-width: 20px !important;
+            flex: 0 0 20px !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            height: 20px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
             background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
-            line-height: 13px !important;
+            line-height: 18px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
             transform: none !important;
         }
@@ -7707,14 +7728,36 @@
 
 
         #viChoiceModal#viChoiceModal#viChoiceModal .vi-choice-close {
-            width: 18px !important;
-            height: 16px !important;
+            width: 20px !important;
+            min-width: 0 !important;
+            max-width: 20px !important;
+            flex: 0 0 20px !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            height: 20px !important;
             border: 1px solid var(--win-deep) !important;
             border-radius: 0 !important;
             background: var(--effect-face-white-compact) !important;
             color: var(--win-deep) !important;
-            line-height: 13px !important;
+            line-height: 18px !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade) !important;
+            transform: none !important;
+        }
+
+        #viChoiceModal#viChoiceModal#viChoiceModal.chat-settings-choice .vi-choice-close {
+            width: 20px !important;
+            min-width: 0 !important;
+            max-width: 20px !important;
+            flex: 0 0 20px !important;
+            padding: 0 !important;
+            height: 18px !important;
+            border: 1px solid var(--color-muted) !important;
+            border-radius: 3px !important;
+            background: var(--effect-face-white-compact) !important;
+            color: var(--color-muted) !important;
+            font-size: 12px !important;
+            line-height: 15px !important;
+            box-shadow: var(--effect-raised), var(--effect-drop) !important;
             transform: none !important;
         }
 
@@ -8799,6 +8842,7 @@
 /* @qingtuan-order:003965 */
 
         :is(html, #_#_#_#_#_) .sp-press-bare:is(:active, .sp-is-pressed) { opacity: .78; }
+        :is(html, #_#_#_#_#_) .sp-press-icon:is(:active, .sp-is-pressed) > :is(svg, .pause-bars) { opacity: .78; }
 
 /* @qingtuan-order:003966 */
 
