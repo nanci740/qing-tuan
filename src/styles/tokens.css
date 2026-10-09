@@ -4,7 +4,7 @@
  * 页面旧变量只作兼容别名，不再维护独立颜色公式。 */
 :root, body {
     --color-primary: var(--theme-color);
-    --color-accent: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25 - 0.015) min(0.025, calc(c * 0.55)) h);
+    --color-accent: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * var(--theme-lightness-retention, 0.25) - 0.015) min(var(--theme-chroma-limit, 0.025), calc(c * var(--theme-chroma-retention, 0.55))) h);
     --color-text: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 0.25) h);
     --color-muted: oklch(from var(--theme-color) calc(l - 0.20) calc(c * 0.20) h);
     --color-page: color-mix(in srgb, var(--color-primary) 15%, #FFFFFF);
@@ -38,7 +38,7 @@
 
     /* 材质用色从七类派生：保留明暗层次，不另设页面专属色板。 */
     --color-surface-rgb: 255, 255, 255;
-    --color-accent-strong: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25 - 0.035) min(0.025, calc(c * 0.55)) h);
+    --color-accent-strong: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * var(--theme-lightness-retention, 0.25) - 0.035) min(var(--theme-chroma-limit, 0.025), calc(c * var(--theme-chroma-retention, 0.55))) h);
     --color-accent-ink: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 0.25) h);
     --color-accent-soft: color-mix(in srgb, var(--color-accent) 35%, var(--color-surface));
     --color-tint: oklch(from var(--theme-color) min(calc(l + 0.015), 0.98) calc(c * 0.65) h);
@@ -99,7 +99,7 @@
             --beautify-modal-radius: var(--ui-radius);
         }
         body {
-            --theme-color: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25) min(0.025, calc(c * 0.55)) h);
+            --theme-color: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * var(--theme-lightness-retention, 0.25)) min(var(--theme-chroma-limit, 0.025), calc(c * var(--theme-chroma-retention, 0.55))) h);
             --theme-dark: var(--color-accent-strong);
             --theme-deep: var(--color-text);
             --ui-cyan-button-bg: rgba(var(--theme-rgb), 0.16);

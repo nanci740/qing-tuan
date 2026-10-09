@@ -1482,7 +1482,8 @@
 
         #settingsPage .retro-badge.is-dark .retro-badge-side {
             background: var(--theme-color);
-            color: var(--win-deep);
+            color: var(--color-muted);
+            -webkit-text-fill-color: var(--color-muted);
         }
 
 /* @qingtuan-order:001129 */

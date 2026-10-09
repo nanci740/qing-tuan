@@ -1,3 +1,10 @@
+export type ThemeTone = 'mist' | 'vivid';
+export function normalizeThemeTone(value: unknown): ThemeTone { return value === 'vivid' ? 'vivid' : 'mist'; }
+export function themeToneSettings(tone: ThemeTone) {
+    return tone === 'vivid'
+        ? { lightness: 0.7, chroma: 0.85, limit: 1 }
+        : { lightness: 0.25, chroma: 0.55, limit: 0.025 };
+}
 export const DEFAULT_THEME_COLOR = '#DDF2F4';
     export function normalizeThemeColor(value: unknown) {
         const color = String(value || '').trim().toUpperCase();
@@ -57,8 +64,8 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
         return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
     }
 
-    // 把原色换成框架色的 RGB：OKLCH 亮度集中在 0.94 附近、保留 55% 色度并限制为 0.025，色调不变（跟 CSS 的 body --theme-color 同一个公式）
-    export function themeFrameRgb(rgb: number[]) {
+    // 与 CSS 共用模式参数；保留原始选色，霧灰柔化、鮮明保留更多色度。
+    export function themeFrameRgb(rgb: number[], tone: ThemeTone = 'mist') {
         const toLin = (v: number) => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
         const [r, g, b] = rgb.map(toLin);
         const l_ = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
@@ -68,9 +75,10 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
         let A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
         let B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
         const C = Math.hypot(A, B);
-        const Cf = Math.min(0.025, C * 0.55);
+        const settings = themeToneSettings(tone);
+        const Cf = Math.min(settings.limit, C * settings.chroma);
         if (C > 0) { A *= Cf / C; B *= Cf / C; }
-        L = 0.94 + (L - 0.94) * 0.25;
+        L = 0.94 + (L - 0.94) * settings.lightness;
         const l2 = Math.pow(L + 0.3963377774 * A + 0.2158037573 * B, 3);
         const m2 = Math.pow(L - 0.1055613458 * A - 0.0638541728 * B, 3);
         const s2 = Math.pow(L - 0.0894841775 * A - 1.2914855480 * B, 3);

@@ -79,6 +79,12 @@ export function Appearance() {
               {"\n                    "}
             </div>
             {"\n\n                    "}
+            <div className="theme-palette-caption">配色風格</div>
+            <div className="theme-segmented" role="group" aria-label="配色風格" style={{gridTemplateColumns:'repeat(2, minmax(0, 1fr))'}}>
+              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='mist'?' active':'')} aria-pressed={appearance.tone==='mist'} onClick={()=>appearance.setTone('mist')}>霧灰</PressedButton>
+              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='vivid'?' active':'')} aria-pressed={appearance.tone==='vivid'} onClick={()=>appearance.setTone('vivid')}>鮮明</PressedButton>
+            </div>
+            <span className="theme-setting-note">霧灰柔和低飽和；鮮明保留更多主題色。切換不會改變已選色碼。</span>
             <div className="theme-palette-group">
               {"\n                        "}
               <div className="theme-palette-caption">

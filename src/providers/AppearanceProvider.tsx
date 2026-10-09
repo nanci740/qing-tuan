@@ -6,7 +6,8 @@ import { useSettingsNavigation } from './SettingsNavigationProvider';
 import { defaultHomeTexts, homeTextStorageKeys, useHomeTexts } from './HomeTextsProvider';
 import type { HomeTextId, HomeTextValues } from './HomeTextsProvider';
 import { useMusic } from './MusicProvider';
-import { DEFAULT_THEME_COLOR, normalizeThemeColor, themeColorToRgb, themeFrameRgb, hexToHsv, hsvToHex } from '../utils/appearanceColors';
+import { DEFAULT_THEME_COLOR, normalizeThemeTone, themeToneSettings, normalizeThemeColor, themeColorToRgb, themeFrameRgb, hexToHsv, hsvToHex } from '../utils/appearanceColors';
+import type {ThemeTone} from '../utils/appearanceColors';
 import { CUSTOM_FONT_FAMILY, getRestoredUiFont, readLocalFontRecord, writeLocalFontRecord } from '../utils/appearanceStorage';
 import type {LocalFontRecord} from '../utils/appearanceStorage';
 import { showToast } from '../utils/toast';
@@ -20,10 +21,11 @@ function initialAppearance(){let color=DEFAULT_THEME_COLOR,wallpaper='',opacity=
  // 旧的淡青 #C0D6D8 已换成新的淡青 #DDF2F4，之前存的旧值自动换成新色。
  if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;localStorage.setItem('smallphone_theme_color',color);}wallpaper=readImageSlot('smallphone_main_wallpaper');opacity=Number(localStorage.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
  let glass=50;try{const value=Number(localStorage.getItem('smallphone_glass_strength'));if(Number.isFinite(value))glass=value;}catch{}
- const splash=read('smallphone_splash_mode','always');return{color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
+ const splash=read('smallphone_splash_mode','always');return{tone:normalizeThemeTone(read('smallphone_theme_tone')),color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
 function useAppearanceState(){
  const navigation=useSettingsNavigation(),home=useHomeTexts(),music=useMusic();
  const [initial]=useState(initialAppearance),[color,setColor]=useState(initial.color),[hex,setHex]=useState(initial.color),savedColor=useRef(initial.savedColor);
+ const [tone,setToneState]=useState<ThemeTone>(initial.tone);
  const [wallpaper,setWallpaper]=useState(initial.wallpaper),[opacity,setOpacityState]=useState(initial.opacity),opacityRef=useRef(opacity),[glass,setGlassState]=useState(initial.glass),[splash,setSplashState]=useState(initial.splash);
  const [pageOpen,setPageOpen]=useState(false),pageRef=useRef<HTMLDivElement>(null),modalRef=useRef<HTMLDivElement>(null),[modalOpen,setModalOpen]=useState(false),[previous,setPrevious]=useState(DEFAULT_THEME_COLOR),[draftColor,setDraftColor]=useState(DEFAULT_THEME_COLOR),[modalHex,setModalHex]=useState(''),[hsv,setHsv]=useState<number[]>([0,0,0]),[modalReady,setModalReady]=useState(false);
  const [texts,setTexts]=useState<HomeTextValues>(()=>Object.fromEntries(Object.keys(defaultHomeTexts).map(key=>[key,''])) as HomeTextValues);
@@ -33,8 +35,9 @@ function useAppearanceState(){
  const [fontUrl,setFontUrl]=useState(restoredFont?.url||''),[font,setFont]=useState(restoredFont?{name:restoredFont.name,source:restoredFont.source,badge:'CUSTOM',active:true}:{name:'默认字体',source:'霞鹜圆体 / Georgia',badge:'DEFAULT',active:false});
  function persist(values:Record<string,string|null>){try{writeSettingsBatch(values);return true;}catch(error){showToast((error as Error).message);return false;}}
  function applyColor(value:string,save=true){const next=normalizeThemeColor(value);if(save&&!persist({'smallphone_theme_color':next})){setHex(color);return false;}setColor(next);setHex(next);if(save)savedColor.current=next;return true;}
+ function setTone(value:ThemeTone){const next=normalizeThemeTone(value);if(persist({'smallphone_theme_tone':next}))setToneState(next);}
  // body 上的 --theme-rgb 用「框架色」，跟 CSS 里 body 的 --theme-color 对应。
- useLayoutEffect(()=>{const rgb=themeColorToRgb(color);document.documentElement.style.setProperty('--theme-color',color);document.documentElement.style.setProperty('--theme-rgb',rgb.join(', '));document.body.style.setProperty('--theme-rgb',themeFrameRgb(rgb).join(', '));},[color]);
+ useLayoutEffect(()=>{const settings=themeToneSettings(tone);document.documentElement.style.setProperty('--theme-lightness-retention',String(settings.lightness));document.documentElement.style.setProperty('--theme-chroma-retention',String(settings.chroma));document.documentElement.style.setProperty('--theme-chroma-limit',String(settings.limit));const rgb=themeColorToRgb(color);document.documentElement.style.setProperty('--theme-color',color);document.documentElement.style.setProperty('--theme-rgb',rgb.join(', '));document.body.style.setProperty('--theme-rgb',themeFrameRgb(rgb,tone).join(', '));},[color,tone]);
  useLayoutEffect(()=>{
  // 50% 对应当前设计：约 8% 白底、3px 模糊、40% 左上高光。
  const values={'--ui-glass-alpha':(.03+glass*.001).toFixed(3),'--ui-glass-blur':(1+glass*.04).toFixed(2)+'px','--ui-glass-edge-highlight-alpha':(.20+glass*.004).toFixed(3),'--ui-glass-edge-soft-alpha':(.06+glass*.0016).toFixed(3),'--tama-jelly':(glass/100).toFixed(2)};
@@ -103,7 +106,7 @@ function useAppearanceState(){
   try{await commitFont(null,{smallphone_custom_font_type:null,smallphone_custom_font_url:null,smallphone_custom_font_name:null});deactivateFont();showToast('已恢复默认字体');}
   catch(error){showToast((error as Error).message||'字体恢复失败');}finally{fontBusy.current=false;}
  }
- return{pageOpen,pageRef,closePage,color,hex,setHex,applyColor,applyHex,glass,setGlass,splash,setSplash,wallpaper,wallpaperLayers,opacity,setOpacity,wallpaperInput,onWallpaper,removeWallpaper,modalRef,modalOpen,previous,draftColor,modalHex,setModalHex,hsv,modalReady,openModal,closeModal,modalApplyHex,setRange,confirmModal:()=>{if(applyColor(draftColor)){closeModal(false);showToast('主题颜色已保存');}},texts,setTexts,saveTexts,resetTexts:()=>saveTexts(defaultHomeTexts),icons,iconDrafts,chooseIcon,onIcon,resetIcons,saveIcons,iconInput,font,fontUrl,setFontUrl,fontInput,onFont,applyFontUrl,resetFont};
+ return{pageOpen,pageRef,closePage,tone,setTone,color,hex,setHex,applyColor,applyHex,glass,setGlass,splash,setSplash,wallpaper,wallpaperLayers,opacity,setOpacity,wallpaperInput,onWallpaper,removeWallpaper,modalRef,modalOpen,previous,draftColor,modalHex,setModalHex,hsv,modalReady,openModal,closeModal,modalApplyHex,setRange,confirmModal:()=>{if(applyColor(draftColor)){closeModal(false);showToast('主题颜色已保存');}},texts,setTexts,saveTexts,resetTexts:()=>saveTexts(defaultHomeTexts),icons,iconDrafts,chooseIcon,onIcon,resetIcons,saveIcons,iconInput,font,fontUrl,setFontUrl,fontInput,onFont,applyFontUrl,resetFont};
 }
 const Context=createContext<ReturnType<typeof useAppearanceState>|null>(null);
 export function AppearanceProvider({children}:{children:ReactNode}){const value=useAppearanceState();return <Context.Provider value={value}>{children}</Context.Provider>;}
