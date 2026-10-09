@@ -487,7 +487,7 @@
             width: 18px;
             height: 18px;
             fill: var(--color-text);
-            transition: fill 0.3s ease;
+            transition: none;
         }
 
 /* @qingtuan-order:000114 */
@@ -3009,6 +3009,12 @@
         #main-content .mp3-player .controls .btn-play,
         #main-content .tama-btn {
             box-shadow: var(--effect-button-shadow);
+        }
+
+        /* 有框圆钮保留图标淡化，同时收掉外投影，显示内凹细线。 */
+        #main-content .mp3-player .controls .btn-play:is(:active, .sp-is-pressed),
+        #main-content .tama-btn:is(:active, .sp-is-pressed) {
+            box-shadow: var(--effect-sunken);
         }
 
 /* @qingtuan-order:003628 */
