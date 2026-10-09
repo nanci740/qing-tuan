@@ -49,14 +49,12 @@ const icons = {
     "offset": "translate(0 0)"
   }
 } as const;
-// 按轮廓宽高及视觉重量调整留白，避免窄长图标显得过小。
-const iconCanvas = {people:26, message:26, document:22, image:24, sound:26, eye:22, trash:22, sparkle:28, location:26, book:26, mic:26, camera:24} as const;
+// 使用统一画布，让各图标的像素粗细一致，仅保留轮廓本身的大小差异。
 export type ChatPixelIconName = keyof typeof icons;
 export function ChatPixelIcon({name}:{name:ChatPixelIconName}) {
   const icon = icons[name];
-  const canvas = iconCanvas[name];
-  const edge = (24 - canvas) / 2;
-  return <svg className="chat-pixel-icon" viewBox={`${edge} ${edge} ${canvas} ${canvas}`} aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
+  return <svg className="chat-pixel-icon" viewBox="-1 -1 26 26" aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
     <path d={icon.path} transform={icon.offset} fill="currentColor" fillRule="evenodd" stroke="none" />
   </svg>;
 }
+
