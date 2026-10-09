@@ -5,8 +5,8 @@ const icons = {
     "offset": "translate(0 0)"
   },
   "message": {
-    "path": "M4 3h16v2h2v12h-2v2H10v2H8v2H4v-4H2V5h2z M4 5v12h2v4h2v-4h12V5z",
-    "offset": "translate(0 -1)"
+    "path": "M2 3h18v2h2v12h-2v2H10v2H8v2H2v-4H0V5h2z M2 5v12h2v4h4v-4h12V5z",
+    "offset": "translate(1 -1)"
   },
   "document": {
     "path": "M6 2h10v2h2v2h2v14h-2v2H6v-2H4V4h2z M6 4v16h12V10h-4V4z M16 4v4h2V6h-2z M8 12h8v2H8z M8 16h6v2H8z",
@@ -49,10 +49,14 @@ const icons = {
     "offset": "translate(0 0)"
   }
 } as const;
+// 按轮廓宽高及视觉重量调整留白，避免窄长图标显得过小。
+const iconCanvas = {people:26, message:26, document:22, image:24, sound:26, eye:22, trash:22, sparkle:28, location:26, book:24, mic:26, camera:24} as const;
 export type ChatPixelIconName = keyof typeof icons;
 export function ChatPixelIcon({name}:{name:ChatPixelIconName}) {
   const icon = icons[name];
-  return <svg className="chat-pixel-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
+  const canvas = iconCanvas[name];
+  const edge = (24 - canvas) / 2;
+  return <svg className="chat-pixel-icon" viewBox={`${edge} ${edge} ${canvas} ${canvas}`} aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
     <path d={icon.path} transform={icon.offset} fill="currentColor" fillRule="evenodd" stroke="none" />
   </svg>;
 }

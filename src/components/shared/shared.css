@@ -8753,7 +8753,7 @@
 
 /* @qingtuan-order:003953 */
 
-        /* 右边那颗小方钮：世界书白按钮 + 像素小三角 */
+        /* 右边那颗小方钮：世界书白按钮 + 平滑小三角 */
 
 /* @qingtuan-order:003954 */
 
@@ -8762,12 +8762,11 @@
             align-self: stretch;
             margin: 1px;
             border-left: 1px solid var(--cc-line);
-            background:
-                linear-gradient(var(--cc-title), var(--cc-title)) center calc(50% - 1px) / 7px 1px no-repeat,
-                linear-gradient(var(--cc-title), var(--cc-title)) center 50% / 5px 1px no-repeat,
-                linear-gradient(var(--cc-title), var(--cc-title)) center calc(50% + 1px) / 3px 1px no-repeat,
-                linear-gradient(var(--cc-title), var(--cc-title)) center calc(50% + 2px) / 1px 1px no-repeat,
-                var(--cc-btn-face);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cc-btn-face);
         }
 
 /* @qingtuan-order:003955 */
@@ -8776,8 +8775,19 @@
 
 /* @qingtuan-order:003956 */
 
+        .cc-switch i::before {
+            content: '';
+            width: 8px;
+            height: 5px;
+            background: var(--cc-title);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+
         .cc-switch:active i,
-        .cc-switch.open i { box-shadow: var(--cc-sunken); background-position: center calc(50% - 1px + 1px), center calc(50% + 1px), center calc(50% + 2px), center calc(50% + 3px), 0 0; }
+        .cc-switch.open i { box-shadow: var(--cc-sunken); }
+
+        .cc-switch:active i::before,
+        .cc-switch.open i::before { transform: translateY(1px); }
 
 /* @qingtuan-order:003957 */
 
