@@ -699,50 +699,50 @@ export function Home() {
                 <img className="app-custom-icon" alt="Memories icon" src={appearance.icons.app['memories'] || undefined} />
                 {"\n"}
                 <svg className="px-icon" viewBox="0 0 16 16" aria-hidden="true" shapeRendering="crispEdges">
-                  <rect className="px-l" x="9" y="1" width="6" height="1" />
+                  <rect className="px-x" x="9" y="1" width="6" height="1" />
                   <rect className="px-x" x="15" y="1" width="1" height="1" />
-                  <rect className="px-l" x="2" y="2" width="11" height="1" />
+                  <rect className="px-x" x="2" y="2" width="11" height="1" />
                   <rect className="px-o" x="13" y="2" width="2" height="1" />
                   <rect className="px-x" x="15" y="2" width="1" height="1" />
-                  <rect className="px-l" x="2" y="3" width="1" height="1" />
+                  <rect className="px-x" x="2" y="3" width="1" height="1" />
                   <rect className="px-w" x="3" y="3" width="9" height="1" />
-                  <rect className="px-l" x="12" y="3" width="1" height="1" />
+                  <rect className="px-x" x="12" y="3" width="1" height="1" />
                   <rect className="px-o" x="13" y="3" width="2" height="1" />
                   <rect className="px-x" x="15" y="3" width="1" height="1" />
-                  <rect className="px-l" x="1" y="4" width="12" height="1" />
+                  <rect className="px-x" x="1" y="4" width="12" height="1" />
                   <rect className="px-o" x="13" y="4" width="2" height="1" />
                   <rect className="px-x" x="15" y="4" width="1" height="1" />
-                  <rect className="px-l" x="0" y="5" width="1" height="1" />
+                  <rect className="px-x" x="0" y="5" width="1" height="1" />
                   <rect className="px-o" x="1" y="5" width="12" height="1" />
-                  <rect className="px-l" x="13" y="5" width="1" height="1" />
+                  <rect className="px-x" x="13" y="5" width="1" height="1" />
                   <rect className="px-o" x="14" y="5" width="1" height="1" />
                   <rect className="px-x" x="15" y="5" width="1" height="1" />
-                  <rect className="px-l" x="0" y="6" width="1" height="1" />
+                  <rect className="px-x" x="0" y="6" width="1" height="1" />
                   <rect className="px-o" x="1" y="6" width="12" height="1" />
-                  <rect className="px-l" x="13" y="6" width="1" height="1" />
+                  <rect className="px-x" x="13" y="6" width="1" height="1" />
                   <rect className="px-o" x="14" y="6" width="1" height="1" />
                   <rect className="px-x" x="15" y="6" width="1" height="1" />
-                  <rect className="px-l" x="0" y="7" width="1" height="1" />
+                  <rect className="px-x" x="0" y="7" width="1" height="1" />
                   <rect className="px-o" x="1" y="7" width="12" height="1" />
-                  <rect className="px-l" x="13" y="7" width="1" height="1" />
+                  <rect className="px-x" x="13" y="7" width="1" height="1" />
                   <rect className="px-o" x="14" y="7" width="1" height="1" />
                   <rect className="px-x" x="15" y="7" width="1" height="1" />
-                  <rect className="px-l" x="1" y="8" width="1" height="1" />
+                  <rect className="px-x" x="1" y="8" width="1" height="1" />
                   <rect className="px-o" x="2" y="8" width="13" height="1" />
                   <rect className="px-x" x="15" y="8" width="1" height="1" />
-                  <rect className="px-l" x="1" y="9" width="1" height="1" />
+                  <rect className="px-x" x="1" y="9" width="1" height="1" />
                   <rect className="px-o" x="2" y="9" width="12" height="1" />
-                  <rect className="px-l" x="14" y="9" width="1" height="1" />
+                  <rect className="px-x" x="14" y="9" width="1" height="1" />
                   <rect className="px-x" x="15" y="9" width="1" height="1" />
-                  <rect className="px-l" x="1" y="10" width="1" height="1" />
+                  <rect className="px-x" x="1" y="10" width="1" height="1" />
                   <rect className="px-o" x="2" y="10" width="12" height="1" />
-                  <rect className="px-l" x="14" y="10" width="1" height="1" />
+                  <rect className="px-x" x="14" y="10" width="1" height="1" />
                   <rect className="px-x" x="15" y="10" width="1" height="1" />
-                  <rect className="px-l" x="1" y="11" width="1" height="1" />
+                  <rect className="px-x" x="1" y="11" width="1" height="1" />
                   <rect className="px-o" x="2" y="11" width="12" height="1" />
-                  <rect className="px-l" x="14" y="11" width="1" height="1" />
+                  <rect className="px-x" x="14" y="11" width="1" height="1" />
                   <rect className="px-x" x="15" y="11" width="1" height="1" />
-                  <rect className="px-l" x="2" y="12" width="1" height="1" />
+                  <rect className="px-x" x="2" y="12" width="1" height="1" />
                   <rect className="px-o" x="3" y="12" width="12" height="1" />
                   <rect className="px-x" x="15" y="12" width="1" height="1" />
                   <rect className="px-x" x="2" y="13" width="14" height="1" />
