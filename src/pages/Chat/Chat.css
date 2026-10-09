@@ -102,7 +102,7 @@
 
 .chat-edit-overlay {
   position:fixed;inset:0;z-index:5500;display:flex;align-items:center;justify-content:center;
-  padding:22px;background:color-mix(in srgb, var(--color-muted) 26%, transparent);
+  padding:22px;background:var(--color-modal-overlay);
   backdrop-filter:blur(8px) saturate(112%);-webkit-backdrop-filter:blur(8px) saturate(112%);
 }
 
@@ -110,7 +110,7 @@
 
 .chat-edit-card {
   width:min(340px,90vw);border:.5px solid rgba(var(--color-surface-rgb), .72);
-  border-radius:var(--ui-radius);padding:18px 16px 15px;background:rgba(var(--color-surface-rgb), .74);
+  border-radius:var(--ui-radius);padding:18px 16px 15px;background:var(--color-surface);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   box-shadow:inset 0 1px 0 var(--effect-highlight);
   color:var(--color-text);
@@ -288,7 +288,7 @@
 /* @qingtuan-order:004245 */
 
         #chatAppPage#chatAppPage > .chat-edit-overlay {
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent) !important;
+            background: var(--color-modal-overlay) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -301,7 +301,7 @@
             overflow: hidden;
             border: 1px solid var(--cr-line) !important;
             border-radius: 4px !important;
-            background: color-mix(in srgb, var(--theme-color) 15%, var(--color-surface)) !important;
+            background: var(--color-surface) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: var(--effect-drop) !important;
