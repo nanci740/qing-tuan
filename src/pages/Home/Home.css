@@ -1418,11 +1418,7 @@
 /* @qingtuan-order:003361 */
 
 
-        #main-content .mp3-player .controls .btn-play:active {
-            /* 按下保持位置，边缘呈内凹细线。 */
 
-            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
-        }
 
 /* @qingtuan-order:003362 */
 
@@ -2613,14 +2609,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-/* @qingtuan-order:003548 */
-
-
-        #main-content .tama-btn:active {
-            /* 按下保持位置，边缘呈内凹细线。 */
-
-            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
-        }
 
 /* @qingtuan-order:003549 */
 
@@ -2890,14 +2878,6 @@
             background: var(--home-gloss-btn);
         }
 
-/* @qingtuan-order:003599 */
-
-        #main-content .mp3-player .controls .btn-play:active,
-        #main-content .tama-btn:active {
-            /* 按下保持位置，边缘呈内凹细线。 */
-
-            box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
-        }
 
 /* @qingtuan-order:003600 */
 

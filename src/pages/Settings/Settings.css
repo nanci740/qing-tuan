@@ -1290,7 +1290,8 @@
 /* @qingtuan-order:001106 */
 
 
-        #settingsPage .settings-content > .settings-section .settings-item:active .settings-item-action {
+        #settingsPage .settings-content > .settings-section .settings-item:active .settings-item-action,
+        #settingsPage .settings-content > .settings-section.settings-section-personal .settings-profile-card:active .settings-item-action {
         
             box-shadow: var(--bevel-in);
         }

@@ -4,11 +4,11 @@ import { flushSync } from 'react-dom';
 import type { PointerEventHandler } from 'react';
 /** 按下立即反馈，短点保留 120ms；不延迟点击操作，滑动及取消立即释放。 */
 export function useButtonPress(baseClass?:string){
- const [previous,setPrevious]=useState(baseClass),[tokens,setTokens]=useState(()=>baseClass?.split(/\s+/).filter(Boolean)||[]),[marked,setMarked]=useState(()=>!!baseClass?.split(/\s+/).some(token=>token==='sp-press'||token==='sp-press-bare')),[hadClass,setHadClass]=useState(baseClass!==undefined);
+ const [previous,setPrevious]=useState(baseClass),[tokens,setTokens]=useState(()=>baseClass?.split(/\s+/).filter(Boolean)||[]),[marked,setMarked]=useState(()=>!!baseClass?.split(/\s+/).some(token=>token==='sp-press'||token==='sp-press-bare'||token==='sp-press-icon')),[hadClass,setHadClass]=useState(baseClass!==undefined);
  const [pressed,setPressed]=useState(false);
  const cleanup=useRef<()=>void>(()=>{});
  useEffect(()=>()=>cleanup.current(),[]);
- if(previous!==baseClass){const required=baseClass?.split(/\s+/).filter(Boolean)||[],next=tokens.filter(token=>token==='sp-press'||token==='sp-press-bare'||required.includes(token));for(const token of required)if(!next.includes(token))next.push(token);setPrevious(baseClass);setTokens(next);if(baseClass!==undefined)setHadClass(true);}
+ if(previous!==baseClass){const required=baseClass?.split(/\s+/).filter(Boolean)||[],next=tokens.filter(token=>token==='sp-press'||token==='sp-press-bare'||token==='sp-press-icon'||required.includes(token));for(const token of required)if(!next.includes(token))next.push(token);setPrevious(baseClass);setTokens(next);if(baseClass!==undefined)setHadClass(true);}
  const onPointerDownCapture:PointerEventHandler<HTMLElement>=event=>{
   const element=event.currentTarget;
   if(!event.isPrimary||(event.pointerType==='mouse'&&event.button!==0)||element.matches(':disabled,[aria-disabled="true"]')||element.matches(PRESS_SKIP)||(event.target instanceof Element&&event.target.closest(PRESS_TARGET)!==element))return;
