@@ -984,7 +984,6 @@
 /* @qingtuan-order:003675 */
 
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-tools-open:active {
-            background: var(--win-face) !important;
             box-shadow: var(--bevel-in) !important;
         }
 
