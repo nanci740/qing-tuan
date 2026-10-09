@@ -4600,7 +4600,6 @@
 
         .chat-thread-card:active {
             transform: none;
-            background: rgba(var(--theme-rgb), .08);
         }
 
 /* @qingtuan-order:001617 */
@@ -5438,7 +5437,6 @@
 /* @qingtuan-order:001792 */
 
         .chat-thread-card.is-long-pressing {
-            background: rgba(var(--theme-rgb), .08) !important;
             transform: none;
         }
 
