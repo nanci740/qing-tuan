@@ -79,12 +79,6 @@ export function Appearance() {
               {"\n                    "}
             </div>
             {"\n\n                    "}
-            <div className="theme-palette-caption">配色风格</div>
-            <div className="theme-segmented" role="group" aria-label="配色风格" style={{gridTemplateColumns:'repeat(2, minmax(0, 1fr))'}}>
-              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='mist'?' active':'')} aria-pressed={appearance.tone==='mist'} onClick={()=>appearance.setTone('mist')}>雾灰</PressedButton>
-              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='vivid'?' active':'')} aria-pressed={appearance.tone==='vivid'} onClick={()=>appearance.setTone('vivid')}>鲜明</PressedButton>
-            </div>
-            <span className="theme-setting-note">雾灰柔和低饱和；鲜明保留更多主题色。切换不会改变已选色码。</span>
             <div className="theme-palette-group">
               {"\n                        "}
               <div className="theme-palette-caption">
@@ -121,8 +115,8 @@ export function Appearance() {
                 if (appearance.applyColor('#D7A6C1')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
-                <PressedButton type="button" data-color="#AEBBD1" aria-label="云灰蓝" data-qt-token="inline-007" className={'theme-swatch' + (appearance.color === '#AEBBD1' ? ' active' : '')} onClick={() => {
-                if (appearance.applyColor('#AEBBD1')) showToast('主题颜色已保存');
+                <PressedButton type="button" data-color="#B0A3C7" aria-label="灰紫色" data-qt-token="inline-007" className={'theme-swatch' + (appearance.color === '#B0A3C7' ? ' active' : '')} onClick={() => {
+                if (appearance.applyColor('#B0A3C7')) showToast('主题颜色已保存');
               }} />
                 {"\n                            "}
                 <PressedButton type="button" data-color="#AEC394" aria-label="抹茶灰绿" data-qt-token="inline-008" className={'theme-swatch' + (appearance.color === '#AEC394' ? ' active' : '')} onClick={() => {
@@ -189,6 +183,14 @@ export function Appearance() {
               {"\n                    "}
             </div>
             {"\n\n                    "}
+            <div className="theme-custom-color-panel theme-tone-panel">
+            <div className="theme-palette-caption">配色风格</div>
+            <div className="theme-segmented" role="group" aria-label="配色风格" style={{gridTemplateColumns:'repeat(2, minmax(0, 1fr))'}}>
+              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='mist'?' active':'')} aria-pressed={appearance.tone==='mist'} onClick={()=>appearance.setTone('mist')}>雾灰</PressedButton>
+              <PressedButton type="button" className={'theme-segment-btn'+(appearance.tone==='vivid'?' active':'')} aria-pressed={appearance.tone==='vivid'} onClick={()=>appearance.setTone('vivid')}>鲜明</PressedButton>
+            </div>
+            <span className="theme-setting-note">雾灰柔和低饱和；鲜明保留更多主题色。切换不会改变已选色码。</span>
+            </div>
             <div className="theme-custom-color-panel">
               {"\n                        "}
               <div className="theme-custom-color-title">
