@@ -1225,4 +1225,4 @@
 
 /* @qingtuan-order:003934 */
 
-        .cc-tag.on { background: var(--cc-head); color: var(--color-surface); text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); box-shadow: var(--cc-sunken); }
+        .cc-tag.on { background: var(--cc-head); color: var(--color-surface); text-shadow: none; box-shadow: var(--cc-sunken); }

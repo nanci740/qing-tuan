@@ -323,7 +323,7 @@
             font-size: 12px !important;
             font-weight: 600 !important;
             letter-spacing: 1px;
-            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title), 1px 1px 0 color-mix(in srgb, var(--cr-title) 70%, transparent) !important;
+            text-shadow: none !important;
         }
 
 /* @qingtuan-order:004248 */
@@ -377,5 +377,5 @@
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
-            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
+            text-shadow: none;
         }

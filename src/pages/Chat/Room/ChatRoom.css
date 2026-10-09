@@ -1133,7 +1133,7 @@
             font-size: 12px;
             letter-spacing: 1px;
             color: var(--color-surface);
-            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title);
+            text-shadow: none;
         }
 
 /* @qingtuan-order:004106 */
@@ -1206,11 +1206,9 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         
-/* 顶栏字：跟 Chat 列表顶栏「Chat」同一套白色描边 + 右下叠一层白 + 淡主题青 */
+/* 顶栏字：跟 Chat 列表顶栏「Chat」一样不加文字阴影 */
 
-            text-shadow:
-                -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
-                2px 2px 0 var(--color-surface), 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+            text-shadow: none !important;
         
             overflow: hidden;
             font-size: 12.5px !important;
@@ -1458,9 +1456,7 @@
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 12px !important;
-            text-shadow:
-                -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
-                2px 2px 0 var(--color-surface), 3px 3px 0 color-mix(in srgb, var(--theme-color) 90%, transparent) !important;
+            text-shadow: none !important;
         }
 
 /* @qingtuan-order:004156 */
@@ -1597,7 +1593,7 @@
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 9.5px !important;
-            text-shadow: -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface);
+            text-shadow: none;
         }
 
 /* @qingtuan-order:004174 */
