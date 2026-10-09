@@ -999,7 +999,7 @@
             font-size: 10.5px;
             font-weight: 500;
             /* 没有底色和虚线框：字跟耳机线同色（亮度一样），彩度比耳机线再高一点点 */
-            color: oklch(from var(--theme-color) calc(l - 0.05) calc(c * 1.4) h); /* 彩度收一点点，带一丝灰调 */
+            color: var(--color-accent-strong); /* 彩度收一点点，带一丝灰调 */
             background: transparent;
             border: 0;
             text-shadow: 0 0 4px rgba(var(--color-surface-rgb), 0.55); /* 只留一点点柔和的白光 */
@@ -2984,7 +2984,7 @@
         #main-content .heart-icon { fill: currentColor !important; 
 /* 像素爱心：11×10 格，两边圆一点，不加反光 */
  width: 12.1px; height: 11px; top: 138px; 
-            color: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h) !important;
+            color: var(--color-accent-strong) !important;
         }
 
 /* @qingtuan-order:003623 */
@@ -3028,11 +3028,11 @@
 
 /* @qingtuan-order:003630 */
 
-        #main-content .earphone-wires path { stroke: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h); }
+        #main-content .earphone-wires path { stroke: var(--color-accent-strong); }
 
 /* @qingtuan-order:003631 */
 
-        #main-content .earphone-wires ellipse { fill: oklch(from var(--theme-color) calc(l - 0.04) calc(c * 1.15) h); }
+        #main-content .earphone-wires ellipse { fill: var(--color-accent-strong); }
 
 /* @qingtuan-order:003691 */
 

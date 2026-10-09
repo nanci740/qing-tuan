@@ -64,7 +64,7 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
         return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
     }
 
-    // 与 CSS 共用模式参数；保留原始选色，霧灰柔化、鮮明保留更多色度。
+    // 与 CSS 共用模式参数；保留原始选色，雾灰柔化、鲜明保留更多色度。
     export function themeFrameRgb(rgb: number[], tone: ThemeTone = 'mist') {
         const toLin = (v: number) => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
         const [r, g, b] = rgb.map(toLin);

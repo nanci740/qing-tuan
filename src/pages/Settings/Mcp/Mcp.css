@@ -531,7 +531,8 @@
 
 
         #mcpSettingsPage#mcpSettingsPage .mcp-service-status {
-            color: var(--win-ink) !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF;
             font-family: 'SF Mono', Menlo, Consolas, monospace;
         }
 
@@ -872,7 +873,7 @@
             /* 跟音乐设置「当前」标签同一套：主按钮青、饱和度拉高一点、带一丝灰 */
             border: 1px solid var(--sb-line, var(--win-deep)) !important;
             border-radius: 0 !important;
-            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            background: var(--color-accent-strong) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;
@@ -921,7 +922,7 @@
             padding: 2px 6px;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
             font-family: var(--mono);
-         color: #FFFFFF !important;  -webkit-text-fill-color: #FFFFFF !important; }
+        }
 
 /* @qingtuan-order:003003 */
 

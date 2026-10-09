@@ -2134,7 +2134,7 @@
 /* @qingtuan-order:002815 */
 
 
-        /* DEFAULT 标签：和版本号、访客计数一样的深底浅青小牌 */
+        /* DEFAULT 标签：和版本号、访客计数一样的主题灰底白字小牌 */
 
 /* @qingtuan-order:002816 */
 
@@ -2142,7 +2142,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0 !important;
             background: var(--set-fill, var(--win-deep));
-            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF; -webkit-text-fill-color: #FFFFFF;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 
