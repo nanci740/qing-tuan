@@ -2369,12 +2369,12 @@
 
 /* @qingtuan-order:003495 */
 
-        #main-content .tama-pet .tq-x,
-        #main-content .tama-pet .tq-eye,
+                #main-content .tama-pet .tq-eye,
         #main-content .tama-pet .tq-eye-closed { fill: var(--home-ink); }
 
+        #main-content .tama-pet .tq-x { fill: var(--color-muted); }
         #main-content .tama-pet .tq-mouth,
-        #main-content .tama-pet .tq-mouth-open { fill: #e49147; }
+        #main-content .tama-pet .tq-mouth-open { fill: #E8C7A6; }
 
 /* @qingtuan-order:003496 */
 
@@ -2386,7 +2386,7 @@
 
 /* @qingtuan-order:003498 */
 
-        #main-content .tama-pet .tq-b { fill: rgba(236, 150, 170, 0.70); }
+        #main-content .tama-pet .tq-b { fill: rgba(236, 150, 170, 0.30); }
 
 /* @qingtuan-order:003499 */
 
