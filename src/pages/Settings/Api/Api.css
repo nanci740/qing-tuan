@@ -1722,6 +1722,6 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-badge {
             background: var(--set-block) !important;
             border-color: var(--set-block) !important;
-            color: var(--theme-color) !important; -webkit-text-fill-color: var(--theme-color) !important;
+            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }

@@ -3232,7 +3232,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0;
             background: var(--set-fill, var(--win-deep));
-            color: var(--theme-color); -webkit-text-fill-color: var(--theme-color); /* 跟访客计数器一样：青灰底 + 主题青字 */
+            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; /* 跟访客计数器一样：青灰底 + 主题青字 */
             font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 1px;

@@ -921,7 +921,7 @@
             padding: 2px 6px;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade), inset -1px -1px 0 var(--effect-highlight);
             font-family: var(--mono);
-        }
+         color: #FFFFFF !important;  -webkit-text-fill-color: #FFFFFF !important; }
 
 /* @qingtuan-order:003003 */
 
