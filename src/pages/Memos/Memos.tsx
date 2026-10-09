@@ -5,11 +5,10 @@ import type { MemoFolder, MemoKind, MemoNote } from '../../types/memos';
 import { memoSummary, memoTitle, selectMemos } from '../../utils/memoStorage';
 import './Memos.css';
 
-type SymbolName = 'note' | 'list' | 'back' | 'plus' | 'pin' | 'trash' | 'search' | 'disk' | 'close';
+type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'disk' | 'close';
 const symbols: Record<SymbolName, string> = {
   note: 'M3 1h7v1h1v1h1v11H3z M4 2v11h7V5H8V2z M9 2v2h2V3h-1V2z M5 7h5v1H5z M5 9h5v1H5z M5 11h3v1H5z',
   list: 'M2 1h12v14H2z M3 2v12h10V2z M4 4h2v2H4z M7 4h5v1H7z M4 7h2v2H4z M7 7h5v1H7z M4 10h2v2H4z M7 10h5v1H7z',
-  back: 'M9 3h2v2H9z M7 5h2v2H7z M5 7h2v2H5z M7 9h2v2H7z M9 11h2v2H9z',
   plus: 'M7 2h2v5h5v2H9v5H7V9H2V7h5z',
   pin: 'M5 2h6v2h-1v4l2 2v1H9v3H7v-3H4v-1l2-2V4H5z M7 4v4h2V4z',
   trash: 'M6 1h4v1H6z M3 3h10v1H3z M4 5h8v9H4z M5 6v7h6V6z M6 7h1v5H6z M9 7h1v5H9z',
@@ -20,6 +19,16 @@ const symbols: Record<SymbolName, string> = {
 function MemoSymbol({ name }: { name: SymbolName }) {
   return <svg className="memos-symbol" viewBox="0 0 16 16" aria-hidden="true" shapeRendering="crispEdges">
     <path d={symbols[name]} fill="currentColor" fillRule="evenodd" />
+  </svg>;
+}
+const pixels = {
+  note: 'M6 2h10v2h2v2h2v14h-2v2H6v-2H4V4h2z M6 4v16h12V10h-4V4z M16 4v4h2V6h-2z M8 12h8v2H8z M8 16h6v2H8z',
+  list: 'M4 3h16v2h2v14h-2v2H4v-2H2V5h2z M4 5v14h16V5z M6 7h2v2H6z M10 7h8v2h-8z M6 11h2v2H6z M10 11h8v2h-8z M6 15h2v2H6z M10 15h6v2h-6z',
+  trash: 'M9 2h6v2H9z M5 4h14v2H5z M5 8h14v12h-2v2H7v-2H5z M7 10v10h10V10z M9 12h2v6H9z M13 12h2v6h-2z',
+};
+function MemoPixel({ name }: { name: keyof typeof pixels }) {
+  return <svg className="memos-pixel" viewBox="-1 -1 26 26" aria-hidden="true" shapeRendering="crispEdges">
+    <path d={pixels[name]} fill="currentColor" fillRule="evenodd" />
   </svg>;
 }
 function dateLabel(time: number, full = false) {
@@ -114,15 +123,15 @@ export function Memos({ onClose }: { onClose: () => void }) {
       }
     }}>
     <header className="memos-titlebar">
-      <button type="button" className="memos-button memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><MemoSymbol name="back" /></button>
-      <h1 id="memosHeading"><MemoSymbol name={selected?.kind === 'checklist' ? 'list' : 'note'} /><span>{selected ? memoTitle(selected) : 'memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
+      <button type="button" className="memos-button memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
+      <h1 id="memosHeading"><span>{selected ? memoTitle(selected) : 'memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
       {!selected && <div className="memos-folder-area" ref={folderArea}>
         <button type="button" className="memos-folder-button" aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></button>
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
     </header>
-    <div className="memos-holes" aria-hidden="true" />
-    <div className="memos-address"><span>目录</span><MemoSymbol name="note" /><span>{`C:\\青团\\备忘录\\${selected ? `${memoTitle(selected)}.${selected.kind === 'text' ? 'txt' : 'list'}` : folderNames[folder] + '\\'}`}</span></div>
+    <div className="memos-binding" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>
+    <div className="memos-address"><span>目录</span><MemoPixel name="note" /><span>{`C:\\青团\\备忘录\\${selected ? `${memoTitle(selected)}.${selected.kind === 'text' ? 'txt' : 'list'}` : folderNames[folder] + '\\'}`}</span></div>
     <main className="memos-window">
       {memos.loadError && <div className="memos-notice" role="alert">{memos.loadError}<button type="button" className="memos-button" onClick={memos.retryRead}>重新读取</button></div>}
       {memos.saveState === 'error' && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
@@ -157,10 +166,10 @@ export function Memos({ onClose }: { onClose: () => void }) {
         <div className="memos-tagline"><span className="memos-tag">{folderNames[folder]}</span><span>{folder === 'trash' ? '删除日期' : `${visible.length} 条`}</span></div>
         <div className="memos-directory">
           {visible.length ? <ul className="memos-note-list">{visible.map(note => <li key={note.id} className="memos-note-row">
-            {folder === 'trash' ? <div className="memos-note-entry"><MemoSymbol name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.deletedAt ?? note.updatedAt)}</time></div> :
-              <button type="button" className="memos-note-entry" onClick={() => setSelectedId(note.id)}><MemoSymbol name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{note.pinned && <MemoSymbol name="pin" />}{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.updatedAt)}</time></button>}
+            {folder === 'trash' ? <div className="memos-note-entry"><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.deletedAt ?? note.updatedAt)}</time></div> :
+              <button type="button" className="memos-note-entry" onClick={() => setSelectedId(note.id)}><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{note.pinned && <MemoSymbol name="pin" />}{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.updatedAt)}</time></button>}
             {folder === 'trash' && <div className="memos-trash-tools"><button type="button" className="memos-button" onClick={() => memos.restore(note.id)}>恢复</button><button type="button" className="memos-button memos-danger" onClick={event => { eraseTrigger.current = event.currentTarget; setEraseId(note.id); }}>彻底删除</button></div>}
-          </li>)}</ul> : <div className="memos-empty"><MemoSymbol name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '这里留给你的小事'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
+          </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
       </>}
       <footer className="memos-status"><span role="status"><MemoSymbol name="disk" />{memos.loadError ? '读取失败' : saveLabel}</span><span>{selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><i aria-hidden="true" /></footer>
