@@ -723,7 +723,7 @@ position:relative;
 /* @qingtuan-order:001965 */
 
 #chatListView .chat-conversation-panel .chat-thread-card:is(:active, .sp-is-pressed),
-#chatListView .chat-thread-card.is-long-pressing{box-shadow:var(--chat-sunken)!important;background:var(--win-face)!important}
+#chatListView .chat-thread-card.is-long-pressing{box-shadow:var(--chat-sunken)!important}
 
 /* @qingtuan-order:001966 */
 
@@ -866,7 +866,7 @@ position:relative;
 
 /* @qingtuan-order:001996 */
 
-#chatListView .chat-subnav-item.active{background:linear-gradient(var(--color-surface), var(--color-surface) 60%, var(--win-face));
+#chatListView .chat-subnav-item.active{background:var(--effect-face-white);
             margin-top:-1px;
             border-top:2px solid var(--chat-teal);
             opacity:1;
@@ -1093,7 +1093,7 @@ position:relative;
 /* @qingtuan-order:003853 */
 
         #chatAppPage#chatAppPage #chatListView .chat-subnav-item.active {
-            background: linear-gradient(var(--color-surface), var(--color-surface) 60%, color-mix(in srgb, var(--ch-btn-tint) 30%, var(--color-surface))) !important;
+            background: var(--effect-face-white) !important;
         }
 
 /* @qingtuan-order:003861 */

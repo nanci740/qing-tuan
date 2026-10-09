@@ -17,8 +17,8 @@
     --effect-inner-emphasis: color-mix(in srgb, var(--color-text) 70%, transparent);
     --effect-face-accent: linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--color-accent) 55%, var(--color-surface)) 42.5%, var(--color-accent) 56.5%, color-mix(in srgb, var(--color-accent) 88%, var(--color-surface)) 100%);
     --effect-face-white: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 42%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 30%, var(--color-surface)) 100%);
-    /* 小尺寸白色滑块、手柄和关闭钮：保留白色上半面，增强下半面层次。 */
-    --effect-face-white-compact: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface) 42.5%, color-mix(in srgb, var(--color-tint) 85%, var(--color-surface)) 56.5%, color-mix(in srgb, var(--color-tint) 60%, var(--color-surface)) 100%);
+    /* 白色滑块、手柄和关闭钮与普通白色按钮共用正面高光。 */
+    --effect-face-white-compact: var(--effect-face-white);
     --effect-highlight: color-mix(in srgb, var(--color-surface) 85%, transparent);
     --effect-highlight-soft: color-mix(in srgb, var(--color-surface) 60%, transparent);
     --effect-inner-soft: color-mix(in srgb, var(--color-muted) 22%, transparent);
