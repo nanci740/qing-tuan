@@ -531,8 +531,8 @@
 
 
         #mcpSettingsPage#mcpSettingsPage .mcp-service-status {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF;
+            color: var(--color-divider) !important;
+            -webkit-text-fill-color: var(--color-divider);
             font-family: 'SF Mono', Menlo, Consolas, monospace;
         }
 
@@ -1002,3 +1002,4 @@
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%201.5%205.5%204%203%206.5%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%278%27%20viewBox%3D%270%200%208%208%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%201.5%205.5%204%203%206.5%27/%3E%3C/svg%3E") no-repeat center / 8px 8px;
         }
+

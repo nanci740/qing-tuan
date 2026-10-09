@@ -604,16 +604,14 @@
 
 /* @qingtuan-order:002160 */
 
-/* 大标题：白边 + 右下错位阴影的古早艺术字，两边一颗星 */
+/* 大标题：无文字阴影，两边一颗星 */
 
 /* @qingtuan-order:002161 */
 
 .world-page .world-main-title{
   justify-self:center;max-width:100%;
   font-size:18px;font-weight:700;letter-spacing:2px;text-align:center;
-  text-shadow:
-    -1px -1px 0 var(--color-surface), 1px -1px 0 var(--color-surface), -1px 1px 0 var(--color-surface), 1px 1px 0 var(--color-surface),
-    2px 2px 0 var(--color-surface), 2px 2px 0 rgba(var(--theme-rgb), 0.3);
+  text-shadow:none;
 }
 
 /* @qingtuan-order:002162 */
@@ -621,7 +619,7 @@
 .world-page .world-main-title::before,
 .world-page .world-main-title::after{
   content:'✧';margin:0 6px;font-size:12px;font-weight:400;opacity:1;letter-spacing:0;vertical-align:2px;
-  color:var(--color-surface);text-shadow:1px 1px 0 var(--win-line);
+  color:var(--color-surface);text-shadow:none;
 }
 
 /* @qingtuan-order:002163 */
@@ -2208,3 +2206,4 @@
 /* @qingtuan-order:004291 */
 
         :is(html, #_#_#_) .world-page .world-action-menu-item:active svg { stroke: var(--color-surface) !important; }
+
