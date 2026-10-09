@@ -2333,7 +2333,7 @@
             bottom: 6px;
             left: 8px;
             width: 28px;
-            height: 21px;
+            height: 23px;
             transition: left 2.8s steps(12);
             cursor: pointer;
             z-index: 2;
@@ -2365,19 +2365,20 @@
 /* @qingtuan-order:003494 */
 
 
-        /* 像素颜色：描边、眼睛、嘴 = 点缀色；身体白；腮红淡粉 */
+        /* 小鸟：描边和眼睛沿用点缀色；白色身体、橙色喙、淡粉腮红 */
 
 /* @qingtuan-order:003495 */
 
         #main-content .tama-pet .tq-x,
         #main-content .tama-pet .tq-eye,
-        #main-content .tama-pet .tq-eye-closed,
+        #main-content .tama-pet .tq-eye-closed { fill: var(--home-ink); }
+
         #main-content .tama-pet .tq-mouth,
-        #main-content .tama-pet .tq-mouth-open { fill: var(--home-ink); }
+        #main-content .tama-pet .tq-mouth-open { fill: #e28b3d; }
 
 /* @qingtuan-order:003496 */
 
-        #main-content .tama-pet .tq-o { fill: var(--color-surface); }
+        #main-content .tama-pet .tq-o { fill: #fff; }
 
 /* @qingtuan-order:003497 */
 

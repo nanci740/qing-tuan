@@ -770,7 +770,7 @@ export function Home() {
         "display": "none"
       }} />
         {"\n"}
-        <OriginalComment text={" 电子宠物：蛋形果冻机，放在 App 右边代替拍立得；液晶小窗里住着一颗像素青团，下面三颗按钮；像素图和互动都在底部 initTamaPet 里 "} />
+        <OriginalComment text={" 电子宠物：蛋形果冻机，放在 App 右边代替拍立得；液晶小窗里住着一只像素小鸟，下面三颗按钮；像素图和互动都在底部 initTamaPet 里 "} />
         {"\n"}
         <TamaPet />
         {"\n"}
