@@ -1634,4 +1634,4 @@
 
 /* @qingtuan-order:003694 */
 
-        #settingsPage#settingsPage .settings-content > .settings-section .retro-sec-toggle::before { background: var(--theme-accent) !important; }
+        #settingsPage#settingsPage .settings-content > .settings-section .retro-sec-toggle::before { background: var(--color-accent-strong) !important; }
