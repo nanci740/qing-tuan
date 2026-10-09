@@ -51,10 +51,15 @@ const icons = {
 } as const;
 // 使用统一画布，让各图标的像素粗细一致，仅保留轮廓本身的大小差异。
 export type ChatPixelIconName = keyof typeof icons;
-export function ChatPixelIcon({name}:{name:ChatPixelIconName}) {
+export function ChatPixelIcon({name, uniformSize = false}:{name:ChatPixelIconName; uniformSize?:boolean}) {
   const icon = icons[name];
-  return <svg className="chat-pixel-icon" viewBox="-1 -1 26 26" aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
+  // 设置列表按轮廓最长边统一大小；其他位置继续使用原有画布。
+  const extent = {people:22, message:22, document:20, image:20, sound:22, eye:20, trash:20, sparkle:24, location:18, book:18, mic:22, camera:20}[name];
+  const canvas = uniformSize ? extent * 26 / 20 : 26;
+  const edge = (24 - canvas) / 2;
+  return <svg className="chat-pixel-icon" viewBox={`${edge} ${edge} ${canvas} ${canvas}`} aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
     <path d={icon.path} transform={icon.offset} fill="currentColor" fillRule="evenodd" stroke="none" />
   </svg>;
 }
+
 
