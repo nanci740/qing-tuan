@@ -1779,7 +1779,7 @@
             border: 1px solid var(--cr-line) !important;
             border-radius: 2px !important;
             background: transparent !important;
-            box-shadow: inset 1px 1px 0 var(--effect-highlight), var(--effect-drop) !important;
+            box-shadow: inset 1px 1px 0 var(--effect-highlight) !important;
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
         }
