@@ -1,3 +1,4 @@
+import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
 import type { CSSProperties } from 'react';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 import {ChatSidebar} from './ChatSidebar';
@@ -70,10 +71,7 @@ export function ChatRoom() {
         {"\n            "}
         <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"draw"}]}>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"},{"name":"aria-hidden","value":"true"}]}>
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"m12 3-1.5 4.5L6 9l4.5 1.5L12 15l1.5-4.5L18 9l-4.5-1.5Z"}]} />
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"m19 15-.8 2.2L16 18l2.2.8L19 21l.8-2.2L22 18l-2.2-.8Z"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="sparkle" />
           {"\n                "}
           <OriginalElement tag="span" attributes={[]}>
             {"Generate"}
@@ -83,10 +81,7 @@ export function ChatRoom() {
         {"\n            "}
         <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"location"}]}>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"},{"name":"aria-hidden","value":"true"}]}>
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"}]} />
-            <OriginalElement tag="circle" attributes={[{"name":"cx","value":"12"},{"name":"cy","value":"10"},{"name":"r","value":"2.5"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="location" />
           {"\n                "}
           <OriginalElement tag="span" attributes={[]}>
             {"Location"}
@@ -96,10 +91,7 @@ export function ChatRoom() {
         {"\n            "}
         <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"world"}]}>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"},{"name":"aria-hidden","value":"true"}]}>
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"M12 7v14"}]} />
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"M3 18V5.5A2.5 2.5 0 0 1 5.5 3H9a3 3 0 0 1 3 3 3 3 0 0 1 3-3h3.5A2.5 2.5 0 0 1 21 5.5V18h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3Z"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="book" />
           {"\n                "}
           <OriginalElement tag="span" attributes={[]}>
             {"World Book"}
@@ -123,10 +115,7 @@ export function ChatRoom() {
         {"\n            "}
         <ChatMicrophone>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-            <OriginalElement tag="rect" attributes={[{"name":"x","value":"9"},{"name":"y","value":"2"},{"name":"width","value":"6"},{"name":"height","value":"12"},{"name":"rx","value":"3"}]} />
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="mic" />
           {"\n            "}
         </ChatMicrophone>
         {"\n            "}
@@ -151,11 +140,7 @@ export function ChatRoom() {
         {"\n        "}
         <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"image"}]}>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"},{"name":"aria-hidden","value":"true"}]}>
-            <OriginalElement tag="rect" attributes={[{"name":"x","value":"3"},{"name":"y","value":"4"},{"name":"width","value":"18"},{"name":"height","value":"16"},{"name":"rx","value":"2"}]} />
-            <OriginalElement tag="circle" attributes={[{"name":"cx","value":"8.5"},{"name":"cy","value":"9"},{"name":"r","value":"1.5"}]} />
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"m21 15-5-5L5 20"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="image" />
           {"\n                "}
           <OriginalElement tag="span" attributes={[]}>
             {"Image"}
@@ -164,10 +149,7 @@ export function ChatRoom() {
         </OriginalElement>
         <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"camera"}]}>
           {"\n                "}
-          <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"},{"name":"aria-hidden","value":"true"}]}>
-            <OriginalElement tag="path" attributes={[{"name":"d","value":"M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"}]} />
-            <OriginalElement tag="circle" attributes={[{"name":"cx","value":"12"},{"name":"cy","value":"13"},{"name":"r","value":"3"}]} />
-          </OriginalElement>
+          <ChatPixelIcon name="camera" />
           {"\n                "}
           <OriginalElement tag="span" attributes={[]}>
             {"Camera"}

@@ -1,3 +1,4 @@
+import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
 import {ChatWorldBooks} from './ChatWorldBooks';
 import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/ChatIdentityField';
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
@@ -204,12 +205,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-020"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"}]} />
-                  <OriginalElement tag="circle" attributes={[{"name":"cx","value":"9"},{"name":"cy","value":"7"},{"name":"r","value":"4"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M22 21v-2a4 4 0 0 0-3-3.87"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M16 3.13a4 4 0 0 1 0 7.75"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="people" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -248,9 +244,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-021"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="message" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -439,10 +433,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-022"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M4 4h16v16H4z"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M8 9h8M8 13h6"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="document" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -483,11 +474,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-023"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="circle" attributes={[{"name":"cx","value":"13.5"},{"name":"cy","value":"6.5"},{"name":"r","value":"2.5"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M19 8.5V19H5V5h6"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"m5 16 4.5-4.5 3 3 2-2L19 17"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="image" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -617,10 +604,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-024"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M11 5 6 9H3v6h3l5 4z"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M15.5 8.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="sound" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -673,10 +657,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-025"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"}]} />
-                  <OriginalElement tag="circle" attributes={[{"name":"cx","value":"12"},{"name":"cy","value":"12"},{"name":"r","value":"3"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="eye" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
@@ -751,10 +732,7 @@ export function ChatSettings() {
             <ChatSettingsEntryButton>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-icon"},{"name":"data-qt-token","value":"inline-026"}]}>
-                <OriginalElement tag="svg" attributes={[{"name":"viewBox","value":"0 0 24 24"}]}>
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M4 7h16M6 7v12h12V7M9 11h6"}]} />
-                  <OriginalElement tag="path" attributes={[{"name":"d","value":"M8 4h8l1 3H7z"}]} />
-                </OriginalElement>
+                <ChatPixelIcon name="trash" />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-settings-entry-copy"}]}>
