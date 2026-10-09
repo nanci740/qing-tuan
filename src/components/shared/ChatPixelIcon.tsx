@@ -5,7 +5,7 @@ const icons = {
     "offset": "translate(0 0)"
   },
   "message": {
-    "path": "M2 3h18v2h2v12h-2v2H10v2H8v2H4v-4H0V5h2z M2 5v12h4v4h2v-4h12V5z",
+    "path": "M2 3h18v2h2v12h-2v2H10v2H8v2H4v-4H2v-2H0V5h2z M2 5v12h4v4h2v-4h12V5z",
     "offset": "translate(1 -1)"
   },
   "document": {
