@@ -1633,7 +1633,7 @@
 
 .world-page .world-entry-card .world-entry-title{
   height:33px;margin:0 0 9px;padding:0 34px 0 0;
-  color:var(--wt);text-shadow:-1px -1px 0 #FFF,1px -1px 0 #FFF,-1px 1px 0 #FFF,1px 1px 0 #FFF;
+  color:var(--wt);text-shadow:none;
 }
 
 /* @qingtuan-order:002377 */
@@ -1698,7 +1698,7 @@
     repeating-linear-gradient(90deg,rgba(var(--color-surface-rgb), .35) 0 2px,transparent 2px 6px),
     var(--theme-color);
   color:var(--color-surface);font-size:9.5px;font-weight:700;letter-spacing:3px;
-  text-shadow:1px 1px 0 color-mix(in srgb,var(--theme-color) 90%,transparent);
+  text-shadow:none;
 }
 
 /* @qingtuan-order:002395 */
@@ -1720,7 +1720,7 @@
   content:'✎ 填写资料 ✎';margin:0 -14px 16px;padding:9px 0 8px;
   border-bottom:1px solid var(--wt);
   font-size:11.5px;font-weight:700;letter-spacing:3px;
-  text-shadow:-1px -1px 0 #FFF,1px -1px 0 #FFF,-1px 1px 0 #FFF,1px 1px 0 #FFF,0 0 3px #FFF;
+  text-shadow:none;
 }
 
 /* @qingtuan-order:002399 */

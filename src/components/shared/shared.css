@@ -6314,7 +6314,7 @@
 
 #worldPickerModal#worldPickerModal .api-model-sheet-title::before,
 .world-confirm-title::before{content:none;
-            text-shadow:1px 1px 0 color-mix(in srgb,var(--theme-color) 90%,transparent);
+            text-shadow:none;
         }
 
 /* @qingtuan-order:002394 */
@@ -8512,7 +8512,7 @@
             /* 跟标题栏同一个青 */
             background: var(--effect-face-accent);
             color: var(--color-surface);
-            text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title);
+            text-shadow: none;
             box-shadow: var(--effect-button-shadow);
         }
 
@@ -8826,11 +8826,11 @@
 
 /* @qingtuan-order:003960 */
 
-        .cc-menu-item.active{ background: var(--cc-head); color: var(--color-surface); text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); }
+        .cc-menu-item.active{ background: var(--cc-head); color: var(--color-surface); text-shadow: none; }
 
 /* @qingtuan-order:003961 */
 
-.cc-menu-item:active{; text-shadow: 0 0 1px var(--cc-title), 0 0 2px var(--cc-title); }
+.cc-menu-item:active{; text-shadow: none; }
 
 /* @qingtuan-order:003962 */
 
@@ -8925,7 +8925,7 @@
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--color-surface);
-            text-shadow: 0 0 1px var(--spc-title), 0 0 2px var(--spc-title), 1px 1px 0 color-mix(in srgb, var(--spc-title) 70%, transparent);
+            text-shadow: none;
         }
 
 /* @qingtuan-order:003978 */
@@ -8978,7 +8978,7 @@
         .sp-confirm-btn.is-primary {
             background: var(--effect-face-accent);
             color: var(--color-surface);
-            text-shadow: 0 0 1px var(--spc-title), 0 0 2px var(--spc-title);
+            text-shadow: none;
             box-shadow: var(--effect-button-shadow);
         }
 
@@ -8991,7 +8991,7 @@
         .sp-confirm-btn.is-primary.is-danger {
             background: linear-gradient(180deg, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 42.5%, var(--spc-danger) 56.5%, var(--spc-danger) 100%);
             border-color: color-mix(in srgb, var(--spc-danger) 70%, var(--color-danger-ink));
-            text-shadow: 0 0 1px var(--color-danger-ink), 0 0 2px var(--color-danger-ink);
+            text-shadow: none;
             box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent);
         }
 
@@ -9141,7 +9141,7 @@
             background: var(--effect-face-accent) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
-            text-shadow: 0 0 1px var(--wcf-title), 0 0 2px var(--wcf-title) !important;
+            text-shadow: none !important;
             box-shadow: var(--effect-button-shadow) !important;
         }
 
@@ -9150,7 +9150,7 @@
         :is(html, #_#_#_) .world-confirm-card .world-confirm-btn.primary.is-danger {
             background: linear-gradient(180deg, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 42.5%, var(--wcf-danger) 56.5%, var(--wcf-danger) 100%) !important;
             border-color: color-mix(in srgb, var(--wcf-danger) 70%, var(--color-danger-ink)) !important;
-            text-shadow: 0 0 1px var(--color-danger-ink), 0 0 2px var(--color-danger-ink) !important;
+            text-shadow: none !important;
             box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent) !important;
         }
 
@@ -9504,7 +9504,7 @@
             background: linear-gradient(180deg, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 42.5%, var(--fw-send) 56.5%, var(--fw-send) 100%) !important;
             box-shadow: var(--effect-button-shadow) !important;
             color: var(--color-surface) !important;
-            text-shadow: 0 0 1px var(--cr-title), 0 0 2px var(--cr-title); /* 跟发送(S)一样的深青灰描边 */
+            text-shadow: none; /* 跟发送(S)一样的深青灰描边 */
             font-size: 11px !important;
         }
 
