@@ -71,7 +71,7 @@
 
 
         .chat-filter-tab.active {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             background: var(--theme-color);
         }
 
@@ -525,7 +525,7 @@
 
 /* @qingtuan-order:001930 */
 
-#chatListView .chat-memory-title{color:var(--color-surface);font-size:11px;font-weight:600;letter-spacing:.5px}
+#chatListView .chat-memory-title{color:var(--color-surface); text-shadow: var(--effect-text-white);font-size:11px;font-weight:600;letter-spacing:.5px}
 
 /* @qingtuan-order:001931 */
 
@@ -777,7 +777,7 @@ position:relative;
 
 #chatListView .chat-conversation-panel .chat-unread-dot{
   min-width:16px;height:16px;padding:0 4px;border:1px solid var(--color-surface);border-radius:999px;
-  color:var(--color-surface);font-size:8px;font-weight:600;
+  color:var(--color-surface); text-shadow: var(--effect-text-white);font-size:8px;font-weight:600;
 }
 
 /* @qingtuan-order:001977 */
@@ -921,7 +921,7 @@ position:relative;
 #chatListView .chat-conversation-panel .chat-thread-pin{
   display:inline-flex;align-items:center;gap:2px;
   padding:1px 5px 1px 3px;border:1px solid var(--chat-teal);border-radius:3px;
-  color:var(--color-surface);font-size:7.5px;font-weight:600;letter-spacing:.5px;line-height:1.3;
+  color:var(--color-surface); text-shadow: var(--effect-text-white);font-size:7.5px;font-weight:600;letter-spacing:.5px;line-height:1.3;
   box-shadow:inset 1px 1px 0 var(--effect-highlight), 1px 1px 0 var(--effect-drop-color);
 }
 

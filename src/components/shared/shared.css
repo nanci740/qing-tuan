@@ -3029,7 +3029,7 @@
             border: 0;
             background: var(--set-fill, var(--win-deep));
             box-shadow: none;
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 1.2px;
@@ -3232,7 +3232,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0;
             background: var(--set-fill, var(--win-deep));
-            color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; /* 跟访客计数器一样：青灰底 + 白字 */
+            color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; text-shadow: var(--effect-text-white); /* 跟访客计数器一样：青灰底 + 白字 */
             font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 1px;
@@ -3399,7 +3399,7 @@
         #voiceImageSettingsPage .settings-header h2,
         #apiSettingsPage .settings-header .back-btn,
         #voiceImageSettingsPage .settings-header .back-btn {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001262 */
@@ -3807,7 +3807,7 @@
 
         #apiSettingsPage#apiSettingsPage .api-action-btn.primary,        #apiSettingsPage#apiSettingsPage .api-action-btn.primary:focus-visible,        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary,        #voiceImageSettingsPage#voiceImageSettingsPage .vi-btn.primary:focus-visible {
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001301 */
@@ -3894,7 +3894,7 @@
         #apiModelModal#apiModelModal .api-model-sheet-title,
         #viChoiceModal#viChoiceModal .vi-choice-title,
         #viChoiceModal#viChoiceModal.settings-choice .api-model-sheet-title {
-            color: var(--color-surface) !important;
+            color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             font-weight: 600;
             letter-spacing: 1.2px;
         }
@@ -3917,7 +3917,7 @@
             border: 1px solid rgba(var(--color-surface-rgb), 0.85) !important;
             border-radius: 2px !important;
             background: var(--effect-face-white-compact) !important;
-            color: var(--color-surface) !important;
+            color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             font-size: 14px !important;
             line-height: 17px !important;
             box-shadow: inset -1px -1px 0 var(--effect-inner-shade) !important;
@@ -4010,7 +4010,7 @@
         #viChoiceModal#viChoiceModal.settings-choice .api-model-action.primary:disabled {
             background: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001395 */
@@ -4069,7 +4069,7 @@
         #mcpSettingsPage#mcpSettingsPage .mcp-add-btn,        #mcpSettingsPage#mcpSettingsPage .mcp-add-btn:focus-visible,        #mcpServiceModal#mcpServiceModal .mcp-modal-btn.primary,        #mcpToolsModal#mcpToolsModal .mcp-modal-btn.primary{
             background: var(--effect-face-accent)!important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001476 */
@@ -4463,7 +4463,7 @@
             background-clip: padding-box !important;
             -webkit-background-clip: padding-box !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -4475,7 +4475,7 @@
             background: rgba(var(--theme-rgb), 0.72) !important;
             border-color: rgba(var(--color-surface-rgb), .72) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             outline: none !important;
             box-shadow: none !important;
         }
@@ -4757,7 +4757,7 @@
             place-items: center;
             padding: 0 4px;
             border-radius: 999px;
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             background: var(--theme-color);
             font-size: 8px;
         }
@@ -5682,7 +5682,7 @@
   padding:10px 8px;
   background:var(--theme-color);
   color:var(--color-surface);
-  -webkit-text-fill-color:var(--color-surface);
+  -webkit-text-fill-color:var(--color-surface); text-shadow: var(--effect-text-white);
   font-weight:400;
   font-size:10.5px;
   cursor:pointer;
@@ -6242,7 +6242,7 @@
 /* @qingtuan-order:002359 */
 
 #worldPickerModal#worldPickerModal .api-model-action.primary,#worldPickerModal#worldPickerModal .api-model-action.primary:disabled,.world-confirm-btn.primary{
-  background:var(--theme-color)!important;border-color:var(--theme-color)!important;color:var(--color-surface)!important;-webkit-text-fill-color:var(--color-surface)!important;
+  background:var(--theme-color)!important;border-color:var(--theme-color)!important;color:var(--color-surface)!important;-webkit-text-fill-color:var(--color-surface)!important; text-shadow: var(--effect-text-white) !important;
 }
 
 /* @qingtuan-order:002360 */
@@ -6289,7 +6289,7 @@
 /* @qingtuan-order:002389 */
 
 #worldPickerModal#worldPickerModal .api-model-sheet-title::before,
-.world-confirm-title::before{color:var(--color-surface);}
+.world-confirm-title::before{color:var(--color-surface); text-shadow: var(--effect-text-white);}
 
 /* @qingtuan-order:002390 */
 
@@ -6307,14 +6307,13 @@
 
 #worldPickerModal#worldPickerModal .api-model-sheet-title,
 .world-confirm-title{
-  color:var(--color-surface)!important;-webkit-text-fill-color:var(--color-surface);
+  color:var(--color-surface)!important;-webkit-text-fill-color:var(--color-surface); text-shadow: var(--effect-text-white);
 }
 
 /* @qingtuan-order:002393 */
 
 #worldPickerModal#worldPickerModal .api-model-sheet-title::before,
 .world-confirm-title::before{content:none;
-            text-shadow:none;
         }
 
 /* @qingtuan-order:002394 */
@@ -6637,7 +6636,7 @@
             background-clip: padding-box !important;
             -webkit-background-clip: padding-box !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -6702,7 +6701,7 @@
             background: rgba(var(--theme-rgb), 0.72) !important;
             border-color: rgba(var(--color-surface-rgb), .72) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             outline: none !important;
             box-shadow: none !important;
         }
@@ -6750,7 +6749,7 @@
             background-clip: padding-box !important;
             -webkit-background-clip: padding-box !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
             backdrop-filter: blur(10px) !important;
@@ -6786,7 +6785,7 @@
             background: rgba(var(--theme-rgb), 0.72) !important;
             border-color: rgba(var(--color-surface-rgb), .72) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:002570 */
@@ -7186,7 +7185,7 @@
 
 /* @qingtuan-order:002781 */
 
-.chat-forward-picker-send {min-width:86px;padding:9px 18px;border:0;border-radius:8px;background:var(--theme-color);color:var(--color-surface);font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+.chat-forward-picker-send {min-width:86px;padding:9px 18px;border:0;border-radius:8px;background:var(--theme-color);color:var(--color-surface); text-shadow: var(--effect-text-white);font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
 
 /* @qingtuan-order:002782 */
 
@@ -7499,7 +7498,7 @@
 
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-title,
         #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-title {
-            color: var(--color-surface) !important;
+            color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             font-size: 11px !important;
         }
 
@@ -7572,7 +7571,7 @@
         #mcpServiceModal#mcpServiceModal#mcpServiceModal .mcp-modal-btn.primary,        #mcpToolsModal#mcpToolsModal#mcpToolsModal .mcp-modal-btn.primary{
             background: var(--effect-face-accent) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: var(--bevel-solid-out) !important;
         }
 
@@ -8196,7 +8195,7 @@
             border-radius: 3px !important;
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
             font-weight: 400 !important;
-            text-shadow: none !important;
+            text-shadow: var(--effect-text-white) !important;
             box-shadow: var(--effect-button-shadow) !important;
         }
 
@@ -8338,7 +8337,7 @@
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--color-surface);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:003884 */
@@ -8512,7 +8511,7 @@
             /* 跟标题栏同一个青 */
             background: var(--effect-face-accent);
             color: var(--color-surface);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
             box-shadow: var(--effect-button-shadow);
         }
 
@@ -8826,11 +8825,10 @@
 
 /* @qingtuan-order:003960 */
 
-        .cc-menu-item.active{ background: var(--cc-head); color: var(--color-surface); text-shadow: none; }
+        .cc-menu-item.active{ background: var(--cc-head); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 
 /* @qingtuan-order:003961 */
 
-.cc-menu-item:active{; text-shadow: none; }
 
 /* @qingtuan-order:003962 */
 
@@ -8925,7 +8923,7 @@
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--color-surface);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:003978 */
@@ -8978,7 +8976,7 @@
         .sp-confirm-btn.is-primary {
             background: var(--effect-face-accent);
             color: var(--color-surface);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
             box-shadow: var(--effect-button-shadow);
         }
 
@@ -8991,7 +8989,6 @@
         .sp-confirm-btn.is-primary.is-danger {
             background: linear-gradient(180deg, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--spc-danger) 55%, var(--color-surface)) 42.5%, var(--spc-danger) 56.5%, var(--spc-danger) 100%);
             border-color: color-mix(in srgb, var(--spc-danger) 70%, var(--color-danger-ink));
-            text-shadow: none;
             box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent);
         }
 
@@ -9095,7 +9092,7 @@
             font-weight: 600 !important;
             letter-spacing: 1px !important;
             text-align: left !important;
-            text-shadow: none !important;
+            text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:003996 */
@@ -9141,7 +9138,7 @@
             background: var(--effect-face-accent) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
-            text-shadow: none !important;
+            text-shadow: var(--effect-text-white) !important;
             box-shadow: var(--effect-button-shadow) !important;
         }
 
@@ -9150,7 +9147,6 @@
         :is(html, #_#_#_) .world-confirm-card .world-confirm-btn.primary.is-danger {
             background: linear-gradient(180deg, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--wcf-danger) 55%, var(--color-surface)) 42.5%, var(--wcf-danger) 56.5%, var(--wcf-danger) 100%) !important;
             border-color: color-mix(in srgb, var(--wcf-danger) 70%, var(--color-danger-ink)) !important;
-            text-shadow: none !important;
             box-shadow: inset 1px 1px 0 rgba(var(--color-surface-rgb), .7), inset -1px -1px 0 color-mix(in srgb, var(--color-danger-ink) 45%, transparent), 1px 1px 0 color-mix(in srgb, var(--color-danger-ink) 30%, transparent) !important;
         }
 
@@ -9237,7 +9233,7 @@
         #chatAppPage#chatAppPage #chatRoomView#chatRoomView :is(.chat-room-title, .chat-message-selection-title, .chat-history-search-count, .chat-record-view-title, .chat-record-view-subtitle),
         #chatSettingsPage#chatSettingsPage .settings-header h2,
         body .chat-forward-picker .chat-forward-picker-title {
-            text-shadow: none !important;
+            text-shadow: var(--effect-text-white) !important;
             color: var(--color-surface) !important; /* 白字：跟 XP / QQ2006 标题栏一样 */
             -webkit-text-fill-color: var(--color-surface) !important;
         }
@@ -9504,7 +9500,7 @@
             background: linear-gradient(180deg, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--fw-send) 55%, var(--color-surface)) 42.5%, var(--fw-send) 56.5%, var(--fw-send) 100%) !important;
             box-shadow: var(--effect-button-shadow) !important;
             color: var(--color-surface) !important;
-            text-shadow: none; /* 跟发送(S)一样的深青灰描边 */
+            text-shadow: var(--effect-text-white) !important; /* 跟发送(S)一样的深青灰描边 */
             font-size: 11px !important;
         }
 
@@ -9673,7 +9669,7 @@
 
 /* @qingtuan-order:004346 */
 
-        .cr-my-menu > button:active { background: var(--theme-color); color: var(--color-surface); }
+        .cr-my-menu > button:active { background: var(--theme-color); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 
 /* @qingtuan-order:004347 */
 

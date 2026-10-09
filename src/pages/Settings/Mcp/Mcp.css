@@ -184,7 +184,7 @@
 
         #mcpSettingsPage .settings-header h2,
         #mcpSettingsPage .settings-header .back-btn {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001427 */
@@ -638,7 +638,7 @@
             background: var(--theme-color) !important;
             border: 0.75px solid var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -666,7 +666,7 @@
             background: var(--theme-color) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             outline: none !important;
             box-shadow: none !important;
         }
@@ -875,7 +875,7 @@
             border-radius: 0 !important;
             background: var(--color-accent-strong) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
         }
 

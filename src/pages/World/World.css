@@ -356,7 +356,7 @@
 
 /* @qingtuan-order:002076 */
 
-.world-page .world-sort-hint::before{content:'i';display:inline-grid;place-items:center;width:11px;height:11px;margin-right:5px;background:var(--theme-color);color:var(--color-surface);font-size:8px;font-style:italic;font-weight:700;}
+.world-page .world-sort-hint::before{content:'i';display:inline-grid;place-items:center;width:11px;height:11px;margin-right:5px;background:var(--theme-color);color:var(--color-surface); text-shadow: var(--effect-text-white);font-size:8px;font-style:italic;font-weight:700;}
 
 /* @qingtuan-order:002077 */
 
@@ -619,7 +619,7 @@
 .world-page .world-main-title::before,
 .world-page .world-main-title::after{
   content:'✧';margin:0 6px;font-size:12px;font-weight:400;opacity:1;letter-spacing:0;vertical-align:2px;
-  color:var(--color-surface);text-shadow:none;
+  color:var(--color-surface);text-shadow: var(--effect-text-white);
 }
 
 /* @qingtuan-order:002163 */
@@ -1633,8 +1633,7 @@
 
 .world-page .world-entry-card .world-entry-title{
   height:33px;margin:0 0 9px;padding:0 34px 0 0;
-  color:var(--wt);text-shadow:none;
-}
+  color:var(--wt);}
 
 /* @qingtuan-order:002377 */
 
@@ -1698,7 +1697,7 @@
     repeating-linear-gradient(90deg,rgba(var(--color-surface-rgb), .35) 0 2px,transparent 2px 6px),
     var(--theme-color);
   color:var(--color-surface);font-size:9.5px;font-weight:700;letter-spacing:3px;
-  text-shadow:none;
+  text-shadow: var(--effect-text-white);
 }
 
 /* @qingtuan-order:002395 */
@@ -1720,7 +1719,6 @@
   content:'✎ 填写资料 ✎';margin:0 -14px 16px;padding:9px 0 8px;
   border-bottom:1px solid var(--wt);
   font-size:11.5px;font-weight:700;letter-spacing:3px;
-  text-shadow:none;
 }
 
 /* @qingtuan-order:002399 */
@@ -1826,7 +1824,7 @@
 .world-page .world-action:not(.secondary):not(.danger){
   padding:0 8px;
   border-radius:3px;
-  color:var(--color-surface);-webkit-text-fill-color:var(--color-surface);font-size:11.5px;letter-spacing:1px;
+  color:var(--color-surface);-webkit-text-fill-color:var(--color-surface); text-shadow: var(--effect-text-white);font-size:11.5px;letter-spacing:1px;
 }
 
 /* @qingtuan-order:002441 */
@@ -1998,7 +1996,7 @@
 
 /* @qingtuan-order:002494 */
 
-.world-page .world-entry-filter.is-active{background:var(--wk-accent)!important;border-color:var(--wt)!important;color:var(--color-surface)!important}
+.world-page .world-entry-filter.is-active{background:var(--wk-accent)!important;border-color:var(--wt)!important;color:var(--color-surface)!important; text-shadow: var(--effect-text-white) !important;}
 
 /* @qingtuan-order:002497 */
 
@@ -2200,7 +2198,7 @@
             translate: none !important;
             background: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:004291 */

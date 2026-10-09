@@ -706,7 +706,7 @@
 
         #personalProfilePage#personalProfilePage .pp2-page-back,
         #personalProfilePage#personalProfilePage .pp2-page-header-title {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:003147 */

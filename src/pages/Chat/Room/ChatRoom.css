@@ -267,7 +267,7 @@
 /* @qingtuan-order:001694 */
 
         .chat-composer .chat-mic-btn.recording {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             /* 青色实心圆直径 26px，按钮点击范围仍保留 32px。 */
             background: radial-gradient(circle at center, var(--theme-color) 0 13px, transparent 13.2px);
         }
@@ -1112,7 +1112,7 @@
             /* 跟资料卡「保存」钮（.cc-primary）同一个青，饱和度提两成：上半截淡、下半截 --cr-send */ /* 改用顶栏最下面那个深青（--win-deep），跟转发钮同色 */
             background: linear-gradient(180deg, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 0%, color-mix(in srgb, var(--cr-send) 55%, var(--color-surface)) 42.5%, var(--cr-send) 56.5%, var(--cr-send) 100%) !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
-            color: var(--color-surface) !important;
+            color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         
             grid-area: send;
         }
@@ -1133,7 +1133,7 @@
             font-size: 12px;
             letter-spacing: 1px;
             color: var(--color-surface);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:004106 */
@@ -1208,7 +1208,6 @@
         
 /* 顶栏字：跟 Chat 列表顶栏「Chat」一样不加文字阴影 */
 
-            text-shadow: none !important;
         
             overflow: hidden;
             font-size: 12.5px !important;
@@ -1456,7 +1455,6 @@
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 12px !important;
-            text-shadow: none !important;
         }
 
 /* @qingtuan-order:004156 */
@@ -1593,7 +1591,6 @@
             color: var(--cr-title) !important;
             -webkit-text-fill-color: var(--cr-title) !important;
             font-size: 9.5px !important;
-            text-shadow: none;
         }
 
 /* @qingtuan-order:004174 */
@@ -2069,12 +2066,12 @@
             translate: none !important;
             background: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:004300 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active svg { color: var(--color-surface); }
+        #chatAppPage#chatAppPage #chatRoomView .chat-room-more-panel button:active svg { color: var(--color-surface); text-shadow: var(--effect-text-white); }
 
 /* @qingtuan-order:004301 */
 

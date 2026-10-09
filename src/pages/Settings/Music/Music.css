@@ -371,7 +371,7 @@
 
         #musicSettingsPage .settings-header h2,
         #musicSettingsPage .settings-header .back-btn {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001202 */
@@ -789,7 +789,7 @@
         #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary),        #musicSettingsPage#musicSettingsPage .music-settings-content .music-action-btn.ui-cyan-btn:not(.secondary):focus-visible {
             background: var(--effect-face-accent)!important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001249 */
@@ -873,7 +873,7 @@
             background: var(--effect-face-accent) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -913,7 +913,7 @@
             background: var(--effect-face-accent)!important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001574 */
@@ -1109,7 +1109,7 @@
             /* 以「导入本地音乐」按钮的青为底：饱和度拉高一点、亮度压低一点点（带一丝灰），小标签才不会太淡 */
             background: var(--color-accent-strong) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
         }
 
@@ -1225,4 +1225,4 @@
 
 /* @qingtuan-order:003934 */
 
-        .cc-tag.on { background: var(--cc-head); color: var(--color-surface); text-shadow: none; box-shadow: var(--cc-sunken); }
+        .cc-tag.on { background: var(--cc-head); color: var(--color-surface); text-shadow: var(--effect-text-white); box-shadow: var(--cc-sunken); }
