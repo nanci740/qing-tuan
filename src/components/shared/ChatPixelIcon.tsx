@@ -37,7 +37,7 @@ const icons = {
     "offset": "translate(0 -1)"
   },
   "book": {
-    "path": "M4 4h16v14h-2v2h2v2H6v-2H4z M6 6v10h12V6z M6 18v2h10v-2z M8 6h2v10H8z M14 6h2v6h-2z",
+    "path": "M6 4h14v14h-2v2h2v2H6v-2H4V6h2z M6 6v10h12V6z M6 18v2h10v-2z M8 6h2v10H8z M14 6h2v4h-2z",
     "offset": "translate(0 -1)"
   },
   "mic": {
