@@ -2142,7 +2142,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0 !important;
             background: var(--set-fill, var(--win-deep));
-            color: var(--theme-color); -webkit-text-fill-color: var(--theme-color);
+            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade);
         }
 

@@ -490,7 +490,7 @@
 
 /* @qingtuan-order:003740 */
 
-        #chatSettingsPage .idw-status > span { padding: 1px 5px; border: 1px solid var(--idw-soft); box-shadow: var(--idw-sunken); color: var(--idw-title); font-size: 8px; letter-spacing: .5px; }
+        #chatSettingsPage .idw-status > span { padding: 1px 5px; border: 1px solid var(--idw-soft); box-shadow: var(--idw-sunken); color: #FFFFFF !important; font-size: 8px; letter-spacing: .5px;  -webkit-text-fill-color: #FFFFFF !important; }
 
 /* @qingtuan-order:003741 */
 
