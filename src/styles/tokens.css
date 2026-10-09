@@ -22,9 +22,10 @@
     --effect-highlight: color-mix(in srgb, var(--color-surface) 85%, transparent);
     --effect-highlight-soft: color-mix(in srgb, var(--color-surface) 60%, transparent);
     --effect-inner-soft: color-mix(in srgb, var(--color-muted) 22%, transparent);
-    --effect-drop-soft: color-mix(in srgb, var(--color-muted) 12%, transparent);
+    --effect-drop-soft: rgba(var(--theme-rgb), 0.18);
     --effect-inner-shade: color-mix(in srgb, var(--color-muted) 55%, transparent);
-    --effect-drop-color: color-mix(in srgb, var(--color-muted) 24%, transparent);
+    /* 外投影跟主画面四个图标同一种：淡主题色，不用灰。 */
+    --effect-drop-color: rgba(var(--theme-rgb), 0.35);
     --effect-drop: 2px 2px 0 var(--effect-drop-color);
     /* 凸起与凹陷各保留一亮一暗；按钮另加一层外投影。 */
     --effect-raised: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade);
