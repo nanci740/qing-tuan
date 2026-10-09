@@ -47,7 +47,7 @@ export const settingsIcons: Record<string, readonly string[]> = {
                     'XoX..XoooooooooX',
                     'XooXXooXXXXoXoX.',
                     '.XooooX....X.X..',
-                    '..XXXX.....X.X..',
+                    '..XXXX..........',
                     '................',
                     '................',
                     '................',
