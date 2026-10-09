@@ -9,6 +9,7 @@
     --color-muted: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
     --color-page: color-mix(in srgb, var(--color-primary) 15%, #FFFFFF);
     --color-surface: #FFFFFF;
+    --color-modal-overlay: rgba(0, 0, 0, .18);
     --color-danger: #D08F88;
 
     /* 四类效果：正面高光、内侧暗边、外侧投影、玻璃反光。

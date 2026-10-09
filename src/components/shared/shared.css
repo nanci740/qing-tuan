@@ -637,7 +637,7 @@
         .theme-color-modal-backdrop {
             position: absolute;
             inset: 0;
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent);
+            background: var(--color-modal-overlay);
             backdrop-filter: blur(14px) saturate(135%);
             -webkit-backdrop-filter: blur(14px) saturate(135%);
         }
@@ -648,7 +648,7 @@
         .theme-color-modal-card {
             position: relative;
             width: min(92vw, 320px);
-            background: rgba(var(--color-surface-rgb), 0.72);
+            background: var(--color-surface);
             border: 1px solid rgba(var(--color-surface-rgb), 0.62);
             box-shadow: inset 0 1px 0 var(--effect-highlight);
             backdrop-filter: blur(20px);
@@ -1671,7 +1671,7 @@
             flex-direction: column;
             overflow: hidden;
             border-radius: var(--ui-radius) !important;
-            background: rgba(var(--color-surface-rgb), 0.72);
+            background: var(--color-surface);
             border: 1px solid rgba(var(--color-surface-rgb), 0.62);
             box-shadow: inset 0 1px 0 var(--effect-highlight);
             backdrop-filter: blur(20px);
@@ -2385,7 +2385,7 @@
             align-items: center;
             justify-content: center;
             padding: 18px;
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent);
+            background: var(--color-modal-overlay);
             backdrop-filter: blur(14px) saturate(130%);
             -webkit-backdrop-filter: blur(14px) saturate(130%);
             opacity: 0;
@@ -2410,7 +2410,7 @@
             flex-direction: column;
             border: 1px solid rgba(var(--color-surface-rgb), .58);
             border-radius: var(--ui-radius);
-            background: rgba(var(--color-surface-rgb), .72);
+            background: var(--color-surface);
             box-shadow: inset 0 1px 0 var(--effect-highlight);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -2807,7 +2807,7 @@
             align-items: center;
             justify-content: center;
             padding: 18px;
-            background: color-mix(in srgb, var(--color-muted) 18%, transparent);
+            background: var(--color-modal-overlay);
             backdrop-filter: blur(12px) saturate(120%);
             -webkit-backdrop-filter: blur(12px) saturate(120%);
             opacity: 0;
@@ -2832,7 +2832,7 @@
             overflow: hidden;
             border: 1px solid rgba(var(--color-surface-rgb), .62);
             border-radius: var(--ui-radius);
-            background: rgba(var(--color-surface-rgb), .72);
+            background: var(--color-surface);
             box-shadow: inset 0 1px 0 var(--effect-highlight);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -2988,7 +2988,7 @@
 
 
         #aboutAppModal .theme-color-modal-backdrop {
-            background: color-mix(in srgb, var(--color-muted) 22%, transparent) !important;
+            background: var(--color-modal-overlay) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -3004,7 +3004,7 @@
             padding: 0;
             border: 1px solid var(--win-deep) !important;
             border-radius: 3px !important;
-            background: var(--win-face) !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--bevel-out), var(--win-drop) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -3865,7 +3865,7 @@
 /* @qingtuan-order:001379 */
 
         #apiProviderModal, #apiModelModal, #viChoiceModal {
-            background: color-mix(in srgb, var(--color-muted) 22%, transparent) !important;
+            background: var(--color-modal-overlay) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -4105,7 +4105,7 @@
 
         #mcpServiceModal#mcpServiceModal,
         #mcpToolsModal#mcpToolsModal {
-            background: color-mix(in srgb, var(--color-muted) 22%, transparent) !important;
+            background: var(--color-modal-overlay) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -4445,7 +4445,7 @@
 /* @qingtuan-order:001576 */
 
         .api-model-modal {
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent) !important;
+            background: var(--color-modal-overlay) !important;
             backdrop-filter: blur(14px) saturate(135%) !important;
             -webkit-backdrop-filter: blur(14px) saturate(135%) !important;
         }
@@ -5984,7 +5984,7 @@
 /* @qingtuan-order:002107 */
 
 #worldPickerModal{
-  background:color-mix(in srgb, var(--color-muted) 22%, transparent)!important;
+  background:var(--color-modal-overlay)!important;
   backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
 }
 
@@ -6064,7 +6064,7 @@
 
 /* @qingtuan-order:002122 */
 
-.world-confirm-overlay{background:color-mix(in srgb, var(--color-muted) 22%, transparent);backdrop-filter:none;-webkit-backdrop-filter:none}
+.world-confirm-overlay{background:var(--color-modal-overlay);backdrop-filter:none;-webkit-backdrop-filter:none}
 
 /* @qingtuan-order:002123 */
 
@@ -6109,7 +6109,7 @@
 
 #worldPickerModal#worldPickerModal .api-model-sheet,
 .world-confirm-card{
-  background:var(--win-face)!important;
+  background:var(--color-surface)!important;
 }
 
 /* @qingtuan-order:002148 */
@@ -7681,7 +7681,7 @@
             width: min(300px, 88vw);
             border: 1px solid var(--color-text) !important;
             border-radius: 4px !important;
-            background: var(--color-page) !important;
+            background: var(--color-surface) !important;
             box-shadow: var(--effect-drop) !important;
         }
 
@@ -8234,7 +8234,7 @@
             align-items: center;
             justify-content: center;
             padding: calc(env(safe-area-inset-top, 0px) + 24px) 12px calc(env(safe-area-inset-bottom, 0px) + 24px);
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent); /* 跟其他弹窗一样的灰色遮罩 */
+            background: var(--color-modal-overlay); /* 跟其他弹窗一样的灰色遮罩 */
         }
 
 /* @qingtuan-order:003877 */
@@ -8253,7 +8253,7 @@
             max-height: 100%;
             display: flex;
             flex-direction: column;
-            background: var(--cc-bg);
+            background: var(--color-surface);
             border: 1px solid var(--cc-line);
             border-radius: 4px; /* 跟世界书弹窗一样 */
             box-shadow: var(--cc-drop);
@@ -8834,14 +8834,14 @@
             align-items: center;
             justify-content: center;
             padding: 22px;
-            background: color-mix(in srgb, var(--color-muted) 20%, transparent);
+            background: var(--color-modal-overlay);
         }
 
 /* @qingtuan-order:003975 */
 
         .sp-confirm {
             width: min(300px, 88vw);
-            background: var(--spc-bg);
+            background: var(--color-surface);
             border: 1px solid var(--spc-line);
             border-radius: 4px;
             box-shadow: var(--effect-drop);
@@ -9017,7 +9017,7 @@
         :is(html, #_#_#_) .world-confirm-card {
             width: min(300px, 88vw) !important;
             padding: 0 !important;
-            background: color-mix(in srgb, var(--theme-color) 15%, var(--color-surface)) !important;
+            background: var(--color-surface) !important;
             border: 1px solid var(--wcf-line) !important;
             border-radius: 4px !important;
             box-shadow: var(--effect-drop) !important;
