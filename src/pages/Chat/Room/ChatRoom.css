@@ -755,7 +755,7 @@
             border: 0 !important;
             color: var(--cr-title);
             -webkit-text-fill-color: var(--cr-title);
-            font-size: 10.5px;
+            font-size: var(--chat-message-font-size);
             line-height: 1.6;
         }
 
@@ -966,7 +966,7 @@
             box-shadow: none !important;
             color: var(--color-muted) !important;
             -webkit-text-fill-color: var(--color-muted) !important;
-            font-size: 10.5px !important;
+            font-size: var(--chat-message-font-size) !important;
             line-height: 1.6 !important;
             text-align: left !important;
         }
