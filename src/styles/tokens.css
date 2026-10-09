@@ -4,9 +4,9 @@
  * 页面旧变量只作兼容别名，不再维护独立颜色公式。 */
 :root, body {
     --color-primary: var(--theme-color);
-    --color-accent: oklch(from var(--theme-accent) min(calc(l - 0.02), 0.925) calc(c * 0.95) h);
-    --color-text: oklch(from var(--theme-color) calc(l - 0.166 + (0.946 - l) * 0.25) calc(c * 0.72) h);
-    --color-muted: oklch(from var(--theme-color) calc(l - 0.146 + (0.946 - l) * 0.25) calc(c * 0.65) h);
+    --color-accent: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25 - 0.015) min(0.025, calc(c * 0.55)) h);
+    --color-text: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 0.25) h);
+    --color-muted: oklch(from var(--theme-color) calc(l - 0.20) calc(c * 0.20) h);
     --color-page: color-mix(in srgb, var(--color-primary) 15%, #FFFFFF);
     --color-surface: #FFFFFF;
     --color-modal-overlay: rgba(0, 0, 0, .18);
@@ -38,10 +38,10 @@
 
     /* 材质用色从七类派生：保留明暗层次，不另设页面专属色板。 */
     --color-surface-rgb: 255, 255, 255;
-    --color-accent-strong: oklch(from var(--theme-accent) min(l, 0.85) calc(c * 1.15) h);
-    --color-accent-ink: oklch(from var(--theme-color) 0.6 calc(c * 1.1) h);
+    --color-accent-strong: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25 - 0.035) min(0.025, calc(c * 0.55)) h);
+    --color-accent-ink: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 0.25) h);
     --color-accent-soft: color-mix(in srgb, var(--color-accent) 35%, var(--color-surface));
-    --color-tint: oklch(from var(--theme-color) 0.96 min(max(calc(c * 0.9), 0.032), calc(c * 4)) h);
+    --color-tint: oklch(from var(--theme-color) min(calc(l + 0.015), 0.98) calc(c * 0.65) h);
     --color-divider: color-mix(in srgb, var(--color-muted) 35%, var(--color-surface));
     --color-paper: color-mix(in srgb, var(--color-muted) 12%, var(--color-surface));
     --color-danger-ink: color-mix(in srgb, var(--color-danger) 75%, #70504E);
@@ -99,7 +99,7 @@
             --beautify-modal-radius: var(--ui-radius);
         }
         body {
-            --theme-color: oklch(from var(--theme-accent) max(l, calc(0.945 - (0.945 - l) * 0.5)) max(min(c, 0.022), calc(c * 0.6)) h);
+            --theme-color: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * 0.25) min(0.025, calc(c * 0.55)) h);
             --theme-dark: var(--color-accent-strong);
             --theme-deep: var(--color-text);
             --ui-cyan-button-bg: rgba(var(--theme-rgb), 0.16);
@@ -131,8 +131,8 @@
             --sb-accent: var(--color-accent);
             --sb-accent-ink: var(--color-accent-ink);
             --sb-tint: var(--color-tint);
-            --sb-press: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 25%, var(--color-surface));
-            --sb-press-line: color-mix(in srgb, oklch(from var(--theme-color) calc(l - 0.03) calc(c * 1.25) h) 55%, transparent);
+            --sb-press: color-mix(in srgb, var(--color-accent) 25%, var(--color-surface));
+            --sb-press-line: color-mix(in srgb, var(--color-accent) 55%, transparent);
             --ui-text-primary: var(--color-text);
             --ui-text-muted: var(--color-muted);
         }
@@ -308,7 +308,7 @@
   --world-page-bg:var(--color-page);
 }
         .world-page,#worldPickerModal,.world-confirm-card{
-    --theme-color:oklch(from var(--wk-src) calc(l - 0.03) calc(c * 1.25) h);
+    --theme-color:var(--wk-src);
     --wk-accent:var(--color-accent);
     --wk-accent-ink:var(--color-accent-ink);
     --world-accent:var(--wk-accent);
@@ -511,7 +511,7 @@
             --wcf-danger: var(--color-danger);
         }
         #chatListView#chatListView .chat-conversation-panel .chat-thread-pin {
-            --pin-c: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h);
+            --pin-c: var(--color-accent-strong);
         }
         #chatAppPage#chatAppPage #chatRoomView {
             --cr-bg: var(--color-page);

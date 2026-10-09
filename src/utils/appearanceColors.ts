@@ -57,7 +57,7 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
         return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
     }
 
-    // 把原色换成框架色的 RGB：OKLCH 里亮度按比例往淡青拉回 50%、饱和度保留 60%，色调不变（跟 CSS 的 body --theme-color 同一个公式）
+    // 把原色换成框架色的 RGB：OKLCH 亮度集中在 0.94 附近、保留 55% 色度并限制为 0.025，色调不变（跟 CSS 的 body --theme-color 同一个公式）
     export function themeFrameRgb(rgb: number[]) {
         const toLin = (v: number) => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
         const [r, g, b] = rgb.map(toLin);
@@ -68,9 +68,9 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
         let A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
         let B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
         const C = Math.hypot(A, B);
-        const Cf = Math.max(Math.min(C, 0.022), C * 0.6);
+        const Cf = Math.min(0.025, C * 0.55);
         if (C > 0) { A *= Cf / C; B *= Cf / C; }
-        L = Math.max(L, 0.945 - (0.945 - L) * 0.5);
+        L = 0.94 + (L - 0.94) * 0.25;
         const l2 = Math.pow(L + 0.3963377774 * A + 0.2158037573 * B, 3);
         const m2 = Math.pow(L - 0.1055613458 * A - 0.0638541728 * B, 3);
         const s2 = Math.pow(L - 0.0894841775 * A - 1.2914855480 * B, 3);
@@ -84,4 +84,3 @@ export const DEFAULT_THEME_COLOR = '#DDF2F4';
             return Math.round(255 * (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055));
         });
     }
-
