@@ -33,11 +33,11 @@ const icons = {
     "offset": "translate(0 0)"
   },
   "location": {
-    "path": "M8 2h8v2h4v2h2v10h-2v4h-2v2h-4v2h-4v-2H6v-2H4v-4H2V6h2V4h4z M8 4v2H4v10h2v4h4v2h4v-2h4v-4h2V6h-4V4z M10 7h4v2h2v4h-2v2h-4v-2H8V9h2z M10 9v4h4V9z",
+    "path": "M8 4h8v2h2v2h2v8h-2v2h-2v2h-2v2h-4v-2H8v-2H6v-2H4V8h2V6h2z M8 6v2H6v8h2v2h2v2h4v-2h2v-2h2V8h-2V6z M10 8h4v2h2v4h-2v2h-4v-2H8v-4h2z M10 10v4h4v-4z",
     "offset": "translate(0 -1)"
   },
   "book": {
-    "path": "M2 3h8v2h4V3h8v18h-8v2h-4v-2H2z M4 5v14h6v2h1V7h-1V5z M14 5v2h-1v14h1v-2h6V5z",
+    "path": "M2 3h6v2h2v2h4V5h2V3h6v18h-6v2H8v-2H2z M4 5v14h4v2h2V9H8V7H6V5z M18 5v2h-2v2h-2v12h2v-2h4V5z",
     "offset": "translate(0 -1)"
   },
   "mic": {
