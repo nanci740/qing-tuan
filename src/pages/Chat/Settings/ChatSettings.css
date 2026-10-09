@@ -356,7 +356,7 @@
 
 /* @qingtuan-order:003710 */
 
-        #chatSettingsPage .idw-bar b { color: var(--color-surface); font-size: 10.5px; font-weight: 600; letter-spacing: .5px; text-shadow: none; }
+        #chatSettingsPage .idw-bar b { color: var(--color-surface); font-size: 10.5px; font-weight: 600; letter-spacing: .5px; text-shadow: var(--effect-text-white); }
 
 /* @qingtuan-order:003711 */
 
@@ -772,7 +772,7 @@
             background: var(--effect-face-accent) !important;
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--cs-drop) !important;
             color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important;
-            text-shadow: none;
+            text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:003795 */

@@ -280,7 +280,7 @@
             font-size: 11px; /* 调小字体 */
             font-style: italic;
             margin: 14px 0 8px;
-            text-shadow: none; /* 改回原来的白色光晕 */
+/* 改回原来的白色光晕 */
             z-index: 2;
         }
 
@@ -1002,7 +1002,7 @@
             color: var(--color-accent-strong); /* 彩度收一点点，带一丝灰调 */
             background: transparent;
             border: 0;
-            text-shadow: none; /* 只留一点点柔和的白光 */
+/* 只留一点点柔和的白光 */
             position: relative;
         }
 
@@ -1332,7 +1332,6 @@
             font-weight: 700;
             letter-spacing: 1.6px;
             color: color-mix(in srgb, var(--win-deep) 60%, var(--color-surface)); /* 刻字比图标描边再淡一级 */
-            text-shadow: none;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1659,7 +1658,7 @@
             background: var(--theme-color);
             color: var(--color-surface);
             border-color: var(--win-deep);
-            text-shadow: none;
+            text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:003398 */
@@ -1999,7 +1998,7 @@
             padding: 0 3px;
             border: 1px solid var(--win-deep);
             background: var(--home-ink);
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             font: 700 8px/9px 'SF Mono', Menlo, Consolas, monospace;
             text-align: center;
         }
@@ -2807,7 +2806,6 @@
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: none;
         }
 
 /* @qingtuan-order:003590 */

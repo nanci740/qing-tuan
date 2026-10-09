@@ -23,7 +23,7 @@
 
         :is(#backgroundActivityPage, #dataManagementPage) .settings-header h2,
         :is(#backgroundActivityPage, #dataManagementPage) .settings-header .back-btn {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001505 */
@@ -645,7 +645,7 @@
             border-bottom: 1px solid var(--win-deep) !important;
             background: var(--set-fill, var(--win-deep)) !important;
             box-shadow: none !important;
-            color: var(--color-surface) !important;
+            color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             font-weight: 600 !important;
         }
 

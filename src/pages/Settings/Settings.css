@@ -144,7 +144,7 @@
 
         #settingsPage .settings-item:hover .settings-item-icon {
             background: var(--theme-light-35);
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:000193 */
@@ -965,7 +965,7 @@
 
         #settingsPage .settings-header h2,
         #settingsPage .settings-header .back-btn {
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001070 */
@@ -1353,7 +1353,7 @@
             height: 20px;
             border-bottom: 1px solid var(--win-deep);
             background: var(--set-fill, var(--win-deep));
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             font-size: 10px;
             line-height: 20px;
             letter-spacing: 1px;
@@ -1424,7 +1424,7 @@
             flex: 0 0 22px;
             margin: 2px 0 2px 2px;
             background: var(--set-fill, var(--win-deep));
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
             font-size: 12px;
         }
 
@@ -1474,7 +1474,7 @@
 
         #settingsPage .retro-badge.is-dark {
             background: var(--set-fill, var(--win-deep));
-            color: var(--color-surface);
+            color: var(--color-surface); text-shadow: var(--effect-text-white);
         }
 
 /* @qingtuan-order:001128 */
@@ -1534,7 +1534,7 @@
             /* 访客计数器：底用顶栏那种青（主题色带灰），数字用白色 */
             background: var(--set-fill, var(--win-deep));
             color: #FFFFFF;
-            -webkit-text-fill-color: #FFFFFF;
+            -webkit-text-fill-color: #FFFFFF; text-shadow: var(--effect-text-white);
             font-weight: 700;
             letter-spacing: 2px;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade);

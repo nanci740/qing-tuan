@@ -1078,7 +1078,7 @@
             background: var(--effect-face-accent) !important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: none !important;
             font-weight: 400 !important;
         }
@@ -1130,7 +1130,7 @@
             background: var(--effect-face-accent)!important;
             border-color: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:001566 */
@@ -1722,6 +1722,6 @@
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-status-badge {
             background: var(--set-block) !important;
             border-color: var(--set-block) !important;
-            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; text-shadow: var(--effect-text-white) !important;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade) !important;
         }

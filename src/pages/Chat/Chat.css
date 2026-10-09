@@ -146,7 +146,7 @@
 
 /* @qingtuan-order:002584 */
 
-.chat-edit-btn.primary {background:rgba(var(--theme-rgb),.78);border-color:rgba(var(--color-surface-rgb), .8);color:var(--color-surface);}
+.chat-edit-btn.primary {background:rgba(var(--theme-rgb),.78);border-color:rgba(var(--color-surface-rgb), .8);color:var(--color-surface); text-shadow: var(--effect-text-white);}
 
 /* @qingtuan-order:002585 */
 
@@ -251,7 +251,7 @@
             translate: none !important;
             background: var(--theme-color) !important;
             color: var(--color-surface) !important;
-            -webkit-text-fill-color: var(--color-surface) !important;
+            -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:004198 */
@@ -276,7 +276,7 @@
 
 /* @qingtuan-order:004201 */
 
-        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"]:active { background: var(--color-danger-ink) !important; color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important; }
+        #chatAppPage#chatAppPage > .chat-message-menu .chat-message-menu-panel button[data-message-action="delete"]:active { background: var(--color-danger-ink) !important; color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important; text-shadow: var(--effect-text-white) !important; }
 
 /* @qingtuan-order:004244 */
 
@@ -323,7 +323,7 @@
             font-size: 12px !important;
             font-weight: 600 !important;
             letter-spacing: 1px;
-            text-shadow: none !important;
+            text-shadow: var(--effect-text-white) !important;
         }
 
 /* @qingtuan-order:004248 */
@@ -377,5 +377,5 @@
             box-shadow: inset 1px 1px 0 var(--effect-highlight), inset -1px -1px 0 var(--effect-inner-shade), var(--effect-drop) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
-            text-shadow: none;
+            text-shadow: var(--effect-text-white) !important;
         }
