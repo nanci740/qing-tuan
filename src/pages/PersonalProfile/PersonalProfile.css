@@ -1528,8 +1528,8 @@
         #personalProfilePage#personalProfilePage .mh-today,
         #personalProfilePage#personalProfilePage .mh-total,
         #personalProfilePage#personalProfilePage .is-active {
-            color: oklch(from var(--theme-color) calc(l - 0.045) calc(c * 1.25) h) !important;
-            -webkit-text-fill-color: oklch(from var(--theme-color) calc(l - 0.045) calc(c * 1.25) h) !important;
+            color: var(--color-accent-strong) !important;
+            -webkit-text-fill-color: var(--color-accent-strong) !important;
         }
 
 /* @qingtuan-order:003683 */

@@ -3232,7 +3232,7 @@
             border: 1px solid var(--win-deep);
             border-radius: 0;
             background: var(--set-fill, var(--win-deep));
-            color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; /* 跟访客计数器一样：青灰底 + 主题青字 */
+            color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; /* 跟访客计数器一样：青灰底 + 白字 */
             font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 1px;
@@ -9219,7 +9219,7 @@
                 linear-gradient(rgba(var(--color-surface-rgb), 0.85), rgba(var(--color-surface-rgb), 0.85)) top / 100% 1px no-repeat,
                 linear-gradient(180deg,
                     color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 0%,
-                    oklch(from var(--theme-color) calc(l - 0.11) calc(c * 1.6) h) 22%,
+                    var(--color-accent-strong) 22%,
                     var(--color-accent-strong) 55%,
                     var(--theme-color) 92%,
                     color-mix(in srgb, var(--theme-color) 85%, var(--color-surface)) 100%) !important;
@@ -9593,7 +9593,7 @@
 
 /* @qingtuan-order:004327 */
 
-        .cr-presence i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: oklch(from var(--cr-head) l calc(c * 1.2) h); box-shadow: 0 0 0 1px var(--color-surface), 0 0 0 2px color-mix(in srgb, var(--cr-line) 45%, transparent); }
+        .cr-presence i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: var(--color-accent-strong); box-shadow: 0 0 0 1px var(--color-surface), 0 0 0 2px color-mix(in srgb, var(--cr-line) 45%, transparent); }
 
 /* @qingtuan-order:004328 */
 
@@ -9677,7 +9677,7 @@
 
 /* @qingtuan-order:004347 */
 
-        .cr-my-menu i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: oklch(from var(--mm-head) l calc(c * 1.2) h); box-shadow: 0 0 0 1px var(--color-surface); }
+        .cr-my-menu i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: var(--color-accent-strong); box-shadow: 0 0 0 1px var(--color-surface); }
 
 /* @qingtuan-order:004348 */
 

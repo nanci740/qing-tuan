@@ -1136,7 +1136,7 @@
         #settingsPage .retro-counter {
             display: inline-block;
             margin-left: 4px;
-         color: #FFFFFF !important;  -webkit-text-fill-color: #FFFFFF !important; }
+        }
 
 /* @qingtuan-order:001088 */
 
@@ -1524,17 +1524,17 @@
 /* @qingtuan-order:001133 */
 
 
-        /* 访客计数：深底主题色数字，像 LCD 计数器 */
+        /* 访客计数：主题灰底白色数字，像 LCD 计数器 */
 
 /* @qingtuan-order:001134 */
 
         #settingsPage .retro-counter {
             padding: 1px 5px;
             border-radius: 0;
-            /* 访客计数器：底用顶栏那种青（主题色带灰），数字用主题色本身 */
+            /* 访客计数器：底用顶栏那种青（主题色带灰），数字用白色 */
             background: var(--set-fill, var(--win-deep));
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF;
+            -webkit-text-fill-color: #FFFFFF;
             font-weight: 700;
             letter-spacing: 2px;
             box-shadow: inset 1px 1px 0 var(--effect-inner-shade);

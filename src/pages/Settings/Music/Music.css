@@ -1107,7 +1107,7 @@
             border: 1px solid var(--sb-line, var(--win-deep)) !important;
             border-radius: 0 !important;
             /* 以「导入本地音乐」按钮的青为底：饱和度拉高一点、亮度压低一点点（带一丝灰），小标签才不会太淡 */
-            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            background: var(--color-accent-strong) !important;
             color: var(--color-surface) !important;
             -webkit-text-fill-color: var(--color-surface) !important;
             box-shadow: none !important;

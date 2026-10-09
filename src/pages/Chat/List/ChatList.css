@@ -1063,7 +1063,7 @@ position:relative;
         #chatAppPage#chatAppPage #chatListView .chat-memory-head {
             background:
                 linear-gradient(rgba(var(--color-surface-rgb), .35), rgba(var(--color-surface-rgb), .08) 50%, transparent 52%),
-                linear-gradient(90deg, oklch(from var(--ch-block) calc(l + 0.015) calc(c * 1.3) h) 8%, color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 82%, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 100%) !important;
+                linear-gradient(90deg, var(--color-accent-strong) 8%, color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 82%, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 100%) !important;
         }
 
 /* @qingtuan-order:003848 */
@@ -1130,12 +1130,12 @@ position:relative;
 /* @qingtuan-order:004010 */
 
         #chatListView#chatListView .chat-conversation-panel .chat-unread-dot {
-            background: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
-            box-shadow: 0 0 0 1px oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            background: var(--color-accent-strong) !important;
+            box-shadow: 0 0 0 1px var(--color-accent-strong) !important;
         }
 
 /* @qingtuan-order:004011 */
 
         #chatListView#chatListView .chat-thread-favorite {
-            color: oklch(from var(--sb-accent, var(--win-deep)) calc(l - 0.03) calc(c * 1.35) h) !important;
+            color: var(--color-accent-strong) !important;
         }

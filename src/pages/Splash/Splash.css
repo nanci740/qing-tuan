@@ -761,7 +761,7 @@
 
         /* ===== 开屏换色：跟其他页面同一套 =====
            底色：米白 → 淡青底（框架色 15% 混白）；「青团机」→ 深青灰；Amor fati、正在启动… → 淡青灰
-           Logo 描边跟图标描边同一套；进度条外框淡青灰、格子用你选的原色（重点）；「▶ 点击任意处开始」用浅青强调字 */
+           Logo 描边跟图标描边同一套；进度条外框淡青灰、格子用统一推算的强调色；「▶ 点击任意处开始」用浅青强调字 */
 
 /* @qingtuan-order:003696 */
 
@@ -794,7 +794,7 @@
 
 /* @qingtuan-order:003702 */
 
-        #splash-screen .boot-bar i { background: repeating-linear-gradient(90deg, var(--theme-accent) 0 8px, transparent 8px 10px) !important; }
+        #splash-screen .boot-bar i { background: repeating-linear-gradient(90deg, var(--color-accent-strong) 0 8px, transparent 8px 10px) !important; }
 
 /* @qingtuan-order:003867 */
 
