@@ -37,7 +37,7 @@ const icons = {
     "offset": "translate(0 -1)"
   },
   "book": {
-    "path": "M2 3h6v2h2v2h4V5h2V3h6v18h-6v2H8v-2H2z M4 5v14h4v2h2V9H8V7H6V5z M18 5v2h-2v2h-2v12h2v-2h4V5z",
+    "path": "M4 4h16v14h-2v2h2v2H6v-2H4z M6 6v10h12V6z M6 18v2h10v-2z M8 6h2v10H8z M14 6h2v6h-2z",
     "offset": "translate(0 -1)"
   },
   "mic": {
@@ -50,7 +50,7 @@ const icons = {
   }
 } as const;
 // 按轮廓宽高及视觉重量调整留白，避免窄长图标显得过小。
-const iconCanvas = {people:26, message:26, document:22, image:24, sound:26, eye:22, trash:22, sparkle:28, location:26, book:24, mic:26, camera:24} as const;
+const iconCanvas = {people:26, message:26, document:22, image:24, sound:26, eye:22, trash:22, sparkle:28, location:26, book:26, mic:26, camera:24} as const;
 export type ChatPixelIconName = keyof typeof icons;
 export function ChatPixelIcon({name}:{name:ChatPixelIconName}) {
   const icon = icons[name];
