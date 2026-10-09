@@ -345,9 +345,6 @@
 /* @qingtuan-order:000896 */
 
 
-        #settingsPage .settings-section-personal .settings-profile-card:active {
-            background: var(--theme-light-18);
-        }
 
 /* @qingtuan-order:000897 */
 
@@ -1294,7 +1291,6 @@
 
 
         #settingsPage .settings-content > .settings-section .settings-item:active .settings-item-action {
-            background: var(--win-face);
         
             box-shadow: var(--bevel-in);
         }

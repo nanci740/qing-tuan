@@ -9352,7 +9352,6 @@
 
 /* @qingtuan-order:004225 */
 
-        body .chat-forward-picker .chat-forward-target:active { background: color-mix(in srgb, var(--theme-color) 12%, var(--color-surface)) !important; }
 
 /* @qingtuan-order:004226 */
 
