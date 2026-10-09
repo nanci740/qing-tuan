@@ -2374,7 +2374,7 @@
         #main-content .tama-pet .tq-eye-closed { fill: var(--home-ink); }
 
         #main-content .tama-pet .tq-mouth,
-        #main-content .tama-pet .tq-mouth-open { fill: #e28b3d; }
+        #main-content .tama-pet .tq-mouth-open { fill: #e49147; }
 
 /* @qingtuan-order:003496 */
 
@@ -2386,7 +2386,7 @@
 
 /* @qingtuan-order:003498 */
 
-        #main-content .tama-pet .tq-b { fill: rgba(236, 150, 170, 0.75); }
+        #main-content .tama-pet .tq-b { fill: rgba(236, 150, 170, 0.70); }
 
 /* @qingtuan-order:003499 */
 
@@ -2417,7 +2417,7 @@
 /* @qingtuan-order:003507 */
 
 
-        /* 吃东西：嘴巴一开一合 */
+        /* 吃东西：喙保持同宽，上下缩短后恢复 */
 
 /* @qingtuan-order:003508 */
 
