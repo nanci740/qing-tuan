@@ -6,21 +6,20 @@ import { memoSummary, memoTitle, selectMemos } from '../../utils/memoStorage';
 import { confirmChat } from '../../utils/chatConfirm';
 import './Memos.css';
 
-type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'disk' | 'close';
+type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'close';
 const symbols = {
   note: 'M3 1h7v1h1v1h1v11H3z M4 2v11h7V5H8V2z M9 2v2h2V3h-1V2z M5 7h5v1H5z M5 9h5v1H5z M5 11h3v1H5z',
   list: 'M2 1h12v14H2z M3 2v12h10V2z M4 4h2v2H4z M7 4h5v1H7z M4 7h2v2H4z M7 7h5v1H7z M4 10h2v2H4z M7 10h5v1H7z',
 } as const;
 const outlineSymbols = {
   search: 'M21 21l-5-5 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0',
-  disk: 'M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12l4 4v12a2 2 0 0 1-2 2z M7 3v6h10V3 M7 21v-8h10v8',
   close: 'M6 6l12 12 M18 6 6 18',
   plus: 'M12 5v14 M5 12h14',
   trash: 'M10 11v6 M14 11v6 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M3 6h18 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2',
 } as const;
 function MemoSymbol({ name }: { name: SymbolName }) {
   if (name === 'pin') {
-    return <svg className="memos-symbol" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 0h4v1H6.5v3l1.5 1.5V6H5.5v4h-1V6H2v-.5L3.5 4V1H3z" fill="currentColor" /></svg>;
+    return <svg className="memos-symbol" viewBox="-2 -2 14 14" aria-hidden="true"><path d="M3 0h4v1H6.5v3l1.5 1.5V6H5.5v4h-1V6H2v-.5L3.5 4V1H3z" fill="currentColor" /></svg>;
   }
   if (name !== 'note' && name !== 'list') {
     return <svg className="memos-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -154,7 +153,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
               <button type="button" className="memos-add-item" onClick={() => memos.addItem(selected.id)}><MemoSymbol name="plus" />添加一项</button>
             </div>}
         </div>
-        <div className="memos-paper-options"><span>纸张</span>{(['lined', 'plain'] as const).map(paper => <button type="button" key={paper} className="memos-button" aria-pressed={selected.paper === paper} onClick={() => memos.update(selected.id, { paper })}>{paper === 'lined' ? '横线' : '空白'}</button>)}</div>
+        <div className="memos-paper-options"><span className="memos-paper-note" role="status">{memos.loadError ? '读取失败' : saveLabel} · {selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><span>纸张</span>{(['lined', 'plain'] as const).map(paper => <button type="button" key={paper} className="memos-button" aria-pressed={selected.paper === paper} onClick={() => memos.update(selected.id, { paper })}>{paper === 'lined' ? '横线' : '空白'}</button>)}</div>
       </> : <>
         <div className="memos-toolbar">
           <label className="memos-search"><MemoSymbol name="search" /><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="查找这一页记录" aria-label="搜索备忘录" /></label>
@@ -172,7 +171,6 @@ export function Memos({ onClose }: { onClose: () => void }) {
           </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
       </>}
-      <footer className="memos-status"><span role="status"><MemoSymbol name="disk" />{memos.loadError ? '读取失败' : saveLabel}</span><span>{selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><svg className="memos-grip" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1"><path d="M2 10l8-8 M5 10l5-5 M8 10l2-2" /></svg></footer>
     </main>
   </section>, document.body);
 }
