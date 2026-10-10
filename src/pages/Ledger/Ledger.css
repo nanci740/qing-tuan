@@ -24,7 +24,7 @@
 .ledger-page .ledger-pixel { display: block; }
 .ledger-page .ledger-emoji { display: grid; place-items: center; font-size: calc(var(--ledger-icon, 24px) * .75); line-height: 1; }
 .ledger-page .ledger-tool-icon { display: block; width: var(--ledger-tool, 14px); height: var(--ledger-tool, 14px); flex: 0 0 auto; }
-.ledger-page :is(.ledger-button, .ledger-select, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; }
+.ledger-page :is(.ledger-button, .ledger-select, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: var(--ledger-radius, 2px); }
 /* 选中的支出、收入是凹下去的，其余按钮凸起。 */
 .ledger-page :is(.ledger-button, .ledger-select, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice):not(.ledger-button[aria-pressed="true"]) { box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not(.ledger-danger),
@@ -61,11 +61,12 @@
 .ledger-page :is(.ledger-totals strong, .ledger-budget strong, .ledger-slip-amount, .ledger-slip-total strong, .ledger-category-stat > strong) { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .ledger-page .ledger-totals strong { font-size: 19px; font-weight: 500; }
 .ledger-page .ledger-expense { color: var(--color-danger-ink); }
-.ledger-page .ledger-budget { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--color-divider); }
+/* 主要操作按钮圆角 3px，跟美化设置的主要按钮一样；小按钮维持 2px。 */
+.ledger-page .ledger-budget { --ledger-radius: 3px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--color-divider); }
 .ledger-page .ledger-budget > span { font-size: 10px; }
 .ledger-page .ledger-budget strong { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; }
 .ledger-page .ledger-budget-warning { margin: 10px 0 0; font-size: 10px; color: var(--color-danger); }
-.ledger-page .ledger-home-actions { display: flex; gap: 9px; margin: 14px 0 18px; }
+.ledger-page .ledger-home-actions { --ledger-radius: 3px; display: flex; gap: 9px; margin: 14px 0 18px; }
 .ledger-page .ledger-home-actions > button { flex: 1; }
 .ledger-page :is(.ledger-breakdown, .ledger-manager) { margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); }
 .ledger-page .ledger-category-stat { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
@@ -125,7 +126,7 @@
 .ledger-page .ledger-field > .ledger-select { flex: 1; }
 .ledger-page .ledger-field :is(input, textarea) { width: 100%; flex: 1; min-height: 30px; padding: 6px; --lf-size: 12px; }
 .ledger-page .ledger-field textarea { resize: vertical; --lf-line: 1.7; }
-.ledger-page .ledger-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.ledger-page .ledger-form-actions { --ledger-radius: 3px; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
 .ledger-page .ledger-management-list { list-style: none; margin: 0; padding: 0; }
 .ledger-page .ledger-management-list > li { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
 .ledger-page .ledger-management-name { flex: 1; overflow-wrap: anywhere; }
