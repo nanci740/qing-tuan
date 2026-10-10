@@ -94,7 +94,7 @@
 .memos-page .memos-new-button { --memo-button-h: 32px; --memo-button-pad: 5px 9px; --memo-button-radius: 3px; --memo-button-font: 12px; --memo-button-face: var(--effect-face-accent); --memo-button-color: var(--color-surface); --mf-shadow: var(--effect-text-white); }
 .memos-page .memos-new-menu { position: absolute; right: 0; top: calc(100% + 5px); z-index: 2; width: 108px; padding: 2px; border: 1px solid var(--memo-edge); background: var(--color-surface); box-shadow: var(--effect-drop); }
 .memos-page .memos-new-menu button { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: var(--memo-menu-face, transparent); --mf-size: 10px; text-align: left; }
-.memos-page .memos-new-menu button:hover { --memo-menu-face: var(--color-accent-strong); }
+@media (hover: hover) and (pointer: fine) { .memos-page .memos-new-menu button:hover { --memo-menu-face: var(--color-accent-strong); } }
 .memos-page .memos-tagline { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 0 10px; border-bottom: 2px solid var(--color-accent-strong); color: var(--color-muted); font-size: 9.5px; letter-spacing: .8px; }
 .memos-page .memos-tagline > span:last-child { line-height: 15px; padding-bottom: 3px; }
 .memos-page .memos-tag { display: inline-block; padding: 4px 10px 3px; border-radius: 2px 8px 0 0; background: var(--color-accent-strong); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 11px; font-weight: 700; letter-spacing: 1px; line-height: 15px; }
@@ -102,7 +102,8 @@
 .memos-page .memos-note-list { list-style: none; padding: 0 10px; margin: 0; }
 .memos-page .memos-note-row { border-bottom: 1px dashed var(--color-divider); }
 .memos-page .memos-note-entry { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 76px; padding: 13px 0; border: 0; border-radius: 0; background: var(--memo-entry-face, transparent); text-align: left; --memo-pixel: 26px; }
-.memos-page button.memos-note-entry:hover, .memos-page button.memos-note-entry:active { --memo-entry-face: var(--color-page); }
+.memos-page button.memos-note-entry:active { --memo-entry-face: var(--color-page); }
+@media (hover: hover) and (pointer: fine) { .memos-page button.memos-note-entry:hover { --memo-entry-face: var(--color-page); } }
 .memos-page .memos-note-entry > .memos-pixel { color: var(--color-muted); }
 .memos-page .memos-note-copy { flex: 1; min-width: 0; }
 .memos-page .memos-note-copy strong { --memo-symbol: 12px; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }

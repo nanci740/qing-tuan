@@ -426,9 +426,6 @@
 /* @qingtuan-order:000108 */
 
 
-        .progress-bar-bg:hover {
-            height: 8px;
-        }
 
 /* @qingtuan-order:000109 */
 
@@ -685,9 +682,6 @@
 /* @qingtuan-order:000136 */
 
         
-        .app-item:hover .icon-box svg {
-            stroke: var(--theme-color); /* 悬停时图标变淡青色 */
-        }
 
 /* @qingtuan-order:000137 */
 
@@ -1268,8 +1262,7 @@
 /* @qingtuan-order:003343 */
 
 
-        #main-content .mp3-player .progress-bar-bg,
-        #main-content .mp3-player .progress-bar-bg:hover {
+        #main-content .mp3-player .progress-bar-bg {
             flex: 1;
             order: 2;
             padding: 1px;
@@ -1591,8 +1584,7 @@
 /* @qingtuan-order:003389 */
 
 
-        #main-content .mp3-player .progress-bar-bg,
-        #main-content .mp3-player .progress-bar-bg:hover { height: 6px; }
+        #main-content .mp3-player .progress-bar-bg { height: 6px; }
 
 /* @qingtuan-order:003390 */
 
@@ -1646,12 +1638,20 @@
 /* @qingtuan-order:003397 */
 
 
-        #main-content .app-item:hover .app-label-cn,
+        /* 按下时标签变主题色；悬停变色只给滑鼠，手机点完回来不会一直亮着 */
         #main-content .app-item:active .app-label-cn {
             background: var(--theme-color);
             color: var(--color-surface);
             border-color: var(--win-deep);
             text-shadow: var(--effect-text-white);
+        }
+        @media (hover: hover) and (pointer: fine) {
+            #main-content .app-item:hover .app-label-cn {
+                background: var(--theme-color);
+                color: var(--color-surface);
+                border-color: var(--win-deep);
+                text-shadow: var(--effect-text-white);
+            }
         }
 
 /* @qingtuan-order:003398 */
