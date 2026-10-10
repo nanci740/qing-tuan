@@ -36,7 +36,6 @@ export function Ledger({ onClose }: { onClose: () => void }) {
   const [currencyDraft, setCurrencyDraft] = useState({ code: '', name: '', decimals: 2 });
   const [closing, setClosing] = useState(false);
   const [confirming, setConfirming] = useState(false);
-  const [message, setMessage] = useState('');
   const root = useRef<HTMLElement>(null), backButton = useRef<HTMLButtonElement>(null);
   const closingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const confirmationBusy = useRef(false), alive = useRef(true);
@@ -59,6 +58,7 @@ export function Ledger({ onClose }: { onClose: () => void }) {
     };
   }, []);
   useEffect(() => { backButton.current?.focus(); }, [view]);
+  useEffect(() => { if (ledger.loadError) showToast(ledger.loadError); }, []);
   useEffect(() => {
     if (!confirming) return;
     const dialog = () => Array.from(document.querySelectorAll<HTMLElement>('.sp-confirm-overlay')).at(-1);
@@ -94,11 +94,10 @@ export function Ledger({ onClose }: { onClose: () => void }) {
     if (view === 'entry' && draft && JSON.stringify(draft) !== originalDraft.current &&
         !await ask('返回流水', '这次修改还没有保存，要放弃修改吗？')) return;
     if (!alive.current) return;
-    ledger.clearError(); setMessage('');
     if (view !== 'home') { setView('home'); setDraft(null); }
     else { setClosing(true); closingTimer.current = setTimeout(onClose, 380); }
   }
-  function navigate(next: View) { ledger.clearError(); setMessage(''); setView(next); }
+  function navigate(next: View) { setView(next); }
   function startEntry(entry?: LedgerTransaction) {
     const next: LedgerDraft = entry ? { id: entry.id, type: entry.type, amount: entry.amount.toFixed(ledger.data.currencies.find(c => c.code === entry.currencyCode)!.decimals),
       currencyCode: entry.currencyCode, categoryId: entry.categoryId, note: entry.note, occurredOn: entry.occurredOn } :
@@ -106,13 +105,13 @@ export function Ledger({ onClose }: { onClose: () => void }) {
     originalDraft.current = JSON.stringify(next); setDraft(next); navigate('entry');
   }
   function patchDraft(values: Partial<LedgerDraft>) {
-    setDraft(current => current ? { ...current, ...values } : null); setMessage(''); ledger.clearError();
+    setDraft(current => current ? { ...current, ...values } : null);
   }
   function changeEntryCurrency(nextCode: string) {
     const nextCurrency = ledger.data.currencies.find(c => c.code === nextCode)!;
     const exact = draft && evaluateLedgerExpression(draft.amount, 3), rounded = draft && evaluateLedgerExpression(draft.amount, nextCurrency.decimals);
     if (draft && (exact === null || rounded === null || Number(exact) !== Number(rounded))) {
-      patchDraft({ currencyCode: nextCode, amount: '0' }); setMessage('币种精度不同，请重新输入金额。');
+      patchDraft({ currencyCode: nextCode, amount: '0' }); showToast('币种精度不同，请重新输入金额');
     } else patchDraft({ currencyCode: nextCode });
   }
   function pressKey(key: string) {
@@ -121,7 +120,7 @@ export function Ledger({ onClose }: { onClose: () => void }) {
   function saveEntry() {
     if (!draft) return;
     const amount = evaluateLedgerExpression(draft.amount, entryCurrency.decimals);
-    if (amount === null) { setMessage('算式算不出有效金额，请检查一下。'); return; }
+    if (amount === null) { showToast('算式算不出有效金额，请检查一下'); return; }
     if (!ledger.saveTransaction({ ...draft, amount })) return;
     setCode(draft.currencyCode); setMonth(draft.occurredOn.slice(0, 7)); setDraft(null); setView('home'); showToast('这笔已保存');
   }
@@ -153,11 +152,9 @@ export function Ledger({ onClose }: { onClose: () => void }) {
     <header className="ledger-titlebar">
       <PressedButton className="ledger-back" ref={backButton} type="button" aria-label={view === 'home' ? '返回主页' : '返回记账首页'} onClick={() => void back()}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></PressedButton>
       <h1 id="ledgerTitle">{title[view]}<small>.csv</small></h1>
-      <i className="ledger-barcode" aria-hidden="true" />
       {view === 'home' && <PressedButton className="ledger-header-action" type="button" disabled={readonly} onClick={() => { setCategoryDraft(emptyCategory); navigate('categories'); }}>分类</PressedButton>}
     </header>
     <main className="ledger-content">
-      {(ledger.loadError || ledger.error || message) && <div className="ledger-notice" role={ledger.loadError || ledger.error ? 'alert' : 'status'}>{ledger.loadError || ledger.error || message}{(ledger.loadError || ledger.error) && <PressedButton className="ledger-button" type="button" onClick={ledger.reload}>重新读取</PressedButton>}</div>}
       {view === 'home' && <>
         <div className="ledger-filters">
           <div className="ledger-month-control">
@@ -198,7 +195,7 @@ export function Ledger({ onClose }: { onClose: () => void }) {
           <footer className="ledger-form-actions">{draft.id && <PressedButton className="ledger-button ledger-danger" type="button" onClick={() => { const entry = ledger.data.transactions.find(e => e.id === draft.id); if (entry) void removeEntry(entry); }}><LedgerToolIcon name="trash" />删除</PressedButton>}<PressedButton className="ledger-button ledger-primary" type="button" disabled={readonly} onClick={saveEntry}>保存这笔</PressedButton></footer>
         </div></article>
       </>}
-      {view === 'categories' && <section className="ledger-manager"><h2>分类管理</h2><p className="ledger-muted">删除分类后，旧流水仍保留原分类。至少保留一个分类。</p><ul className="ledger-management-list">{categories.map(category => <li key={category.id}><LedgerCategoryIcon name={category.icon} emoji={category.emoji} /><span>{category.name}</span><PressedButton className="ledger-button" type="button" disabled={readonly} onClick={() => { setCategoryDraft({ id: category.id, name: category.name, icon: category.icon, emoji: category.emoji }); ledger.clearError(); }}>修改</PressedButton><PressedButton className="ledger-small-button ledger-danger" type="button" disabled={readonly || categories.length === 1} aria-label={`删除${category.name}分类`} onClick={async () => { if (await ask('删除分类', `删除“${category.name}”分类？旧流水不会删除。`, true) && ledger.deleteCategory(category.id)) { if (categoryDraft.id === category.id) setCategoryDraft(emptyCategory); } }}><LedgerToolIcon name="trash" /></PressedButton></li>)}</ul><form className="ledger-manager-form" onSubmit={event => { event.preventDefault(); if (ledger.saveCategory(categoryDraft.id, categoryDraft.name, categoryDraft.icon, categoryDraft.emoji)) { setCategoryDraft(emptyCategory); showToast('分类已保存'); } }}><h3>{categoryDraft.id ? '修改分类' : '新增分类'}</h3><label className="ledger-field"><span>名称</span><input maxLength={20} required value={categoryDraft.name} onChange={event => setCategoryDraft({ ...categoryDraft, name: event.target.value })} /></label><div className="ledger-icon-choices" aria-label="分类图标">{LEDGER_ICONS.map(icon => <PressedButton key={icon} className="ledger-icon-choice" type="button" aria-label={`分类图标 ${LEDGER_ICON_NAMES[icon]}`} aria-pressed={!categoryDraft.emoji && categoryDraft.icon === icon} onClick={() => setCategoryDraft({ ...categoryDraft, icon, emoji: '' })}><LedgerCategoryIcon name={icon} /></PressedButton>)}</div><label className="ledger-field"><span>表情</span><input maxLength={16} placeholder="也可以放一个表情，例如 🍜" value={categoryDraft.emoji} onChange={event => setCategoryDraft({ ...categoryDraft, emoji: event.target.value })} /></label><div className="ledger-form-actions">{categoryDraft.id && <PressedButton type="button" className="ledger-button" onClick={() => setCategoryDraft(emptyCategory)}>取消修改</PressedButton>}<PressedButton type="submit" className="ledger-button ledger-primary" disabled={readonly}>保存分类</PressedButton></div></form></section>}
+      {view === 'categories' && <section className="ledger-manager"><h2>分类管理</h2><p className="ledger-muted">删除分类后，旧流水仍保留原分类。至少保留一个分类。</p><ul className="ledger-management-list">{categories.map(category => <li key={category.id}><LedgerCategoryIcon name={category.icon} emoji={category.emoji} /><span className="ledger-management-name">{category.name}</span><PressedButton className="ledger-button" type="button" disabled={readonly} onClick={() => { setCategoryDraft({ id: category.id, name: category.name, icon: category.icon, emoji: category.emoji }); }}>修改</PressedButton><PressedButton className="ledger-small-button ledger-danger" type="button" disabled={readonly || categories.length === 1} aria-label={`删除${category.name}分类`} onClick={async () => { if (await ask('删除分类', `删除“${category.name}”分类？旧流水不会删除。`, true) && ledger.deleteCategory(category.id)) { if (categoryDraft.id === category.id) setCategoryDraft(emptyCategory); } }}><LedgerToolIcon name="trash" /></PressedButton></li>)}</ul><form className="ledger-manager-form" onSubmit={event => { event.preventDefault(); if (ledger.saveCategory(categoryDraft.id, categoryDraft.name, categoryDraft.icon, categoryDraft.emoji)) { setCategoryDraft(emptyCategory); showToast('分类已保存'); } }}><h3>{categoryDraft.id ? '修改分类' : '新增分类'}</h3><label className="ledger-field"><span>名称</span><input maxLength={20} required value={categoryDraft.name} onChange={event => setCategoryDraft({ ...categoryDraft, name: event.target.value })} /></label><div className="ledger-icon-choices" aria-label="分类图标">{LEDGER_ICONS.map(icon => <PressedButton key={icon} className="ledger-icon-choice" type="button" aria-label={`分类图标 ${LEDGER_ICON_NAMES[icon]}`} aria-pressed={!categoryDraft.emoji && categoryDraft.icon === icon} onClick={() => setCategoryDraft({ ...categoryDraft, icon, emoji: '' })}><LedgerCategoryIcon name={icon} /></PressedButton>)}</div><label className="ledger-field"><span>表情</span><input maxLength={16} placeholder="也可以放一个表情，例如 🍜" value={categoryDraft.emoji} onChange={event => setCategoryDraft({ ...categoryDraft, emoji: event.target.value })} /></label><div className="ledger-form-actions">{categoryDraft.id && <PressedButton type="button" className="ledger-button" onClick={() => setCategoryDraft(emptyCategory)}>取消修改</PressedButton>}<PressedButton type="submit" className="ledger-button ledger-primary" disabled={readonly}>保存分类</PressedButton></div></form></section>}
       {view === 'budget' && <section className="ledger-manager"><h2>{currency.name}每月预算</h2><p className="ledger-muted">每个币种独立设置；用于每个月的支出提醒，不计入收入，也不换算汇率。</p><form onSubmit={event => { event.preventDefault(); if (ledger.saveBudget(currency.code, budget)) { setView('home'); showToast('预算已保存'); } }}><label className="ledger-field"><span>金额 · {currency.code}</span><input inputMode={currency.decimals ? 'decimal' : 'numeric'} value={budget} placeholder="留空或填 0 取消预算" onChange={event => setBudget(event.target.value)} /></label><div className="ledger-form-actions"><PressedButton type="submit" className="ledger-button ledger-primary" disabled={readonly}>保存预算</PressedButton></div></form></section>}
       {view === 'currencies' && <section className="ledger-manager"><h2>可用币种</h2><p className="ledger-muted">不同币种分开统计。默认显示记录数量最多的币种，不做汇率换算。</p><ul className="ledger-currencies">{ledger.data.currencies.map(c => <li key={c.code}><strong>{c.code}</strong><span>{c.name}</span><small>{c.decimals} 位小数</small></li>)}</ul><form className="ledger-manager-form" onSubmit={event => { event.preventDefault(); if (ledger.addCurrency(currencyDraft)) { setCurrencyDraft({ code: '', name: '', decimals: 2 }); showToast('币种已新增'); } }}><h3>新增币种</h3><label className="ledger-field"><span>代码</span><input maxLength={3} required placeholder="如 HKD" value={currencyDraft.code} onChange={event => setCurrencyDraft({ ...currencyDraft, code: event.target.value.toUpperCase() })} /></label><label className="ledger-field"><span>名称</span><input maxLength={30} required placeholder="如 港元" value={currencyDraft.name} onChange={event => setCurrencyDraft({ ...currencyDraft, name: event.target.value })} /></label><div className="ledger-field"><span>小数位</span><RetroSelect choiceStyle="chat-settings" className="ledger-button ledger-select" title="小数位" value={String(currencyDraft.decimals)} onChange={value => setCurrencyDraft({ ...currencyDraft, decimals: Number(value) })}>{[0, 1, 2, 3].map(n => <option key={n} value={String(n)}>{n} 位</option>)}</RetroSelect></div><div className="ledger-form-actions"><PressedButton type="submit" className="ledger-button ledger-primary" disabled={readonly}>新增币种</PressedButton></div></form></section>}
     </main>
