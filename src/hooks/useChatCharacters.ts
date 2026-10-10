@@ -16,15 +16,13 @@ export function useChatCharacters() {
   function update() {
     setRecords([...data.current]);
   }
-  function persist() {
-    const ok = writeChatCharacters(data.current);
-    if (!ok) showToast('角色保存失败：请检查浏览器存储空间');
+  async function persist() {
+    const ok = await writeChatCharacters(data.current);
+    if (!ok) { data.current = readChatCharacters(); update(); }
     return ok;
   }
   async function saveArchive(record: CharacterDossier) {
     const dossierId = text(record?.id, '001');
-    const existingIndex = data.current.findIndex(item => item.dossierId === dossierId);
-    const existing = existingIndex >= 0 ? data.current[existingIndex] : null;
     let photoUrl = record.photoUrl || '';
     try {
       if (imageReference(photoUrl) === photoUrl && !photoUrl.startsWith('data:image/gif') && !photoUrl.startsWith('data:image/svg+xml')) photoUrl = await shrinkChatCharacterAvatar(photoUrl);
@@ -33,8 +31,11 @@ export function useChatCharacters() {
       showToast('头像读取失败，请重新上传');
       return false;
     }
+    const existingIndex = data.current.findIndex(item => item.dossierId === dossierId);
+    const existing = existingIndex >= 0 ? data.current[existingIndex] : null;
     const character: ChatCharacter = {
       ...record,
+      id: record.id || dossierId,
       photoUrl,
       dossierId,
       archiveId: existing?.archiveId || 'character-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
@@ -43,13 +44,9 @@ export function useChatCharacters() {
       pinned: Boolean(existing?.pinned),
       favorite: Boolean(existing?.favorite)
     };
-    const previous = data.current;
     data.current = [...data.current];
     if (existingIndex >= 0) data.current.splice(existingIndex, 1, character);else data.current.push(character);
-    if (!persist()) {
-      data.current = previous;
-      update();
-      showToast('保存失败：请清理浏览器存储空间后重试');
+    if (!await persist()) {
       return false;
     }
     update();
@@ -57,23 +54,25 @@ export function useChatCharacters() {
     room.current!.syncSaved(character);
     return true;
   }
-  function patch(id: string, fields: {
+  async function patch(id: string, fields: {
     pinned?: boolean;
     favorite?: boolean;
   }) {
     const record = data.current.find(item => item.archiveId === id);
     if (!record) return;
-    Object.assign(record, fields);
+    data.current = data.current.map(item => item.archiveId === id ? {...item, ...fields} : item);
     update();
-    persist();
+    if (!await persist()) return;
     room.current!.render();
   }
-  function beginRemove(character: ChatCharacter) {
-    data.current = data.current.filter(item => item.archiveId !== character.archiveId);
+  async function beginRemove(character: ChatCharacter) {
+    const next = data.current.filter(item => item.archiveId !== character.archiveId);
+    if (!await writeChatCharacters(next)) return false;
+    data.current = readChatCharacters();
     update();
     room.current!.cleanup(character);
-    persist();
     room.current!.saveHistories();
+    return true;
   }
   async function removeFromList(id: string) {
     const character = data.current.find(item => item.archiveId === id);
@@ -87,18 +86,19 @@ export function useChatCharacters() {
       danger: true
     });
     if (!confirmed) return;
-    beginRemove(character);
-    deleteCharacterArchive(character.dossierId);
+    if (!await beginRemove(character)) return;
+    const archiveDeleted = await deleteCharacterArchive(character.dossierId);
     room.current!.render();
     room.current!.finishRemoval(character);
-    showToast('角色已删除');
+    if (archiveDeleted) showToast('角色已删除');
   }
-  function removeByDossier(id: CharacterDossier['id']) {
+  async function removeByDossier(id: CharacterDossier['id']) {
     const character = data.current.find(item => item.dossierId === String(id));
-    if (!character) return;
-    beginRemove(character);
+    if (!character) return true;
+    if (!await beginRemove(character)) return false;
     room.current!.render();
     room.current!.finishRemoval(character);
+    return true;
   }
   useLayoutEffect(() => {
     const connect = (event: Event) => {

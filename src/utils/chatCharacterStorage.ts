@@ -1,30 +1,9 @@
-import { decodePhotoRecords, encodePhotoRecords } from './imageAssets';
+import { readCatalogRecords, writeCatalogRecords } from './catalogStorage';
 import type { ChatCharacter } from '../types/chatCharacters';
-const CHAT_CHARACTERS_KEY = 'smallphone_chat_characters_v1';
-export function readChatCharacters(): ChatCharacter[] {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(CHAT_CHARACTERS_KEY) || '[]');
-    return Array.isArray(saved) ? decodePhotoRecords(saved as ChatCharacter[]) : [];
-  } catch {
-    return [];
-  }
-}
-export function writeChatCharacters(records: ChatCharacter[]) {
-  try {
-    const payload = JSON.stringify(encodePhotoRecords(records));
-    localStorage.setItem(CHAT_CHARACTERS_KEY, payload);
-    return localStorage.getItem(CHAT_CHARACTERS_KEY) === payload;
-  } catch {
-    return false;
-  }
-}
-export function deleteCharacterArchive(id: unknown) {
-  try {
-    const key = 'smallphone_dossier_records_v1';
-    const saved: unknown = JSON.parse(localStorage.getItem(key) || '[]');
-    if (!Array.isArray(saved)) return;
-    localStorage.setItem(key, JSON.stringify(saved.filter(item => String(item?.id) !== String(id))));
-  } catch {/* 原聊天删除失败时仍继续清理聊天清单。 */}
+export function readChatCharacters(): ChatCharacter[] { return readCatalogRecords('chatCharacters'); }
+export function writeChatCharacters(records: ChatCharacter[]): Promise<boolean> { return writeCatalogRecords('chatCharacters', records); }
+export function deleteCharacterArchive(id: unknown): Promise<boolean> {
+  return writeCatalogRecords('characterRecords', readCatalogRecords('characterRecords').filter(item => String(item.id) !== String(id)));
 }
 /** 聊天头像保持原最长边 320px、WebP/JPEG .78；压缩后更大时保留原资料。 */
 export function shrinkChatCharacterAvatar(dataUrl: string): Promise<string> {

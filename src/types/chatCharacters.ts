@@ -31,5 +31,5 @@ export interface ChatCharacterStoreBridge {
     favorite?: boolean;
   }) => void;
   removeFromList: (id: string) => Promise<void>;
-  removeByDossier: (id: CharacterDossier['id']) => void;
+  removeByDossier: (id: CharacterDossier['id']) => Promise<boolean>;
 }

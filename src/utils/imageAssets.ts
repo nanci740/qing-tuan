@@ -1,3 +1,4 @@
+import { readCatalogImageReferences } from './catalogDatabase';
 /** 青团机图片库：数据库保存 Blob，界面继续使用可导出的 data URL。 */
 const DB_NAME = 'qingtuan_image_assets_v1';
 const PREFIX = 'qt-image:';
@@ -6,7 +7,6 @@ const references = new Map<string, string>();
 const slots = new Map<string, string>();
 const pendingImages = new Set<string>();
 const imageKeys = ['personal_profile_polaroid_photo', ...['chatMemoryStar','chatMemoryPolaroid','chatMemoryMoon','chatMemoryExtra'].map(id => `smallphone_chat_memory_photo_v1_${id}`), 'smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`)];
-const recordKeys = ['smallphone_dossier_records_v1', 'smallphone_chat_characters_v1', 'smallphone_world_books_v1'];
 function legacy(key: string) { try { return localStorage.getItem(key) || ''; } catch { return ''; } }
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -39,6 +39,21 @@ export function resolveImage(value: string) {
   const image = images.get(value);
   if (!image) throw Error('已保存的图片暂时无法读取，请重新打开页面');
   return image;
+}
+/** 世界书、角色卡和档案只按其权威资料恢复图片，不重写旧 localStorage。 */
+export async function restoreImageReferences(values: string[]): Promise<void> {
+  const needed = [...new Set(values.filter(value => value.startsWith(PREFIX) && !images.has(value)))];
+  if (!needed.length) return;
+  const rows = await transaction(['images'], 'readonly', tx => {
+    const result: [string, Blob][] = [];
+    for (const ref of needed) {
+      const request = tx.objectStore('images').get(ref);
+      request.onsuccess = () => { if (request.result instanceof Blob) result.push([ref, request.result]); };
+    }
+    return result;
+  });
+  if (rows.length !== needed.length) throw Error('已保存的图片暂时无法读取，请重新打开页面');
+  for (const [ref, blob] of rows) { const value = await blobDataUrl(blob); images.set(ref, value); references.set(value, ref); }
 }
 export function imageReference(value: string) { return references.get(value) || value; }
 export function readImageSlot(key: string) { return resolveImage(slots.has(key) ? slots.get(key)! : legacy(key)); }
@@ -95,30 +110,21 @@ export async function initializeImageAssets() {
       return rows;
     });
     slotRows.forEach(([key,ref])=>slots.set(key,ref));
-    const needed = new Set([...slotRows.map(([,ref])=>ref), ...recordKeys.flatMap(key=>legacy(key).match(/qt-image:[a-f0-9]{64}/g)||[])].filter(ref=>ref.startsWith(PREFIX)));
+    const needed = new Set([...slotRows.map(([,ref])=>ref), ...imageKeys.flatMap(key=>legacy(key).match(/qt-image:[a-f0-9]{64}/g)||[])].filter(ref=>ref.startsWith(PREFIX)));
     const imageRows = await transaction(['images'], 'readonly', tx => {
       const rows: [string,Blob][] = [];
       for(const ref of needed){const request=tx.objectStore('images').get(ref);request.onsuccess=()=>{if(request.result instanceof Blob)rows.push([ref,request.result]);};}
       return rows;
     });
-    // 只恢复仍被设置/档案使用的图片，旧版本图片不进入显示缓存。
+    // 此处恢复设置图片；世界书、角色卡和档案由存储初始化按关联恢复。
     for (const [ref, blob] of imageRows) { const value=await blobDataUrl(blob);images.set(ref,value);references.set(value,ref); }
     restored = true;
     for (const key of imageKeys) {
       if (slots.has(key)) { try { localStorage.setItem(key, slots.get(key)!); } catch {} continue; }
       const value = legacy(key); if(value) await saveImageSlots({[key]:value});
     }
-    for (const key of recordKeys) {
-      const original=legacy(key); if(!original)continue;
-      const records=JSON.parse(original); if(!Array.isArray(records))continue;
-      const world = key === 'smallphone_world_books_v1';
-      if (world) await prepareCoverRecords(records); else await preparePhotoRecords(records);
-      const payload=JSON.stringify(world ? encodeCoverRecords(records) : encodePhotoRecords(records));
-      // 防止迁移期间覆盖另一个页面的新修改。
-      if(legacy(key)===original) localStorage.setItem(key,payload);
-    }
   } catch (cause) { error=cause; }
-  const persistedReferences = [...imageKeys,...recordKeys].flatMap(key => legacy(key).match(/qt-image:[a-f0-9]{64}/g) || []);
+  const persistedReferences = imageKeys.flatMap(key => legacy(key).match(/qt-image:[a-f0-9]{64}/g) || []);
   if (persistedReferences.some(ref => !images.has(ref)) || (!restored && persistedReferences.length)) throw Error('已保存的图片暂时无法读取');
   return error ? '图片迁移暂未完成，旧资料已保留，请稍后重试' : '';
 }
@@ -164,10 +170,6 @@ function persistedImageReferences(): Set<string> {
   const refs = new Set<string>();
   // Read failures and damaged records must stop cleanup, rather than treating them as empty.
   try {
-    for (const key of recordKeys) {
-      const value = localStorage.getItem(key);
-      if (value && !Array.isArray(JSON.parse(value))) throw Error('图片关联资料无法读取，请先检查档案和世界书');
-    }
     for (let index=0; index<localStorage.length; index++) {
       const key=localStorage.key(index); if(key===null)continue;
       const value=localStorage.getItem(key)||'';
@@ -180,11 +182,13 @@ function persistedImageReferences(): Set<string> {
 async function inspectImages(remove:boolean) {
   let failure:unknown;
   const result = {stats:{totalCount:0,totalBytes:0,usedCount:0,usedBytes:0,protectedCount:0,protectedBytes:0,unusedCount:0,unusedBytes:0} as ImageLibraryStats, deletedCount:0,deletedBytes:0};
+  const catalogReferences = await readCatalogImageReferences();
   await transaction(['slots','images'], remove?'readwrite':'readonly', tx => {
     const bindings=tx.objectStore('slots').getAll();
     bindings.onsuccess=()=>{
       try {
         const needed=persistedImageReferences();
+        for (const ref of catalogReferences) needed.add(ref);
         for(const value of bindings.result)if(typeof value==='string'&&value.startsWith(PREFIX))needed.add(value);
         const seen=new Set<string>();
         const cursorRequest=tx.objectStore('images').openCursor();

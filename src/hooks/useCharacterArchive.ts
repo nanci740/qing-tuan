@@ -6,6 +6,7 @@ import { flushSync } from 'react-dom';
 import type { MouseEvent } from 'react';
 import type { CharacterChatServices, CharacterDossier, CharacterEditorBridge, CharacterEditorSnapshot, ImportedDossier } from '../types/characterDossier';
 import { blankCharacterRecord, nextCharacterId, readCharacterRecords, writeCharacterRecords } from '../utils/characterArchiveStorage';
+import { catalogSaveError } from '../utils/catalogStorage';
 import { todayStampDate } from '../utils/characterPng';
 import { showToast } from '../utils/toast';
 
@@ -76,7 +77,7 @@ export function useCharacterArchive() {
     Object.assign(record, fields);
     window.clearTimeout(saveTimer.current);
     saveTimer.current = window.setTimeout(() => {
-      if (!persist()) showToast('资料暂存失败：请检查浏览器存储空间');
+      void persist();
     }, 300);
     publish('fields');
   }
@@ -102,14 +103,14 @@ export function useCharacterArchive() {
     panel('profile');
     flushSync(() => setVisible(true));
   }
-  function close() {
+  async function close() {
     if(importCommitBusy.current)return showToast('正在导入档案，请稍候');
     importPreview.choose('cancel');
     window.clearTimeout(saveTimer.current);
     // 完全空白的新草稿不留下来。
     data.current.records = data.current.records.filter(record => record.isStamped || record.name || record.nickname || record.photoUrl);
     updateOwner();
-    persist();
+    if (!await persist()) return;
     flushSync(() => setVisible(false));
     // 从聊天设置打开的话，关掉后身份卡马上跟着更新（头像换图要一点时间，稍后再补一次）。
     chat.current?.syncIdentity();
@@ -133,8 +134,10 @@ export function useCharacterArchive() {
   }
   async function saveRecord() {
     if(importCommitBusy.current)return;
-    const record = current(),
-      displayName = (record.name || record.nickname || '').trim();
+    window.clearTimeout(saveTimer.current);
+    const record = current();
+    if (!record) return;
+    const displayName = (record.name || record.nickname || '').trim();
     if (!displayName) {
       panel('profile');
       name.current?.focus();
@@ -149,19 +152,19 @@ export function useCharacterArchive() {
       stampDate: todayStampDate()
     });
     updateOwner();
-    if (!persist()) {
-      showToast('保存失败：请清理浏览器存储空间后重试');
+    if (!await persist()) {
       return;
     }
     if (await chat.current!.saveToChat(record)) {
       showToast('资料已保存');
-      close();
+      await close();
     }
   }
   async function deleteRecord() {
     if(importCommitBusy.current)return;
-    const record = current(),
-      label = (record.name || record.nickname || '').trim() || '这个角色';
+    const record = current();
+    if (!record) return;
+    const label = (record.name || record.nickname || '').trim() || '这个角色';
     const ok = await chat.current!.confirm({
       title: '删除角色',
       message: `确定要删除「${label}」吗？聊天记录也会一起删除。`,
@@ -169,13 +172,15 @@ export function useCharacterArchive() {
       danger: true
     });
     if (!ok) return;
-    chat.current!.removeFromChat(record.id);
-    data.current.records.splice(data.current.index, 1);
+    window.clearTimeout(saveTimer.current);
+    if (!await chat.current!.removeFromChat(record.id)) return;
+    const next = data.current.records.filter(item => item.id !== record.id);
+    if (!await writeCharacterRecords(next)) return;
+    data.current.records = next;
     updateOwner();
-    persist();
     showToast('角色已删除');
     if (!data.current.records.length) {
-      close();
+      await close();
       return;
     }
     data.current.index = Math.max(0, data.current.index - 1);
@@ -206,10 +211,11 @@ export function useCharacterArchive() {
       if(data.current.records!==records||JSON.stringify(data.current.records)!==before)throw Error('档案已发生变化，请重新导入并核对');
       const next=target?kept.map(record=>record.id===target.id?restored:record):[...kept,restored];
       const storedBefore=readCharacterRecords();
-      if(!writeCharacterRecords(next))throw Error('档案保存失败，原数据已保留');
+      if(!await writeCharacterRecords(next))throw Error(catalogSaveError('characterRecords'));
       if(!await chat.current!.saveToChat(restored)){
-        if(!writeCharacterRecords(storedBefore))throw Error('聊天角色保存失败，原档案恢复失败，请检查存储空间');
-        throw Error('聊天角色保存失败，原档案已保留');
+        const cause=catalogSaveError('chatCharacters');
+        if(!await writeCharacterRecords(storedBefore))throw Error(catalogSaveError('characterRecords'));
+        throw Error(cause);
       }
       data.current={records:next,index:next.findIndex(record=>record.id===restored.id)};publish('form');panel('profile');return restored;
     } finally {importCommitBusy.current=false;}
