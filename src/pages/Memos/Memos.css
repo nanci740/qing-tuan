@@ -149,7 +149,6 @@
 .memos-page .memos-paper-options > span { margin-right: 3px; font-size: 10px; color: var(--color-muted); }
 .memos-page .memos-paper-options .memos-button { --memo-button-h: 22px; --memo-button-pad: 2px 7px; --memo-button-font: 9.5px; }
 .memos-page .memos-paper-options > .memos-paper-note { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.memos-page .memos-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; background: var(--color-paper); border-bottom: 1px dashed var(--memo-edge); font-size: 11px; line-height: 1.5; }
 .memos-page .memos-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-height: 540px) {
   .memos-page .memos-window { --memo-window-bottom: max(8px, env(safe-area-inset-bottom)); }

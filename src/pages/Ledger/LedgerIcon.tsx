@@ -32,7 +32,7 @@ export function LedgerCategoryIcon({ name, emoji = '' }: { name: CategoryIcon; e
 }
 /** 顶栏右上角的小猪头，只是装饰。 */
 export function LedgerPig() {
-  return <svg className="ledger-pig" viewBox="0 0 24 24" aria-hidden="true" shapeRendering="crispEdges"><path d="M3 3h2v1h1v1h1v1H3z M19 3h2v3h-4V5h1V4h1z M7 6h10v2H7z M5 7h2v2H5z M17 7h2v2h-2z M3 9h2v8H3z M19 9h2v8h-2z M5 17h2v2H5z M17 17h2v2h-2z M7 19h10v2H7z M8 10h2v2H8z M14 10h2v2h-2z M9 13h6v1h1v2h-1v1H9v-1H8v-2h1z M10 14v2h1v-2z M13 14v2h1v-2z" fill="currentColor" fillRule="evenodd" /></svg>;
+  return <svg className="ledger-pig" viewBox="0 0 24 24" aria-hidden="true" shapeRendering="crispEdges"><path d="M4 4h4v2H4z M16 4h4v2h-4z M2 6h2v2H2z M6 6h12v2H6z M20 6h2v2h-2z M2 8h4v2H2z M18 8h4v2h-4z M0 10h2v8H0z M22 10h2v8h-2z M6 12h2v4H6z M16 12h2v4h-2z M10 14h4v2h-4z M2 18h20v2H2z" fill="currentColor" fillRule="evenodd" /></svg>;
 }
 export function LedgerToolIcon({ name }: { name: ToolIcon }) {
   return <svg className="ledger-tool-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={lines[name]} /></svg>;
