@@ -215,12 +215,7 @@
 
 /* @qingtuan-order:000881 */
 
-        #settingsPage .settings-section-personal .settings-item-profile:focus-within {
-            background: var(--color-surface);
-        }
-        @media (hover: hover) and (pointer: fine) {
-            #settingsPage .settings-section-personal .settings-item-profile:hover { background: var(--color-surface); }
-        }
+
 
 /* @qingtuan-order:000882 */
 
@@ -565,12 +560,7 @@
 /* @qingtuan-order:000931 */
 
 
-        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
-            background: rgba(var(--color-surface-rgb), var(--ui-glass-alpha, 0.08));
-        }
-        @media (hover: hover) and (pointer: fine) {
-            #settingsPage .settings-section-personal .settings-profile-card:hover { background: rgba(var(--color-surface-rgb), var(--ui-glass-alpha, 0.08)); }
-        }
+
 
 /* @qingtuan-order:000932 */
 
