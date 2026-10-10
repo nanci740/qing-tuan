@@ -6,17 +6,24 @@ import { memoSummary, memoTitle, selectMemos } from '../../utils/memoStorage';
 import './Memos.css';
 
 type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'disk' | 'close';
-const symbols: Record<SymbolName, string> = {
+const symbols = {
   note: 'M3 1h7v1h1v1h1v11H3z M4 2v11h7V5H8V2z M9 2v2h2V3h-1V2z M5 7h5v1H5z M5 9h5v1H5z M5 11h3v1H5z',
   list: 'M2 1h12v14H2z M3 2v12h10V2z M4 4h2v2H4z M7 4h5v1H7z M4 7h2v2H4z M7 7h5v1H7z M4 10h2v2H4z M7 10h5v1H7z',
   plus: 'M7 2h2v5h5v2H9v5H7V9H2V7h5z',
   pin: 'M5 2h6v2h-1v4l2 2v1H9v3H7v-3H4v-1l2-2V4H5z M7 4v4h2V4z',
   trash: 'M6 1h4v1H6z M3 3h10v1H3z M4 5h8v9H4z M5 6v7h6V6z M6 7h1v5H6z M9 7h1v5H9z',
-  search: 'M4 2h5v1h2v2h1v5h-2v1H5v-1H3V8H2V4h2z M4 4v4h1v1h4V8h1V5H9V4z M10 10h2v2h2v2h-2v-2h-2z',
-  disk: 'M2 2h11v1h1v11H2z M3 3v10h2V9h6v4h2V4h-1V3h-1v4H5V3z M6 3v3h4V3z M6 10v3h4v-3z',
-  close: 'M3 3h2v2H3z M5 5h2v2H5z M7 7h2v2H7z M9 5h2v2H9z M11 3h2v2h-2z M5 9h2v2H5z M3 11h2v2H3z M9 9h2v2H9z M11 11h2v2h-2z',
-};
+} as const;
+const outlineSymbols = {
+  search: 'M21 21l-5-5 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0',
+  disk: 'M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12l4 4v12a2 2 0 0 1-2 2z M7 3v6h10V3 M7 21v-8h10v8',
+  close: 'M6 6l12 12 M18 6 6 18',
+} as const;
 function MemoSymbol({ name }: { name: SymbolName }) {
+  if (name === 'search' || name === 'disk' || name === 'close') {
+    return <svg className="memos-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d={outlineSymbols[name]} />
+    </svg>;
+  }
   return <svg className="memos-symbol" viewBox="0 0 16 16" aria-hidden="true" shapeRendering="crispEdges">
     <path d={symbols[name]} fill="currentColor" fillRule="evenodd" />
   </svg>;
@@ -123,15 +130,14 @@ export function Memos({ onClose }: { onClose: () => void }) {
       }
     }}>
     <header className="memos-titlebar">
-      <button type="button" className="memos-button memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
-      <h1 id="memosHeading"><span>{selected ? memoTitle(selected) : 'memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
+      <button type="button" className="memos-button memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
+      <h1 id="memosHeading"><span>{selected ? memoTitle(selected) : 'Memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
       {!selected && <div className="memos-folder-area" ref={folderArea}>
         <button type="button" className="memos-folder-button" aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></button>
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
     </header>
     <div className="memos-binding" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>
-    <div className="memos-address"><span>目录</span><MemoPixel name="note" /><span>{`C:\\青团\\备忘录\\${selected ? `${memoTitle(selected)}.${selected.kind === 'text' ? 'txt' : 'list'}` : folderNames[folder] + '\\'}`}</span></div>
     <main className="memos-window">
       {memos.loadError && <div className="memos-notice" role="alert">{memos.loadError}<button type="button" className="memos-button" onClick={memos.retryRead}>重新读取</button></div>}
       {memos.saveState === 'error' && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
@@ -172,8 +178,9 @@ export function Memos({ onClose }: { onClose: () => void }) {
           </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
       </>}
-      <footer className="memos-status"><span role="status"><MemoSymbol name="disk" />{memos.loadError ? '读取失败' : saveLabel}</span><span>{selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><i aria-hidden="true" /></footer>
+      <footer className="memos-status"><span role="status"><MemoSymbol name="disk" />{memos.loadError ? '读取失败' : saveLabel}</span><span>{selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><svg className="memos-grip" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1"><path d="M2 10l8-8 M5 10l5-5 M8 10l2-2" /></svg></footer>
     </main>
-    {eraseId && <div className="memos-confirm-overlay"><div className="memos-confirm" role="alertdialog" aria-modal="true" aria-labelledby="memosEraseTitle" aria-describedby="memosEraseDescription"><h2 id="memosEraseTitle">彻底删除</h2><p id="memosEraseDescription">这条备忘录删除后将无法恢复。</p><div><button type="button" className="memos-button" ref={cancelButton} onClick={() => setEraseId(null)}>取消</button><button type="button" className="memos-button memos-danger" onClick={() => { memos.erase(eraseId); eraseTrigger.current = null; setEraseId(null); }}>确认删除</button></div></div></div>}
+    {eraseId && <div className="memos-confirm-overlay"><div className="memos-confirm" role="alertdialog" aria-modal="true" aria-labelledby="memosEraseTitle" aria-describedby="memosEraseDescription"><h2 id="memosEraseTitle">彻底删除</h2><p id="memosEraseDescription">这条备忘录删除后将无法恢复。</p><div className="memos-confirm-actions"><button type="button" className="memos-button" ref={cancelButton} onClick={() => setEraseId(null)}>取消</button><button type="button" className="memos-button memos-danger" onClick={() => { memos.erase(eraseId); eraseTrigger.current = null; setEraseId(null); }}>确认删除</button></div></div></div>}
   </section>, document.body);
 }
+
