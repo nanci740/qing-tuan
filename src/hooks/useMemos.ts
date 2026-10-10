@@ -30,7 +30,7 @@ export function useMemos() {
           if (error instanceof MemoConflictError) {
             conflict.current = true;
             if (active.current) { setConflicted(true); showToast(error.message); }
-          }
+          } else if (active.current) showToast('保存失败，当前内容还在，请稍后再试');
           if (active.current) setSaveState('error');
           return false;
         }
@@ -60,7 +60,8 @@ export function useMemos() {
       return true;
     } catch {
       if (active.current && sequence === readSequence.current)
-        setArchive(current => ({ ...current, loading: false, ready: false, error: '备忘录暂时无法读取，原来的记录已保留。' }));
+        setArchive(current => ({ ...current, loading: false, ready: false, error: '备忘录读不出来，原来的记录还在，请关掉备忘录重新打开' }));
+      if (active.current && sequence === readSequence.current) showToast('备忘录读不出来，原来的记录还在，请关掉备忘录重新打开');
       return false;
     }
   }, []);
