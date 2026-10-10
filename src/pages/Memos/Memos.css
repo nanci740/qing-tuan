@@ -78,7 +78,7 @@
 .memos-page .memos-binding { position: relative; z-index: 1; display: flex; justify-content: space-between; flex: 0 0 auto; height: 12px; margin-top: -6px; padding: 0 calc((100% - min(100% - 32px, 460px)) / 2 + 12px); pointer-events: none; }
 .memos-page .memos-binding i { display: block; width: 5px; height: 12px; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--effect-face-white); box-shadow: 1px 1px 0 var(--effect-drop-soft); }
 .memos-page .memos-pixel { display: block; flex: 0 0 auto; width: 24px; height: 24px; }
-.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 32px, 460px); margin: -6px auto max(14px, env(safe-area-inset-bottom)); border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); box-shadow: 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
+.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 32px, 460px); margin: 12px auto max(14px, env(safe-area-inset-bottom)); border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); box-shadow: 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
 .memos-page .memos-toolbar { display: flex; align-items: center; gap: 7px; padding: 10px; }
 .memos-page .memos-search { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; min-height: 32px; padding: 0 7px; border: 1px solid var(--color-divider); box-shadow: var(--effect-sunken); }
 .memos-page .memos-search .memos-symbol { width: 13px; height: 13px; color: var(--color-muted); }
