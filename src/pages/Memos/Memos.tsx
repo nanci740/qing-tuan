@@ -7,7 +7,7 @@ import { memoSummary, memoTitle, selectMemos } from '../../utils/memoStorage';
 import { confirmChat } from '../../utils/chatConfirm';
 import './Memos.css';
 
-type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'close';
+type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'close' | 'more';
 const symbols = {
   note: 'M3 1h7v1h1v1h1v11H3z M4 2v11h7V5H8V2z M9 2v2h2V3h-1V2z M5 7h5v1H5z M5 9h5v1H5z M5 11h3v1H5z',
   list: 'M2 1h12v14H2z M3 2v12h10V2z M4 4h2v2H4z M7 4h5v1H7z M4 7h2v2H4z M7 7h5v1H7z M4 10h2v2H4z M7 10h5v1H7z',
@@ -21,6 +21,9 @@ const outlineSymbols = {
 function MemoSymbol({ name }: { name: SymbolName }) {
   if (name === 'pin') {
     return <svg className="memos-symbol" viewBox="-2 -2 14 14" aria-hidden="true"><path d="M3 0h4v1H6.5v3l1.5 1.5V6H5.5v4h-1V6H2v-.5L3.5 4V1H3z" fill="currentColor" /></svg>;
+  }
+  if (name === 'more') {
+    return <svg className="memos-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="5" cy="12" r="1.8" /><circle cx="12" cy="12" r="1.8" /><circle cx="19" cy="12" r="1.8" /></svg>;
   }
   if (name !== 'note' && name !== 'list') {
     return <svg className="memos-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -55,11 +58,14 @@ export function Memos({ onClose }: { onClose: () => void }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newMenu, setNewMenu] = useState(false);
   const [folderMenu, setFolderMenu] = useState(false);
+  const [moreMenu, setMoreMenu] = useState(false);
   const [closing, setClosing] = useState(false);
   const root = useRef<HTMLElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   const newArea = useRef<HTMLDivElement>(null);
   const folderArea = useRef<HTMLDivElement>(null);
+  const moreArea = useRef<HTMLDivElement>(null);
+  const moreButton = useRef<HTMLButtonElement>(null);
   const newButton = useRef<HTMLButtonElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
   const selected = memos.notes.find(note => note.id === selectedId && note.deletedAt === null);
@@ -68,6 +74,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
 
   function back() {
     if (!memos.flush()) return;
+    setMoreMenu(false);
     if (selectedId) setSelectedId(null);
     else if (!closing) { setClosing(true); window.setTimeout(onClose, 380); }
   }
@@ -91,14 +98,15 @@ export function Memos({ onClose }: { onClose: () => void }) {
     else backButton.current?.focus();
   }, [selectedId]);
   useEffect(() => {
-    if (!newMenu && !folderMenu) return;
+    if (!newMenu && !folderMenu && !moreMenu) return;
     const outside = (event: PointerEvent) => {
       if (!newArea.current?.contains(event.target as Node)) setNewMenu(false);
       if (!folderArea.current?.contains(event.target as Node)) setFolderMenu(false);
+      if (!moreArea.current?.contains(event.target as Node)) setMoreMenu(false);
     };
     document.addEventListener('pointerdown', outside, true);
     return () => document.removeEventListener('pointerdown', outside, true);
-  }, [newMenu, folderMenu]);
+  }, [newMenu, folderMenu, moreMenu]);
 
   function checklistChange(note: MemoNote, id: string, values: { text?: string; done?: boolean }) {
     memos.update(note.id, { items: note.items.map(item => item.id === id ? { ...item, ...values } : item) });
@@ -113,6 +121,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         event.preventDefault(); event.stopPropagation();
         if (newMenu) { setNewMenu(false); newButton.current?.focus(); }
         else if (folderMenu) setFolderMenu(false);
+        else if (moreMenu) { setMoreMenu(false); moreButton.current?.focus(); }
         else back();
       }
       if (event.key === 'Tab') {
@@ -131,6 +140,13 @@ export function Memos({ onClose }: { onClose: () => void }) {
         <PressedButton type="button" className="memos-folder-button" aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></PressedButton>
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
+      {selected && <div className="memos-more-area" ref={moreArea}>
+        <PressedButton type="button" ref={moreButton} className="memos-more-button" aria-haspopup="menu" aria-expanded={moreMenu} aria-controls="memosMoreMenu" aria-label="更多操作" onClick={() => setMoreMenu(!moreMenu)}><MemoSymbol name="more" /></PressedButton>
+        {moreMenu && <div id="memosMoreMenu" className="memos-more-menu" role="menu" aria-label="这篇备忘录">
+          <button type="button" role="menuitem" onClick={() => { memos.update(selected.id, { pinned: !selected.pinned }); setMoreMenu(false); }}><MemoSymbol name="pin" />{selected.pinned ? '取消置顶' : '置顶'}</button>
+          <button type="button" role="menuitem" className="memos-more-danger" onClick={() => { setMoreMenu(false); memos.trash(selected.id); setSelectedId(null); }}><MemoSymbol name="trash" />移到回收站</button>
+        </div>}
+      </div>}
     </header>
     <div className="memos-binding" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} />)}</div>
     <main className="memos-window">
@@ -139,9 +155,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
       {selected ? <>
         <div className="memos-editor-tools">
           <span className="memos-tag">{selected.kind === 'text' ? '文字记录' : '勾选清单'}</span>
-          <time>{dateLabel(selected.createdAt, true)}</time>
-          <button type="button" className="memos-button" aria-pressed={selected.pinned} onClick={() => memos.update(selected.id, { pinned: !selected.pinned })}><MemoSymbol name="pin" />{selected.pinned ? '已置顶' : '置顶'}</button>
-          <button type="button" className="memos-button" onClick={() => { memos.trash(selected.id); setSelectedId(null); }} aria-label="移入回收站"><MemoSymbol name="trash" /></button>
+          <time>{dateLabel(selected.createdAt, true)}{selected.pinned && <span className="memos-pinned-mark" role="img" aria-label="已置顶"><MemoSymbol name="pin" /></span>}</time>
         </div>
         <div className={`memos-paper memos-paper-${selected.paper}`}>
           <label className="memos-title-field"><span className="memos-sr-only">备忘录标题</span><input ref={titleInput} value={selected.title} placeholder="给这一页起个名字" maxLength={120} onChange={event => memos.update(selected.id, { title: event.target.value })} onBlur={memos.flush} /></label>
