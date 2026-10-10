@@ -13,7 +13,7 @@ const pixels: Record<CategoryIcon, string> = {
   phone: 'M6 2h12v20H6z M8 4v13h8V4z M11 18v2h2v-2z',
   clothes: 'M6 3h4v2H6z M14 3h4v2h-4z M10 5h4v2h-4z M4 5h2v2H4z M18 5h2v2h-2z M2 7h2v6H2z M20 7h2v6h-2z M4 11h4v2H4z M16 11h4v2h-4z M6 13h2v8H6z M16 13h2v8h-2z M8 19h8v2H8z',
   merch: 'M8 3h8v2H8z M6 5h2v2H6z M16 5h2v2h-2z M4 7h2v10H4z M18 7h2v10h-2z M6 17h2v2H6z M16 17h2v2h-2z M8 19h8v2H8z M11 8h2v2h-2z M8 10h8v2H8z M10 12h4v2h-4z M9 14h2v2H9z M13 14h2v2h-2z',
-  pet: 'M4 3h2v2H4z M18 3h2v2h-2z M4 5h2v12H4z M18 5h2v12h-2z M6 5h2v2H6z M16 5h2v2h-2z M8 7h8v2H8z M8 11h2v2H8z M14 11h2v2h-2z M11 14h2v2h-2z M6 17h2v2H6z M16 17h2v2h-2z M8 19h8v2H8z',
+  pet: 'M3 5h3v2H3z M1 7h2v4H1z M3 11h2v2H3z M1 13h2v4H1z M3 17h3v2H3z M6 7h2v2H6z M6 15h2v2H6z M8 9h8v2H8z M8 13h8v2H8z M16 7h2v2h-2z M16 15h2v2h-2z M18 5h3v2h-3z M21 7h2v4h-2z M19 11h2v2h-2z M21 13h2v4h-2z M18 17h3v2h-3z',
   salary: 'M2 5h20v14H2z M4 7v10h16V7z M10 9h4v1h1v4h-1v1h-4v-1H9v-4h1z M11 11v2h2v-2z M5 8h2v2H5z M17 14h2v2h-2z',
   other: 'M4 4h16v16H4z M6 6v12h12V6z M8 10h2v4H8z M14 10h2v4h-2z',
 };
