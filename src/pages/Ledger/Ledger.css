@@ -1,0 +1,115 @@
+/* 记账独立样式。颜色、材质与按压反馈均复用全站系统。 */
+.ledger-page {
+  position: fixed; inset: 0; z-index: 2100; height: 100dvh;
+  display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
+  background: var(--color-page); color: var(--color-text); font: inherit; font-size: 12px;
+  text-shadow: none; animation: ledgerPageIn .38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.ledger-page.is-closing { animation-name: ledgerPageOut; }
+@keyframes ledgerPageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes ledgerPageOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(20px); } }
+.ledger-page *, .ledger-page *::before, .ledger-page *::after { box-sizing: border-box; }
+.ledger-page :is(button, input, select, textarea) { font: inherit; -webkit-text-fill-color: currentColor; }
+.ledger-page button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ledger-page button:disabled { opacity: .5; cursor: default; }
+.ledger-page :is(button, input, select, textarea):focus-visible { outline: 1px dashed var(--color-muted); outline-offset: 3px; }
+.ledger-page :is(input, select, textarea) { min-width: 0; border: 1px solid var(--color-divider); border-radius: 1px; background: var(--color-surface); color: var(--color-text); text-shadow: none; box-shadow: var(--effect-sunken); }
+.ledger-page :is(input, textarea)::placeholder { color: var(--color-muted); opacity: 1; }
+.ledger-page :is(h2, h3) { margin: 0 0 12px; font-weight: 600; }
+.ledger-page h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
+.ledger-page h2 > span { font-size: 9px; font-weight: 400; color: var(--color-muted); }
+.ledger-page h3 { font-size: 12px; }
+.ledger-page .ledger-pixel { display: block; width: 24px; height: 24px; flex: 0 0 auto; color: var(--color-muted); }
+.ledger-page .ledger-tool-icon { display: block; width: 14px; height: 14px; flex: 0 0 auto; }
+.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not(.ledger-danger),
+.ledger-page :is(.ledger-key, .ledger-category-choice, .ledger-icon-choice) { color: var(--color-text); text-shadow: none; }
+.ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not([aria-pressed="true"]),
+.ledger-page .ledger-key { background: var(--effect-face-white); }
+.ledger-page :is(.ledger-button, .ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] { background: var(--win-bar); }
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { background: var(--color-surface); }
+.ledger-page .ledger-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 28px; padding: 4px 8px; font-size: 10px; white-space: nowrap; }
+.ledger-page .ledger-small-button { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
+.ledger-page .ledger-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-danger { color: var(--color-danger-ink); text-shadow: none; }
+.ledger-page .ledger-titlebar { display: flex; align-items: center; gap: 8px; flex: 0 0 45px; height: 45px; padding: 0 16px; background: var(--color-accent-strong); border-bottom: 1px solid var(--color-divider); }
+.ledger-page .ledger-back { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; flex: 0 0 auto; border: 0; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-titlebar h1 { display: flex; align-items: baseline; flex: 1; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
+.ledger-page .ledger-header-action { border: 1px dotted var(--color-surface); border-radius: 0; padding: 3px 7px; min-height: 24px; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 10px; }
+.ledger-page .ledger-content { width: min(100%, 480px); margin: 0 auto; padding: 14px 14px 20px; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.ledger-page .ledger-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding: 9px; border: 1px dashed var(--color-muted); background: var(--color-surface); line-height: 1.7; }
+.ledger-page .ledger-filters { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.ledger-page .ledger-month-control { display: flex; align-items: center; gap: 6px; }
+.ledger-page .ledger-month-control input { width: 120px; height: 28px; padding: 3px; font-size: 11px; }
+.ledger-page .ledger-currency-select { flex: 1; min-width: 110px; }
+.ledger-page .ledger-currency-select select { width: 100%; height: 28px; padding: 3px 5px; font-size: 11px; }
+.ledger-page .ledger-summary { padding: 12px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page .ledger-summary-label { display: flex; justify-content: space-between; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px dashed var(--color-divider); font-size: 9px; letter-spacing: 1px; color: var(--color-muted); }
+.ledger-page .ledger-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.ledger-page .ledger-totals > div { min-width: 0; }
+.ledger-page .ledger-totals span { display: block; margin-bottom: 6px; font-size: 10px; color: var(--color-muted); }
+.ledger-page :is(.ledger-totals strong, .ledger-budget strong, .ledger-receipt-amount strong, .ledger-category-stat > strong) { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ledger-page .ledger-totals strong { font-size: 19px; font-weight: 500; }
+.ledger-page .ledger-expense { color: var(--color-danger-ink); }
+.ledger-page .ledger-budget { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--color-divider); }
+.ledger-page .ledger-budget > span { font-size: 10px; }
+.ledger-page .ledger-budget strong { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; }
+.ledger-page .ledger-budget-warning { margin: 10px 0 0; font-size: 10px; color: var(--color-danger); }
+.ledger-page .ledger-home-actions { display: flex; gap: 9px; margin: 14px 0 18px; }
+.ledger-page .ledger-home-actions > button { flex: 1; }
+.ledger-page :is(.ledger-breakdown, .ledger-manager, .ledger-entry-details) { margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); }
+.ledger-page .ledger-category-stat { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.ledger-page .ledger-category-stat > div { flex: 1; min-width: 0; }
+.ledger-page .ledger-category-stat span { display: flex; justify-content: space-between; gap: 6px; font-size: 10px; }
+.ledger-page .ledger-category-stat small { font-size: 9px; color: var(--color-muted); }
+.ledger-page .ledger-category-stat > strong { font-size: 11px; font-weight: 500; }
+.ledger-page .ledger-category-bar { height: 5px; margin-top: 5px; background: var(--color-page); border: 1px solid var(--color-divider); }
+.ledger-page .ledger-category-bar > i { display: block; height: 100%; background: var(--color-accent-strong); }
+.ledger-page .ledger-muted { margin: 8px 0 12px; font-size: 10px; line-height: 1.8; color: var(--color-muted); }
+.ledger-page .ledger-day { margin: 16px 0; }
+.ledger-page .ledger-day-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; font-size: 9px; color: var(--color-muted); }
+.ledger-page .ledger-receipt { display: block; width: 100%; margin: 0 0 12px; padding: 0; border: 0; border-inline: 1px solid var(--color-divider); border-radius: 0; background: var(--color-surface); color: var(--color-text); text-shadow: none; text-align: left; box-shadow: var(--effect-drop); }
+.ledger-page .ledger-receipt-edge { display: block; width: 100%; height: 6px; }
+.ledger-page .ledger-receipt-edge.is-bottom { transform: rotate(180deg); }
+.ledger-page .ledger-receipt-body { display: flex; align-items: center; gap: 8px; padding: 12px 10px; }
+.ledger-page .ledger-receipt-copy { flex: 1; min-width: 0; }
+.ledger-page .ledger-receipt-copy > strong { display: block; font-size: 12px; font-weight: 600; }
+.ledger-page .ledger-receipt-copy > span { display: block; margin-top: 5px; overflow-wrap: anywhere; font-size: 10px; line-height: 1.6; color: var(--color-muted); }
+.ledger-page .ledger-receipt-amount { min-width: 0; max-width: 48%; text-align: right; }
+.ledger-page .ledger-receipt-amount > strong { display: block; font-size: 14px; font-weight: 500; }
+.ledger-page .ledger-receipt-amount > small { display: block; margin-top: 4px; font-size: 9px; color: var(--color-muted); }
+.ledger-page .ledger-empty { display: flex; align-items: center; flex-direction: column; padding: 40px 10px; text-align: center; color: var(--color-muted); }
+.ledger-page .ledger-empty > .ledger-pixel { width: 36px; height: 36px; }
+.ledger-page .ledger-empty p { margin: 12px 0 8px; }
+.ledger-page .ledger-empty span { font-size: 10px; }
+.ledger-page .ledger-calculator { padding: 12px; margin-bottom: 16px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-paper); box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page .ledger-calculator-label { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 8px; letter-spacing: 1px; color: var(--color-muted); }
+.ledger-page .ledger-type-switch { display: flex; gap: 7px; margin-bottom: 10px; }
+.ledger-page .ledger-type-switch > select { min-width: 0; flex: 1; padding: 3px; font-size: 10px; }
+.ledger-page .ledger-display { display: block; padding: 7px 10px; border: 1px solid var(--color-muted); background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.ledger-page .ledger-display span { display: block; color: var(--color-muted); font-size: 9px; }
+.ledger-page .ledger-display input { display: block; width: 100%; height: 43px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; font: 27px/1.4 ui-monospace, monospace; text-align: right; }
+.ledger-page .ledger-keypad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.ledger-page .ledger-key { display: grid; place-items: center; min-height: 40px; padding: 5px; font-family: ui-monospace, monospace; font-size: 18px; }
+.ledger-page .ledger-key-zero { grid-column: span 3; }
+.ledger-page .ledger-field-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; font-size: 10px; }
+.ledger-page .ledger-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.ledger-page .ledger-category-choice { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 58px; padding: 8px 5px; font-size: 10px; overflow-wrap: anywhere; }
+.ledger-page .ledger-field { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; }
+.ledger-page .ledger-field > span { min-width: 52px; padding-top: 7px; font-size: 10px; color: var(--color-muted); }
+.ledger-page .ledger-field :is(input, textarea, select) { width: 100%; flex: 1; min-height: 30px; padding: 6px; font-size: 12px; }
+.ledger-page .ledger-field textarea { resize: vertical; line-height: 1.7; }
+.ledger-page .ledger-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.ledger-page .ledger-management-list { list-style: none; margin: 0; padding: 0; }
+.ledger-page .ledger-management-list > li { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
+.ledger-page .ledger-management-list > li > span { flex: 1; overflow-wrap: anywhere; }
+.ledger-page .ledger-manager-form { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--color-divider); }
+.ledger-page .ledger-icon-choices { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; margin: 12px 0; }
+.ledger-page .ledger-icon-choice { display: grid; place-items: center; min-height: 34px; padding: 4px; }
+.ledger-page .ledger-currencies { list-style: none; padding: 0; margin: 0; }
+.ledger-page .ledger-currencies > li { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
+.ledger-page .ledger-currencies span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ledger-page .ledger-currencies small { color: var(--color-muted); font-size: 9px; }
+.ledger-page .ledger-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 0 0 auto; padding: 7px 16px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--color-divider); background: var(--win-bar); color: var(--color-muted); font-size: 9px; }
+.ledger-page .ledger-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; white-space: nowrap; }
