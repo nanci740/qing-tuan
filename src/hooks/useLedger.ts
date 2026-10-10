@@ -1,39 +1,57 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { LedgerCurrency, LedgerData, LedgerDraft, LedgerIcon } from '../types/ledger';
-import { defaultLedgerData, LEDGER_STORAGE_KEY, ledgerEmoji, ledgerId, upgradeLedgerData, validateLedgerData, writeLedgerData } from '../utils/ledgerStorage.ts';
+import { defaultLedgerData, LedgerConflictError, ledgerEmoji, ledgerId, readLedgerData, writeLedgerData } from '../utils/ledgerStorage.ts';
 import { parseLedgerAmount, validLedgerDate } from '../utils/ledgerMath.ts';
 import { showToast } from '../utils/toast';
 
-function loadLedger() {
-  try {
-    const raw = localStorage.getItem(LEDGER_STORAGE_KEY);
-    return { data: raw === null ? defaultLedgerData() : upgradeLedgerData(validateLedgerData(JSON.parse(raw))), raw, loadError: '' };
-  } catch {
-    return { data: defaultLedgerData(), raw: null, loadError: '记账数据读不出来，原来的存档还在，请关掉记账重新打开' };
-  }
-}
 export function useLedger() {
-  const [state, setState] = useState(loadLedger);
-  const live = useRef(state.data), snapshot = useRef(state.raw);
+  // 初始结构仅供页面计算；ready 之前不渲染账本，也不允许操作或写入。
+  const [state, setState] = useState(() => ({ data: defaultLedgerData(), loading: true, ready: false, loadError: '' }));
+  const [saving, setSaving] = useState(false);
+  const [conflicted, setConflicted] = useState(false);
+  const live = useRef(state.data), revision = useRef(0);
+  const ready = useRef(false), pending = useRef(false), conflict = useRef(false);
   const active = useRef(true);
 
+  useEffect(() => {
+    let cancelled = false;
+    active.current = true;
+    void readLedgerData().then(snapshot => {
+      if (cancelled) return;
+      live.current = snapshot.data; revision.current = snapshot.revision; ready.current = true;
+      setState({ data: snapshot.data, loading: false, ready: true, loadError: '' });
+    }).catch(() => {
+      if (cancelled) return;
+      ready.current = false;
+      setState(current => ({ ...current, loading: false, ready: false, loadError: '记账数据读不出来，原来的存档还在，请关掉记账重新打开' }));
+    });
+    return () => { cancelled = true; active.current = false; ready.current = false; };
+  }, []);
+
   /** 出错一律用小弹窗提示，不留在页面上。 */
-  function fail(message: string) { showToast(message); return false; }
-  function commit(next: LedgerData) {
-    if (!active.current || state.loadError) return false;
+  function fail(message: string) { if (active.current) showToast(message); return false; }
+  async function commit(next: LedgerData) {
+    if (!active.current || !ready.current || pending.current || conflict.current) return false;
+    pending.current = true; setSaving(true);
     try {
-      if (localStorage.getItem(LEDGER_STORAGE_KEY) !== snapshot.current)
-        return fail('其他青团机分页改过记账，请关掉其他分页，再重新打开记账');
-      const checked = writeLedgerData(next);
-      live.current = checked;
-      snapshot.current = JSON.stringify(checked);
-      setState({ data: checked, raw: snapshot.current, loadError: '' });
+      const snapshot = await writeLedgerData(next, revision.current);
+      if (!active.current) return false;
+      live.current = snapshot.data; revision.current = snapshot.revision;
+      setState({ data: snapshot.data, loading: false, ready: true, loadError: '' });
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof LedgerConflictError) {
+        conflict.current = true;
+        if (active.current) setConflicted(true);
+        return fail(error.message);
+      }
       return fail('保存失败，请检查浏览器存储空间后重试，原来的记录已保留');
+    } finally {
+      pending.current = false;
+      if (active.current) setSaving(false);
     }
   }
-  function saveTransaction(draft: LedgerDraft) {
+  async function saveTransaction(draft: LedgerDraft) {
     const currency = live.current.currencies.find(c => c.code === draft.currencyCode);
     const category = live.current.categories.find(c => c.id === draft.categoryId);
     const old = live.current.transactions.find(entry => entry.id === draft.id);
@@ -48,10 +66,10 @@ export function useLedger() {
       createdAt: old?.createdAt ?? now, updatedAt: now };
     return commit({ ...live.current, transactions: old ? live.current.transactions.map(e => e.id === old.id ? next : e) : [...live.current.transactions, next] });
   }
-  function deleteTransaction(id: string) {
+  async function deleteTransaction(id: string) {
     return commit({ ...live.current, transactions: live.current.transactions.filter(e => e.id !== id) });
   }
-  function saveCategory(id: string | null, name: string, icon: LedgerIcon, emojiText = '') {
+  async function saveCategory(id: string | null, name: string, icon: LedgerIcon, emojiText = '') {
     const cleaned = name.trim(), emoji = ledgerEmoji(emojiText);
     if (emojiText.trim() && !emoji) return fail('表情请只放一个符号');
     if (!cleaned || cleaned.length > 20) return fail('分类名称请填写 1–20 个字符');
@@ -61,11 +79,11 @@ export function useLedger() {
     const category = { id: old?.id ?? ledgerId(), name: cleaned, icon, emoji, archived: false };
     return commit({ ...live.current, categories: old ? live.current.categories.map(c => c.id === id ? category : c) : [...live.current.categories, category] });
   }
-  function deleteCategory(id: string) {
+  async function deleteCategory(id: string) {
     if (live.current.categories.filter(c => !c.archived).length <= 1) return fail('请至少保留一个可用分类');
     return commit({ ...live.current, categories: live.current.categories.map(c => c.id === id ? { ...c, archived: true } : c) });
   }
-  function saveBudget(code: string, text: string) {
+  async function saveBudget(code: string, text: string) {
     const currency = live.current.currencies.find(c => c.code === code);
     if (!currency) return fail('请选择有效币种');
     const minor = text.trim() ? parseLedgerAmount(text, currency.decimals) : 0;
@@ -74,12 +92,12 @@ export function useLedger() {
     if (minor > 0) budgets.push({ currencyCode: code, monthlyAmount: minor / 10 ** currency.decimals });
     return commit({ ...live.current, budgets });
   }
-  function addCurrency(currency: LedgerCurrency) {
+  async function addCurrency(currency: LedgerCurrency) {
     const code = currency.code.trim().toUpperCase(), name = currency.name.trim();
     if (!/^[A-Z]{3}$/.test(code) || !name || name.length > 30) return fail('请填写三位币种代码和 1–30 个字符的名称');
     if (live.current.currencies.some(c => c.code === code)) return fail('这个币种已经存在');
     return commit({ ...live.current, currencies: [...live.current.currencies, { code, name, decimals: currency.decimals }] });
   }
-  return { data: state.data, loadError: state.loadError, active,
+  return { data: state.data, loadError: state.loadError, loading: state.loading, ready: state.ready, saving, conflicted, active,
     saveTransaction, deleteTransaction, saveCategory, deleteCategory, saveBudget, addCurrency };
 }
