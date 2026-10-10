@@ -60,6 +60,9 @@ export function Memos({ onClose }: { onClose: () => void }) {
   const [folderMenu, setFolderMenu] = useState(false);
   const [moreMenu, setMoreMenu] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const active = useRef(true), exitBusy = useRef(false);
+  const closingTimer = useRef<number | null>(null);
   const root = useRef<HTMLElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   const newArea = useRef<HTMLDivElement>(null);
@@ -71,12 +74,23 @@ export function Memos({ onClose }: { onClose: () => void }) {
   const selected = memos.notes.find(note => note.id === selectedId && note.deletedAt === null);
   const visible = selectMemos(memos.notes, folder, search);
   const count = memos.notes.filter(note => note.deletedAt === null).length;
+  const readonly = !memos.ready || memos.conflicted;
 
-  function back() {
-    if (!memos.flush()) return;
-    setMoreMenu(false);
-    if (selectedId) setSelectedId(null);
-    else if (!closing) { setClosing(true); window.setTimeout(onClose, 380); }
+  async function back() {
+    if (closing || memos.loading || exitBusy.current) return;
+    exitBusy.current = true; setLeaving(true);
+    try {
+      if (memos.conflicted) {
+        if (!await confirmChat({ title: '退出备忘录', message: '当前修改尚未保存。退出后将丢弃这些修改，其他分页保存的记录会保留。', confirmText: '退出', danger: true })) return;
+      } else if (memos.ready && !await memos.flush()) return;
+      if (!active.current) return;
+      setMoreMenu(false);
+      if (selectedId && !memos.conflicted) setSelectedId(null);
+      else { setClosing(true); closingTimer.current = window.setTimeout(onClose, 380); }
+    } finally {
+      exitBusy.current = false;
+      if (active.current) setLeaving(false);
+    }
   }
   function create(kind: MemoKind) {
     const id = memos.create(kind);
@@ -87,16 +101,22 @@ export function Memos({ onClose }: { onClose: () => void }) {
   }
 
   useEffect(() => {
+    active.current = true;
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     backButton.current?.focus();
-    return () => { document.body.style.overflow = previousOverflow; previousFocus?.focus(); };
+    return () => {
+      active.current = false;
+      if (closingTimer.current) window.clearTimeout(closingTimer.current);
+      document.body.style.overflow = previousOverflow; previousFocus?.focus();
+    };
   }, []);
   useEffect(() => {
+    if (memos.loading) return;
     if (selectedId) titleInput.current?.focus();
     else backButton.current?.focus();
-  }, [selectedId]);
+  }, [selectedId, memos.loading]);
   useEffect(() => {
     if (!newMenu && !folderMenu && !moreMenu) return;
     const outside = (event: PointerEvent) => {
@@ -113,10 +133,11 @@ export function Memos({ onClose }: { onClose: () => void }) {
   }
   const saveLabel = memos.saveState === 'error' ? '保存失败' : memos.saveState === 'pending' ? '保存中…' : '已保存';
 
-  return createPortal(<section className={closing ? 'memos-page is-closing' : 'memos-page'} ref={root} role="dialog" aria-modal="true" aria-labelledby="memosHeading"
+  return createPortal(<section className={closing ? 'memos-page is-closing' : 'memos-page'} ref={root} role="dialog" aria-modal="true" aria-labelledby="memosHeading" aria-busy={memos.loading || memos.saving} inert={memos.loading || leaving || closing}
     onTouchStart={event => event.stopPropagation()} onTouchEnd={event => event.stopPropagation()}
     onPointerDown={event => event.stopPropagation()} onPointerUp={event => event.stopPropagation()}
     onKeyDown={event => {
+      if (memos.loading || leaving || closing) return;
       if (event.key === 'Escape') {
         event.preventDefault(); event.stopPropagation();
         if (newMenu) { setNewMenu(false); newButton.current?.focus(); }
@@ -127,21 +148,21 @@ export function Memos({ onClose }: { onClose: () => void }) {
       if (event.key === 'Tab') {
         const scope = root.current;
         const elements = Array.from(scope?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), textarea:not(:disabled)') ?? [])
-          .filter(element => element.getClientRects().length > 0);
+          .filter(element => !element.closest('[inert]') && element.getClientRects().length > 0);
         const first = elements[0], last = elements.at(-1);
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }
     }}>
     <header className="memos-titlebar">
-      <button type="button" className="memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
+      <button type="button" className="memos-back" ref={backButton} disabled={memos.loading || leaving || closing} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
       <h1 id="memosHeading"><span>{selected ? memoTitle(selected) : 'Memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
-      {!selected && <div className="memos-folder-area" ref={folderArea}>
-        <PressedButton type="button" className="memos-folder-button" aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></PressedButton>
+      {!selected && <div className="memos-folder-area" ref={folderArea} inert={readonly}>
+        <PressedButton type="button" className="memos-folder-button" disabled={readonly} aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></PressedButton>
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
-      {selected && <div className="memos-more-area" ref={moreArea}>
-        <PressedButton type="button" ref={moreButton} className="memos-more-button" aria-haspopup="menu" aria-expanded={moreMenu} aria-controls="memosMoreMenu" aria-label="更多操作" onClick={() => setMoreMenu(!moreMenu)}><MemoSymbol name="more" /></PressedButton>
+      {selected && <div className="memos-more-area" ref={moreArea} inert={readonly}>
+        <PressedButton type="button" ref={moreButton} className="memos-more-button" disabled={readonly} aria-haspopup="menu" aria-expanded={moreMenu} aria-controls="memosMoreMenu" aria-label="更多操作" onClick={() => setMoreMenu(!moreMenu)}><MemoSymbol name="more" /></PressedButton>
         {moreMenu && <div id="memosMoreMenu" className="memos-more-menu" role="menu" aria-label="这篇备忘录">
           <button type="button" role="menuitem" onClick={() => { memos.update(selected.id, { pinned: !selected.pinned }); setMoreMenu(false); }}><MemoSymbol name="pin" />{selected.pinned ? '取消置顶' : '置顶'}</button>
           <button type="button" role="menuitem" className="memos-more-danger" onClick={() => { setMoreMenu(false); memos.trash(selected.id); setSelectedId(null); }}><MemoSymbol name="trash" />移到回收站</button>
@@ -149,10 +170,10 @@ export function Memos({ onClose }: { onClose: () => void }) {
       </div>}
     </header>
     <div className="memos-binding" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} />)}</div>
-    <main className="memos-window">
+    <main className="memos-window" inert={memos.conflicted}>
       {memos.loadError && <div className="memos-notice" role="alert">{memos.loadError}<button type="button" className="memos-button" onClick={memos.retryRead}>重新读取</button></div>}
-      {memos.saveState === 'error' && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
-      {selected ? <>
+      {memos.saveState === 'error' && !memos.conflicted && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
+      {memos.ready && (selected ? <>
         <div className="memos-editor-tools">
           <span className="memos-tag">{selected.kind === 'text' ? '文字记录' : '勾选清单'}</span>
           <time>{dateLabel(selected.createdAt, true)}{selected.pinned && <span className="memos-pinned-mark" role="img" aria-label="已置顶"><MemoSymbol name="pin" /></span>}</time>
@@ -174,7 +195,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         <div className="memos-toolbar">
           <label className="memos-search"><MemoSymbol name="search" /><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="查找这一页记录" aria-label="搜索备忘录" /></label>
           <div className="memos-new-area" ref={newArea}>
-            <button type="button" ref={newButton} className="memos-button memos-new-button" disabled={Boolean(memos.loadError)} aria-expanded={newMenu} aria-controls="memosNewChoices" onClick={() => setNewMenu(!newMenu)}><MemoSymbol name="plus" />新建</button>
+            <button type="button" ref={newButton} className="memos-button memos-new-button" disabled={readonly} aria-expanded={newMenu} aria-controls="memosNewChoices" onClick={() => setNewMenu(!newMenu)}><MemoSymbol name="plus" />新建</button>
             {newMenu && <div id="memosNewChoices" className="memos-new-menu"><button type="button" onClick={() => create('text')}><MemoSymbol name="note" />文字记录</button><button type="button" onClick={() => create('checklist')}><MemoSymbol name="list" />勾选清单</button></div>}
           </div>
         </div>
@@ -186,7 +207,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
             {folder === 'trash' && <div className="memos-trash-tools"><button type="button" className="memos-button" onClick={() => memos.restore(note.id)}>恢复</button><button type="button" className="memos-button memos-danger" onClick={() => { void confirmChat({ title: '彻底删除', message: '这条备忘录删除后将无法恢复。', confirmText: '删除', danger: true }).then(ok => { if (ok) memos.erase(note.id); }); }}>彻底删除</button></div>}
           </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
-      </>}
+      </>)}
     </main>
   </section>, document.body);
 }
