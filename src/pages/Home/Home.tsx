@@ -9,6 +9,7 @@ import { DeviceStatusBar } from './components/DeviceStatusBar';
 import { HomeNotice } from './components/HomeNotice';
 import { memo, useState } from 'react';
 import { Memos } from '../Memos/Memos';
+import { Ledger } from '../Ledger/Ledger';
 import { HomeAvatar } from './components/HomeAvatar';
 import { useBoot } from '../../providers/BootProvider';
 import { useHomePagination } from '../../hooks/useHomePagination';
@@ -25,6 +26,7 @@ const StableDock = memo(DockBar);
 export function Home() {
  const world=useWorld();
   const [memosOpen, setMemosOpen] = useState(false);
+  const [ledgerOpen, setLedgerOpen] = useState(false);
   const appearance = useAppearance();
   const boot = useBoot();
   const player = useHomePlayer();
@@ -413,7 +415,7 @@ export function Home() {
         {"\n"}
         <div className="app-grid-container">
           {"\n"}
-          <div className="app-item" data-app-icon-key="ledger">
+          <div className="app-item" data-app-icon-key="ledger" role="button" tabIndex={0} aria-label="打开记账" onClick={event => { event.stopPropagation(); setLedgerOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setLedgerOpen(true); } }}>
             {"\n"}
             <div className="app-card">
               {"\n"}
@@ -803,6 +805,7 @@ export function Home() {
       {"\n\n"}
       <StableDock />
       {memosOpen && <Memos onClose={() => setMemosOpen(false)} />}
+      {ledgerOpen && <Ledger onClose={() => setLedgerOpen(false)} />}
       {"\n"}
     </div>;
 }
