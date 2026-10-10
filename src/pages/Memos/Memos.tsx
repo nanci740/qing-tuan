@@ -123,7 +123,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
       }
     }}>
     <header className="memos-titlebar">
-      <button type="button" className="memos-button memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
+      <button type="button" className="memos-back" ref={backButton} onClick={back} aria-label={selected ? '返回备忘录目录' : '返回主页'}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg></button>
       <h1 id="memosHeading"><span>{selected ? memoTitle(selected) : 'Memo'}</span><small>{selected?.kind === 'checklist' ? '.list' : '.txt'}</small></h1>
       {!selected && <div className="memos-folder-area" ref={folderArea}>
         <button type="button" className="memos-folder-button" aria-expanded={folderMenu} aria-controls="memosFolderChoices" aria-label="切换备忘录分类" onClick={() => setFolderMenu(!folderMenu)}>{folderNames[folder]}<span aria-hidden="true">▾</span></button>
