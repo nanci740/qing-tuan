@@ -794,8 +794,6 @@
 
 /* @qingtuan-order:002194 */
 
-.world-page .world-action-menu-item:active svg{stroke:var(--color-surface)}
-@media (hover: hover) and (pointer: fine){.world-page .world-action-menu-item:hover svg{stroke:var(--color-surface)}}
 
 /* @qingtuan-order:002195 */
 
