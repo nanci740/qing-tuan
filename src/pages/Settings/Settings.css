@@ -104,11 +104,6 @@
 /* @qingtuan-order:000188 */
 
 
-        #settingsPage .settings-section .settings-item:hover {
-            background: var(--theme-light-14);
-            transform: none;
-            box-shadow: none;
-        }
 
 /* @qingtuan-order:000189 */
 
@@ -142,10 +137,6 @@
 /* @qingtuan-order:000192 */
 
 
-        #settingsPage .settings-item:hover .settings-item-icon {
-            background: var(--theme-light-35);
-            color: var(--color-surface); text-shadow: var(--effect-text-white);
-        }
 
 /* @qingtuan-order:000193 */
 
@@ -193,8 +184,10 @@
 /* @qingtuan-order:000197 */
 
 
-        #settingsPage .settings-item:hover .settings-item-action {
-            color: var(--theme-deep);
+        @media (hover: hover) and (pointer: fine) {
+            #settingsPage .settings-item:hover .settings-item-action {
+                color: var(--theme-deep);
+            }
         }
 
 /* @qingtuan-order:000878 */
@@ -222,9 +215,11 @@
 
 /* @qingtuan-order:000881 */
 
-        #settingsPage .settings-section-personal .settings-item-profile:hover,
         #settingsPage .settings-section-personal .settings-item-profile:focus-within {
             background: var(--color-surface);
+        }
+        @media (hover: hover) and (pointer: fine) {
+            #settingsPage .settings-section-personal .settings-item-profile:hover { background: var(--color-surface); }
         }
 
 /* @qingtuan-order:000882 */
@@ -337,10 +332,6 @@
 /* @qingtuan-order:000895 */
 
 
-        #settingsPage .settings-section-personal .settings-profile-card:hover,
-        #settingsPage .settings-section-personal .settings-profile-card:focus-within {
-            background: var(--color-surface);
-        }
 
 /* @qingtuan-order:000896 */
 
@@ -375,8 +366,7 @@
 
 /* @qingtuan-order:000901 */
 
-        #settingsPage .settings-item-icon,
-        #settingsPage .settings-item:hover .settings-item-icon {
+        #settingsPage .settings-item-icon {
             border: 0.5px solid rgba(var(--theme-rgb), 0.72);
             border-radius: 5px !important;
             background: rgba(var(--theme-rgb), 0.08);
@@ -532,9 +522,6 @@
 /* @qingtuan-order:000925 */
 
 
-        #settingsPage .settings-section .settings-item:hover {
-            background: transparent;
-        }
 
 /* @qingtuan-order:000926 */
 
@@ -578,9 +565,11 @@
 /* @qingtuan-order:000931 */
 
 
-        #settingsPage .settings-section-personal .settings-profile-card:hover,
         #settingsPage .settings-section-personal .settings-profile-card:focus-within {
             background: rgba(var(--color-surface-rgb), var(--ui-glass-alpha, 0.08));
+        }
+        @media (hover: hover) and (pointer: fine) {
+            #settingsPage .settings-section-personal .settings-profile-card:hover { background: rgba(var(--color-surface-rgb), var(--ui-glass-alpha, 0.08)); }
         }
 
 /* @qingtuan-order:000932 */
@@ -722,8 +711,7 @@
 
 /* @qingtuan-order:001042 */
 
-        #settingsPage .settings-content > .settings-section .settings-item-icon,
-        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+        #settingsPage .settings-content > .settings-section .settings-item-icon {
             flex: 0 0 29px;
             border: 1px solid var(--win-line);
             background: var(--color-surface);
@@ -925,8 +913,7 @@
 /* @qingtuan-order:001064 */
 
 
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon {
             width: 36px;
             height: 36px;
             flex-basis: 36px;
@@ -1206,8 +1193,7 @@
 
 /* @qingtuan-order:001097 */
 
-        #settingsPage .settings-content > .settings-section .settings-item-icon,
-        #settingsPage .settings-content > .settings-section .settings-item:hover .settings-item-icon {
+        #settingsPage .settings-content > .settings-section .settings-item-icon {
             width: 30px;
             height: 30px;
             flex: 0 0 30px;
@@ -1239,8 +1225,7 @@
 /* @qingtuan-order:001100 */
 
 
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon,
-        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item:hover .settings-item-icon {
+        #settingsPage .settings-content > .settings-section:nth-child(5) .settings-item-icon {
             border-radius: 2px !important;
         }
 

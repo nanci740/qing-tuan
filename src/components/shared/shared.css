@@ -594,9 +594,12 @@
 /* @qingtuan-order:000178 */
 
 
-        .back-btn:hover {
-            transform: scale(1.1);
-            box-shadow: none;
+        /* 悬停只给滑鼠；手机点完不会一直放大 */
+        @media (hover: hover) and (pointer: fine) {
+            .back-btn:hover {
+                transform: scale(1.1);
+                box-shadow: none;
+            }
         }
 
 /* @qingtuan-order:000276 */
