@@ -17,10 +17,10 @@ const pixels: Record<CategoryIcon, string> = {
   salary: 'M2 5h20v14H2z M4 7v10h16V7z M10 9h4v1h1v4h-1v1h-4v-1H9v-4h1z M11 11v2h2v-2z M5 8h2v2H5z M17 14h2v2h-2z',
   other: 'M4 4h16v16H4z M6 6v12h12V6z M8 10h2v4H8z M14 10h2v4h-2z',
 };
-type ToolIcon = 'plus' | 'close' | 'trash' | 'previous' | 'next' | 'backspace' | 'calendar';
+type ToolIcon = 'close' | 'trash' | 'previous' | 'next' | 'backspace' | 'calendar';
 const lines: Record<ToolIcon, string> = {
   previous: 'M15 18 9 12l6-6', next: 'm9 6 6 6-6 6',
-  plus: 'M12 5v14 M5 12h14', close: 'm6 6 12 12 M18 6 6 18',
+  close: 'm6 6 12 12 M18 6 6 18',
   trash: 'M3 6h18 M8 6V4h8v2 M5 6v14h14V6 M10 10v7 M14 10v7',
   backspace: 'M9 5h12v14H9L3 12z M12 9l6 6 M18 9l-6 6',
   calendar: 'M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5',
@@ -29,6 +29,10 @@ const lines: Record<ToolIcon, string> = {
 export function LedgerCategoryIcon({ name, emoji = '' }: { name: CategoryIcon; emoji?: string }) {
   if (emoji) return <span className="ledger-pixel ledger-emoji" aria-hidden="true">{emoji}</span>;
   return <svg className="ledger-pixel" viewBox="0 0 24 24" aria-hidden="true" shapeRendering="crispEdges"><path d={pixels[name]} fill="currentColor" fillRule="evenodd" /></svg>;
+}
+/** 顶栏右上角的小猪头，只是装饰。 */
+export function LedgerPig() {
+  return <svg className="ledger-pig" viewBox="0 0 24 24" aria-hidden="true" shapeRendering="crispEdges"><path d="M3 3h2v1h1v1h1v1H3z M19 3h2v3h-4V5h1V4h1z M7 6h10v2H7z M5 7h2v2H5z M17 7h2v2h-2z M3 9h2v8H3z M19 9h2v8h-2z M5 17h2v2H5z M17 17h2v2h-2z M7 19h10v2H7z M8 10h2v2H8z M14 10h2v2h-2z M9 13h6v1h1v2h-1v1H9v-1H8v-2h1z M10 14v2h1v-2z M13 14v2h1v-2z" fill="currentColor" fillRule="evenodd" /></svg>;
 }
 export function LedgerToolIcon({ name }: { name: ToolIcon }) {
   return <svg className="ledger-tool-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={lines[name]} /></svg>;
