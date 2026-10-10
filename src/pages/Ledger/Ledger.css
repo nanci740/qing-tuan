@@ -41,7 +41,6 @@
 .ledger-page .ledger-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
 .ledger-page .ledger-header-action { border: 1px dotted var(--color-surface); border-radius: 0; padding: 3px 7px; min-height: 24px; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 10px; }
 .ledger-page .ledger-content { width: min(100%, 480px); margin: 0 auto; padding: 14px 14px 20px; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
-.ledger-page .ledger-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding: 9px; border: 1px dashed var(--color-muted); background: var(--color-surface); line-height: 1.7; }
 .ledger-page .ledger-filters { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .ledger-page .ledger-month-control { display: flex; align-items: center; gap: 6px; }
 .ledger-page .ledger-month-button { min-width: 92px; min-height: 26px; font-size: 11px; }

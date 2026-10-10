@@ -9,7 +9,7 @@ function loadLedger() {
     const raw = localStorage.getItem(LEDGER_STORAGE_KEY);
     return { data: raw === null ? defaultLedgerData() : upgradeLedgerData(validateLedgerData(JSON.parse(raw))), raw, loadError: '' };
   } catch {
-    return { data: defaultLedgerData(), raw: null, loadError: '记账数据暂时无法读取，原来的存档已保留。请重新读取后再记账。' };
+    return { data: defaultLedgerData(), raw: null, loadError: '记账数据读不出来，原来的存档还在，请关掉记账重新打开' };
   }
 }
 export function useLedger() {
@@ -32,11 +32,6 @@ export function useLedger() {
     } catch {
       return fail('保存失败，请检查浏览器存储空间后重试。原来的记录已保留。');
     }
-  }
-  function reload() {
-    const next = loadLedger();
-    live.current = next.data; snapshot.current = next.raw;
-    setState(next);
   }
   function saveTransaction(draft: LedgerDraft) {
     const currency = live.current.currencies.find(c => c.code === draft.currencyCode);
@@ -86,5 +81,5 @@ export function useLedger() {
     return commit({ ...live.current, currencies: [...live.current.currencies, { code, name, decimals: currency.decimals }] });
   }
   return { data: state.data, loadError: state.loadError, active,
-    reload, saveTransaction, deleteTransaction, saveCategory, deleteCategory, saveBudget, addCurrency };
+    saveTransaction, deleteTransaction, saveCategory, deleteCategory, saveBudget, addCurrency };
 }

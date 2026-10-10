@@ -58,6 +58,7 @@ export function Ledger({ onClose }: { onClose: () => void }) {
     };
   }, []);
   useEffect(() => { backButton.current?.focus(); }, [view]);
+  useEffect(() => { if (ledger.loadError) showToast(ledger.loadError); }, []);
   useEffect(() => {
     if (!confirming) return;
     const dialog = () => Array.from(document.querySelectorAll<HTMLElement>('.sp-confirm-overlay')).at(-1);
@@ -154,7 +155,6 @@ export function Ledger({ onClose }: { onClose: () => void }) {
       {view === 'home' && <PressedButton className="ledger-header-action" type="button" disabled={readonly} onClick={() => { setCategoryDraft(emptyCategory); navigate('categories'); }}>分类</PressedButton>}
     </header>
     <main className="ledger-content">
-      {ledger.loadError && <div className="ledger-notice" role="alert">{ledger.loadError}<PressedButton className="ledger-button" type="button" onClick={ledger.reload}>重新读取</PressedButton></div>}
       {view === 'home' && <>
         <div className="ledger-filters">
           <div className="ledger-month-control">
