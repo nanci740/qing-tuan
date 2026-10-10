@@ -1,5 +1,5 @@
 export type LedgerType = 'expense' | 'income';
-export type LedgerIcon = 'food' | 'transport' | 'shopping' | 'fun' | 'daily' | 'other';
+export type LedgerIcon = 'food' | 'transport' | 'shopping' | 'fun' | 'daily' | 'home' | 'medical' | 'study' | 'phone' | 'clothes' | 'gift' | 'pet' | 'salary' | 'other';
 
 export interface LedgerTransaction {
   id: string;
@@ -16,6 +16,8 @@ export interface LedgerCategory {
   id: string;
   name: string;
   icon: LedgerIcon;
+  /** 自己挑的表情符号；空字串就用像素图标。 */
+  emoji: string;
   archived: boolean;
 }
 export interface LedgerCurrency {

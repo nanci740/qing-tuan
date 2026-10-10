@@ -5,5 +5,5 @@ export const PRESS_SKIP='.dock-item, .app-item, .cc-nav-btn, .cc-switch, .api-mo
  +'.theme-swatch, .theme-color-picker-wrap, .theme-custom-picker-btn, .home-dot, .chat-memory-photo-wrap, .pp2-polaroid-photo, .settings-profile-avatar, .cc-avatar, .settings-section-title, input, select';
 // 轻量操作沿用工具栏的淡化反馈，保留原来的边框与投影。
 const PRESS_ICON='#main-content .mp3-player .controls .btn, #main-content .tama-btn';
-const PRESS_BARE='.cr-my-caret, .cc-chip, .world-entry-copy, .chat-character-action-btn, .world-select-btn, .theme-reset-btn';
+const PRESS_BARE='.cr-my-caret, .cc-chip, .world-entry-copy, .chat-character-action-btn, .world-select-btn, .theme-reset-btn, .memos-folder-button, .ledger-category-choice, .ledger-icon-choice';
 export function buttonPressKind(element:HTMLElement){if(element.matches(PRESS_ICON))return 'sp-press-icon';if(element.matches(PRESS_BARE))return 'sp-press-bare';const style=getComputedStyle(element);return parseFloat(style.borderTopWidth)>0&&style.borderTopStyle!=='none'&&!/rgba\(0, 0, 0, 0\)|transparent/.test(style.borderTopColor)?'sp-press':'sp-press-bare';}

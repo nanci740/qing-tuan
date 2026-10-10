@@ -2,7 +2,8 @@ import { PRESS_TARGET, PRESS_SKIP, buttonPressKind } from '../utils/buttonPress'
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import type { PointerEventHandler } from 'react';
-/** 按下立即反馈，短点保留 120ms；不延迟点击操作，滑动及取消立即释放。 */
+/** 按下立即反馈，短点保留 120ms；不延迟点击操作，滑动及取消立即释放。
+ * 抬起在捕获阶段监听：页面自己拦下冒泡时，按钮也不会一直凹着。 */
 export function useButtonPress(baseClass?:string){
  const [previous,setPrevious]=useState(baseClass),[tokens,setTokens]=useState(()=>baseClass?.split(/\s+/).filter(Boolean)||[]),[marked,setMarked]=useState(()=>!!baseClass?.split(/\s+/).some(token=>token==='sp-press'||token==='sp-press-bare'||token==='sp-press-icon')),[hadClass,setHadClass]=useState(baseClass!==undefined);
  const [pressed,setPressed]=useState(false);
@@ -16,14 +17,14 @@ export function useButtonPress(baseClass?:string){
   const kind=element.classList.contains('sp-press')?'sp-press':element.classList.contains('sp-press-bare')?'sp-press-bare':buttonPressKind(element);
   const started=performance.now(),id=event.pointerId,x=event.clientX,y=event.clientY;
   let timer:ReturnType<typeof setTimeout>|undefined;
-  const detach=()=>{window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',cancel);window.removeEventListener('pointermove',move);window.removeEventListener('blur',blur);};
+  const detach=()=>{window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',cancel,true);window.removeEventListener('pointermove',move,true);window.removeEventListener('blur',blur);};
   const release=(immediate:boolean)=>{detach();clearTimeout(timer);const wait=immediate?0:Math.max(0,120-(performance.now()-started));if(wait)timer=setTimeout(()=>setPressed(false),wait);else setPressed(false);};
   const up=(e:globalThis.PointerEvent)=>{if(e.pointerId===id)release(false);};
   const cancel=(e:globalThis.PointerEvent)=>{if(e.pointerId===id)release(true);};
   const move=(e:globalThis.PointerEvent)=>{if(e.pointerId===id&&(Math.hypot(e.clientX-x,e.clientY-y)>9||!element.contains(e.target as Node)))release(true);};
   const blur=()=>release(true);
   cleanup.current=()=>{detach();clearTimeout(timer);};
-  window.addEventListener('pointerup',up);window.addEventListener('pointercancel',cancel);window.addEventListener('pointermove',move);window.addEventListener('blur',blur);
+  window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',cancel,true);window.addEventListener('pointermove',move,true);window.addEventListener('blur',blur);
   flushSync(()=>{setMarked(true);setHadClass(true);setTokens(current=>current.includes(kind)?current:[...current,kind]);setPressed(true);});
  };
  const className=!marked&&baseClass!==undefined?baseClass:tokens.length?tokens.join(' '):hadClass?'':undefined;

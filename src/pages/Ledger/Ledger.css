@@ -12,27 +12,28 @@
 .ledger-page :is(button, input, select, textarea) { font: inherit; -webkit-text-fill-color: currentColor; }
 .ledger-page button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .ledger-page button:disabled { opacity: .5; cursor: default; }
-.ledger-page :is(button, input, select, textarea):focus-visible { outline: 1px dashed var(--color-muted); outline-offset: 3px; }
-.ledger-page :is(input, select, textarea) { min-width: 0; border: 1px solid var(--color-divider); border-radius: 1px; background: var(--color-surface); color: var(--color-text); text-shadow: none; box-shadow: var(--effect-sunken); }
+.ledger-page :is(input, textarea) { min-width: 0; border: 1px solid var(--color-divider); border-radius: 1px; background: var(--color-surface); color: var(--color-text); text-shadow: none; box-shadow: var(--effect-sunken); }
 .ledger-page :is(input, textarea)::placeholder { color: var(--color-muted); opacity: 1; }
 .ledger-page :is(h2, h3) { margin: 0 0 12px; font-weight: 600; }
 .ledger-page h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
 .ledger-page h2 > span { font-size: 9px; font-weight: 400; color: var(--color-muted); }
 .ledger-page h3 { font-size: 12px; }
 .ledger-page .ledger-pixel { display: block; width: 24px; height: 24px; flex: 0 0 auto; color: var(--color-muted); }
+.ledger-page .ledger-emoji { display: grid; place-items: center; font-size: 18px; line-height: 1; }
 .ledger-page .ledger-tool-icon { display: block; width: 14px; height: 14px; flex: 0 0 auto; }
 .ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not(.ledger-danger),
-.ledger-page :is(.ledger-key, .ledger-category-choice, .ledger-icon-choice) { color: var(--color-text); text-shadow: none; }
+.ledger-page .ledger-key:not(.ledger-key-clear):not(.ledger-key-equals),
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { color: var(--color-text); text-shadow: none; }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not([aria-pressed="true"]),
-.ledger-page .ledger-key { background: var(--effect-face-white); }
-.ledger-page :is(.ledger-button, .ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] { background: var(--win-bar); }
-.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { background: var(--color-surface); }
+.ledger-page .ledger-key:not(.ledger-key-op):not(.ledger-key-equals) { background: var(--effect-face-white); }
+.ledger-page .ledger-button[aria-pressed="true"] { background: var(--win-bar); }
 .ledger-page .ledger-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 28px; padding: 4px 8px; font-size: 10px; white-space: nowrap; }
 .ledger-page .ledger-small-button { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
 .ledger-page .ledger-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-danger { color: var(--color-danger-ink); text-shadow: none; }
-.ledger-page .ledger-titlebar { display: flex; align-items: center; gap: 8px; flex: 0 0 45px; height: 45px; padding: 0 16px; background: var(--color-accent-strong); border-bottom: 1px solid var(--color-divider); }
+/* 顶栏跟备忘录一样：高 45px，下缘一条细线加一道亮边。 */
+.ledger-page .ledger-titlebar { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; padding: max(8px, env(safe-area-inset-top)) 16px 8px; background: var(--color-accent-strong); border-bottom: 1px solid var(--color-muted); box-shadow: inset 0 1px 0 var(--effect-highlight); }
 .ledger-page .ledger-back { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; flex: 0 0 auto; border: 0; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar h1 { display: flex; align-items: baseline; flex: 1; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
@@ -41,9 +42,9 @@
 .ledger-page .ledger-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding: 9px; border: 1px dashed var(--color-muted); background: var(--color-surface); line-height: 1.7; }
 .ledger-page .ledger-filters { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .ledger-page .ledger-month-control { display: flex; align-items: center; gap: 6px; }
-.ledger-page .ledger-month-control input { width: 120px; height: 28px; padding: 3px; font-size: 11px; }
-.ledger-page .ledger-currency-select { flex: 1; min-width: 110px; }
-.ledger-page .ledger-currency-select select { width: 100%; height: 28px; padding: 3px 5px; font-size: 11px; }
+.ledger-page .ledger-month-button { min-width: 92px; min-height: 26px; font-size: 11px; }
+.ledger-page .ledger-filters > .ledger-select { flex: 1; min-width: 110px; max-width: 170px; }
+.ledger-page .ledger-select { justify-content: space-between; font-size: 11px; }
 .ledger-page .ledger-summary { padding: 12px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page .ledger-summary-label { display: flex; justify-content: space-between; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px dashed var(--color-divider); font-size: 9px; letter-spacing: 1px; color: var(--color-muted); }
 .ledger-page .ledger-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -58,7 +59,7 @@
 .ledger-page .ledger-budget-warning { margin: 10px 0 0; font-size: 10px; color: var(--color-danger); }
 .ledger-page .ledger-home-actions { display: flex; gap: 9px; margin: 14px 0 18px; }
 .ledger-page .ledger-home-actions > button { flex: 1; }
-.ledger-page :is(.ledger-breakdown, .ledger-manager, .ledger-entry-details) { margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); }
+.ledger-page :is(.ledger-breakdown, .ledger-manager) { margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-divider); border-radius: 2px; background: var(--color-surface); }
 .ledger-page .ledger-category-stat { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 .ledger-page .ledger-category-stat > div { flex: 1; min-width: 0; }
 .ledger-page .ledger-category-stat span { display: flex; justify-content: space-between; gap: 6px; font-size: 10px; }
@@ -89,32 +90,61 @@
 .ledger-page .ledger-empty > .ledger-pixel { width: 36px; height: 36px; }
 .ledger-page .ledger-empty p { margin: 12px 0 8px; }
 .ledger-page .ledger-empty span { font-size: 10px; }
-.ledger-page .ledger-calculator { padding: 12px; margin-bottom: 16px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-paper); box-shadow: var(--effect-raised), var(--effect-drop); }
-.ledger-page .ledger-calculator-label { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 8px; letter-spacing: 1px; color: var(--color-muted); }
-.ledger-page .ledger-type-switch { display: flex; gap: 7px; margin-bottom: 10px; }
-.ledger-page .ledger-type-switch > select { min-width: 0; flex: 1; padding: 3px; font-size: 10px; }
-.ledger-page .ledger-display { display: block; padding: 7px 10px; border: 1px solid var(--color-muted); background: var(--win-bar); box-shadow: var(--effect-sunken); }
-.ledger-page .ledger-display span { display: block; color: var(--color-muted); font-size: 9px; }
-.ledger-page .ledger-display input { display: block; width: 100%; height: 43px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; font: 27px/1.4 ui-monospace, monospace; text-align: right; }
-.ledger-page .ledger-keypad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
-.ledger-page .ledger-key { display: grid; place-items: center; min-height: 40px; padding: 5px; font-family: ui-monospace, monospace; font-size: 18px; }
-.ledger-page .ledger-key-zero { grid-column: span 3; }
-.ledger-page .ledger-field-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; font-size: 10px; }
-.ledger-page .ledger-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: 8px; margin-bottom: 16px; }
-.ledger-page .ledger-category-choice { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 58px; padding: 8px 5px; font-size: 10px; overflow-wrap: anywhere; }
+/* 计算器：上面一块液晶屏，算式小字、结果大字；数字白键、运算键浅主题色、等号主题色。 */
+.ledger-page .ledger-calculator { padding: 12px; margin-bottom: 16px; border: 1px solid var(--color-muted); border-radius: 4px; background: var(--color-surface); box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page .ledger-calculator-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.ledger-page .ledger-type-switch { display: flex; gap: 6px; }
+.ledger-page .ledger-calculator-top > .ledger-select { min-width: 0; max-width: 150px; flex: 1; }
+.ledger-page .ledger-display { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; padding: 8px 10px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--win-bar); box-shadow: var(--effect-sunken); font-family: ui-monospace, monospace; }
+.ledger-page .ledger-display-expr { max-width: 100%; min-height: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; direction: rtl; font-size: 11px; color: var(--color-muted); }
+.ledger-page .ledger-display-value { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 30px; line-height: 1.3; color: var(--color-text); font-variant-numeric: tabular-nums; }
+.ledger-page .ledger-keypad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 42px; gap: 7px; margin-top: 12px; }
+.ledger-page .ledger-key { display: grid; place-items: center; padding: 0; font-family: ui-monospace, monospace; font-size: 18px; }
+.ledger-page .ledger-key-op { background: var(--win-bar); }
+.ledger-page .ledger-key-clear { font-size: 13px; color: var(--color-danger-ink); }
+.ledger-page .ledger-key-equals { grid-row: span 2; background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-key > .ledger-tool-icon { width: 20px; height: 20px; }
+/* 记一笔的下半部是一张小票：分类、日期、备注、保存都在里面。 */
+.ledger-page .ledger-entry-slip .ledger-slip-head { margin-bottom: 10px; }
+.ledger-page .ledger-field-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; font-size: 10px; color: var(--color-muted); }
+.ledger-page .ledger-text-button { padding: 2px 0; border: 0; background: none; font-size: 10px; color: var(--color-accent-strong); text-shadow: none; }
+.ledger-page .ledger-category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); gap: 6px; margin-bottom: 6px; }
+.ledger-page .ledger-category-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; padding: 7px 3px; font-size: 10px; overflow-wrap: anywhere; }
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { background: var(--color-surface); }
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] > .ledger-pixel { color: var(--color-surface); }
 .ledger-page .ledger-field { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; }
 .ledger-page .ledger-field > span { min-width: 52px; padding-top: 7px; font-size: 10px; color: var(--color-muted); }
-.ledger-page .ledger-field :is(input, textarea, select) { width: 100%; flex: 1; min-height: 30px; padding: 6px; font-size: 12px; }
+.ledger-page .ledger-date-button { flex: 1; justify-content: space-between; min-height: 30px; font-size: 12px; }
+.ledger-page .ledger-field > .ledger-select { flex: 1; min-height: 30px; font-size: 12px; }
+.ledger-page .ledger-field :is(input, textarea) { width: 100%; flex: 1; min-height: 30px; padding: 6px; font-size: 12px; }
 .ledger-page .ledger-field textarea { resize: vertical; line-height: 1.7; }
 .ledger-page .ledger-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
 .ledger-page .ledger-management-list { list-style: none; margin: 0; padding: 0; }
 .ledger-page .ledger-management-list > li { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
 .ledger-page .ledger-management-list > li > span { flex: 1; overflow-wrap: anywhere; }
 .ledger-page .ledger-manager-form { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--color-divider); }
-.ledger-page .ledger-icon-choices { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; margin: 12px 0; }
+.ledger-page .ledger-icon-choices { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; margin: 12px 0; }
 .ledger-page .ledger-icon-choice { display: grid; place-items: center; min-height: 34px; padding: 4px; }
 .ledger-page .ledger-currencies { list-style: none; padding: 0; margin: 0; }
 .ledger-page .ledger-currencies > li { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
 .ledger-page .ledger-currencies span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .ledger-page .ledger-currencies small { color: var(--color-muted); font-size: 9px; }
 .ledger-page .ledger-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; white-space: nowrap; }
+/* 日期、月份小窗：跟确认弹窗同一种窗口。 */
+.ledger-page .ledger-picker-overlay { position: fixed; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 22px; background: var(--color-modal-overlay); }
+.ledger-page .ledger-picker { width: min(300px, 88vw); border: 1px solid var(--color-muted); border-radius: 4px; background: var(--color-surface); box-shadow: var(--effect-drop); overflow: hidden; }
+.ledger-page .ledger-picker-bar { display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 4px 0 9px; background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-accent-strong) 12%, var(--color-accent-strong) 100%); border-bottom: 1px solid var(--color-muted); }
+.ledger-page .ledger-picker-bar > span { flex: 1; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-picker-close { display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 0; background: none; color: var(--color-surface); }
+.ledger-page .ledger-picker-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 6px; }
+.ledger-page .ledger-picker-nav > strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ledger-page .ledger-picker-week { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 12px; font-size: 10px; text-align: center; color: var(--color-muted); }
+.ledger-page .ledger-picker-week > span { padding: 4px 0; }
+.ledger-page .ledger-picker-grid { display: grid; gap: 2px; padding: 2px 12px 4px; }
+.ledger-page .ledger-picker-days { grid-template-columns: repeat(7, 1fr); }
+.ledger-page .ledger-picker-months { grid-template-columns: repeat(4, 1fr); gap: 6px; padding-top: 6px; }
+.ledger-page .ledger-picker-cell { height: 32px; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--color-text); text-shadow: none; font-size: 12px; font-variant-numeric: tabular-nums; }
+.ledger-page .ledger-picker-cell[aria-current="date"] { color: var(--color-accent-strong); font-weight: 700; }
+.ledger-page .ledger-picker-cell[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.ledger-page .ledger-picker-actions { display: flex; justify-content: flex-end; padding: 8px 14px 14px; }

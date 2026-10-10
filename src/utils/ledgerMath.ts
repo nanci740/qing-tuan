@@ -44,6 +44,44 @@ export function calculatorInput(value: string, key: string, decimals: number): s
   const fraction = next.split('.')[1] ?? '';
   return fraction.length <= decimals && parseLedgerAmount(next, decimals) !== null ? next : value;
 }
+const LEDGER_OPS = ['+', '−', '×', '÷'];
+/** 算式按先乘除后加减算，结果按币种小数位四舍五入；除以零或算出负数都不算数。 */
+export function evaluateLedgerExpression(expr: string, decimals: number): string | null {
+  const parts = expr.split(/([+−×÷])/).filter(Boolean);
+  if (parts.length && LEDGER_OPS.includes(parts.at(-1)!)) parts.pop();
+  const numbers = parts.filter((_, i) => i % 2 === 0).map(Number), ops = parts.filter((_, i) => i % 2 === 1);
+  if (!numbers.length || numbers.some(n => !Number.isFinite(n)) || ops.some(op => !LEDGER_OPS.includes(op))) return null;
+  const terms = [numbers[0]], signs: string[] = [];
+  for (const [i, op] of ops.entries()) {
+    const n = numbers[i + 1];
+    if (op === '×') terms[terms.length - 1] *= n;
+    else if (op === '÷') { if (n === 0) return null; terms[terms.length - 1] /= n; }
+    else { signs.push(op); terms.push(n); }
+  }
+  const total = terms.reduce((sum, term, i) => i === 0 ? term : signs[i - 1] === '+' ? sum + term : sum - term, 0);
+  const factor = 10 ** decimals, rounded = Math.round(total * factor) / factor;
+  return Number.isFinite(rounded) && rounded >= 0 && rounded * factor <= LEDGER_MAX_MINOR ? rounded.toFixed(decimals) : null;
+}
+export function ledgerExpressionHasOps(expr: string): boolean {
+  return /[+−×÷]/.test(expr);
+}
+export function calculatorPress(expr: string, key: string, decimals: number): string {
+  if (key === 'AC') return '0';
+  if (key === 'backspace') return expr.length > 1 ? expr.slice(0, -1) : '0';
+  if (key === '=') {
+    const result = evaluateLedgerExpression(expr, decimals);
+    return result === null ? expr : result.includes('.') ? result.replace(/0+$/, '').replace(/\.$/, '') : result;
+  }
+  if (LEDGER_OPS.includes(key)) {
+    if (expr.length >= 40) return expr;
+    return LEDGER_OPS.includes(expr.at(-1)!) ? expr.slice(0, -1) + key : expr + key;
+  }
+  const cut = Math.max(...LEDGER_OPS.map(op => expr.lastIndexOf(op))) + 1;
+  const head = expr.slice(0, cut), last = expr.slice(cut);
+  if (head.length + last.length >= 40) return expr;
+  const press = (value: string, k: string) => calculatorInput(value || '0', k, decimals);
+  return head + (key === '00' ? press(press(last, '0'), '0') : press(last, key));
+}
 export function mostUsedLedgerCurrency(data: LedgerData): string {
   const counts = new Map<string, number>();
   for (const entry of data.transactions) counts.set(entry.currencyCode, (counts.get(entry.currencyCode) ?? 0) + 1);

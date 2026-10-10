@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
 import type { LedgerCurrency, LedgerData, LedgerDraft, LedgerIcon } from '../types/ledger';
-import { defaultLedgerData, LEDGER_STORAGE_KEY, ledgerId, validateLedgerData, writeLedgerData } from '../utils/ledgerStorage.ts';
+import { defaultLedgerData, LEDGER_STORAGE_KEY, ledgerEmoji, ledgerId, upgradeLedgerData, validateLedgerData, writeLedgerData } from '../utils/ledgerStorage.ts';
 import { parseLedgerAmount, validLedgerDate } from '../utils/ledgerMath.ts';
 
 function loadLedger() {
   try {
     const raw = localStorage.getItem(LEDGER_STORAGE_KEY);
-    return { data: raw === null ? defaultLedgerData() : validateLedgerData(JSON.parse(raw)), raw, loadError: '' };
+    return { data: raw === null ? defaultLedgerData() : upgradeLedgerData(validateLedgerData(JSON.parse(raw))), raw, loadError: '' };
   } catch {
     return { data: defaultLedgerData(), raw: null, loadError: '记账数据暂时无法读取，原来的存档已保留。请重新读取后再记账。' };
   }
@@ -56,13 +56,14 @@ export function useLedger() {
   function deleteTransaction(id: string) {
     return commit({ ...live.current, transactions: live.current.transactions.filter(e => e.id !== id) });
   }
-  function saveCategory(id: string | null, name: string, icon: LedgerIcon) {
-    const cleaned = name.trim();
+  function saveCategory(id: string | null, name: string, icon: LedgerIcon, emojiText = '') {
+    const cleaned = name.trim(), emoji = ledgerEmoji(emojiText);
+    if (emojiText.trim() && !emoji) return fail('表情请只放一个符号。');
     if (!cleaned || cleaned.length > 20) return fail('分类名称请填写 1–20 个字符。');
     if (live.current.categories.some(c => !c.archived && c.id !== id && c.name === cleaned)) return fail('已有同名分类。');
     const old = live.current.categories.find(c => c.id === id && !c.archived);
     if (id && !old) return fail('分类已不存在，请重新选择。');
-    const category = { id: old?.id ?? ledgerId(), name: cleaned, icon, archived: false };
+    const category = { id: old?.id ?? ledgerId(), name: cleaned, icon, emoji, archived: false };
     return commit({ ...live.current, categories: old ? live.current.categories.map(c => c.id === id ? category : c) : [...live.current.categories, category] });
   }
   function deleteCategory(id: string) {
