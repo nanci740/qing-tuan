@@ -1,13 +1,13 @@
-import { decodePhotoRecords } from '../utils/imageAssets';
+import { readChatCharacters } from '../utils/chatCharacterStorage';
 import { useEffect, useRef, useState } from 'react';
 import { chatReplyPreview } from '../utils/chatReplyParser';
 interface Notice { chatKey: string; title: string; body: string; avatar: string; time: number }
 interface Character { archiveId: string; name?: string; photoUrl?: string }
-const KEY = 'qt_home_notice_v1', CHAR_KEY = 'smallphone_chat_characters_v1', UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
+const KEY = 'qt_home_notice_v1', UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
 function loadLast(): Notice | null { try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); return saved ? {...saved, body: chatReplyPreview(saved.body)} : null; } catch { return null; } }
 function loadCharacter(last: Notice | null): Character | null {
   if (!last?.chatKey) return null;
-  try { const list: Character[] = JSON.parse(localStorage.getItem(CHAR_KEY) || '[]'); return Array.isArray(list) ? decodePhotoRecords(list).find(c => c && c.archiveId === last.chatKey) || null : null; } catch { return null; }
+  return readChatCharacters().find(c => c.archiveId === last.chatKey) || null;
 }
 function unreadTotal() {
   try { const map: Record<string, unknown> = JSON.parse(localStorage.getItem(UNREAD_KEY) || '{}'); return Object.values(map || {}).reduce<number>((sum, n) => sum + (Number(n) || 0), 0); } catch { return 0; }

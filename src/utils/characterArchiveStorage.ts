@@ -1,4 +1,4 @@
-import { decodePhotoRecords, encodePhotoRecords } from './imageAssets';
+import { readCatalogRecords, writeCatalogRecords } from './catalogStorage';
 import type { CharacterDossier } from '../types/characterDossier';
 import { todayStampDate } from './characterPng';
 export const CHARACTER_RECORDS_KEY = 'smallphone_dossier_records_v1';
@@ -38,23 +38,8 @@ export function blankCharacterRecord(id: number): CharacterDossier {
     stampStyle: 'confidential'
   };
 }
-export function readCharacterRecords(): CharacterDossier[] {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(CHARACTER_RECORDS_KEY) || '[]');
-    return Array.isArray(saved) ? decodePhotoRecords(saved.filter(item => item && item.id) as CharacterDossier[]) : [];
-  } catch {
-    return [];
-  }
-}
-export function writeCharacterRecords(records: CharacterDossier[]) {
-  try {
-    const payload = JSON.stringify(encodePhotoRecords(records));
-    localStorage.setItem(CHARACTER_RECORDS_KEY, payload);
-    return localStorage.getItem(CHARACTER_RECORDS_KEY) === payload;
-  } catch {
-    return false;
-  }
-}
+export function readCharacterRecords(): CharacterDossier[] { return readCatalogRecords('characterRecords'); }
+export function writeCharacterRecords(records: CharacterDossier[]): Promise<boolean> { return writeCatalogRecords('characterRecords', records); }
 export function nextCharacterId(records: CharacterDossier[]) {
   return records.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
 }
