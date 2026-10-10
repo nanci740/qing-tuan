@@ -130,7 +130,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
     </header>
-    <div className="memos-binding" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>
+    <div className="memos-binding" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} />)}</div>
     <main className="memos-window">
       {memos.loadError && <div className="memos-notice" role="alert">{memos.loadError}<button type="button" className="memos-button" onClick={memos.retryRead}>重新读取</button></div>}
       {memos.saveState === 'error' && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
@@ -166,7 +166,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         <div className="memos-directory">
           {visible.length ? <ul className="memos-note-list">{visible.map(note => <li key={note.id} className="memos-note-row">
             {folder === 'trash' ? <div className="memos-note-entry"><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.deletedAt ?? note.updatedAt)}</time></div> :
-              <button type="button" className="memos-note-entry" onClick={() => setSelectedId(note.id)}><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{note.pinned && <MemoSymbol name="pin" />}{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.updatedAt)}</time></button>}
+              <button type="button" className="memos-note-entry" onClick={() => setSelectedId(note.id)}><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{memoTitle(note)}{note.pinned && <MemoSymbol name="pin" />}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.updatedAt)}</time></button>}
             {folder === 'trash' && <div className="memos-trash-tools"><button type="button" className="memos-button" onClick={() => memos.restore(note.id)}>恢复</button><button type="button" className="memos-button memos-danger" onClick={() => { void confirmChat({ title: '彻底删除', message: '这条备忘录删除后将无法恢复。', confirmText: '删除', danger: true }).then(ok => { if (ok) memos.erase(note.id); }); }}>彻底删除</button></div>}
           </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
