@@ -4,7 +4,7 @@ import { useChoice } from '../../providers/ChoiceProvider';
 import { PressedButton } from './PressedButton';
 import type { ChoiceOption } from '../../providers/ChoiceProvider';
 /** 复用已有古早选项弹窗，保留受控值与原来的保存回调。 */
-export function RetroSelect({id,className,title,value,children,onChange}: {id?:string;className?:string;title:string;value:string;children:ReactNode;onChange:(value:string)=>void}) {
+export function RetroSelect({id,className,title,value,children,onChange,choiceStyle}: {id?:string;className?:string;title:string;value:string;children:ReactNode;onChange:(value:string)=>void;choiceStyle?:'settings'|'chat-settings'}) {
  const choice=useChoice();
  const options:ChoiceOption[]=Children.toArray(children).flatMap(child=>{
   if(!isValidElement<{value?:string;children?:ReactNode;attributes?:{name:string;value:string}[]}>(child))return [];
@@ -12,7 +12,7 @@ export function RetroSelect({id,className,title,value,children,onChange}: {id?:s
   return [{value:props.value??props.attributes?.find(a=>a.name==='value')?.value??label,label}];
  });
  const selected=options.find(o=>o.value===value);
- const open=()=>choice.openChoice({style:className?.split(/\s+/).includes('vi-choice-btn')?'settings':className?.split(/\s+/).includes('chat-setting-select')?'chat-settings':undefined,title,options,selected:value,confirm:onChange});
+ const open=()=>choice.openChoice({style:choiceStyle??(className?.split(/\s+/).includes('vi-choice-btn')?'settings':className?.split(/\s+/).includes('chat-setting-select')?'chat-settings':undefined),title,options,selected:value,confirm:onChange});
  const label=<span className="retro-select-label">{selected?.label??value}</span>;
  const arrow=<svg viewBox="0 0 8 5" aria-hidden="true"><path d="M0 0h8L4 5z" /></svg>;
  // 聊天设置的凹陷框只显示值，独立方形按钮负责打开与按下反馈。
