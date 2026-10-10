@@ -21,13 +21,15 @@
 .ledger-page .ledger-pixel { display: block; width: 24px; height: 24px; flex: 0 0 auto; color: var(--color-muted); }
 .ledger-page .ledger-emoji { display: grid; place-items: center; font-size: 18px; line-height: 1; }
 .ledger-page .ledger-tool-icon { display: block; width: 14px; height: 14px; flex: 0 0 auto; }
-.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; }
+/* 选中的支出、收入是凹下去的，其余按钮凸起。 */
+.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice):not(.ledger-button[aria-pressed="true"]) { box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not(.ledger-danger),
 .ledger-page .ledger-key:not(.ledger-key-clear):not(.ledger-key-equals),
 .ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { color: var(--color-text); text-shadow: none; }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not([aria-pressed="true"]),
 .ledger-page .ledger-key:not(.ledger-key-op):not(.ledger-key-equals) { background: var(--effect-face-white); }
-.ledger-page .ledger-button[aria-pressed="true"] { background: var(--win-bar); }
+.ledger-page .ledger-button[aria-pressed="true"] { background: var(--win-bar); box-shadow: var(--effect-sunken); }
 .ledger-page .ledger-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 28px; padding: 4px 8px; font-size: 10px; white-space: nowrap; }
 .ledger-page .ledger-small-button { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
 .ledger-page .ledger-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
@@ -37,8 +39,6 @@
 .ledger-page .ledger-back { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; flex: 0 0 auto; border: 0; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar h1 { display: flex; align-items: baseline; flex: 1; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
-/* 标题右边一小段小票条码当装饰，粗细不一的白线。 */
-.ledger-page .ledger-barcode { flex: 0 0 auto; width: 46px; height: 16px; opacity: .55; background: linear-gradient(90deg, var(--color-surface) 0 2px, transparent 2px 3px, var(--color-surface) 3px 4px, transparent 4px 6px, var(--color-surface) 6px 9px, transparent 9px 10px, var(--color-surface) 10px 11px, transparent 11px 13px, var(--color-surface) 13px 15px, transparent 15px 16px, var(--color-surface) 16px 17px, transparent 17px 19px, var(--color-surface) 19px 22px, transparent 22px 23px, var(--color-surface) 23px 24px, transparent 24px 26px, var(--color-surface) 26px 27px, transparent 27px 28px, var(--color-surface) 28px 31px, transparent 31px 33px, var(--color-surface) 33px 34px, transparent 34px 35px, var(--color-surface) 35px 37px, transparent 37px 39px, var(--color-surface) 39px 40px, transparent 40px 41px, var(--color-surface) 41px 44px, transparent 44px 45px, var(--color-surface) 45px 46px); }
 .ledger-page .ledger-header-action { border: 1px dotted var(--color-surface); border-radius: 0; padding: 3px 7px; min-height: 24px; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 10px; }
 .ledger-page .ledger-content { width: min(100%, 480px); margin: 0 auto; padding: 14px 14px 20px; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .ledger-page .ledger-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding: 9px; border: 1px dashed var(--color-muted); background: var(--color-surface); line-height: 1.7; }
@@ -124,7 +124,7 @@
 .ledger-page .ledger-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
 .ledger-page .ledger-management-list { list-style: none; margin: 0; padding: 0; }
 .ledger-page .ledger-management-list > li { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
-.ledger-page .ledger-management-list > li > span { flex: 1; overflow-wrap: anywhere; }
+.ledger-page .ledger-management-name { flex: 1; overflow-wrap: anywhere; }
 .ledger-page .ledger-manager-form { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--color-divider); }
 .ledger-page .ledger-icon-choices { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; margin: 12px 0; }
 .ledger-page .ledger-icon-choice { display: grid; place-items: center; min-height: 34px; padding: 4px; }

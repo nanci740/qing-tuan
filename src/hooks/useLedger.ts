@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import type { LedgerCurrency, LedgerData, LedgerDraft, LedgerIcon } from '../types/ledger';
 import { defaultLedgerData, LEDGER_STORAGE_KEY, ledgerEmoji, ledgerId, upgradeLedgerData, validateLedgerData, writeLedgerData } from '../utils/ledgerStorage.ts';
 import { parseLedgerAmount, validLedgerDate } from '../utils/ledgerMath.ts';
+import { showToast } from '../utils/toast';
 
 function loadLedger() {
   try {
@@ -13,21 +14,20 @@ function loadLedger() {
 }
 export function useLedger() {
   const [state, setState] = useState(loadLedger);
-  const [error, setError] = useState('');
   const live = useRef(state.data), snapshot = useRef(state.raw);
   const active = useRef(true);
 
-  function fail(message: string) { setError(message); return false; }
+  /** 出错一律用小弹窗提示，不留在页面上。 */
+  function fail(message: string) { showToast(message); return false; }
   function commit(next: LedgerData) {
     if (!active.current || state.loadError) return false;
     try {
       if (localStorage.getItem(LEDGER_STORAGE_KEY) !== snapshot.current)
-        return fail('记账已在另一个页面更新，请重新读取，再保存这次修改。');
+        return fail('记账已在别处更新，请关掉记账重新打开再保存');
       const checked = writeLedgerData(next);
       live.current = checked;
       snapshot.current = JSON.stringify(checked);
       setState({ data: checked, raw: snapshot.current, loadError: '' });
-      setError('');
       return true;
     } catch {
       return fail('保存失败，请检查浏览器存储空间后重试。原来的记录已保留。');
@@ -36,7 +36,7 @@ export function useLedger() {
   function reload() {
     const next = loadLedger();
     live.current = next.data; snapshot.current = next.raw;
-    setState(next); setError('');
+    setState(next);
   }
   function saveTransaction(draft: LedgerDraft) {
     const currency = live.current.currencies.find(c => c.code === draft.currencyCode);
@@ -85,6 +85,6 @@ export function useLedger() {
     if (live.current.currencies.some(c => c.code === code)) return fail('这个币种已经存在。');
     return commit({ ...live.current, currencies: [...live.current.currencies, { code, name, decimals: currency.decimals }] });
   }
-  return { data: state.data, loadError: state.loadError, error, clearError: () => setError(''), active,
+  return { data: state.data, loadError: state.loadError, active,
     reload, saveTransaction, deleteTransaction, saveCategory, deleteCategory, saveBudget, addCurrency };
 }
