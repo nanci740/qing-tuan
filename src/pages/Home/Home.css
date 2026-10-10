@@ -205,8 +205,9 @@
 /* @qingtuan-order:000084 */
 
 
-        .avatar-frame-container:hover {
-            transform: scale(1.05);
+        /* 只有滑鼠才有悬停上浮；手机点完不会卡在上面 */
+        @media (hover: hover) and (pointer: fine) {
+            .avatar-frame-container:hover { transform: translateY(-2px); }
         }
 
 /* @qingtuan-order:000085 */
@@ -797,16 +798,9 @@
 /* @qingtuan-order:000527 */
 
 
-        /* 触屏设备不保留 hover 状态，避免更换图片后遮罩/放大效果黏住 */
 
 /* @qingtuan-order:000528 */
 
-        @media (hover: none), (pointer: coarse) {
-            .avatar-frame-container:hover {
-                transform: none;
-            }
-
-        }
 
 /* @qingtuan-order:001674 */
 
@@ -860,7 +854,6 @@
 /* @qingtuan-order:003292 */
 
 
-        #main-content .avatar-frame-container:hover { transform: translateY(-2px); }
 
 /* @qingtuan-order:003293 */
 
