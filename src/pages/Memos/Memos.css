@@ -83,8 +83,8 @@
 .memos-page .memos-binding { position: relative; z-index: 1; display: flex; justify-content: space-between; flex: 0 0 auto; height: 12px; margin-top: -6px; padding: 0 calc((100% - min(100% - 32px, 460px)) / 2 + 12px); pointer-events: none; }
 .memos-page .memos-binding i { display: block; width: 5px; height: 12px; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--effect-face-white); box-shadow: 1px 1px 0 var(--effect-drop-soft); }
 .memos-page .memos-pixel { display: block; flex: 0 0 auto; width: var(--memo-pixel, 24px); height: var(--memo-pixel, 24px); }
-/* 纸张占满整个画面；原本的外距改成内距，里面的东西位置不变。 */
-.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%; margin: 0; padding: 12px calc((100% - min(100% - 32px, 460px)) / 2) var(--memo-window-bottom, max(14px, env(safe-area-inset-bottom))); border: 0; background: var(--color-surface); overflow: hidden; }
+/* 纸张占满整个画面；左右留一点内距，宽画面时内容维持 460px 置中。 */
+.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%; margin: 0; padding: 12px calc((100% - min(100% - 12px, 460px)) / 2) var(--memo-window-bottom, max(14px, env(safe-area-inset-bottom))); border: 0; background: var(--color-surface); overflow: hidden; }
 .memos-page .memos-toolbar { display: flex; align-items: center; gap: 7px; padding: 10px; }
 .memos-page .memos-search { --memo-symbol: 13px; display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; min-height: 32px; padding: 0 7px; border: 1px solid var(--color-divider); box-shadow: var(--effect-sunken); }
 .memos-page .memos-search .memos-symbol { color: var(--color-muted); }
