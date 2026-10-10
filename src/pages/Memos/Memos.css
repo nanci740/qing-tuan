@@ -21,37 +21,42 @@
 @keyframes memosPageOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(20px); } }
 .memos-page *, .memos-page *::before, .memos-page *::after { box-sizing: border-box; }
 .memos-page button, .memos-page input, .memos-page textarea {
-  font: inherit;
-  color: inherit;
-  text-shadow: none;
+  /* 控件的字和颜色都读变量，各处只换变量，不再改写这几个属性。 */
+  font-family: inherit;
+  font-style: inherit;
+  font-size: var(--mf-size, inherit);
+  font-weight: var(--mf-weight, inherit);
+  line-height: var(--mf-line, inherit);
+  color: var(--mf-color, inherit);
+  text-shadow: var(--mf-shadow, none);
   -webkit-text-fill-color: currentColor;
 }
 .memos-page button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .memos-page button:disabled { opacity: .55; cursor: default; }
-.memos-page :is(button, input, textarea):focus-visible { outline: 1px dashed var(--color-text); outline-offset: 3px; }
+.memos-page :is(button, input, textarea):not(.memos-title-field input, .memos-body-field, .memos-check-text, .memos-search input):focus-visible { outline: 1px dashed var(--color-text); outline-offset: 3px; }
 .memos-page input, .memos-page textarea { min-width: 0; }
-.memos-page :is(.memos-title-field input, .memos-body-field, .memos-check-text, .memos-search input):focus-visible { outline: none; }
 .memos-page input::placeholder, .memos-page textarea::placeholder { color: var(--color-muted); opacity: 1; }
-.memos-page .memos-symbol { display: block; width: 14px; height: 14px; flex: 0 0 auto; }
+.memos-page .memos-symbol { display: block; width: var(--memo-symbol, 14px); height: var(--memo-symbol, 14px); flex: 0 0 auto; }
 .memos-page .memos-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: 24px;
-  padding: 3px 6px;
-  font-size: 10px;
+  min-height: var(--memo-button-h, 24px);
+  padding: var(--memo-button-pad, 3px 6px);
   border: 1px solid var(--memo-edge);
-  border-radius: 2px;
-  background: var(--effect-face-white);
-  box-shadow: var(--effect-button-shadow);
-  color: var(--color-text);
-  line-height: 1.3;
+  border-radius: var(--memo-button-radius, 2px);
+  background: var(--memo-button-face, var(--effect-face-white));
+  box-shadow: var(--memo-button-shadow, var(--effect-button-shadow));
+  --mf-size: var(--memo-button-font, 10px);
+  --mf-line: 1.3;
+  --mf-color: var(--memo-button-color, var(--color-text));
   white-space: nowrap;
 }
-.memos-page .memos-button:active { box-shadow: var(--effect-sunken); }
-.memos-page .memos-button[aria-pressed="true"] { background: var(--color-accent-strong); box-shadow: var(--effect-sunken); }
-.memos-page .memos-danger { color: var(--color-danger-ink); }
+/* 按下、选中、危险、新建只换变量。 */
+.memos-page .memos-button:active { --memo-button-shadow: var(--effect-sunken); }
+.memos-page .memos-button[aria-pressed="true"] { --memo-button-face: var(--color-accent-strong); --memo-button-shadow: var(--effect-sunken); }
+.memos-page .memos-danger { --memo-button-color: var(--color-danger-ink); }
 
 /* 与设置窗口不同：顶栏右边是分类下拉，下缘一排活页孔。 */
 .memos-page .memos-titlebar {
@@ -64,82 +69,79 @@
   border-bottom: 1px solid var(--memo-edge);
   box-shadow: inset 0 1px 0 var(--effect-highlight);
 }
-.memos-page .memos-back { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 28px; height: 28px; padding: 0; border: 0; background: transparent; color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.memos-page .memos-back { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 28px; height: 28px; padding: 0; border: 0; background: transparent; --mf-color: var(--color-surface); --mf-shadow: var(--effect-text-white); }
 .memos-page .memos-titlebar h1 { display: flex; align-items: baseline; flex: 1; min-width: 0; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; line-height: 1.3; color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .memos-page .memos-titlebar h1 > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .memos-page .memos-titlebar h1 small { flex: 0 0 auto; margin-left: 1px; font-size: 11px; font-weight: 500; letter-spacing: .5px; opacity: .75; }
 .memos-page .memos-folder-area { position: relative; flex: 0 0 auto; }
-.memos-page .memos-folder-button { display: flex; align-items: center; gap: 4px; min-height: 22px; padding: 2px 6px; border: 1px dotted var(--color-surface); border-radius: 0; background: transparent; font-size: 9.5px; letter-spacing: .5px; color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.memos-page .memos-folder-button { display: flex; align-items: center; gap: 4px; min-height: 22px; padding: 2px 6px; border: 1px dotted var(--color-surface); border-radius: 0; background: transparent; --mf-size: 9.5px; letter-spacing: .5px; --mf-color: var(--color-surface); --mf-shadow: var(--effect-text-white); }
 .memos-page .memos-folder-button > span { font-size: 8px; }
 .memos-page .memos-folder-menu { position: absolute; right: 0; top: calc(100% + 5px); z-index: 3; width: 100px; padding: 2px; border: 1px solid var(--memo-edge); background: var(--color-surface); box-shadow: var(--effect-drop); }
-.memos-page .memos-folder-menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: transparent; font-size: 10px; text-align: left; }
-.memos-page .memos-folder-menu button[aria-pressed="true"] { background: var(--color-accent-strong); }
+.memos-page .memos-folder-menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: var(--memo-menu-face, transparent); --mf-size: 10px; text-align: left; }
+.memos-page .memos-folder-menu button[aria-pressed="true"] { --memo-menu-face: var(--color-accent-strong); }
 .memos-page .memos-folder-menu button > span { font-size: 9px; color: var(--color-muted); }
 .memos-page .memos-binding { position: relative; z-index: 1; display: flex; justify-content: space-between; flex: 0 0 auto; height: 12px; margin-top: -6px; padding: 0 calc((100% - min(100% - 32px, 460px)) / 2 + 12px); pointer-events: none; }
 .memos-page .memos-binding i { display: block; width: 5px; height: 12px; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--effect-face-white); box-shadow: 1px 1px 0 var(--effect-drop-soft); }
-.memos-page .memos-pixel { display: block; flex: 0 0 auto; width: 24px; height: 24px; }
-.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 32px, 460px); margin: 12px auto max(14px, env(safe-area-inset-bottom)); border: 0; border-radius: 2px; background: var(--color-surface); box-shadow: 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
+.memos-page .memos-pixel { display: block; flex: 0 0 auto; width: var(--memo-pixel, 24px); height: var(--memo-pixel, 24px); }
+.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 32px, 460px); margin: 12px auto var(--memo-window-bottom, max(14px, env(safe-area-inset-bottom))); border: 0; border-radius: 2px; background: var(--color-surface); box-shadow: 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
 .memos-page .memos-toolbar { display: flex; align-items: center; gap: 7px; padding: 10px; }
-.memos-page .memos-search { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; min-height: 32px; padding: 0 7px; border: 1px solid var(--color-divider); box-shadow: var(--effect-sunken); }
-.memos-page .memos-search .memos-symbol { width: 13px; height: 13px; color: var(--color-muted); }
-.memos-page .memos-search input { width: 100%; height: 30px; padding: 0; border: 0; border-radius: 0; background: transparent; font-size: 11px; }
+.memos-page .memos-search { --memo-symbol: 13px; display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; min-height: 32px; padding: 0 7px; border: 1px solid var(--color-divider); box-shadow: var(--effect-sunken); }
+.memos-page .memos-search .memos-symbol { color: var(--color-muted); }
+.memos-page .memos-search input { width: 100%; height: 30px; padding: 0; border: 0; border-radius: 0; background: transparent; --mf-size: 11px; }
 /* 清除键跟世界书搜索栏一样：细线小叉，不用系统自带的样子。 */
 .memos-page .memos-search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; margin-left: 6px; background: var(--color-muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23000' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23000' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center / contain no-repeat; cursor: pointer; }
 .memos-page .memos-new-area { position: relative; flex: 0 0 auto; }
-.memos-page .memos-new-button { min-height: 32px; padding: 5px 9px; border-radius: 3px; font-size: 12px; background: var(--effect-face-accent); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.memos-page .memos-new-button { --memo-button-h: 32px; --memo-button-pad: 5px 9px; --memo-button-radius: 3px; --memo-button-font: 12px; --memo-button-face: var(--effect-face-accent); --memo-button-color: var(--color-surface); --mf-shadow: var(--effect-text-white); }
 .memos-page .memos-new-menu { position: absolute; right: 0; top: calc(100% + 5px); z-index: 2; width: 108px; padding: 2px; border: 1px solid var(--memo-edge); background: var(--color-surface); box-shadow: var(--effect-drop); }
-.memos-page .memos-new-menu button { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: transparent; font-size: 10px; text-align: left; }
-.memos-page .memos-new-menu button:hover { background: var(--color-accent-strong); }
+.memos-page .memos-new-menu button { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: var(--memo-menu-face, transparent); --mf-size: 10px; text-align: left; }
+.memos-page .memos-new-menu button:hover { --memo-menu-face: var(--color-accent-strong); }
 .memos-page .memos-tagline { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 0 10px; border-bottom: 2px solid var(--color-accent-strong); color: var(--color-muted); font-size: 9.5px; letter-spacing: .8px; }
 .memos-page .memos-tagline > span:last-child { line-height: 15px; padding-bottom: 3px; }
 .memos-page .memos-tag { display: inline-block; padding: 4px 10px 3px; border-radius: 2px 8px 0 0; background: var(--color-accent-strong); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 11px; font-weight: 700; letter-spacing: 1px; line-height: 15px; }
 .memos-page .memos-directory { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .memos-page .memos-note-list { list-style: none; padding: 0 10px; margin: 0; }
 .memos-page .memos-note-row { border-bottom: 1px dashed var(--color-divider); }
-.memos-page .memos-note-entry { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 76px; padding: 13px 0; border: 0; border-radius: 0; background: transparent; text-align: left; }
-.memos-page button.memos-note-entry:hover, .memos-page button.memos-note-entry:active { background: var(--color-page); }
-.memos-page .memos-note-entry > .memos-pixel { width: 26px; height: 26px; color: var(--color-muted); }
+.memos-page .memos-note-entry { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 76px; padding: 13px 0; border: 0; border-radius: 0; background: var(--memo-entry-face, transparent); text-align: left; --memo-pixel: 26px; }
+.memos-page button.memos-note-entry:hover, .memos-page button.memos-note-entry:active { --memo-entry-face: var(--color-page); }
+.memos-page .memos-note-entry > .memos-pixel { color: var(--color-muted); }
 .memos-page .memos-note-copy { flex: 1; min-width: 0; }
-.memos-page .memos-note-copy strong { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
-.memos-page .memos-note-copy strong .memos-symbol { width: 12px; height: 12px; color: var(--color-muted); }
+.memos-page .memos-note-copy strong { --memo-symbol: 12px; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.memos-page .memos-note-copy strong .memos-symbol { color: var(--color-muted); }
 .memos-page .memos-note-copy > span { display: block; margin-top: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: var(--color-muted); }
 .memos-page .memos-note-entry time { align-self: flex-start; margin-top: 3px; font-size: 9px; white-space: nowrap; color: var(--color-muted); }
 .memos-page .memos-trash-tools { display: flex; justify-content: flex-end; gap: 7px; margin: -3px 0 10px; }
-.memos-page .memos-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100%; padding: 35px 18px; text-align: center; }
-.memos-page .memos-empty > .memos-pixel { width: 42px; height: 42px; margin-bottom: 15px; color: var(--color-divider); }
+.memos-page .memos-empty { --memo-pixel: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100%; padding: 35px 18px; text-align: center; }
+.memos-page .memos-empty > .memos-pixel { margin-bottom: 15px; color: var(--color-divider); }
 .memos-page .memos-empty strong { font-size: 13px; font-weight: 500; }
 .memos-page .memos-empty p { margin: 8px 0 18px; font-size: 10px; color: var(--color-muted); line-height: 1.8; }
 
-.memos-page .memos-editor-tools { display: flex; align-items: flex-end; gap: 6px; margin: 10px 10px 0; padding: 0 0 5px; border-bottom: 2px solid var(--color-accent-strong); }
+.memos-page .memos-editor-tools { --memo-symbol: 12px; display: flex; align-items: flex-end; gap: 6px; margin: var(--memo-tools-top, 10px) 10px 0; padding: 0 0 5px; border-bottom: 2px solid var(--color-accent-strong); }
 .memos-page .memos-editor-tools > .memos-tag { margin-bottom: -5px; }
 .memos-page .memos-editor-tools > time { flex: 1; margin-bottom: -5px; padding-bottom: 3px; line-height: 15px; font-size: 9px; color: var(--color-muted); }
-.memos-page .memos-editor-tools .memos-button { min-height: 24px; padding: 3px 6px; font-size: 9.5px; }
-.memos-page .memos-editor-tools .memos-symbol { width: 12px; height: 12px; }
+.memos-page .memos-editor-tools .memos-button { --memo-button-font: 9.5px; }
 .memos-page .memos-paper { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 10px 10px 0; }
 .memos-page .memos-title-field { display: block; flex: 0 0 auto; border-bottom: 1px solid var(--color-divider); }
-.memos-page .memos-title-field input { display: block; width: 100%; height: 46px; padding: 8px 6px; border: 0; border-radius: 0; background: transparent; font-size: 16px; font-weight: 600; }
-.memos-page .memos-body-field { flex: 1; width: 100%; min-height: 90px; margin: 0; padding: 0 6px; border: 0; border-radius: 0; background: transparent; resize: none; font-size: 13px; line-height: 28px; overscroll-behavior: contain; }
-.memos-page .memos-paper-lined .memos-body-field { background: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--color-divider) 27px, var(--color-divider) 28px); background-attachment: local; }
+.memos-page .memos-title-field input { display: block; width: 100%; height: 46px; padding: 8px 6px; border: 0; border-radius: 0; background: transparent; --mf-size: 16px; --mf-weight: 600; }
+.memos-page .memos-body-field { flex: 1; width: 100%; min-height: 90px; margin: 0; padding: 0 6px; border: 0; border-radius: 0; background: var(--memo-body-lines, transparent); background-attachment: local; resize: none; --mf-size: 13px; --mf-line: 28px; overscroll-behavior: contain; }
+.memos-page .memos-paper-lined .memos-body-field { --memo-body-lines: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--color-divider) 27px, var(--color-divider) 28px); }
 .memos-page .memos-checklist { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .memos-page .memos-check-row { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 6px; }
 .memos-page .memos-paper-lined .memos-check-row { border-bottom: 1px solid var(--color-divider); }
-.memos-page .memos-checkbox { appearance: none; -webkit-appearance: none; flex: 0 0 auto; width: 16px; height: 16px; margin: 0; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--color-surface); box-shadow: var(--effect-sunken); cursor: pointer; }
-.memos-page .memos-checkbox:checked { background: var(--color-accent-soft); }
+.memos-page .memos-checkbox { appearance: none; -webkit-appearance: none; flex: 0 0 auto; width: 16px; height: 16px; margin: 0; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--memo-check-face, var(--color-surface)); box-shadow: var(--effect-sunken); cursor: pointer; }
+.memos-page .memos-checkbox:checked { --memo-check-face: var(--color-accent-soft); }
 .memos-page .memos-checkbox:checked::after { content: ''; display: block; width: 8px; height: 4px; margin: 4px 3px; border-left: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); transform: rotate(-45deg); }
-.memos-page .memos-check-text { flex: 1; width: 0; min-height: 32px; padding: 5px 0; border: 0; border-radius: 0; background: transparent; font-size: 13px; }
-.memos-page .is-done .memos-check-text { color: var(--color-muted); text-decoration: line-through; }
-.memos-page .memos-item-remove { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--color-muted); }
-.memos-page .memos-item-remove .memos-symbol { width: 10px; height: 10px; }
-.memos-page .memos-add-item { display: flex; align-items: center; gap: 8px; margin: 8px 6px; padding: 6px 0; min-height: 32px; border: 0; border-radius: 0; background: transparent; color: var(--color-muted); }
+.memos-page .memos-check-text { flex: 1; width: 0; min-height: 32px; padding: 5px 0; border: 0; border-radius: 0; background: transparent; --mf-size: 13px; }
+.memos-page .is-done .memos-check-text { --mf-color: var(--color-muted); text-decoration: line-through; }
+.memos-page .memos-item-remove { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 0; background: transparent; --mf-color: var(--color-muted); --memo-symbol: 10px; }
+.memos-page .memos-add-item { display: flex; align-items: center; gap: 8px; margin: 8px 6px; padding: 6px 0; min-height: 32px; border: 0; border-radius: 0; background: transparent; --mf-color: var(--color-muted); }
 .memos-page .memos-paper-options { display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 7px 10px; border-top: 1px dashed var(--color-divider); }
 .memos-page .memos-paper-options > span { margin-right: 3px; font-size: 10px; color: var(--color-muted); }
-.memos-page .memos-paper-options .memos-button { min-height: 22px; padding: 2px 7px; font-size: 9.5px; }
+.memos-page .memos-paper-options .memos-button { --memo-button-h: 22px; --memo-button-pad: 2px 7px; --memo-button-font: 9.5px; }
 .memos-page .memos-paper-options > .memos-paper-note { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .memos-page .memos-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; background: var(--color-paper); border-bottom: 1px dashed var(--memo-edge); font-size: 11px; line-height: 1.5; }
-.memos-page .memos-notice .memos-button { font-size: 10px; }
 .memos-page .memos-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-height: 540px) {
-  .memos-page .memos-window { margin-bottom: max(8px, env(safe-area-inset-bottom)); }
-  .memos-page .memos-editor-tools { margin-top: 6px; }
+  .memos-page .memos-window { --memo-window-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .memos-page .memos-editor-tools { --memo-tools-top: 6px; }
 }
 
