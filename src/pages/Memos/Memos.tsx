@@ -54,6 +54,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newMenu, setNewMenu] = useState(false);
   const [folderMenu, setFolderMenu] = useState(false);
+  const [closing, setClosing] = useState(false);
   const root = useRef<HTMLElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   const newArea = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
   function back() {
     if (!memos.flush()) return;
     if (selectedId) setSelectedId(null);
-    else onClose();
+    else if (!closing) { setClosing(true); window.setTimeout(onClose, 380); }
   }
   function create(kind: MemoKind) {
     const id = memos.create(kind);
@@ -103,7 +104,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
   }
   const saveLabel = memos.saveState === 'error' ? '保存失败' : memos.saveState === 'pending' ? '保存中…' : '已保存';
 
-  return createPortal(<section className="memos-page" ref={root} role="dialog" aria-modal="true" aria-labelledby="memosHeading"
+  return createPortal(<section className={closing ? 'memos-page is-closing' : 'memos-page'} ref={root} role="dialog" aria-modal="true" aria-labelledby="memosHeading"
     onTouchStart={event => event.stopPropagation()} onTouchEnd={event => event.stopPropagation()}
     onPointerDown={event => event.stopPropagation()} onPointerUp={event => event.stopPropagation()}
     onKeyDown={event => {
