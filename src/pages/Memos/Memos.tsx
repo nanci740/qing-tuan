@@ -130,7 +130,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         {folderMenu && <div id="memosFolderChoices" className="memos-folder-menu">{(['all', 'pinned', 'trash'] as const).map(value => <button type="button" key={value} aria-pressed={folder === value} onClick={() => changeFolder(value)}>{folderNames[value]}<span>{memos.notes.filter(note => value === 'trash' ? note.deletedAt !== null : note.deletedAt === null && (value !== 'pinned' || note.pinned)).length}</span></button>)}</div>}
       </div>}
     </header>
-    <div className="memos-binding" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>
+    <div className="memos-binding" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} />)}</div>
     <main className="memos-window">
       {memos.loadError && <div className="memos-notice" role="alert">{memos.loadError}<button type="button" className="memos-button" onClick={memos.retryRead}>重新读取</button></div>}
       {memos.saveState === 'error' && <div className="memos-notice" role="alert">保存失败，当前内容仍在。请重试后再退出。<button type="button" className="memos-button" onClick={memos.flush}>重试保存</button></div>}
