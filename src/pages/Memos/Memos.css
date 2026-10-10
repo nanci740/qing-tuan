@@ -55,13 +55,13 @@
   align-items: center;
   gap: 8px;
   flex: 0 0 auto;
-  padding: max(7px, env(safe-area-inset-top)) max(14px, calc((100% - 460px) / 2)) 7px;
+  padding: max(8px, env(safe-area-inset-top)) max(16px, calc((100% - 460px) / 2)) 8px;
   background: var(--color-accent-strong);
   border-bottom: 1px solid var(--memo-edge);
   box-shadow: inset 0 1px 0 var(--effect-highlight);
 }
-.memos-page .memos-back { width: 26px; height: 26px; min-height: 26px; padding: 0; }
-.memos-page .memos-titlebar h1 { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 1.2px; line-height: 1.3; }
+.memos-page .memos-back { width: 28px; height: 28px; min-height: 28px; padding: 0; }
+.memos-page .memos-titlebar h1 { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; line-height: 1.3; }
 .memos-page .memos-titlebar h1 > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .memos-page .memos-titlebar h1 small { flex: 0 0 auto; margin-left: -6px; font-size: 11px; font-weight: 500; opacity: .55; }
 .memos-page .memos-folder-area { position: relative; flex: 0 0 auto; }
@@ -74,23 +74,23 @@
 .memos-page .memos-binding { position: relative; z-index: 1; display: flex; justify-content: space-between; flex: 0 0 auto; height: 12px; margin-top: -6px; padding: 0 10px; pointer-events: none; }
 .memos-page .memos-binding i { display: block; width: 5px; height: 12px; border: 1px solid var(--memo-edge); border-radius: 1px; background: var(--effect-face-white); box-shadow: 1px 1px 0 var(--effect-drop-soft); }
 .memos-page .memos-pixel { display: block; flex: 0 0 auto; width: 24px; height: 24px; }
-.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 28px, 460px); margin: 12px auto max(14px, env(safe-area-inset-bottom)); border: 1px solid var(--memo-edge); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
+.memos-page .memos-window { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(100% - 32px, 460px); margin: 12px auto max(14px, env(safe-area-inset-bottom)); border: 1px solid var(--memo-edge); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), 3px 3px 0 var(--effect-drop-color); overflow: hidden; }
 .memos-page .memos-toolbar { display: flex; align-items: center; gap: 7px; padding: 10px; }
 .memos-page .memos-search { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; min-height: 32px; padding: 0 7px; border: 1px solid var(--color-divider); box-shadow: var(--effect-sunken); }
 .memos-page .memos-search .memos-symbol { width: 13px; height: 13px; color: var(--color-muted); }
 .memos-page .memos-search input { width: 100%; height: 30px; padding: 0; border: 0; border-radius: 0; background: transparent; font-size: 11px; }
 .memos-page .memos-new-area { position: relative; flex: 0 0 auto; }
-.memos-page .memos-new-button { background: var(--color-accent-strong); }
+.memos-page .memos-new-button { min-height: 32px; padding: 5px 9px; font-size: 12px; background: var(--color-accent-strong); }
 .memos-page .memos-new-menu { position: absolute; right: 0; top: calc(100% + 5px); z-index: 2; width: 108px; padding: 2px; border: 1px solid var(--memo-edge); background: var(--color-surface); box-shadow: var(--effect-drop); }
 .memos-page .memos-new-menu button { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: transparent; font-size: 10px; text-align: left; }
 .memos-page .memos-new-menu button:hover { background: var(--color-accent-strong); }
 .memos-page .memos-tagline { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 0 10px; border-bottom: 2px solid var(--color-accent-strong); color: var(--color-muted); font-size: 9.5px; letter-spacing: .8px; }
-.memos-page .memos-tagline > span:last-child { padding-bottom: 4px; }
-.memos-page .memos-tag { display: inline-block; padding: 3px 8px 2px; border-radius: 2px 2px 0 0; background: var(--color-accent-strong); color: var(--color-text); font-size: 9.5px; font-weight: 600; letter-spacing: .8px; }
+.memos-page .memos-tagline > span:last-child { line-height: 15px; padding-bottom: 3px; }
+.memos-page .memos-tag { display: inline-block; padding: 4px 10px 3px; border-radius: 2px 8px 0 0; background: var(--color-accent-strong); color: var(--color-text); font-size: 11px; font-weight: 700; letter-spacing: 1px; line-height: 15px; }
 .memos-page .memos-directory { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .memos-page .memos-note-list { list-style: none; padding: 0 10px; margin: 0; }
 .memos-page .memos-note-row { border-bottom: 1px dashed var(--color-divider); }
-.memos-page .memos-note-entry { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 76px; padding: 13px 3px; border: 0; border-radius: 0; background: transparent; text-align: left; }
+.memos-page .memos-note-entry { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 76px; padding: 13px 0; border: 0; border-radius: 0; background: transparent; text-align: left; }
 .memos-page button.memos-note-entry:hover, .memos-page button.memos-note-entry:active { background: var(--color-page); }
 .memos-page .memos-note-entry > .memos-pixel { width: 26px; height: 26px; color: var(--color-muted); }
 .memos-page .memos-note-copy { flex: 1; min-width: 0; }
@@ -106,10 +106,10 @@
 
 .memos-page .memos-editor-tools { display: flex; align-items: flex-end; gap: 6px; margin: 10px 10px 0; padding: 0 0 5px; border-bottom: 2px solid var(--color-accent-strong); }
 .memos-page .memos-editor-tools > .memos-tag { margin-bottom: -5px; }
-.memos-page .memos-editor-tools > time { flex: 1; padding-bottom: 1px; font-size: 9px; color: var(--color-muted); }
+.memos-page .memos-editor-tools > time { flex: 1; margin-bottom: -5px; padding-bottom: 3px; line-height: 15px; font-size: 9px; color: var(--color-muted); }
 .memos-page .memos-editor-tools .memos-button { min-height: 24px; padding: 3px 6px; font-size: 9.5px; }
 .memos-page .memos-editor-tools .memos-symbol { width: 12px; height: 12px; }
-.memos-page .memos-paper { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 10px 12px 0; }
+.memos-page .memos-paper { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 10px 10px 0; }
 .memos-page .memos-title-field { display: block; flex: 0 0 auto; border-bottom: 1px solid var(--color-divider); }
 .memos-page .memos-title-field input { display: block; width: 100%; height: 46px; padding: 8px 6px; border: 0; border-radius: 0; background: transparent; font-size: 16px; font-weight: 600; }
 .memos-page .memos-body-field { flex: 1; width: 100%; min-height: 90px; margin: 0; padding: 0 6px; border: 0; border-radius: 0; background: transparent; resize: none; font-size: 13px; line-height: 28px; overscroll-behavior: contain; }
@@ -128,19 +128,13 @@
 .memos-page .memos-paper-options { display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 7px 10px; border-top: 1px dashed var(--color-divider); }
 .memos-page .memos-paper-options > span { margin-right: 3px; font-size: 10px; color: var(--color-muted); }
 .memos-page .memos-paper-options .memos-button { min-height: 22px; padding: 2px 7px; font-size: 9.5px; }
-.memos-page .memos-status { display: flex; align-items: center; gap: 6px; padding: 4px; border-top: 1px solid var(--memo-edge); background: var(--color-accent-strong); color: var(--color-muted); font-size: 9px; flex: 0 0 auto; }
+.memos-page .memos-status { display: flex; align-items: center; gap: 6px; padding: 4px; border-top: 1px solid var(--memo-edge); background: color-mix(in srgb, var(--theme-color) 38%, var(--color-surface)); color: var(--color-muted); font-size: 9px; flex: 0 0 auto; }
 .memos-page .memos-status > span { display: flex; align-items: center; gap: 5px; min-height: 20px; padding: 2px 5px; box-shadow: var(--effect-sunken); }
 .memos-page .memos-status > span:first-child { flex: 1; }
 .memos-page .memos-status .memos-symbol { width: 11px; height: 11px; }
 .memos-page .memos-grip { display: block; width: 12px; height: 12px; flex: 0 0 auto; align-self: flex-end; color: var(--color-muted); }
 .memos-page .memos-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; background: var(--color-paper); border-bottom: 1px dashed var(--memo-edge); font-size: 11px; line-height: 1.5; }
 .memos-page .memos-notice .memos-button { font-size: 10px; }
-.memos-page .memos-confirm-overlay { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 24px; background: var(--color-modal-overlay); }
-.memos-page .memos-confirm { width: min(100%, 280px); border: 1px solid var(--memo-edge); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), var(--effect-drop); }
-.memos-page .memos-confirm h2 { margin: 3px; padding: 6px 8px; background: var(--color-accent-strong); border-bottom: 1px solid var(--color-divider); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 12px; font-weight: 600; }
-.memos-page .memos-confirm p { margin: 16px 12px; font-size: 11px; line-height: 1.7; }
-.memos-page .memos-confirm-actions { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 12px; border-top: 1px solid var(--color-divider); background: var(--color-page); }
-.memos-page .memos-confirm-actions .memos-button { flex: 1; max-width: 100px; min-height: 24px; padding: 3px 8px; font-size: 10px; }
 .memos-page .memos-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-height: 540px) {
   .memos-page .memos-window { margin-bottom: max(8px, env(safe-area-inset-bottom)); }
