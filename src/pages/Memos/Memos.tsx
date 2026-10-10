@@ -3,23 +3,26 @@ import { createPortal } from 'react-dom';
 import { useMemos } from '../../hooks/useMemos';
 import type { MemoFolder, MemoKind, MemoNote } from '../../types/memos';
 import { memoSummary, memoTitle, selectMemos } from '../../utils/memoStorage';
+import { confirmChat } from '../../utils/chatConfirm';
 import './Memos.css';
 
 type SymbolName = 'note' | 'list' | 'plus' | 'pin' | 'trash' | 'search' | 'disk' | 'close';
 const symbols = {
   note: 'M3 1h7v1h1v1h1v11H3z M4 2v11h7V5H8V2z M9 2v2h2V3h-1V2z M5 7h5v1H5z M5 9h5v1H5z M5 11h3v1H5z',
   list: 'M2 1h12v14H2z M3 2v12h10V2z M4 4h2v2H4z M7 4h5v1H7z M4 7h2v2H4z M7 7h5v1H7z M4 10h2v2H4z M7 10h5v1H7z',
-  plus: 'M7 2h2v5h5v2H9v5H7V9H2V7h5z',
-  pin: 'M5 2h6v2h-1v4l2 2v1H9v3H7v-3H4v-1l2-2V4H5z M7 4v4h2V4z',
-  trash: 'M6 1h4v1H6z M3 3h10v1H3z M4 5h8v9H4z M5 6v7h6V6z M6 7h1v5H6z M9 7h1v5H9z',
 } as const;
 const outlineSymbols = {
   search: 'M21 21l-5-5 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0',
   disk: 'M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12l4 4v12a2 2 0 0 1-2 2z M7 3v6h10V3 M7 21v-8h10v8',
   close: 'M6 6l12 12 M18 6 6 18',
+  plus: 'M12 5v14 M5 12h14',
+  trash: 'M10 11v6 M14 11v6 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M3 6h18 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2',
 } as const;
 function MemoSymbol({ name }: { name: SymbolName }) {
-  if (name === 'search' || name === 'disk' || name === 'close') {
+  if (name === 'pin') {
+    return <svg className="memos-symbol" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 0h4v1H6.5v3l1.5 1.5V6H5.5v4h-1V6H2v-.5L3.5 4V1H3z" fill="currentColor" /></svg>;
+  }
+  if (name !== 'note' && name !== 'list') {
     return <svg className="memos-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d={outlineSymbols[name]} />
     </svg>;
@@ -52,15 +55,12 @@ export function Memos({ onClose }: { onClose: () => void }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newMenu, setNewMenu] = useState(false);
   const [folderMenu, setFolderMenu] = useState(false);
-  const [eraseId, setEraseId] = useState<string | null>(null);
   const root = useRef<HTMLElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   const newArea = useRef<HTMLDivElement>(null);
   const folderArea = useRef<HTMLDivElement>(null);
   const newButton = useRef<HTMLButtonElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
-  const cancelButton = useRef<HTMLButtonElement>(null);
-  const eraseTrigger = useRef<HTMLButtonElement | null>(null);
   const selected = memos.notes.find(note => note.id === selectedId && note.deletedAt === null);
   const visible = selectMemos(memos.notes, folder, search);
   const count = memos.notes.filter(note => note.deletedAt === null).length;
@@ -90,11 +90,6 @@ export function Memos({ onClose }: { onClose: () => void }) {
     else backButton.current?.focus();
   }, [selectedId]);
   useEffect(() => {
-    if (eraseId) cancelButton.current?.focus();
-    else if (eraseTrigger.current?.isConnected) eraseTrigger.current.focus();
-    else backButton.current?.focus();
-  }, [eraseId]);
-  useEffect(() => {
     if (!newMenu && !folderMenu) return;
     const outside = (event: PointerEvent) => {
       if (!newArea.current?.contains(event.target as Node)) setNewMenu(false);
@@ -115,13 +110,12 @@ export function Memos({ onClose }: { onClose: () => void }) {
     onKeyDown={event => {
       if (event.key === 'Escape') {
         event.preventDefault(); event.stopPropagation();
-        if (eraseId) setEraseId(null);
-        else if (newMenu) { setNewMenu(false); newButton.current?.focus(); }
+        if (newMenu) { setNewMenu(false); newButton.current?.focus(); }
         else if (folderMenu) setFolderMenu(false);
         else back();
       }
       if (event.key === 'Tab') {
-        const scope = eraseId ? root.current?.querySelector('.memos-confirm') : root.current;
+        const scope = root.current;
         const elements = Array.from(scope?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), textarea:not(:disabled)') ?? [])
           .filter(element => element.getClientRects().length > 0);
         const first = elements[0], last = elements.at(-1);
@@ -163,7 +157,7 @@ export function Memos({ onClose }: { onClose: () => void }) {
         <div className="memos-paper-options"><span>纸张</span>{(['lined', 'plain'] as const).map(paper => <button type="button" key={paper} className="memos-button" aria-pressed={selected.paper === paper} onClick={() => memos.update(selected.id, { paper })}>{paper === 'lined' ? '横线' : '空白'}</button>)}</div>
       </> : <>
         <div className="memos-toolbar">
-          <label className="memos-search"><MemoSymbol name="search" /><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="查找这一页小事" aria-label="搜索备忘录" /></label>
+          <label className="memos-search"><MemoSymbol name="search" /><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="查找这一页记录" aria-label="搜索备忘录" /></label>
           <div className="memos-new-area" ref={newArea}>
             <button type="button" ref={newButton} className="memos-button memos-new-button" disabled={Boolean(memos.loadError)} aria-expanded={newMenu} aria-controls="memosNewChoices" onClick={() => setNewMenu(!newMenu)}><MemoSymbol name="plus" />新建<span aria-hidden="true">▾</span></button>
             {newMenu && <div id="memosNewChoices" className="memos-new-menu"><button type="button" onClick={() => create('text')}><MemoSymbol name="note" />文字记录</button><button type="button" onClick={() => create('checklist')}><MemoSymbol name="list" />勾选清单</button></div>}
@@ -174,13 +168,12 @@ export function Memos({ onClose }: { onClose: () => void }) {
           {visible.length ? <ul className="memos-note-list">{visible.map(note => <li key={note.id} className="memos-note-row">
             {folder === 'trash' ? <div className="memos-note-entry"><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.deletedAt ?? note.updatedAt)}</time></div> :
               <button type="button" className="memos-note-entry" onClick={() => setSelectedId(note.id)}><MemoPixel name={note.kind === 'text' ? 'note' : 'list'} /><div className="memos-note-copy"><strong>{note.pinned && <MemoSymbol name="pin" />}{memoTitle(note)}</strong><span>{memoSummary(note)}</span></div><time>{dateLabel(note.updatedAt)}</time></button>}
-            {folder === 'trash' && <div className="memos-trash-tools"><button type="button" className="memos-button" onClick={() => memos.restore(note.id)}>恢复</button><button type="button" className="memos-button memos-danger" onClick={event => { eraseTrigger.current = event.currentTarget; setEraseId(note.id); }}>彻底删除</button></div>}
+            {folder === 'trash' && <div className="memos-trash-tools"><button type="button" className="memos-button" onClick={() => memos.restore(note.id)}>恢复</button><button type="button" className="memos-button memos-danger" onClick={() => { void confirmChat({ title: '彻底删除', message: '这条备忘录删除后将无法恢复。', confirmText: '删除', danger: true }).then(ok => { if (ok) memos.erase(note.id); }); }}>彻底删除</button></div>}
           </li>)}</ul> : <div className="memos-empty"><MemoPixel name={folder === 'trash' ? 'trash' : 'note'} /><strong>{search ? '没有找到这条记录' : folder === 'trash' ? '回收站是空的' : folder === 'pinned' ? '还没有置顶的记录' : '还没有写下什么'}</strong><p>{search ? '换个关键词再找找。' : folder === 'trash' ? '删除的记录会先放到这里。' : folder === 'pinned' ? '编辑时点一下置顶，就能在这里找到。' : '一句灵感、一张清单，都可以记下来。'}</p>{!search && folder === 'all' && <button type="button" className="memos-button" disabled={Boolean(memos.loadError)} onClick={() => create('text')}><MemoSymbol name="plus" />写第一条备忘录</button>}</div>}
         </div>
       </>}
       <footer className="memos-status"><span role="status"><MemoSymbol name="disk" />{memos.loadError ? '读取失败' : saveLabel}</span><span>{selected ? selected.kind === 'text' ? `${Array.from(selected.body).length} 字` : `${selected.items.filter(item => item.done && item.text.trim()).length}/${selected.items.filter(item => item.text.trim()).length} 项完成` : `${count} 条记录`}</span><svg className="memos-grip" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1"><path d="M2 10l8-8 M5 10l5-5 M8 10l2-2" /></svg></footer>
     </main>
-    {eraseId && <div className="memos-confirm-overlay"><div className="memos-confirm" role="alertdialog" aria-modal="true" aria-labelledby="memosEraseTitle" aria-describedby="memosEraseDescription"><h2 id="memosEraseTitle">彻底删除</h2><p id="memosEraseDescription">这条备忘录删除后将无法恢复。</p><div className="memos-confirm-actions"><button type="button" className="memos-button" ref={cancelButton} onClick={() => setEraseId(null)}>取消</button><button type="button" className="memos-button memos-danger" onClick={() => { memos.erase(eraseId); eraseTrigger.current = null; setEraseId(null); }}>确认删除</button></div></div></div>}
   </section>, document.body);
 }
 
