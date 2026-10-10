@@ -9,7 +9,8 @@
 @keyframes ledgerPageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes ledgerPageOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(20px); } }
 .ledger-page *, .ledger-page *::before, .ledger-page *::after { box-sizing: border-box; }
-.ledger-page :is(button, input, select, textarea) { font: inherit; -webkit-text-fill-color: currentColor; }
+/* 控件的字读变量，各处只换变量，不再改写字体属性。 */
+.ledger-page :is(button, input, textarea) { font-family: var(--lf-family, inherit); font-style: inherit; font-weight: inherit; font-size: var(--lf-size, inherit); line-height: var(--lf-line, inherit); font-variant-numeric: var(--lf-num, inherit); -webkit-text-fill-color: currentColor; }
 .ledger-page button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .ledger-page button:disabled { opacity: .5; cursor: default; }
 .ledger-page :is(input, textarea) { min-width: 0; border: 1px solid var(--color-divider); border-radius: 1px; background: var(--color-surface); color: var(--color-text); text-shadow: none; box-shadow: var(--effect-sunken); }
@@ -18,19 +19,24 @@
 .ledger-page h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
 .ledger-page h2 > span { font-size: 9px; font-weight: 400; color: var(--color-muted); }
 .ledger-page h3 { font-size: 12px; }
-.ledger-page .ledger-pixel { display: block; width: 24px; height: 24px; flex: 0 0 auto; color: var(--color-muted); }
-.ledger-page .ledger-emoji { display: grid; place-items: center; font-size: 18px; line-height: 1; }
-.ledger-page .ledger-tool-icon { display: block; width: 14px; height: 14px; flex: 0 0 auto; }
-.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; }
+/* 图标大小和颜色由所在位置的变量决定，不在别处改写宽高。 */
+.ledger-page :is(.ledger-pixel, .ledger-emoji) { flex: 0 0 auto; width: var(--ledger-icon, 24px); height: var(--ledger-icon, 24px); color: var(--ledger-icon-color, var(--color-muted)); }
+.ledger-page .ledger-pixel { display: block; }
+.ledger-page .ledger-emoji { display: grid; place-items: center; font-size: calc(var(--ledger-icon, 24px) * .75); line-height: 1; }
+.ledger-page .ledger-tool-icon { display: block; width: var(--ledger-tool, 14px); height: var(--ledger-tool, 14px); flex: 0 0 auto; }
+.ledger-page :is(.ledger-button, .ledger-select, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice) { border: 1px solid var(--color-muted); border-radius: 2px; }
 /* 选中的支出、收入是凹下去的，其余按钮凸起。 */
-.ledger-page :is(.ledger-button, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice):not(.ledger-button[aria-pressed="true"]) { box-shadow: var(--effect-raised), var(--effect-drop); }
+.ledger-page :is(.ledger-button, .ledger-select, .ledger-small-button, .ledger-key, .ledger-category-choice, .ledger-icon-choice):not(.ledger-button[aria-pressed="true"]) { box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not(.ledger-danger),
+.ledger-page .ledger-select,
 .ledger-page .ledger-key:not(.ledger-key-clear):not(.ledger-key-equals),
 .ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { color: var(--color-text); text-shadow: none; }
 .ledger-page :is(.ledger-button, .ledger-small-button):not(.ledger-primary):not([aria-pressed="true"]),
+.ledger-page .ledger-select,
 .ledger-page .ledger-key:not(.ledger-key-op):not(.ledger-key-equals) { background: var(--effect-face-white); }
 .ledger-page .ledger-button[aria-pressed="true"] { background: var(--win-bar); box-shadow: var(--effect-sunken); }
-.ledger-page .ledger-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 28px; padding: 4px 8px; font-size: 10px; white-space: nowrap; }
+/* 按钮高度、字号、对齐由变量决定，月份、日期键只换变量。 */
+.ledger-page .ledger-button { display: inline-flex; align-items: center; justify-content: var(--ledger-button-justify, center); gap: 5px; min-height: var(--ledger-control-h, 28px); padding: 4px 8px; --lf-size: var(--ledger-button-font, 10px); white-space: nowrap; }
 .ledger-page .ledger-small-button { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
 .ledger-page .ledger-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-danger { color: var(--color-danger-ink); text-shadow: none; }
@@ -39,13 +45,14 @@
 .ledger-page .ledger-back { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; flex: 0 0 auto; border: 0; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar h1 { display: flex; align-items: baseline; flex: 1; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
-.ledger-page .ledger-header-action { border: 1px dotted var(--color-surface); border-radius: 0; padding: 3px 7px; min-height: 24px; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); font-size: 10px; }
+.ledger-page .ledger-header-action { border: 1px dotted var(--color-surface); border-radius: 0; padding: 3px 7px; min-height: 24px; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); --lf-size: 10px; }
 .ledger-page .ledger-content { width: min(100%, 480px); margin: 0 auto; padding: 14px 14px 20px; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .ledger-page .ledger-filters { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .ledger-page .ledger-month-control { display: flex; align-items: center; gap: 6px; }
-.ledger-page .ledger-month-button { min-width: 92px; min-height: 26px; font-size: 11px; }
+.ledger-page .ledger-month-button { --ledger-control-h: 26px; --ledger-button-font: 11px; min-width: 92px; }
 .ledger-page .ledger-filters > .ledger-select { flex: 1; min-width: 110px; max-width: 170px; }
-.ledger-page .ledger-select { justify-content: space-between; font-size: 11px; }
+/* 选单外观跟按钮同款，排版交给共用的选单样式。 */
+.ledger-page .ledger-select { min-height: var(--ledger-control-h, 28px); padding: 4px 8px; --lf-size: var(--ledger-button-font, 11px); }
 .ledger-page .ledger-summary { padding: 12px; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page .ledger-summary-label { display: flex; justify-content: space-between; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px dashed var(--color-divider); font-size: 9px; letter-spacing: 1px; color: var(--color-muted); }
 .ledger-page .ledger-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -75,20 +82,19 @@
 .ledger-page .ledger-slip-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; border-bottom: 1px dashed var(--color-divider); font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 1px; }
 .ledger-page .ledger-slip-head > span { font-size: 9px; color: var(--color-muted); }
 .ledger-page .ledger-slip-items { list-style: none; margin: 0; padding: 4px 0; }
-.ledger-page .ledger-slip-item { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 6px 0; border: 0; background: none; color: inherit; text-shadow: none; text-align: left; }
-.ledger-page .ledger-slip-item > .ledger-pixel { width: 18px; height: 18px; }
+.ledger-page .ledger-slip-item { --ledger-icon: 18px; display: flex; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 6px 0; border: 0; background: none; color: inherit; text-shadow: none; text-align: left; }
 .ledger-page .ledger-slip-name { display: flex; flex-direction: column; min-width: 0; max-width: 55%; }
 .ledger-page .ledger-slip-name > strong { font-size: 12px; font-weight: 600; }
 .ledger-page .ledger-slip-name > small { margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 10px; color: var(--color-muted); }
-.ledger-page .ledger-slip-leader { flex: 1; min-width: 12px; align-self: flex-end; margin-bottom: 9px; border-bottom: 1px dotted var(--color-muted); }
+.ledger-page .ledger-slip-leader { flex: 1; min-width: 12px; border-bottom: 1px dotted var(--color-muted); }
+.ledger-page .ledger-slip-item > .ledger-slip-leader { align-self: flex-end; margin-bottom: 9px; }
 .ledger-page .ledger-slip-amount { flex: 0 0 auto; font-size: 13px; font-weight: 500; }
 .ledger-page .ledger-slip-total { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px dashed var(--color-divider); font-size: 10px; color: var(--color-muted); }
 .ledger-page .ledger-slip-total > span { display: flex; align-items: baseline; }
-.ledger-page .ledger-slip-total .ledger-slip-leader { align-self: auto; margin: 0 6px 3px; }
+.ledger-page .ledger-slip-total .ledger-slip-leader { margin: 0 6px 3px; }
 .ledger-page .ledger-slip-total strong { font-size: 12px; font-weight: 600; color: var(--color-text); }
 .ledger-page .ledger-slip-total > small { align-self: flex-end; font-size: 8px; letter-spacing: 1px; }
-.ledger-page .ledger-empty { display: flex; align-items: center; flex-direction: column; padding: 40px 10px; text-align: center; color: var(--color-muted); }
-.ledger-page .ledger-empty > .ledger-pixel { width: 36px; height: 36px; }
+.ledger-page .ledger-empty { --ledger-icon: 36px; display: flex; align-items: center; flex-direction: column; padding: 40px 10px; text-align: center; color: var(--color-muted); }
 .ledger-page .ledger-empty p { margin: 12px 0 8px; }
 .ledger-page .ledger-empty span { font-size: 10px; }
 /* 计算器：上面一块液晶屏，算式小字、结果大字；数字白键、运算键浅主题色、等号主题色。 */
@@ -100,26 +106,25 @@
 .ledger-page .ledger-display-expr { max-width: 100%; min-height: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; direction: rtl; font-size: 11px; color: var(--color-muted); }
 .ledger-page .ledger-display-value { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 30px; line-height: 1.3; color: var(--color-text); font-variant-numeric: tabular-nums; }
 .ledger-page .ledger-keypad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 42px; gap: 7px; margin-top: 12px; }
-.ledger-page .ledger-key { display: grid; place-items: center; padding: 0; font-family: ui-monospace, monospace; font-size: 18px; }
+.ledger-page .ledger-key { --ledger-tool: 20px; display: grid; place-items: center; padding: 0; --lf-family: ui-monospace, monospace; --lf-size: var(--ledger-key-font, 18px); }
 .ledger-page .ledger-key-op { background: var(--win-bar); }
-.ledger-page .ledger-key-clear { font-size: 13px; color: var(--color-danger-ink); }
+.ledger-page .ledger-key-clear { --ledger-key-font: 13px; color: var(--color-danger-ink); }
 .ledger-page .ledger-key-equals { grid-row: span 2; background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); }
-.ledger-page .ledger-key > .ledger-tool-icon { width: 20px; height: 20px; }
 /* 记一笔的下半部是一张小票：分类、日期、备注、保存都在里面。 */
 .ledger-page .ledger-entry-slip .ledger-slip-head { margin-bottom: 10px; }
 .ledger-page .ledger-field-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; font-size: 10px; color: var(--color-muted); }
-.ledger-page .ledger-text-button { padding: 2px 0; border: 0; background: none; font-size: 10px; color: var(--color-accent-strong); text-shadow: none; }
+.ledger-page .ledger-text-button { padding: 2px 0; border: 0; background: none; --lf-size: 10px; color: var(--color-accent-strong); text-shadow: none; }
 .ledger-page .ledger-category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); gap: 6px; margin-bottom: 6px; }
-.ledger-page .ledger-category-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; padding: 7px 3px; font-size: 10px; overflow-wrap: anywhere; }
+.ledger-page .ledger-category-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; padding: 7px 3px; --lf-size: 10px; overflow-wrap: anywhere; }
 .ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="false"] { background: var(--color-surface); }
-.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
-.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] > .ledger-pixel { color: var(--color-surface); }
+.ledger-page :is(.ledger-category-choice, .ledger-icon-choice)[aria-pressed="true"] { --ledger-icon-color: var(--color-surface); background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-field { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; }
 .ledger-page .ledger-field > span { min-width: 52px; padding-top: 7px; font-size: 10px; color: var(--color-muted); }
-.ledger-page .ledger-date-button { flex: 1; justify-content: space-between; min-height: 30px; font-size: 12px; }
-.ledger-page .ledger-field > .ledger-select { flex: 1; min-height: 30px; font-size: 12px; }
-.ledger-page .ledger-field :is(input, textarea) { width: 100%; flex: 1; min-height: 30px; padding: 6px; font-size: 12px; }
-.ledger-page .ledger-field textarea { resize: vertical; line-height: 1.7; }
+.ledger-page .ledger-field { --ledger-control-h: 30px; --ledger-button-font: 12px; }
+.ledger-page .ledger-date-button { --ledger-button-justify: space-between; flex: 1; }
+.ledger-page .ledger-field > .ledger-select { flex: 1; }
+.ledger-page .ledger-field :is(input, textarea) { width: 100%; flex: 1; min-height: 30px; padding: 6px; --lf-size: 12px; }
+.ledger-page .ledger-field textarea { resize: vertical; --lf-line: 1.7; }
 .ledger-page .ledger-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
 .ledger-page .ledger-management-list { list-style: none; margin: 0; padding: 0; }
 .ledger-page .ledger-management-list > li { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
@@ -138,16 +143,17 @@
 .ledger-page .ledger-picker-bar { display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 4px 0 9px; background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-accent-strong) 12%, var(--color-accent-strong) 100%); border-bottom: 1px solid var(--color-muted); }
 .ledger-page .ledger-picker-bar > span { flex: 1; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 /* 右上角叉叉跟聊天设置的选项弹窗一样：小方框白键。 */
-.ledger-page .ledger-picker-close { display: grid; place-items: center; width: 20px; height: 18px; padding: 0; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white-compact); color: var(--color-muted); box-shadow: var(--effect-raised), var(--effect-drop); }
-.ledger-page .ledger-picker-close > .ledger-tool-icon { width: 11px; height: 11px; }
+.ledger-page .ledger-picker-close { --ledger-tool: 11px; display: grid; place-items: center; width: 20px; height: 18px; padding: 0; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white-compact); color: var(--color-muted); box-shadow: var(--effect-raised), var(--effect-drop); }
 .ledger-page .ledger-picker-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 6px; }
 .ledger-page .ledger-picker-nav > strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ledger-page .ledger-picker-week { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 12px; font-size: 10px; text-align: center; color: var(--color-muted); }
 .ledger-page .ledger-picker-week > span { padding: 4px 0; }
-.ledger-page .ledger-picker-grid { display: grid; gap: 2px; padding: 2px 12px 4px; }
-.ledger-page .ledger-picker-days { grid-template-columns: repeat(7, 1fr); }
-.ledger-page .ledger-picker-months { grid-template-columns: repeat(4, 1fr); gap: 6px; padding-top: 6px; }
-.ledger-page .ledger-picker-cell { height: 32px; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--color-text); text-shadow: none; font-size: 12px; font-variant-numeric: tabular-nums; }
-.ledger-page .ledger-picker-cell[aria-current="date"] { color: var(--color-accent-strong); font-weight: 700; }
+.ledger-page .ledger-picker-grid { display: grid; padding: var(--ledger-grid-top, 2px) 12px 4px; }
+.ledger-page .ledger-picker-days { grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.ledger-page .ledger-picker-months { --ledger-grid-top: 6px; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.ledger-page .ledger-picker-cell { height: 32px; padding: 0; border: 0; border-radius: 2px; --lf-size: 12px; --lf-num: tabular-nums; }
+/* 一般日子、今天、选中的那天各一种样子。 */
+.ledger-page .ledger-picker-cell[aria-pressed="false"] { background: none; color: var(--color-text); text-shadow: none; }
+.ledger-page .ledger-picker-cell[aria-pressed="false"][aria-current="date"] { color: var(--color-accent-strong); font-weight: 700; }
 .ledger-page .ledger-picker-cell[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .ledger-page .ledger-picker-actions { display: flex; justify-content: flex-end; padding: 8px 14px 14px; }
