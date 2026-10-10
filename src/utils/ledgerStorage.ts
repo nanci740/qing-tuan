@@ -2,10 +2,10 @@ import type { LedgerCategory, LedgerCurrency, LedgerData, LedgerIcon, LedgerTran
 import { ledgerMinor, LEDGER_MAX_MINOR, validLedgerDate } from './ledgerMath.ts';
 
 export const LEDGER_STORAGE_KEY = 'smallphone_ledger_v1';
-export const LEDGER_ICONS: LedgerIcon[] = ['food', 'transport', 'shopping', 'fun', 'daily', 'home', 'medical', 'study', 'phone', 'clothes', 'gift', 'pet', 'salary', 'other'];
+export const LEDGER_ICONS: LedgerIcon[] = ['food', 'transport', 'shopping', 'fun', 'daily', 'home', 'medical', 'study', 'phone', 'clothes', 'merch', 'pet', 'salary', 'other'];
 export const LEDGER_ICON_NAMES: Record<LedgerIcon, string> = {
   food: '饮食', transport: '交通', shopping: '购物', fun: '娱乐', daily: '日用', home: '居住', medical: '医疗',
-  study: '学习', phone: '通讯', clothes: '服饰', gift: '人情', pet: '宠物', salary: '工资', other: '其他',
+  study: '学习', phone: '通讯', clothes: '服饰', merch: '周边', pet: '宠物', salary: '工资', other: '其他',
 };
 /** 表情只收一个字形，太长的直接拒绝。 */
 export function ledgerEmoji(text: string): string {
@@ -48,10 +48,10 @@ export function validateLedgerData(value: unknown): LedgerData {
   if (!currencies.length) throw new Error('至少保留一个币种');
   const categories = value.categories.map((c: unknown): LedgerCategory => {
     if (!record(c) || typeof c.id !== 'string' || !c.id || categoryIds.has(c.id) || typeof c.name !== 'string' ||
-        !c.name.trim() || c.name.length > 20 || !LEDGER_ICONS.includes(c.icon as LedgerIcon) || typeof c.archived !== 'boolean' ||
+        !c.name.trim() || c.name.length > 20 || !LEDGER_ICONS.includes((c.icon === 'gift' ? 'merch' : c.icon) as LedgerIcon) || typeof c.archived !== 'boolean' ||
         (c.emoji !== undefined && (typeof c.emoji !== 'string' || ledgerEmoji(c.emoji) !== c.emoji))) throw new Error('分类数据不正确');
     categoryIds.add(c.id);
-    return { id: c.id, name: c.name, icon: c.icon as LedgerIcon, emoji: typeof c.emoji === 'string' ? c.emoji : '', archived: c.archived };
+    return { id: c.id, name: c.name, icon: (c.icon === 'gift' ? 'merch' : c.icon) as LedgerIcon, emoji: typeof c.emoji === 'string' ? c.emoji : '', archived: c.archived };
   });
   if (!categories.some(c => !c.archived)) throw new Error('至少保留一个可用分类');
   const totals = new Map<string, number>();
@@ -77,9 +77,13 @@ export function validateLedgerData(value: unknown): LedgerData {
   });
   return { version: 1, transactions, categories, currencies, budgets };
 }
-/** 旧存档补上后来加的预设分类，“吃饭”改叫“饮食”；新台币没有用到小数时改成 0 位。只改内存，下次保存才写回。 */
+/** 旧存档补上后来加的预设分类，“吃饭”改叫“饮食”、“人情”改成“周边”；新台币没有用到小数时改成 0 位。只改内存，下次保存才写回。 */
 export function upgradeLedgerData(data: LedgerData): LedgerData {
-  const categories = data.categories.map(c => c.id === 'category-food' && c.name === '吃饭' && !data.categories.some(o => o.name === '饮食') ? { ...c, name: '饮食' } : c);
+  const renamed: Record<string, [string, string]> = { 'category-food': ['吃饭', '饮食'], 'category-gift': ['人情', '周边'] };
+  const categories = data.categories.map(c => {
+    const [from, to] = renamed[c.id] ?? [];
+    return from && c.name === from && !data.categories.some(o => o.name === to) ? { ...c, name: to } : c;
+  });
   for (const icon of LEDGER_ICONS) {
     if (categories.some(c => c.id === `category-${icon}` || (!c.archived && c.name === LEDGER_ICON_NAMES[icon]))) continue;
     const other = categories.findIndex(c => c.id === 'category-other');

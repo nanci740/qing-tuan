@@ -1,5 +1,5 @@
 export type LedgerType = 'expense' | 'income';
-export type LedgerIcon = 'food' | 'transport' | 'shopping' | 'fun' | 'daily' | 'home' | 'medical' | 'study' | 'phone' | 'clothes' | 'gift' | 'pet' | 'salary' | 'other';
+export type LedgerIcon = 'food' | 'transport' | 'shopping' | 'fun' | 'daily' | 'home' | 'medical' | 'study' | 'phone' | 'clothes' | 'merch' | 'pet' | 'salary' | 'other';
 
 export interface LedgerTransaction {
   id: string;
