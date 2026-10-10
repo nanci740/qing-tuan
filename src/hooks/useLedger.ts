@@ -23,7 +23,7 @@ export function useLedger() {
     if (!active.current || state.loadError) return false;
     try {
       if (localStorage.getItem(LEDGER_STORAGE_KEY) !== snapshot.current)
-        return fail('记账已在别处更新，请关掉记账重新打开再保存');
+        return fail('其他青团机分页改过记账，请关掉其他分页，再重新打开记账');
       const checked = writeLedgerData(next);
       live.current = checked;
       snapshot.current = JSON.stringify(checked);
