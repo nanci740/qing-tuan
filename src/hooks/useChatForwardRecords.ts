@@ -1,25 +1,21 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import type { ForwardRecord } from '../types/chatRecordDetail';
+import { useLayoutEffect } from 'react';
 import type { ForwardRecordsApi } from '../types/chatForwardRecords';
-import { appendForwardRecord, createForwardRecord, loadForwardRecords, saveForwardRecords } from '../utils/chatForwardRecords';
-import type { ForwardRecordsStorage } from '../utils/chatForwardRecords';
+import { createForwardRecord, FORWARD_SAVE_ERROR } from '../utils/chatForwardRecords';
+import { CHAT_RECORDS_BLOCKED_MESSAGE, readStoredForwardRecord, saveStoredForwardRecord } from '../utils/chatRecords';
+import { showToast } from '../utils/toast';
 
-/** 记录数据由 React 状态和同步 ref 管理；旧消息服务仅提交输入并读取结果。 */
+/** 同步读取开机缓存；新增记录后台单条保存，失败通过全站小弹窗提示。 */
 export function useChatForwardRecords() {
-  const [records, setRecords] = useState<ForwardRecordsStorage>({});
-  const current = useRef(records);
   useLayoutEffect(() => {
     const connect = (event: Event) => {
       const detail = (event as CustomEvent<{ accept(api: ForwardRecordsApi): void }>).detail;
-      current.current = loadForwardRecords();
-      setRecords(current.current);
+      const failed = (error: unknown) => showToast(error instanceof Error && error.message === CHAT_RECORDS_BLOCKED_MESSAGE ? CHAT_RECORDS_BLOCKED_MESSAGE : FORWARD_SAVE_ERROR);
       detail.accept({
-        read: id => current.current[id] as ForwardRecord | undefined,
+        read: readStoredForwardRecord,
         create(items, sourceChatName) {
           const record = createForwardRecord(items, sourceChatName);
-          current.current = appendForwardRecord(current.current, record);
-          setRecords(current.current);
-          saveForwardRecords(current.current);
+          try {void saveStoredForwardRecord(record).catch(failed);}
+          catch (error) {failed(error);}
           return record;
         }
       });
