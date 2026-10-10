@@ -49,7 +49,7 @@
 .ledger-page .ledger-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .ledger-page .ledger-totals > div { min-width: 0; }
 .ledger-page .ledger-totals span { display: block; margin-bottom: 6px; font-size: 10px; color: var(--color-muted); }
-.ledger-page :is(.ledger-totals strong, .ledger-budget strong, .ledger-receipt-amount strong, .ledger-category-stat > strong) { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ledger-page :is(.ledger-totals strong, .ledger-budget strong, .ledger-slip-amount, .ledger-slip-total strong, .ledger-category-stat > strong) { font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .ledger-page .ledger-totals strong { font-size: 19px; font-weight: 500; }
 .ledger-page .ledger-expense { color: var(--color-danger-ink); }
 .ledger-page .ledger-budget { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--color-divider); }
@@ -67,18 +67,24 @@
 .ledger-page .ledger-category-bar { height: 5px; margin-top: 5px; background: var(--color-page); border: 1px solid var(--color-divider); }
 .ledger-page .ledger-category-bar > i { display: block; height: 100%; background: var(--color-accent-strong); }
 .ledger-page .ledger-muted { margin: 8px 0 12px; font-size: 10px; line-height: 1.8; color: var(--color-muted); }
-.ledger-page .ledger-day { margin: 16px 0; }
-.ledger-page .ledger-day-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; font-size: 9px; color: var(--color-muted); }
-.ledger-page .ledger-receipt { display: block; width: 100%; margin: 0 0 12px; padding: 0; border: 0; border-inline: 1px solid var(--color-divider); border-radius: 0; background: var(--color-surface); color: var(--color-text); text-shadow: none; text-align: left; box-shadow: var(--effect-drop); }
-.ledger-page .ledger-receipt-edge { display: block; width: 100%; height: 6px; }
-.ledger-page .ledger-receipt-edge.is-bottom { transform: rotate(180deg); }
-.ledger-page .ledger-receipt-body { display: flex; align-items: center; gap: 8px; padding: 12px 10px; }
-.ledger-page .ledger-receipt-copy { flex: 1; min-width: 0; }
-.ledger-page .ledger-receipt-copy > strong { display: block; font-size: 12px; font-weight: 600; }
-.ledger-page .ledger-receipt-copy > span { display: block; margin-top: 5px; overflow-wrap: anywhere; font-size: 10px; line-height: 1.6; color: var(--color-muted); }
-.ledger-page .ledger-receipt-amount { min-width: 0; max-width: 48%; text-align: right; }
-.ledger-page .ledger-receipt-amount > strong { display: block; font-size: 14px; font-weight: 500; }
-.ledger-page .ledger-receipt-amount > small { display: block; margin-top: 4px; font-size: 9px; color: var(--color-muted); }
+/* 每天一张小票：上方日期、品项带点线引到金额、底部小计，下缘锯齿撕边。 */
+.ledger-page .ledger-slip { margin: 0 0 16px; filter: drop-shadow(2px 2px 0 var(--effect-drop-color)); }
+.ledger-page .ledger-slip-paper { padding: 12px 14px 18px; background: var(--color-surface); color: var(--color-text); -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px 6px repeat-x; mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px 6px repeat-x; }
+.ledger-page .ledger-slip-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; border-bottom: 1px dashed var(--color-divider); font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: 1px; }
+.ledger-page .ledger-slip-head > span { font-size: 9px; color: var(--color-muted); }
+.ledger-page .ledger-slip-items { list-style: none; margin: 0; padding: 4px 0; }
+.ledger-page .ledger-slip-item { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 6px 0; border: 0; background: none; color: inherit; text-shadow: none; text-align: left; }
+.ledger-page .ledger-slip-item > .ledger-pixel { width: 18px; height: 18px; }
+.ledger-page .ledger-slip-name { display: flex; flex-direction: column; min-width: 0; max-width: 55%; }
+.ledger-page .ledger-slip-name > strong { font-size: 12px; font-weight: 600; }
+.ledger-page .ledger-slip-name > small { margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 10px; color: var(--color-muted); }
+.ledger-page .ledger-slip-leader { flex: 1; min-width: 12px; align-self: flex-end; margin-bottom: 9px; border-bottom: 1px dotted var(--color-muted); }
+.ledger-page .ledger-slip-amount { flex: 0 0 auto; font-size: 13px; font-weight: 500; }
+.ledger-page .ledger-slip-total { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px dashed var(--color-divider); font-size: 10px; color: var(--color-muted); }
+.ledger-page .ledger-slip-total > span { display: flex; align-items: baseline; }
+.ledger-page .ledger-slip-total .ledger-slip-leader { align-self: auto; margin: 0 6px 3px; }
+.ledger-page .ledger-slip-total strong { font-size: 12px; font-weight: 600; color: var(--color-text); }
+.ledger-page .ledger-slip-total > small { align-self: flex-end; font-size: 8px; letter-spacing: 1px; }
 .ledger-page .ledger-empty { display: flex; align-items: center; flex-direction: column; padding: 40px 10px; text-align: center; color: var(--color-muted); }
 .ledger-page .ledger-empty > .ledger-pixel { width: 36px; height: 36px; }
 .ledger-page .ledger-empty p { margin: 12px 0 8px; }
@@ -111,5 +117,4 @@
 .ledger-page .ledger-currencies > li { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--color-divider); }
 .ledger-page .ledger-currencies span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .ledger-page .ledger-currencies small { color: var(--color-muted); font-size: 9px; }
-.ledger-page .ledger-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 0 0 auto; padding: 7px 16px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--color-divider); background: var(--win-bar); color: var(--color-muted); font-size: 9px; }
 .ledger-page .ledger-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; white-space: nowrap; }
