@@ -94,6 +94,7 @@
 .memos-page .memos-new-button { --memo-button-h: 32px; --memo-button-pad: 5px 9px; --memo-button-radius: 3px; --memo-button-font: 12px; --memo-button-face: var(--effect-face-accent); --memo-button-color: var(--color-surface); --mf-shadow: var(--effect-text-white); }
 .memos-page .memos-new-menu { position: absolute; right: 0; top: calc(100% + 5px); z-index: 2; width: 108px; padding: 2px; border: 1px solid var(--memo-edge); background: var(--color-surface); box-shadow: var(--effect-drop); }
 .memos-page .memos-new-menu button { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 26px; padding: 4px 6px; border: 0; border-radius: 0; background: var(--memo-menu-face, transparent); --mf-size: 10px; text-align: left; }
+.memos-page .memos-new-menu button:active { --memo-menu-face: var(--color-accent-strong); }
 @media (hover: hover) and (pointer: fine) { .memos-page .memos-new-menu button:hover { --memo-menu-face: var(--color-accent-strong); } }
 .memos-page .memos-tagline { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 0 10px; border-bottom: 2px solid var(--color-accent-strong); color: var(--color-muted); font-size: 9.5px; letter-spacing: .8px; }
 .memos-page .memos-tagline > span:last-child { line-height: 15px; padding-bottom: 3px; }
