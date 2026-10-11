@@ -5,7 +5,11 @@ import type { SettingsDestination } from '../utils/settingsPageBridge';
 function useNavigationState() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [activeDock, setActiveDock] = useState('home');
+  const [activeDock, setActiveDockState] = useState('home');
+  const [spaceOpen, setSpaceOpen] = useState(false);
+  const setActiveDock = useCallback((key: string) => { setActiveDockState(key); if (key !== 'space') setSpaceOpen(false); }, []);
+  const openSpace = useCallback(() => { setSettingsOpen(false); setActiveDock('space'); setSpaceOpen(true); }, [setActiveDock]);
+  const closeSpace = useCallback(() => { setSpaceOpen(false); setActiveDock('home'); }, [setActiveDock]);
   const aboutSource = useRef<HTMLElement | null>(null);
   const destinations = useRef(new Map<SettingsDestination, () => void | Promise<void>>());
   const registerDestination = useCallback((key: SettingsDestination, enter: () => void | Promise<void>) => {
@@ -31,8 +35,8 @@ function useNavigationState() {
     const dock = (event: Event) => setActiveDock(String((event as CustomEvent<string>).detail || 'home'));
     window.addEventListener('qingtuan:dock', dock);
     return () => window.removeEventListener('qingtuan:dock', dock);
-  }, []);
-  return { settingsOpen, aboutOpen, activeDock, setActiveDock, openSettings, closeSettings, openAbout, closeAbout, openDestination, registerDestination };
+  }, [setActiveDock]);
+  return { settingsOpen, aboutOpen, activeDock, setActiveDock, spaceOpen, openSpace, closeSpace, openSettings, closeSettings, openAbout, closeAbout, openDestination, registerDestination };
 }
 const NavigationContext = createContext<ReturnType<typeof useNavigationState> | null>(null);
 export function SettingsNavigationProvider({ children }: { children: ReactNode }) {

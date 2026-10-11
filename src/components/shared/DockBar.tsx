@@ -8,7 +8,8 @@ export function DockBar() {
   const surface = useChatNavigationSurface('dock', 'dock-bar');
   const appearance = useAppearance();
   const navigation = useSettingsNavigation();
-  return <nav {...surface} id="dockBar" onClickCapture={event => {
+  // 小窝打开时底部导航收起来（沿用聊天收起导航的同一种样子），之后那里会放小窝自己的工具列。
+  return <nav {...surface} className={navigation.spaceOpen ? `${surface.className} chat-hidden` : surface.className} aria-hidden={navigation.spaceOpen || surface['aria-hidden']} inert={navigation.spaceOpen} id="dockBar" onClickCapture={event => {
     const item = (event.target as Element).closest<HTMLElement>('.dock-item');
     if (item) {
       event.preventDefault();
@@ -203,7 +204,7 @@ export function DockBar() {
         {"\n"}
       </a>
       {"\n"}
-      <a href="#" data-dock-icon-key="space" className={"dock-item cat-item" + (appearance.icons.dock['space'] ? ' has-custom-icon' : '')}>
+      <a href="#" data-dock-icon-key="space" onClick={event => { event.preventDefault(); event.stopPropagation(); chat.closeApp(); navigation.openSpace(); }} className={(navigation.activeDock === 'space' ? 'dock-item cat-item active' : 'dock-item cat-item') + (appearance.icons.dock['space'] ? ' has-custom-icon' : '')}>
         {"\n"}
         <img className="dock-icon-image" alt="Space icon" src={appearance.icons.dock['space'] || undefined} />
         {"\n"}

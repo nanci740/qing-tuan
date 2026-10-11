@@ -1,0 +1,54 @@
+{
+  "mode": "fake-indexeddb in memory, actual browser persistence still requires browser verification",
+  "sourceCommit": "b92592fecd760b5e3dcc0d78528b0cf8f8e7ccce",
+  "checks": [
+    {
+      "name": "first entry initializes Room 01 once",
+      "passed": true
+    },
+    {
+      "name": "concurrent initializers preserve the existing configuration",
+      "passed": true
+    },
+    {
+      "name": "furniture coordinate and state updates persist across closed DB connections",
+      "passed": true
+    },
+    {
+      "name": "old defaults cannot overwrite an existing save",
+      "passed": true
+    },
+    {
+      "name": "stale revision rejects without changing the saved row",
+      "passed": true
+    },
+    {
+      "name": "failed transaction retains the last successful save",
+      "passed": true
+    },
+    {
+      "name": "unavailable IndexedDB rejects safely",
+      "passed": true
+    },
+    {
+      "name": "other databases and namespaces remain unchanged",
+      "passed": true
+    },
+    {
+      "name": "future save versions are preserved, not reinitialized",
+      "passed": true
+    },
+    {
+      "name": "independent rooms keep independent revisions and data",
+      "passed": true
+    },
+    {
+      "name": "blocked upgrades leave original database data intact",
+      "passed": true
+    },
+    {
+      "name": "database contains configurations, not screenshots",
+      "passed": true
+    }
+  ]
+}

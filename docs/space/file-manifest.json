@@ -1,0 +1,332 @@
+{
+  "upstreamCommit": "549692e9118d2e27fd10561d22173ec918b605b6",
+  "modified": [
+    "src/components/shared/DockBar.tsx",
+    "src/pages/Home/Home.tsx",
+    "src/pages/Ledger/Ledger.css",
+    "src/providers/SettingsNavigationProvider.tsx"
+  ],
+  "added": [
+    "docs/space-room01.md",
+    "docs/space/build.log",
+    "docs/space/file-manifest.json",
+    "docs/space/model-results.json",
+    "docs/space/palette.json",
+    "docs/space/room01-preview.png",
+    "docs/space/storage-results.json",
+    "docs/space/validation-results.json",
+    "public/space/room01/basket.png",
+    "public/space/room01/bed.png",
+    "public/space/room01/bookcase.png",
+    "public/space/room01/books.png",
+    "public/space/room01/cabinet.png",
+    "public/space/room01/cartridge.png",
+    "public/space/room01/chair.png",
+    "public/space/room01/clock.png",
+    "public/space/room01/console.png",
+    "public/space/room01/crt.png",
+    "public/space/room01/cup.png",
+    "public/space/room01/curtains.png",
+    "public/space/room01/cushion.png",
+    "public/space/room01/desk.png",
+    "public/space/room01/floor.png",
+    "public/space/room01/keyboard.png",
+    "public/space/room01/lamp.png",
+    "public/space/room01/mat.png",
+    "public/space/room01/nightstand.png",
+    "public/space/room01/noticeboard.png",
+    "public/space/room01/pictureLeft.png",
+    "public/space/room01/plant.png",
+    "public/space/room01/plush.png",
+    "public/space/room01/postcardsLeft.png",
+    "public/space/room01/radio.png",
+    "public/space/room01/rug.png",
+    "public/space/room01/sideShelf.png",
+    "public/space/room01/smallPlant.png",
+    "public/space/room01/sofa.png",
+    "public/space/room01/table.png",
+    "public/space/room01/tableFront.png",
+    "public/space/room01/tower.png",
+    "public/space/room01/tv.png",
+    "public/space/room01/tvStand.png",
+    "public/space/room01/wallClock.png",
+    "public/space/room01/wallLeft.png",
+    "public/space/room01/wallRight.png",
+    "public/space/room01/wallShelf.png",
+    "public/space/room01/window.png",
+    "public/space/room01/windowsill.png",
+    "scripts/generate-space-assets.mjs",
+    "scripts/space-art/furniture.mjs",
+    "scripts/space-art/pixels.mjs",
+    "scripts/space-model-regression.mjs",
+    "scripts/space-regression.mjs",
+    "scripts/space-storage-regression.mjs",
+    "src/hooks/useRoomViewport.ts",
+    "src/hooks/useSpaceRoom.ts",
+    "src/pages/Space/RoomCanvas.tsx",
+    "src/pages/Space/Space.css",
+    "src/pages/Space/Space.tsx",
+    "src/space/assets.generated.ts",
+    "src/space/depth.ts",
+    "src/space/projection.ts",
+    "src/space/renderer.ts",
+    "src/space/rooms/index.ts",
+    "src/space/rooms/room01.ts",
+    "src/space/validation.ts",
+    "src/types/space.ts",
+    "src/utils/spaceDatabase.ts"
+  ],
+  "assets": [
+    {
+      "file": "public/space/room01/basket.png",
+      "width": 30,
+      "height": 21
+    },
+    {
+      "file": "public/space/room01/bed.png",
+      "width": 139,
+      "height": 96
+    },
+    {
+      "file": "public/space/room01/bookcase.png",
+      "width": 48,
+      "height": 82
+    },
+    {
+      "file": "public/space/room01/books.png",
+      "width": 28,
+      "height": 14
+    },
+    {
+      "file": "public/space/room01/cabinet.png",
+      "width": 65,
+      "height": 83
+    },
+    {
+      "file": "public/space/room01/cartridge.png",
+      "width": 15,
+      "height": 8
+    },
+    {
+      "file": "public/space/room01/chair.png",
+      "width": 50,
+      "height": 49
+    },
+    {
+      "file": "public/space/room01/clock.png",
+      "width": 22,
+      "height": 16
+    },
+    {
+      "file": "public/space/room01/console.png",
+      "width": 33,
+      "height": 16
+    },
+    {
+      "file": "public/space/room01/crt.png",
+      "width": 46,
+      "height": 36
+    },
+    {
+      "file": "public/space/room01/cup.png",
+      "width": 15,
+      "height": 12
+    },
+    {
+      "file": "public/space/room01/curtains.png",
+      "width": 102,
+      "height": 117
+    },
+    {
+      "file": "public/space/room01/cushion.png",
+      "width": 38,
+      "height": 17
+    },
+    {
+      "file": "public/space/room01/desk.png",
+      "width": 98,
+      "height": 67
+    },
+    {
+      "file": "public/space/room01/floor.png",
+      "width": 433,
+      "height": 155
+    },
+    {
+      "file": "public/space/room01/keyboard.png",
+      "width": 42,
+      "height": 17
+    },
+    {
+      "file": "public/space/room01/lamp.png",
+      "width": 19,
+      "height": 30
+    },
+    {
+      "file": "public/space/room01/mat.png",
+      "width": 51,
+      "height": 17
+    },
+    {
+      "file": "public/space/room01/nightstand.png",
+      "width": 40,
+      "height": 36
+    },
+    {
+      "file": "public/space/room01/noticeboard.png",
+      "width": 37,
+      "height": 40
+    },
+    {
+      "file": "public/space/room01/pictureLeft.png",
+      "width": 43,
+      "height": 43
+    },
+    {
+      "file": "public/space/room01/plant.png",
+      "width": 34,
+      "height": 46
+    },
+    {
+      "file": "public/space/room01/plush.png",
+      "width": 16,
+      "height": 21
+    },
+    {
+      "file": "public/space/room01/postcardsLeft.png",
+      "width": 32,
+      "height": 23
+    },
+    {
+      "file": "public/space/room01/radio.png",
+      "width": 31,
+      "height": 21
+    },
+    {
+      "file": "public/space/room01/rug.png",
+      "width": 204,
+      "height": 68
+    },
+    {
+      "file": "public/space/room01/sideShelf.png",
+      "width": 43,
+      "height": 35
+    },
+    {
+      "file": "public/space/room01/smallPlant.png",
+      "width": 19,
+      "height": 25
+    },
+    {
+      "file": "public/space/room01/sofa.png",
+      "width": 124,
+      "height": 78
+    },
+    {
+      "file": "public/space/room01/table.png",
+      "width": 95,
+      "height": 58
+    },
+    {
+      "file": "public/space/room01/tableFront.png",
+      "width": 62,
+      "height": 44
+    },
+    {
+      "file": "public/space/room01/tower.png",
+      "width": 35,
+      "height": 32
+    },
+    {
+      "file": "public/space/room01/tv.png",
+      "width": 66,
+      "height": 54
+    },
+    {
+      "file": "public/space/room01/tvStand.png",
+      "width": 108,
+      "height": 58
+    },
+    {
+      "file": "public/space/room01/wallClock.png",
+      "width": 23,
+      "height": 31
+    },
+    {
+      "file": "public/space/room01/wallLeft.png",
+      "width": 221,
+      "height": 186
+    },
+    {
+      "file": "public/space/room01/wallRight.png",
+      "width": 221,
+      "height": 186
+    },
+    {
+      "file": "public/space/room01/wallShelf.png",
+      "width": 54,
+      "height": 26
+    },
+    {
+      "file": "public/space/room01/window.png",
+      "width": 83,
+      "height": 105
+    },
+    {
+      "file": "public/space/room01/windowsill.png",
+      "width": 93,
+      "height": 35
+    }
+  ],
+  "unrelatedUpstreamFilesVerified": 401,
+  "rebuiltDistribution": [
+    "dist/assets/index-BN2fIk76.css",
+    "dist/assets/index-CllMyDEV.js",
+    "dist/assets/qingtuan-splash-BH6_Olm5.webp",
+    "dist/avatars/avatar-bird.png",
+    "dist/avatars/avatar-fox.png",
+    "dist/images/photo-placeholder-wide.png",
+    "dist/images/photo-placeholder.png",
+    "dist/index.html",
+    "dist/space/room01/basket.png",
+    "dist/space/room01/bed.png",
+    "dist/space/room01/bookcase.png",
+    "dist/space/room01/books.png",
+    "dist/space/room01/cabinet.png",
+    "dist/space/room01/cartridge.png",
+    "dist/space/room01/chair.png",
+    "dist/space/room01/clock.png",
+    "dist/space/room01/console.png",
+    "dist/space/room01/crt.png",
+    "dist/space/room01/cup.png",
+    "dist/space/room01/curtains.png",
+    "dist/space/room01/cushion.png",
+    "dist/space/room01/desk.png",
+    "dist/space/room01/floor.png",
+    "dist/space/room01/keyboard.png",
+    "dist/space/room01/lamp.png",
+    "dist/space/room01/mat.png",
+    "dist/space/room01/nightstand.png",
+    "dist/space/room01/noticeboard.png",
+    "dist/space/room01/pictureLeft.png",
+    "dist/space/room01/plant.png",
+    "dist/space/room01/plush.png",
+    "dist/space/room01/postcardsLeft.png",
+    "dist/space/room01/radio.png",
+    "dist/space/room01/rug.png",
+    "dist/space/room01/sideShelf.png",
+    "dist/space/room01/smallPlant.png",
+    "dist/space/room01/sofa.png",
+    "dist/space/room01/table.png",
+    "dist/space/room01/tableFront.png",
+    "dist/space/room01/tower.png",
+    "dist/space/room01/tv.png",
+    "dist/space/room01/tvStand.png",
+    "dist/space/room01/wallClock.png",
+    "dist/space/room01/wallLeft.png",
+    "dist/space/room01/wallRight.png",
+    "dist/space/room01/wallShelf.png",
+    "dist/space/room01/window.png",
+    "dist/space/room01/windowsill.png"
+  ]
+}
