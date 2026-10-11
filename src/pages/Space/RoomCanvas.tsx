@@ -38,7 +38,7 @@ export function RoomCanvas({ room, children }: {
         paintRoom(canvas.current, scene.current, viewport, camera); }); return () => cancelAnimationFrame(frame); }, [ready, viewport, camera]);
     return <div className="space-room">
   <div ref={stage} className="space-stage" {...handlers} data-zoom={camera.zoom.toFixed(4)} data-offset-x={camera.x.toFixed(2)} data-offset-y={camera.y.toFixed(2)} onContextMenu={e => e.preventDefault()}>
-   <canvas ref={canvas} className="space-canvas" role="img" aria-label="青白格纹床、青色沙发、木茶几、CRT电脑、电视和收纳柜组成的像素小窝" data-logical-width={SCENE_WIDTH} data-logical-height={SCENE_HEIGHT}/>
+   <canvas ref={canvas} className="space-canvas" role="img" aria-label="像素小窝" data-logical-width={SCENE_WIDTH} data-logical-height={SCENE_HEIGHT}/>
    {!ready && !error && <p className="space-loading" role="status">正在布置小窝…</p>}
    {error && <p className="space-loading" role="alert">{error}</p>}
   </div>

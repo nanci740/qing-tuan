@@ -17,7 +17,7 @@
       "passed": true
     },
     {
-      "name": "rug, supported props and furniture behind each other have correct ordering",
+      "name": "furniture groups are ordered by footprint, supported props follow their support",
       "passed": true
     },
     {

@@ -1,6 +1,6 @@
 import type { RoomObject } from '../types/space.ts';
 const layers = { architecture: 0, ground: 1, objects: 2, foreground: 3 };
-const architecture: Record<string, number> = { floor: 0, wallLeft: 1, wallRight: 2, window: 3, wallLamp: 4, pictureLeft: 5, photosLeft: 5, wallClock: 5, corkboard: 5, toteBag: 5, wallShelf: 6 };
+const architecture: Record<string, number> = { floor: 0, wallLeft: 1, wallRight: 2, window: 3 };
 /** Support groups remain together; lower contents precede the body, top contents
  * follow it, and explicit front parts close the group. Furniture groups are ordered
  * by footprint (whatever sits fully behind another and overlaps it on screen comes
