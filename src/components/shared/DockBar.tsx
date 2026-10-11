@@ -203,7 +203,7 @@ export function DockBar() {
         {"\n"}
       </a>
       {"\n"}
-      <a href="#" data-dock-icon-key="space" className={"dock-item cat-item" + (appearance.icons.dock['space'] ? ' has-custom-icon' : '')}>
+      <a href="#" data-dock-icon-key="space" onClick={event => { event.preventDefault(); event.stopPropagation(); chat.closeApp(); navigation.openSpace(); }} className={(navigation.activeDock === 'space' ? 'dock-item cat-item active' : 'dock-item cat-item') + (appearance.icons.dock['space'] ? ' has-custom-icon' : '')}>
         {"\n"}
         <img className="dock-icon-image" alt="Space icon" src={appearance.icons.dock['space'] || undefined} />
         {"\n"}

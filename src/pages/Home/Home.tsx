@@ -18,12 +18,15 @@ import { OriginalComment } from "../../components/shared/OriginalComment";
 import { World } from "../World/World";
 import { Chat } from "../Chat/Chat";
 import { DockBar } from "../../components/shared/DockBar";
+import { Space } from '../Space/Space';
+import { useSettingsNavigation } from '../../hooks/useSettingsNavigation';
 
 /** 原页面的静态结构；所有页面保持挂载，由原脚本切换显示状态。 */
 const StableWorld = memo(World);
 const StableChat = memo(Chat);
 const StableDock = memo(DockBar);
 export function Home() {
+  const navigation = useSettingsNavigation();
  const world=useWorld();
   const [memosOpen, setMemosOpen] = useState(false);
   const [ledgerOpen, setLedgerOpen] = useState(false);
@@ -44,7 +47,7 @@ export function Home() {
       {"\n        "}
       <DeviceStatusBar />
       {"\n"}
-      <div className="widget-card">
+      <div className="widget-card" inert={navigation.spaceOpen}>
         {"\n"}
         <svg className="earphone-wires" fill="none" viewBox="0 0 380 320">
           {"\n"}
@@ -409,7 +412,7 @@ export function Home() {
       {"\n"}
       <OriginalComment text={" App 和 拍立得 区域 "} />
       {"\n"}
-      <div className="app-section">
+      <div className="app-section" inert={navigation.spaceOpen}>
         {"\n"}
         <OriginalComment text={" 左侧 2x2 App 图标区 "} />
         {"\n"}
@@ -782,7 +785,7 @@ export function Home() {
       {"\n"}
       <OriginalComment text={" 主画面第二页（往左滑出现）和页数小圆点；换页逻辑在底部 initHomePages "} />
       {"\n"}
-      <div className="home-page2" id="homePage2" aria-hidden={pagination.page !== 1}>
+      <div className="home-page2" id="homePage2" aria-hidden={pagination.page !== 1} inert={navigation.spaceOpen}>
         {"\n"}
         <OriginalComment text={" 消息小窗（在第二页最上面）：显示角色最新传来的一句话，点一下打开那个聊天；内容由底部 initHomeNotice 填 "} />
         {"\n"}
@@ -790,7 +793,7 @@ export function Home() {
         {"\n"}
       </div>
       {"\n"}
-      <div className="home-dots" id="homeDots" role="tablist" aria-label="主画面页数">
+      <div className="home-dots" id="homeDots" role="tablist" aria-label="主画面页数" inert={navigation.spaceOpen}>
         <PressedButton type="button" className={pagination.page === 0 ? 'home-dot active' : 'home-dot'} role="tab" aria-selected={pagination.page === 0} data-page="0" onClick={event => pagination.select(0, event)} aria-label="第 1 页" />
         <PressedButton type="button" className={pagination.page === 1 ? 'home-dot active' : 'home-dot'} role="tab" aria-selected={pagination.page === 1} data-page="1" onClick={event => pagination.select(1, event)} aria-label="第 2 页" />
       </div>
@@ -804,6 +807,7 @@ export function Home() {
       <StableChat />
       {"\n\n"}
       <StableDock />
+      {navigation.spaceOpen && <Space onClose={navigation.closeSpace} />}
       {memosOpen && <Memos onClose={() => setMemosOpen(false)} />}
       {ledgerOpen && <Ledger onClose={() => setLedgerOpen(false)} />}
       {"\n"}

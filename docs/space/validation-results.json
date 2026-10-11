@@ -1,0 +1,53 @@
+{
+  "upstreamCommit": "549692e9118d2e27fd10561d22173ec918b605b6",
+  "logicalScene": {
+    "width": 480,
+    "height": 320
+  },
+  "checks": {
+    "productionBuild": {
+      "status": "passed",
+      "command": "npm run build",
+      "includes": "tsc --noEmit and Vite",
+      "log": "build.log"
+    },
+    "migration": {
+      "status": "passed",
+      "command": "npm run verify:migration"
+    },
+    "model": {
+      "status": "passed",
+      "count": 9,
+      "details": "model-results.json"
+    },
+    "storage": {
+      "status": "passed",
+      "count": 12,
+      "mode": "in-memory fake-indexeddb, not native browser persistence",
+      "details": "storage-results.json"
+    },
+    "unrelatedOriginalFiles": {
+      "status": "passed",
+      "count": 401,
+      "method": "GitHub blob SHA-1"
+    },
+    "sharedHeaderRules": {
+      "status": "passed",
+      "method": "Original Ledger stylesheet identical after removing four new SPACE selector alternatives"
+    },
+    "nativeBrowser": {
+      "status": "not_run",
+      "reason": "Sandbox blocked local server/Chromium IPC; additional execution request was interrupted."
+    }
+  },
+  "manualPending": [
+    "Mobile full-room furniture recognition",
+    "iOS/Android pinch, drag, reset and dock interaction",
+    "High-DPI zoom pixel edges",
+    "Native browser refresh and persistent profile restart",
+    "Other pages navigation regression"
+  ],
+  "knownLimitations": [
+    "Existing global startup may block the entire app when all IndexedDB is disabled; SPACE-specific database failure has a local fallback."
+  ]
+}

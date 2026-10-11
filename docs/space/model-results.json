@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "name": "480 × 320 complete scene and separate assets",
+      "passed": true
+    },
+    {
+      "name": "furniture has no physical footprint intersections",
+      "passed": true
+    },
+    {
+      "name": "projection roundtrip keeps world coordinates independent of pixels",
+      "passed": true
+    },
+    {
+      "name": "depth order is independent of object creation order",
+      "passed": true
+    },
+    {
+      "name": "rug, supported props, and table front have correct ordering",
+      "passed": true
+    },
+    {
+      "name": "fit mode keeps the original aspect at narrow and landscape viewports",
+      "passed": true
+    },
+    {
+      "name": "pinch center stays anchored and zoom is limited to 2.5",
+      "passed": true
+    },
+    {
+      "name": "invalid, duplicate, cyclic and future-version saves are rejected",
+      "passed": true
+    },
+    {
+      "name": "future state fields survive validation and defaults are independently cloned",
+      "passed": true
+    }
+  ]
+}
