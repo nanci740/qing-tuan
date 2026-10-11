@@ -6,7 +6,7 @@ import { SCENE_WIDTH as W, SCENE_HEIGHT as H, SCENE_ORIGIN } from '../src/space/
 // 这里只读图片尺寸、写素材表；改图之后重新跑一次。
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'public/space/room01');
-const LAYERS=['floor','wallLeft','wallRight','window','door'];
+const LAYERS=['floor','wallLeft','wallRight','window','curtainLeft','curtainRight','curtainRod','door'];
 const assets={};
 for(const id of LAYERS){
  const b=fs.readFileSync(path.join(dir,`${id}.png`)),width=b.readUInt32BE(16),height=b.readUInt32BE(20);

@@ -37,6 +37,33 @@ export const ROOM_ASSETS: Readonly<Record<string, RoomAsset>> = {
       "y": 205
     }
   },
+  "curtainLeft": {
+    "path": "space/room01/curtainLeft.png",
+    "width": 831,
+    "height": 573,
+    "anchor": {
+      "x": 372,
+      "y": 205
+    }
+  },
+  "curtainRight": {
+    "path": "space/room01/curtainRight.png",
+    "width": 831,
+    "height": 573,
+    "anchor": {
+      "x": 372,
+      "y": 205
+    }
+  },
+  "curtainRod": {
+    "path": "space/room01/curtainRod.png",
+    "width": 831,
+    "height": 573,
+    "anchor": {
+      "x": 372,
+      "y": 205
+    }
+  },
   "door": {
     "path": "space/room01/door.png",
     "width": 831,

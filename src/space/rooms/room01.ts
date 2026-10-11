@@ -6,8 +6,9 @@ const object = (id: string, assetId: string, x: number, y: number, z = 0, width 
 export const ROOM_01_ID = 'room-01';
 /** 默认布置换版时加一；旧版存档在没被手动改过家具时会换成新版布置。
  * 3：拿掉程序画的家具，只留房间外壳，家具之后改用单独绘制的图片。
- * 4：外壳换成手绘的新房间（墙、地板、窗、门各一张图），角度改成右墙 1/3、左墙 1/2。 */
-export const ROOM_01_VERSION = 4;
+ * 4：外壳换成手绘的新房间（墙、地板、窗、门各一张图），角度改成右墙 1/3、左墙 1/2。
+ * 5：窗帘从窗户拆出来，左右窗帘和窗帘杆各一张图。 */
+export const ROOM_01_VERSION = 5;
 export function createRoom01(now = Date.now()): RoomConfiguration {
     return {
         schemaVersion: 1, roomId: ROOM_01_ID, roomVersion: ROOM_01_VERSION, revision: 0, updatedAt: now,
@@ -16,6 +17,9 @@ export function createRoom01(now = Date.now()): RoomConfiguration {
             object('wall-left', 'wallLeft', 0, 0, 0, 0, 0, 'architecture'),
             object('wall-right', 'wallRight', 0, 0, 0, 0, 0, 'architecture'),
             object('window', 'window', 0, 0, 0, 0, 0, 'architecture'),
+            object('curtain-left', 'curtainLeft', 0, 0, 0, 0, 0, 'architecture'),
+            object('curtain-right', 'curtainRight', 0, 0, 0, 0, 0, 'architecture'),
+            object('curtain-rod', 'curtainRod', 0, 0, 0, 0, 0, 'architecture'),
             object('door', 'door', 0, 0, 0, 0, 0, 'architecture'),
         ]
     };
