@@ -4,8 +4,9 @@ const object = (id: string, assetId: string, x: number, y: number, z = 0, width 
     ...(parentId ? { parentId } : {}), ...(width && depth ? { footprint: { width, depth }, collision: { solid: layer === 'objects' } } : {}), state: {}
 });
 export const ROOM_01_ID = 'room-01';
-/** 默认布置换版时加一；旧版存档在没被手动改过家具时会换成新版布置。 */
-export const ROOM_01_VERSION = 2;
+/** 默认布置换版时加一；旧版存档在没被手动改过家具时会换成新版布置。
+ * 3：拿掉程序画的家具，只留房间外壳，家具之后改用单独绘制的图片。 */
+export const ROOM_01_VERSION = 3;
 export function createRoom01(now = Date.now()): RoomConfiguration {
     return {
         schemaVersion: 1, roomId: ROOM_01_ID, roomVersion: ROOM_01_VERSION, revision: 0, updatedAt: now,
@@ -14,58 +15,6 @@ export function createRoom01(now = Date.now()): RoomConfiguration {
             object('wall-left', 'wallLeft', 0, 0, 0, 0, 0, 'architecture'),
             object('wall-right', 'wallRight', 0, 0, 0, 0, 0, 'architecture'),
             object('window', 'window', 8.8, 0, 40, 0, 0, 'architecture'),
-            object('wall-lamp', 'wallLamp', 1.3, 0, 96, 0, 0, 'architecture'),
-            object('wall-shelf', 'wallShelf', 0, .9, 112, 0, 0, 'architecture'),
-            object('wall-clock', 'wallClock', 0, 5.9, 100, 0, 0, 'architecture'),
-            object('landscape', 'pictureLeft', 0, 8.2, 76, 0, 0, 'architecture'),
-            object('photos', 'photosLeft', 0, 12.1, 64, 0, 0, 'architecture'),
-            object('tote-bag', 'toteBag', 0, 13.4, 50, 0, 0, 'architecture'),
-            object('corkboard', 'corkboard', 15.2, 0, 82, 0, 0, 'architecture'),
-            object('rug', 'rug', 6.4, 9.1, 0, 10, 5.6, 'ground'),
-            object('window-mat', 'mat', 9.3, 1.3, 0, 2.6, 1.3, 'ground'),
-            object('entry-mat', 'entryMat', 20.4, 9.4, -6, 2.3, 1.6, 'ground'),
-            object('sunlight', 'sunlight', 8.8, 1, 0, 0, 0, 'ground', undefined, 100),
-            object('bed', 'bed', 2.1, .05, 0, 5, 6.2),
-            object('low-shelf', 'lowShelf', .15, 3.2, 0, 1.8, 2.6),
-            object('shelf-photo', 'photoFrame', .5, 4, 30, 0, 0, 'objects', 'low-shelf'),
-            object('laundry', 'laundry', .3, 6.2, 0, 1.3, 1.1),
-            object('nightstand', 'nightstand', 7.35, .2, 0, 1.5, 1.6),
-            object('alarm', 'alarm', 7.5, .55, 28, 0, 0, 'objects', 'nightstand'),
-            object('bed-lamp', 'lamp', 8.2, .35, 28, 0, 0, 'objects', 'nightstand'),
-            object('window-radio', 'radio', 9.6, .1, 40, 0, 0, 'objects', 'window'),
-            object('window-plant', 'smallPlant', 12.8, .12, 40, 0, 0, 'objects', 'window'),
-            object('window-floor-plant', 'plant', 12.6, 1, 0, 1.1, 1.1),
-            object('desk', 'desk', 14.2, .2, 0, 4, 2.3),
-            object('desk-books', 'books', 14.3, .4, 34, 0, 0, 'objects', 'desk'),
-            object('desk-lamp', 'lamp', 14.45, .45, 43, 0, 0, 'objects', 'desk-books'),
-            object('computer', 'crt', 15.2, .25, 34, 0, 0, 'objects', 'desk'),
-            object('keyboard', 'keyboard', 15.25, 1.78, 34, 0, 0, 'objects', 'desk'),
-            object('desk-plant', 'smallPlant', 17.45, .45, 34, 0, 0, 'objects', 'desk'),
-            object('mouse', 'mouse', 17.6, 1.8, 34, 0, 0, 'objects', 'desk'),
-            object('chair', 'chair', 15.2, 3, 0, 1.6, 1.6),
-            object('bookcase', 'bookcase', 18.2, .2, 0, 1.8, 1.6),
-            object('bookcase-plant', 'smallPlant', 18.6, .45, 108, 0, 0, 'objects', 'bookcase'),
-            object('wardrobe', 'wardrobe', 20.0, .2, 0, 3, 2.3),
-            object('nook-plant', 'plant', 21.7, 5.4, 0, 1.1, 1.1),
-            object('door', 'door', 19, 8.5, -6, .4, 2.2),
-            object('shoe-box', 'shoeBox', 19.5, 10.4, -6, 1.3, 1),
-            object('entry-plant', 'plant', 21.8, 8.1, -6, 1.1, 1.1),
-            object('tv-stand', 'tvStand', .2, 7.6, 0, 2.4, 5.4),
-            object('television', 'tv', .3, 8.15, 24, 0, 0, 'objects', 'tv-stand'),
-            object('tv-cat', 'cat', 1, 11.2, 24, 0, 0, 'objects', 'tv-stand'),
-            object('tv-controller', 'controller', 1.3, 12.35, 24, 0, 0, 'objects', 'tv-stand'),
-            object('corner-plant', 'plant', .4, 13.6, 0, 1.1, 1.1),
-            object('pouf', 'pouf', 3.6, 8.7, 0, 1.6, 1.6),
-            object('floor-cushion', 'floorCushion', 3, 11.8, 0, 1.7, 1.6),
-            object('sofa', 'sofa', 10, 7.6, 0, 5.4, 2.8),
-            object('side-table', 'sideTable', 15.7, 8.5, 0, 1.6, 1.6),
-            object('side-plant', 'smallPlant', 16.15, 8.85, 24, 0, 0, 'objects', 'side-table'),
-            object('floor-lamp', 'floorLamp', 16.9, 10.6, 0, 1, 1),
-            object('table', 'table', 7.4, 11.2, 0, 4.2, 2.2),
-            object('table-plant', 'smallPlant', 7.65, 11.4, 24, 0, 0, 'objects', 'table'),
-            object('table-game', 'handheld', 8.5, 11.75, 24, 0, 0, 'objects', 'table'),
-            object('table-mug', 'mug', 10.4, 11.7, 24, 0, 0, 'objects', 'table'),
-            object('table-phone', 'phone', 10.8, 12.5, 24, 0, 0, 'objects', 'table'),
         ]
     };
 }
