@@ -9,6 +9,8 @@ export function validateRoom(value: unknown, roomId?: string): RoomConfiguration
         throw Error('房间存档版本暂不支持，原存档已保留');
     if (typeof value.roomId !== 'string' || (roomId && value.roomId !== roomId) || !Number.isInteger(value.roomVersion) || Number(value.roomVersion) < 1 || !Number.isInteger(value.revision) || Number(value.revision) < 0 || !finite(value.updatedAt) || !Array.isArray(value.objects) || value.objects.length > 500)
         throw Error('房间存档格式异常，原存档已保留');
+    if (value.seen !== undefined && (!Array.isArray(value.seen) || value.seen.length > 100 || value.seen.some(key => typeof key !== 'string')))
+        throw Error('房间存档格式异常，原存档已保留');
     const ids = new Set<string>();
     for (const o of value.objects) {
         const position = record(o) && record(o.position) ? o.position : null;

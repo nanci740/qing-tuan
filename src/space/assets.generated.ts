@@ -3,362 +3,434 @@ import type { RoomAsset } from '../types/space.ts';
 export const ROOM_ASSETS: Readonly<Record<string, RoomAsset>> = {
   "floor": {
     "path": "space/room01/floor.png",
-    "width": 433,
-    "height": 155,
+    "width": 629,
+    "height": 289,
     "anchor": {
-      "x": 216,
+      "x": 250,
       "y": 0
     }
   },
   "wallLeft": {
     "path": "space/room01/wallLeft.png",
-    "width": 221,
-    "height": 186,
+    "width": 251,
+    "height": 280,
     "anchor": {
-      "x": 220,
-      "y": 113
+      "x": 250,
+      "y": 149
     }
   },
   "wallRight": {
     "path": "space/room01/wallRight.png",
-    "width": 221,
-    "height": 186,
+    "width": 389,
+    "height": 349,
     "anchor": {
-      "x": 0,
-      "y": 113
+      "x": 10,
+      "y": 154
     }
   },
   "window": {
     "path": "space/room01/window.png",
-    "width": 83,
-    "height": 105,
+    "width": 147,
+    "height": 159,
     "anchor": {
-      "x": 0,
-      "y": 77
+      "x": 40,
+      "y": 101
     }
   },
-  "curtains": {
-    "path": "space/room01/curtains.png",
-    "width": 102,
-    "height": 117,
+  "wallLamp": {
+    "path": "space/room01/wallLamp.png",
+    "width": 45,
+    "height": 41,
     "anchor": {
-      "x": 10,
-      "y": 87
-    }
-  },
-  "windowsill": {
-    "path": "space/room01/windowsill.png",
-    "width": 93,
-    "height": 35,
-    "anchor": {
-      "x": 10,
-      "y": 3
+      "x": 19,
+      "y": 23
     }
   },
   "wallShelf": {
     "path": "space/room01/wallShelf.png",
-    "width": 54,
-    "height": 26,
+    "width": 71,
+    "height": 63,
     "anchor": {
-      "x": 43,
-      "y": 3
+      "x": 54,
+      "y": 4
     }
   },
-  "postcardsLeft": {
-    "path": "space/room01/postcardsLeft.png",
-    "width": 32,
-    "height": 23,
+  "wallClock": {
+    "path": "space/room01/wallClock.png",
+    "width": 27,
+    "height": 31,
     "anchor": {
-      "x": 31,
-      "y": 12
+      "x": 13,
+      "y": 15
+    }
+  },
+  "pictureLeft": {
+    "path": "space/room01/pictureLeft.png",
+    "width": 59,
+    "height": 60,
+    "anchor": {
+      "x": 58,
+      "y": 30
+    }
+  },
+  "photosLeft": {
+    "path": "space/room01/photosLeft.png",
+    "width": 54,
+    "height": 48,
+    "anchor": {
+      "x": 53,
+      "y": 25
+    }
+  },
+  "toteBag": {
+    "path": "space/room01/toteBag.png",
+    "width": 21,
+    "height": 42,
+    "anchor": {
+      "x": 20,
+      "y": 31
+    }
+  },
+  "corkboard": {
+    "path": "space/room01/corkboard.png",
+    "width": 52,
+    "height": 57,
+    "anchor": {
+      "x": 0,
+      "y": 30
+    }
+  },
+  "sunlight": {
+    "path": "space/room01/sunlight.png",
+    "width": 131,
+    "height": 114,
+    "anchor": {
+      "x": 58,
+      "y": -6
     }
   },
   "bed": {
     "path": "space/room01/bed.png",
-    "width": 139,
-    "height": 96,
+    "width": 186,
+    "height": 151,
     "anchor": {
-      "x": 62,
-      "y": 48
+      "x": 103,
+      "y": 56
+    }
+  },
+  "lowShelf": {
+    "path": "space/room01/lowShelf.png",
+    "width": 81,
+    "height": 72,
+    "anchor": {
+      "x": 46,
+      "y": 30
+    }
+  },
+  "photoFrame": {
+    "path": "space/room01/photoFrame.png",
+    "width": 19,
+    "height": 24,
+    "anchor": {
+      "x": 14,
+      "y": 14
+    }
+  },
+  "laundry": {
+    "path": "space/room01/laundry.png",
+    "width": 46,
+    "height": 42,
+    "anchor": {
+      "x": 22,
+      "y": 18
+    }
+  },
+  "nightstand": {
+    "path": "space/room01/nightstand.png",
+    "width": 57,
+    "height": 58,
+    "anchor": {
+      "x": 30,
+      "y": 28
+    }
+  },
+  "alarm": {
+    "path": "space/room01/alarm.png",
+    "width": 21,
+    "height": 20,
+    "anchor": {
+      "x": 7,
+      "y": 9
+    }
+  },
+  "lamp": {
+    "path": "space/room01/lamp.png",
+    "width": 27,
+    "height": 36,
+    "anchor": {
+      "x": 12,
+      "y": 25
+    }
+  },
+  "radio": {
+    "path": "space/room01/radio.png",
+    "width": 34,
+    "height": 28,
+    "anchor": {
+      "x": 9,
+      "y": 11
+    }
+  },
+  "smallPlant": {
+    "path": "space/room01/smallPlant.png",
+    "width": 13,
+    "height": 20,
+    "anchor": {
+      "x": 6,
+      "y": 12
+    }
+  },
+  "plant": {
+    "path": "space/room01/plant.png",
+    "width": 43,
+    "height": 56,
+    "anchor": {
+      "x": 22,
+      "y": 33
+    }
+  },
+  "tvStand": {
+    "path": "space/room01/tvStand.png",
+    "width": 132,
+    "height": 92,
+    "anchor": {
+      "x": 90,
+      "y": 24
+    }
+  },
+  "tv": {
+    "path": "space/room01/tv.png",
+    "width": 68,
+    "height": 79,
+    "anchor": {
+      "x": 37,
+      "y": 40
+    }
+  },
+  "cat": {
+    "path": "space/room01/cat.png",
+    "width": 20,
+    "height": 28,
+    "anchor": {
+      "x": 8,
+      "y": 19
+    }
+  },
+  "controller": {
+    "path": "space/room01/controller.png",
+    "width": 16,
+    "height": 7,
+    "anchor": {
+      "x": 5,
+      "y": -3
+    }
+  },
+  "pouf": {
+    "path": "space/room01/pouf.png",
+    "width": 35,
+    "height": 26,
+    "anchor": {
+      "x": 17,
+      "y": 4
+    }
+  },
+  "floorCushion": {
+    "path": "space/room01/floorCushion.png",
+    "width": 54,
+    "height": 33,
+    "anchor": {
+      "x": 26,
+      "y": 6
     }
   },
   "rug": {
     "path": "space/room01/rug.png",
-    "width": 204,
-    "height": 68,
+    "width": 255,
+    "height": 126,
     "anchor": {
-      "x": 90,
+      "x": 92,
       "y": 0
     }
   },
   "sofa": {
     "path": "space/room01/sofa.png",
-    "width": 124,
-    "height": 78,
+    "width": 139,
+    "height": 108,
     "anchor": {
-      "x": 40,
-      "y": 35
+      "x": 49,
+      "y": 37
+    }
+  },
+  "floorLamp": {
+    "path": "space/room01/floorLamp.png",
+    "width": 53,
+    "height": 91,
+    "anchor": {
+      "x": 26,
+      "y": 78
     }
   },
   "table": {
     "path": "space/room01/table.png",
-    "width": 95,
-    "height": 58,
+    "width": 110,
+    "height": 80,
     "anchor": {
-      "x": 34,
-      "y": 25
+      "x": 39,
+      "y": 24
     }
   },
-  "tableFront": {
-    "path": "space/room01/tableFront.png",
-    "width": 62,
-    "height": 44,
+  "handheld": {
+    "path": "space/room01/handheld.png",
+    "width": 35,
+    "height": 22,
     "anchor": {
-      "x": 31,
-      "y": 15
+      "x": 13,
+      "y": 4
+    }
+  },
+  "mug": {
+    "path": "space/room01/mug.png",
+    "width": 14,
+    "height": 12,
+    "anchor": {
+      "x": 5,
+      "y": 5
+    }
+  },
+  "phone": {
+    "path": "space/room01/phone.png",
+    "width": 20,
+    "height": 12,
+    "anchor": {
+      "x": 12,
+      "y": 1
+    }
+  },
+  "sideTable": {
+    "path": "space/room01/sideTable.png",
+    "width": 59,
+    "height": 55,
+    "anchor": {
+      "x": 30,
+      "y": 24
     }
   },
   "desk": {
     "path": "space/room01/desk.png",
-    "width": 98,
-    "height": 67,
+    "width": 108,
+    "height": 90,
     "anchor": {
-      "x": 36,
-      "y": 33
-    }
-  },
-  "chair": {
-    "path": "space/room01/chair.png",
-    "width": 50,
-    "height": 49,
-    "anchor": {
-      "x": 26,
-      "y": 31
+      "x": 41,
+      "y": 34
     }
   },
   "crt": {
     "path": "space/room01/crt.png",
-    "width": 46,
-    "height": 36,
+    "width": 54,
+    "height": 51,
     "anchor": {
-      "x": 17,
-      "y": 22
+      "x": 26,
+      "y": 23
     }
   },
   "keyboard": {
     "path": "space/room01/keyboard.png",
-    "width": 42,
-    "height": 17,
+    "width": 47,
+    "height": 26,
     "anchor": {
-      "x": 10,
+      "x": 11,
       "y": 2
     }
   },
-  "tower": {
-    "path": "space/room01/tower.png",
-    "width": 35,
-    "height": 32,
+  "mouse": {
+    "path": "space/room01/mouse.png",
+    "width": 7,
+    "height": 5,
     "anchor": {
-      "x": 21,
-      "y": 20
-    }
-  },
-  "tvStand": {
-    "path": "space/room01/tvStand.png",
-    "width": 108,
-    "height": 58,
-    "anchor": {
-      "x": 77,
-      "y": 20
-    }
-  },
-  "tv": {
-    "path": "space/room01/tv.png",
-    "width": 66,
-    "height": 54,
-    "anchor": {
-      "x": 46,
-      "y": 34
-    }
-  },
-  "bookcase": {
-    "path": "space/room01/bookcase.png",
-    "width": 48,
-    "height": 82,
-    "anchor": {
-      "x": 18,
-      "y": 65
-    }
-  },
-  "cabinet": {
-    "path": "space/room01/cabinet.png",
-    "width": 65,
-    "height": 83,
-    "anchor": {
-      "x": 28,
-      "y": 60
-    }
-  },
-  "nightstand": {
-    "path": "space/room01/nightstand.png",
-    "width": 40,
-    "height": 36,
-    "anchor": {
-      "x": 18,
-      "y": 22
-    }
-  },
-  "plant": {
-    "path": "space/room01/plant.png",
-    "width": 34,
-    "height": 46,
-    "anchor": {
-      "x": 17,
-      "y": 35
-    }
-  },
-  "smallPlant": {
-    "path": "space/room01/smallPlant.png",
-    "width": 19,
-    "height": 25,
-    "anchor": {
-      "x": 8,
-      "y": 18
-    }
-  },
-  "lamp": {
-    "path": "space/room01/lamp.png",
-    "width": 19,
-    "height": 30,
-    "anchor": {
-      "x": 8,
-      "y": 23
-    }
-  },
-  "clock": {
-    "path": "space/room01/clock.png",
-    "width": 22,
-    "height": 16,
-    "anchor": {
-      "x": 7,
-      "y": 8
+      "x": 3,
+      "y": 0
     }
   },
   "books": {
     "path": "space/room01/books.png",
-    "width": 28,
-    "height": 14,
-    "anchor": {
-      "x": 11,
-      "y": 5
-    }
-  },
-  "cup": {
-    "path": "space/room01/cup.png",
-    "width": 15,
-    "height": 12,
-    "anchor": {
-      "x": 5,
-      "y": 6
-    }
-  },
-  "console": {
-    "path": "space/room01/console.png",
     "width": 33,
-    "height": 16,
+    "height": 24,
     "anchor": {
-      "x": 12,
-      "y": 4
+      "x": 13,
+      "y": 8
     }
   },
-  "cartridge": {
-    "path": "space/room01/cartridge.png",
-    "width": 15,
-    "height": 8,
+  "chair": {
+    "path": "space/room01/chair.png",
+    "width": 59,
+    "height": 62,
     "anchor": {
-      "x": 6,
-      "y": 2
+      "x": 30,
+      "y": 31
     }
   },
-  "plush": {
-    "path": "space/room01/plush.png",
-    "width": 16,
-    "height": 21,
+  "bookcase": {
+    "path": "space/room01/bookcase.png",
+    "width": 62,
+    "height": 140,
     "anchor": {
-      "x": 8,
-      "y": 17
+      "x": 30,
+      "y": 108
     }
   },
-  "cushion": {
-    "path": "space/room01/cushion.png",
-    "width": 38,
-    "height": 17,
+  "wardrobe": {
+    "path": "space/room01/wardrobe.png",
+    "width": 92,
+    "height": 172,
     "anchor": {
-      "x": 18,
-      "y": 4
+      "x": 41,
+      "y": 124
     }
   },
-  "pictureLeft": {
-    "path": "space/room01/pictureLeft.png",
-    "width": 43,
-    "height": 43,
+  "door": {
+    "path": "space/room01/door.png",
+    "width": 50,
+    "height": 127,
     "anchor": {
-      "x": 42,
-      "y": 28
+      "x": 39,
+      "y": 103
     }
   },
-  "noticeboard": {
-    "path": "space/room01/noticeboard.png",
-    "width": 37,
-    "height": 40,
+  "shoeBox": {
+    "path": "space/room01/shoeBox.png",
+    "width": 44,
+    "height": 38,
     "anchor": {
-      "x": 0,
-      "y": 27
+      "x": 20,
+      "y": 14
     }
   },
-  "wallClock": {
-    "path": "space/room01/wallClock.png",
-    "width": 23,
-    "height": 31,
+  "entryMat": {
+    "path": "space/room01/entryMat.png",
+    "width": 64,
+    "height": 32,
     "anchor": {
-      "x": 11,
-      "y": 30
-    }
-  },
-  "sideShelf": {
-    "path": "space/room01/sideShelf.png",
-    "width": 43,
-    "height": 35,
-    "anchor": {
-      "x": 19,
-      "y": 20
+      "x": 26,
+      "y": 0
     }
   },
   "mat": {
     "path": "space/room01/mat.png",
-    "width": 51,
-    "height": 17,
+    "width": 64,
+    "height": 32,
     "anchor": {
-      "x": 20,
+      "x": 21,
       "y": 0
-    }
-  },
-  "radio": {
-    "path": "space/room01/radio.png",
-    "width": 31,
-    "height": 21,
-    "anchor": {
-      "x": 8,
-      "y": 10
-    }
-  },
-  "basket": {
-    "path": "space/room01/basket.png",
-    "width": 30,
-    "height": 21,
-    "anchor": {
-      "x": 13,
-      "y": 10
     }
   }
 };

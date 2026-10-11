@@ -29,6 +29,8 @@ export interface RoomConfiguration {
     revision: number;
     updatedAt: number;
     objects: RoomObject[];
+    /** 已经出现过的一次性提示（例如第一次进小窝的欢迎词）。 */
+    seen?: string[];
 }
 export interface RoomAsset {
     path: string;
