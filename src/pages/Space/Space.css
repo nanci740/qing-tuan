@@ -9,11 +9,30 @@
 /* 房间铺满顶栏下方到画面底部（底部导航在小窝里收起来），没有外框；放大缩小、拖动都在整片画面上。 */
 .space-page .space-content { flex: 1; min-width: 0; min-height: 0; display: flex; }
 .space-page .space-initializing { display: grid; place-items: center; flex: 1; font-size: 11px; color: var(--color-muted); }
-.space-page .space-room { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; }
+/* --space-bottom：浮在房间底部的东西离底边多远；之后加底部工具列时只改这里。 */
+.space-page .space-room { --space-bottom: max(12px, env(safe-area-inset-bottom)); --space-reset-size: 46px; position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; }
 .space-page .space-stage { position: relative; flex: 1; min-width: 0; min-height: 0; overflow: hidden; touch-action: none; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; cursor: grab; }
 .space-page .space-stage:active { cursor: grabbing; }
 .space-page .space-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .space-page .space-loading { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--color-muted); font-size: 11px; background: var(--color-page); pointer-events: none; }
 /* 右下角浮着的“归位”小方钮，用全站白键的正面和投影。 */
-.space-page .space-reset { position: absolute; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 46px; height: 46px; padding: 0; border: 1px solid var(--color-muted); border-radius: 6px; background: var(--effect-face-white); color: var(--color-text); font-size: 9px; letter-spacing: .5px; box-shadow: var(--effect-button-shadow); }
+.space-page .space-reset { position: absolute; right: 12px; bottom: var(--space-bottom); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: var(--space-reset-size); height: var(--space-reset-size); padding: 0; border: 1px solid var(--color-muted); border-radius: 6px; background: var(--effect-face-white); color: var(--color-text); font-size: 9px; letter-spacing: .5px; box-shadow: var(--effect-button-shadow); }
 .space-page .space-reset > svg { display: block; width: 18px; height: 18px; }
+/* 底部浮层：左下角通知叠在对话框上面，整排让开右下角的归位钮。只有对话框能点，其余地方照样可以拖动房间。 */
+.space-page .space-hud { position: absolute; left: 12px; right: calc(24px + var(--space-reset-size)); bottom: var(--space-bottom); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; pointer-events: none; }
+/* 古早游戏对话框：直角像素框、逐字打出、句尾闪烁的 ▼。 */
+.space-page .space-dialogue { position: relative; align-self: stretch; max-width: 560px; padding-top: 10px; pointer-events: auto; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.space-page .space-dialogue:focus-visible .space-dialogue-frame { outline: 1px dashed var(--color-text); outline-offset: 3px; }
+.space-page .space-dialogue-frame { position: relative; min-height: 64px; padding: 12px 16px 18px; background: var(--color-surface); border: 2px solid var(--color-text); box-shadow: inset 0 0 0 2px var(--color-surface), inset 0 0 0 4px var(--color-accent-soft); clip-path: polygon(2px 0, calc(100% - 2px) 0, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 0 calc(100% - 2px), 0 2px); }
+.space-page .space-dialogue-name { position: absolute; left: 12px; top: 0; z-index: 1; padding: 1px 8px; background: var(--color-accent-strong); color: var(--color-surface); border: 2px solid var(--color-text); font-size: 11px; line-height: 1.4; letter-spacing: .5px; }
+.space-page .space-dialogue-text { margin: 0; min-height: 1.6em; font-size: 13px; line-height: 1.6; letter-spacing: .5px; white-space: pre-wrap; color: var(--color-text); }
+.space-page .space-dialogue-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+.space-page .space-dialogue-next { position: absolute; right: 12px; bottom: 6px; font-size: 9px; line-height: 1; color: var(--color-accent-strong); animation: space-dialogue-blink 1s steps(1) infinite; }
+@keyframes space-dialogue-blink { 50% { opacity: 0; } }
+/* 左下角的小通知：像素小图示加一句话，几秒后一格一格淡掉。 */
+.space-page .space-notices { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.space-page .space-notice { display: flex; align-items: center; gap: 6px; max-width: 100%; padding: 5px 10px 5px 8px; background: var(--color-surface); color: var(--color-text); border: 2px solid var(--color-text); font-size: 11px; line-height: 1.4; clip-path: polygon(2px 0, calc(100% - 2px) 0, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 0 calc(100% - 2px), 0 2px); animation: space-notice-life 3.6s steps(1) forwards; }
+.space-page .space-notice-icon { flex: 0 0 auto; width: 14px; height: 14px; fill: var(--color-accent-strong); }
+.space-page .space-notice[data-tone="warn"] .space-notice-icon { fill: var(--color-danger); }
+@keyframes space-notice-life { 0% { opacity: 0; transform: translateY(4px); } 4% { opacity: 1; transform: none; } 84% { opacity: .66; } 90% { opacity: .33; } 96%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .space-page .space-dialogue-next { animation: none; } .space-page .space-notice { animation: none; } }

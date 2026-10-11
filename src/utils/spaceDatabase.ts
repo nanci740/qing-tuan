@@ -126,6 +126,10 @@ export async function updateRoom(roomId: string, change: (room: RoomConfiguratio
         };
     }, factory);
 }
+/** 记下一次性提示已经出现过，跟房间存在同一份存档里。 */
+export async function markRoomSeen(roomId: string, key: string, expectedRevision: number, factory?: IDBFactory): Promise<RoomConfiguration> {
+    return updateRoom(roomId, room => ({ ...room, seen: [...new Set([...(room.seen ?? []), key])] }), expectedRevision, factory);
+}
 export type RoomObjectPatch = Partial<Omit<RoomObject, 'id' | 'position'>> & {
     position?: Partial<RoomObject['position']>;
 };
