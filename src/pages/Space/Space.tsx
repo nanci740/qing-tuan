@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { useSpaceRoom } from '../../hooks/useSpaceRoom';
 import { RoomCanvas } from './RoomCanvas';
@@ -7,25 +7,15 @@ import './Space.css';
 export function Space({ onClose }: {
     onClose: () => void;
 }) {
-    const { room, status, warning } = useSpaceRoom(), back = useRef<HTMLButtonElement>(null), [dockGap, setDockGap] = useState(104);
+    const { room, status, warning } = useSpaceRoom(), back = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         back.current?.focus();
-        const dock = document.querySelector<HTMLElement>('#dockBar');
-        const measure = () => { if (dock)
-            setDockGap(Math.max(0, window.innerHeight - dock.getBoundingClientRect().top + 10)); };
-        const observer = new ResizeObserver(measure);
-        if (dock)
-            observer.observe(dock);
-        window.addEventListener('resize', measure);
-        window.visualViewport?.addEventListener('resize', measure);
-        measure();
-        return () => { observer.disconnect(); window.removeEventListener('resize', measure); window.visualViewport?.removeEventListener('resize', measure); if (focused?.isConnected)
-            focused.focus(); };
+        return () => { if (focused?.isConnected) focused.focus(); };
     }, []);
     // 存档相关的提示一律用小弹窗，不留在页面上。
     useEffect(() => { if (warning) showToast(warning); }, [warning]);
-    return <section id="spacePage" className="space-page" style={{ paddingBottom: dockGap }} aria-labelledby="spaceTitle" onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onKeyDown={e => { if (e.key === 'Escape') {
+    return <section id="spacePage" className="space-page" aria-labelledby="spaceTitle" onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()} onPointerUp={e => e.stopPropagation()} onKeyDown={e => { if (e.key === 'Escape') {
         e.stopPropagation();
         onClose();
     } }}>

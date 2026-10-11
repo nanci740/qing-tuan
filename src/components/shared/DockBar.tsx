@@ -8,7 +8,8 @@ export function DockBar() {
   const surface = useChatNavigationSurface('dock', 'dock-bar');
   const appearance = useAppearance();
   const navigation = useSettingsNavigation();
-  return <nav {...surface} id="dockBar" onClickCapture={event => {
+  // 小窝打开时底部导航收起来（沿用聊天收起导航的同一种样子），之后那里会放小窝自己的工具列。
+  return <nav {...surface} className={navigation.spaceOpen ? `${surface.className} chat-hidden` : surface.className} aria-hidden={navigation.spaceOpen || surface['aria-hidden']} inert={navigation.spaceOpen} id="dockBar" onClickCapture={event => {
     const item = (event.target as Element).closest<HTMLElement>('.dock-item');
     if (item) {
       event.preventDefault();

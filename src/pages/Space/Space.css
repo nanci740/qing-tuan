@@ -6,7 +6,7 @@
 .space-page .space-back { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; flex: 0 0 auto; border: 0; background: none; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .space-page .space-titlebar h1 { display: flex; align-items: baseline; flex: 1; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .5px; color: var(--color-surface); text-shadow: var(--effect-text-white); }
 .space-page .space-titlebar small { margin-left: 1px; font-size: 11px; font-weight: 500; opacity: .75; }
-/* 房间铺满顶栏下方到底部导航上方，没有外框；放大缩小、拖动都在整片画面上。 */
+/* 房间铺满顶栏下方到画面底部（底部导航在小窝里收起来），没有外框；放大缩小、拖动都在整片画面上。 */
 .space-page .space-content { flex: 1; min-width: 0; min-height: 0; display: flex; }
 .space-page .space-initializing { display: grid; place-items: center; flex: 1; font-size: 11px; color: var(--color-muted); }
 .space-page .space-room { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; }
@@ -15,5 +15,5 @@
 .space-page .space-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .space-page .space-loading { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--color-muted); font-size: 11px; background: var(--color-page); pointer-events: none; }
 /* 右下角浮着的“归位”小方钮，用全站白键的正面和投影。 */
-.space-page .space-reset { position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 46px; height: 46px; padding: 0; border: 1px solid var(--color-muted); border-radius: 6px; background: var(--effect-face-white); color: var(--color-text); font-size: 9px; letter-spacing: .5px; box-shadow: var(--effect-button-shadow); }
+.space-page .space-reset { position: absolute; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 46px; height: 46px; padding: 0; border: 1px solid var(--color-muted); border-radius: 6px; background: var(--effect-face-white); color: var(--color-text); font-size: 9px; letter-spacing: .5px; box-shadow: var(--effect-button-shadow); }
 .space-page .space-reset > svg { display: block; width: 18px; height: 18px; }
