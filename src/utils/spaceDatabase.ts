@@ -1,6 +1,6 @@
 import type { RoomConfiguration, RoomObject } from '../types/space.ts';
 import { ROOM_01_ID } from '../space/rooms/room01.ts';
-import { createDefaultRoom } from '../space/rooms/index.ts';
+import { createDefaultRoom, upgradeRoom } from '../space/rooms/index.ts';
 import { validateRoom } from '../space/validation.ts';
 export const SPACE_DATABASE_NAME = 'QingTuanSpaceDB';
 export const SPACE_DATABASE_VERSION = 1;
@@ -77,8 +77,11 @@ export async function readRoom(roomId: string, factory?: IDBFactory): Promise<Ro
 }
 export async function loadOrInitializeRoom(roomId = ROOM_01_ID, factory?: IDBFactory): Promise<RoomConfiguration> {
     const saved = await readRoom(roomId, factory);
-    if (saved)
-        return saved;
+    if (saved) {
+        if (!upgradeRoom(saved)) return saved;
+        // 换成新版布置也走一般的存档流程：重新检查、版本号加一，别的页面同时改过就不覆盖。
+        return updateRoom(roomId, room => upgradeRoom(room) ?? room, saved.revision, factory);
+    }
     // Recheck within the write transaction: another tab may have initialized first.
     return transaction('readwrite', (store, result, fail) => {
         const req = store.get(roomId);

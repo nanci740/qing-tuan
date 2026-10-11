@@ -49,6 +49,14 @@
     {
       "name": "database contains configurations, not screenshots",
       "passed": true
+    },
+    {
+      "name": "one-time prompts are remembered in the room save and stale tabs cannot overwrite them",
+      "passed": true
+    },
+    {
+      "name": "an older default layout is upgraded once and keeps the seen prompts",
+      "passed": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "name": "480 × 320 complete scene and separate assets",
+      "name": "632 × 444 complete scene and separate assets",
       "passed": true
     },
     {
@@ -17,7 +17,7 @@
       "passed": true
     },
     {
-      "name": "rug, supported props, and table front have correct ordering",
+      "name": "rug, supported props and furniture behind each other have correct ordering",
       "passed": true
     },
     {
@@ -25,11 +25,15 @@
       "passed": true
     },
     {
-      "name": "pinch center stays anchored and zoom is limited to 2.5",
+      "name": "pinch center stays anchored and zoom is limited to 2.5× the cover zoom",
       "passed": true
     },
     {
       "name": "invalid, duplicate, cyclic and future-version saves are rejected",
+      "passed": true
+    },
+    {
+      "name": "seen keys must be a list of strings",
       "passed": true
     },
     {

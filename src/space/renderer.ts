@@ -25,7 +25,7 @@ export function composeRoom(room: RoomConfiguration, images: Map<string, HTMLIma
     }
     return canvas;
 }
-/** Logical scene is always 480×320. The visible bitmap follows the element's CSS
+/** Logical scene is SCENE_WIDTH×SCENE_HEIGHT. The visible bitmap follows the element's CSS
  * bounds × DPR; only drawImage applies the camera, using nearest-neighbour. */
 export function paintRoom(canvas: HTMLCanvasElement, scene: HTMLCanvasElement, v: RoomViewport, camera: RoomCamera) {
     const w = Math.max(1, Math.round(v.width * v.dpr)), h = Math.max(1, Math.round(v.height * v.dpr));
@@ -39,7 +39,6 @@ export function paintRoom(canvas: HTMLCanvasElement, scene: HTMLCanvasElement, v
     c.imageSmoothingEnabled = false;
     c.clearRect(0, 0, w, h);
     const scale = fitScale(v) * camera.zoom;
-    const pixelUnit = Math.max(1, Math.round(SCENE_HEIGHT * scale * v.dpr / 2));
-    const dw = pixelUnit * 3, dh = pixelUnit * 2;
+    const dw = Math.max(1, Math.round(SCENE_WIDTH * scale * v.dpr)), dh = Math.max(1, Math.round(SCENE_HEIGHT * scale * v.dpr));
     c.drawImage(scene, Math.round((w - dw) / 2 + camera.x * v.dpr), Math.round((h - dh) / 2 + camera.y * v.dpr), dw, dh);
 }
