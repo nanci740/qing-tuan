@@ -26,7 +26,8 @@ export function composeRoom(room: RoomConfiguration, images: Map<string, HTMLIma
     return canvas;
 }
 /** Logical scene is SCENE_WIDTH×SCENE_HEIGHT. The visible bitmap follows the element's CSS
- * bounds × DPR; only drawImage applies the camera, using nearest-neighbour. */
+ * bounds × DPR; only drawImage applies the camera. The scene itself is composed pixel-exact,
+ * but this upscale is bilinear on purpose: a soft, old-game look instead of hard pixel edges. */
 export function paintRoom(canvas: HTMLCanvasElement, scene: HTMLCanvasElement, v: RoomViewport, camera: RoomCamera) {
     const w = Math.max(1, Math.round(v.width * v.dpr)), h = Math.max(1, Math.round(v.height * v.dpr));
     if (canvas.width !== w)
@@ -36,7 +37,8 @@ export function paintRoom(canvas: HTMLCanvasElement, scene: HTMLCanvasElement, v
     const c = canvas.getContext('2d');
     if (!c)
         return;
-    c.imageSmoothingEnabled = false;
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'low';
     c.clearRect(0, 0, w, h);
     const scale = fitScale(v) * camera.zoom;
     const dw = Math.max(1, Math.round(SCENE_WIDTH * scale * v.dpr)), dh = Math.max(1, Math.round(SCENE_HEIGHT * scale * v.dpr));
