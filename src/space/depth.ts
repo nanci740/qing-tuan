@@ -1,6 +1,6 @@
 import type { RoomObject } from '../types/space.ts';
 const layers = { architecture: 0, ground: 1, objects: 2, foreground: 3 };
-const architecture: Record<string, number> = { floor: 0, wallLeft: 1, wallRight: 2, window: 3, curtainLeft: 4, curtainRight: 5, curtainRod: 6, door: 7 };
+const architecture: Record<string, number> = { floor: 0, wall: 1, window: 2, curtains: 3 };
 /** Support groups remain together; lower contents precede the body, top contents
  * follow it, and explicit front parts close the group. Furniture groups are ordered
  * by footprint (whatever sits fully behind another and overlaps it on screen comes
@@ -17,16 +17,17 @@ export function orderRoomObjects(objects: readonly RoomObject[]): RoomObject[] {
         current = parent;
     } return current; }
     const roots = new Map(objects.map(o => [o.id, owner(o)]));
-    function groundDepth(o: RoomObject) { return o.position.x + o.position.y + (o.footprint?.width ?? 0) + (o.footprint?.depth ?? 0) + o.depthBias; }
+    /** 正面视角：越靠前（y 越大）越晚画。 */
+    function groundDepth(o: RoomObject) { return o.position.y + (o.footprint?.depth ?? 0) + o.depthBias; }
     function phase(o: RoomObject) { if (o.state.renderPhase === 'front')
         return 2; if (!o.parentId)
         return 0; return o.position.z <= roots.get(o.id)!.position.z ? -1 : 1; }
     const extent = (o: RoomObject) => ({ x1: o.position.x, y1: o.position.y, x2: o.position.x + (o.footprint?.width ?? 0), y2: o.position.y + (o.footprint?.depth ?? 0) });
-    /** a 整个在 b 的后面（x 或 y 方向完全靠墙那侧），而且两者在画面上左右有重叠时才算。 */
+    /** a 整个在 b 的后面（y 方向完全靠后墙那侧），而且两者在画面上左右有重叠时才算。 */
     function behind(a: RoomObject, b: RoomObject) {
         const p = extent(a), q = extent(b);
-        if (p.x1 - q.y2 >= q.x2 - q.y1 || q.x1 - q.y2 >= p.x2 - p.y1) return false;
-        return p.x2 <= q.x1 + .001 || p.y2 <= q.y1 + .001;
+        if (p.x2 <= q.x1 || q.x2 <= p.x1) return false;
+        return p.y2 <= q.y1 + .001;
     }
     function sortRoots(list: RoomObject[]) {
         const rest = [...list].sort((a, b) => groundDepth(a) - groundDepth(b) || a.id.localeCompare(b.id)), out: RoomObject[] = [];

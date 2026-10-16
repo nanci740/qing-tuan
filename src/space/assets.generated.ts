@@ -3,74 +3,56 @@ import type { RoomAsset } from '../types/space.ts';
 export const ROOM_ASSETS: Readonly<Record<string, RoomAsset>> = {
   "floor": {
     "path": "space/room01/floor.png",
-    "width": 831,
-    "height": 573,
+    "width": 320,
+    "height": 224,
     "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 16,
+      "y": 80
     }
   },
-  "wallLeft": {
-    "path": "space/room01/wallLeft.png",
-    "width": 831,
-    "height": 573,
+  "wall": {
+    "path": "space/room01/wall.png",
+    "width": 320,
+    "height": 224,
     "anchor": {
-      "x": 372,
-      "y": 205
-    }
-  },
-  "wallRight": {
-    "path": "space/room01/wallRight.png",
-    "width": 831,
-    "height": 573,
-    "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 16,
+      "y": 80
     }
   },
   "window": {
     "path": "space/room01/window.png",
-    "width": 831,
-    "height": 573,
+    "width": 320,
+    "height": 224,
     "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 16,
+      "y": 80
     }
   },
-  "curtainLeft": {
-    "path": "space/room01/curtainLeft.png",
-    "width": 831,
-    "height": 573,
+  "curtains": {
+    "path": "space/room01/curtains.png",
+    "width": 320,
+    "height": 224,
     "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 16,
+      "y": 80
     }
   },
-  "curtainRight": {
-    "path": "space/room01/curtainRight.png",
-    "width": 831,
-    "height": 573,
+  "frame": {
+    "path": "space/room01/frame.png",
+    "width": 320,
+    "height": 224,
     "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 16,
+      "y": 80
     }
   },
-  "curtainRod": {
-    "path": "space/room01/curtainRod.png",
-    "width": 831,
-    "height": 573,
+  "bed": {
+    "path": "space/room01/bed.png",
+    "width": 64,
+    "height": 64,
     "anchor": {
-      "x": 372,
-      "y": 205
-    }
-  },
-  "door": {
-    "path": "space/room01/door.png",
-    "width": 831,
-    "height": 573,
-    "anchor": {
-      "x": 372,
-      "y": 205
+      "x": 1,
+      "y": 28
     }
   }
 };
