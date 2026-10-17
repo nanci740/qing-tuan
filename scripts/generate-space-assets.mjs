@@ -8,7 +8,8 @@ import { SCENE_WIDTH as W, SCENE_HEIGHT as H, SCENE_ORIGIN } from '../src/space/
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'public/space/room01');
 const LAYERS=['floor','wall','window','curtains','frame'];
-const FURNITURE={bed:{x:1,y:28}};
+// 床拆成后半（床头、枕头）和前半（被子、床尾），床头柜夹在中间，被子才能盖过床头柜。
+const FURNITURE={bedBack:{x:1,y:28},bedFront:{x:1,y:32},nightstand:{x:0,y:15}};
 const assets={};
 const size=id=>{const b=fs.readFileSync(path.join(dir,`${id}.png`));return {width:b.readUInt32BE(16),height:b.readUInt32BE(20)};};
 for(const id of LAYERS){

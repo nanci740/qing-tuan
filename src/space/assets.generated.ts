@@ -46,13 +46,31 @@ export const ROOM_ASSETS: Readonly<Record<string, RoomAsset>> = {
       "y": 80
     }
   },
-  "bed": {
-    "path": "space/room01/bed.png",
+  "bedBack": {
+    "path": "space/room01/bedBack.png",
     "width": 64,
     "height": 64,
     "anchor": {
       "x": 1,
       "y": 28
+    }
+  },
+  "bedFront": {
+    "path": "space/room01/bedFront.png",
+    "width": 64,
+    "height": 64,
+    "anchor": {
+      "x": 1,
+      "y": 32
+    }
+  },
+  "nightstand": {
+    "path": "space/room01/nightstand.png",
+    "width": 24,
+    "height": 26,
+    "anchor": {
+      "x": 0,
+      "y": 15
     }
   }
 };
