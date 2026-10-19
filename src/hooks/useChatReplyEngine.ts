@@ -252,7 +252,6 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         try {
             const requestOptions = {
                 feature: 'chat',
-                stream: false,
                 contextMessages: requestPreferences.contextMessages,
                 ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {})
             };

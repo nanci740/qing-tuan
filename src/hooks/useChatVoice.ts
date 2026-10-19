@@ -148,7 +148,7 @@ export function useChatVoice(messages:MessageNodesApi){
         const data = await performChatRequest([
             {role:'system',content:'Translate the user text into Simplified Chinese (zh-CN). Return only the translation without commentary.'},
             {role:'user',content:source}
-        ], {...config, model, stream:false, temperature:0.2});
+        ], {...config, model, temperature:0.2});
         if (requestEpoch !== media.current.voiceTextEpoch) return '';
         const translated = extractChatAiReply(data);
         if (!translated || Array.isArray(translated)) throw new Error('接口没有返回译文');

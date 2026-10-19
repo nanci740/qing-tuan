@@ -105,30 +105,29 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
         if (!reader) return response.json();
 
         const decoder = new TextDecoder();
-        let buffer = '';
-        let collected = '';
+        let buffer = '', raw = '', sawData = false;
+        let collected = '', reasoning = '', finish = '';
         let finalModel = config.model;
         let inputTokens = 0, outputTokens = 0, totalTokens = 0;
+        let streamError = '';
 
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            const parts = buffer.split('\n');
-            buffer = parts.pop() || '';
-
-            for (const raw of parts) {
-                const line = raw.trim();
-                if (!line.startsWith('data:')) continue;
+        const handle = (rawLine: string) => {
+                const line = rawLine.trim();
+                if (!line.startsWith('data:')) return;
+                sawData = true;
                 const payload = line.slice(5).trim();
-                if (!payload || payload === '[DONE]') continue;
+                if (!payload || payload === '[DONE]') return;
 
                 try {
-                    const data: ApiResponse = JSON.parse(payload);
+                    const data: ApiResponse & { error?: { message?: string } | string; delta?: { stop_reason?: string; thinking?: string }; choices?: { delta?: { reasoning_content?: string; reasoning?: string } }[] } = JSON.parse(payload);
                     let chunk = '';
+                    // 有的中转站把错误塞在串流里，照样当错误处理。
+                    if (data?.error) { streamError = typeof data.error === 'string' ? data.error : data.error.message || '接口返回错误'; return; }
 
                     if (config.provider === 'claude') {
                         chunk = data?.delta?.text || data?.content_block?.text || '';
+                        reasoning += data?.delta?.thinking || '';
+                        finish = data?.delta?.stop_reason || finish;
                         finalModel = data?.message?.model || data?.model || finalModel;
                         if (data?.message?.usage) {
                             inputTokens = data.message.usage.input_tokens || inputTokens;
@@ -139,7 +138,10 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
                             outputTokens = data.usage.output_tokens || outputTokens;
                         }
                     } else {
-                        chunk = data?.choices?.[0]?.delta?.content || '';
+                        const choice = data?.choices?.[0];
+                        chunk = choice?.delta?.content || '';
+                        reasoning += choice?.delta?.reasoning_content || choice?.delta?.reasoning || '';
+                        finish = choice?.finish_reason || finish;
                         finalModel = data?.model || finalModel;
                         if (data?.usage) {
                             inputTokens = data.usage.prompt_tokens || inputTokens;
@@ -153,13 +155,31 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
                         if (typeof onChunk === 'function') onChunk(chunk, collected);
                     }
                 } catch (err) {}
-            }
+        };
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            const text = decoder.decode(value, { stream: true });
+            if (!sawData && raw.length < 2000000) raw += text;
+            buffer += text;
+            const parts = buffer.split('\n');
+            buffer = parts.pop() || '';
+            parts.forEach(handle);
+        }
+        handle(buffer);
+
+        if (streamError) throw new Error(streamError);
+        // 接口不支持串流、直接回了一整段 JSON 时，照非串流的结果用。
+        if (!sawData) {
+            try { return JSON.parse(raw); } catch (err) {}
         }
 
         totalTokens = totalTokens || inputTokens + outputTokens;
         return {
             model: finalModel,
             text: collected,
+            choices: [{ message: { content: collected, ...(reasoning ? { reasoning_content: reasoning } : {}) }, finish_reason: finish }],
             usage: { input_tokens: inputTokens, output_tokens: outputTokens, total_tokens: totalTokens },
             stream: true
         };
