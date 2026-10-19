@@ -81,5 +81,23 @@ export const ROOM_ASSETS: Readonly<Record<string, RoomAsset>> = {
       "x": 0,
       "y": 21
     }
+  },
+  "bookshelf": {
+    "path": "space/room01/bookshelf.png",
+    "width": 29,
+    "height": 59,
+    "anchor": {
+      "x": 2,
+      "y": 48
+    }
+  },
+  "plant": {
+    "path": "space/room01/plant.png",
+    "width": 12,
+    "height": 28,
+    "anchor": {
+      "x": 1,
+      "y": 20
+    }
   }
 };
