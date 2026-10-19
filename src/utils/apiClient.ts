@@ -1,4 +1,5 @@
 import type { ApiConfig, ApiConnection, ApiMessage, ApiResponse, ApiChunkHandler } from '../types/api';
+import { isGeminiNative, geminiHeaders, geminiRequest, normalizeGeminiResponse, parseGeminiStream, fetchGeminiModels } from './geminiNative';
 
 export function cleanBaseUrl(value: unknown) {
         return String(value || '').trim().replace(/\/+$/, '');
@@ -82,6 +83,7 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
 
     export async function fetchModels(config: ApiConnection): Promise<string[]> {
         validateConfig(config, false);
+        if (isGeminiNative(config)) return fetchGeminiModels(config);
         let response;
         try {
             response = await fetch(`${config.baseUrl}/models`, {
@@ -171,6 +173,19 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
         // 单次回复上限留空或填 0 表示不限字数：OpenAI 兼容接口不送上限，用模型自己的；Claude 必须送，给 8192。
         // 思考型模型（如 Gemini 3.1 Pro）的思考也算在上限里，上限太小会想完就没额度，正文是空的。
         const unlimited = Number(config.maxTokens) === 0;
+
+        if (isGeminiNative(config)) {
+            const { url, body: nativeBody } = geminiRequest(inputMessages, config, unlimited);
+            let nativeResponse;
+            try {
+                nativeResponse = await fetchWithTimeout(url, { method: 'POST', headers: geminiHeaders(config), body: JSON.stringify(nativeBody) }, config.timeoutSeconds);
+            } catch (err) {
+                if (err instanceof Error && err.message === '请求超时') throw err;
+                throw new Error('无法连接接口；请检查地址、网络或浏览器 CORS 限制');
+            }
+            if (!nativeResponse.ok) throw new Error(await parseApiError(nativeResponse));
+            return config.stream ? parseGeminiStream(nativeResponse, config.model, onChunk) : normalizeGeminiResponse(await nativeResponse.json(), config.model);
+        }
 
         if (config.provider === 'claude') {
             endpoint = `${config.baseUrl}/messages`;

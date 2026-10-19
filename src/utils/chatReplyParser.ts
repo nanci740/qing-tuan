@@ -11,7 +11,8 @@ export function emptyChatReplyReason(data: unknown): string {
     const block = String(fields(source.promptFeedback ?? source.prompt_feedback).blockReason ?? '').trim();
     const thought = [message.reasoning_content, message.reasoning, message.thinking].some(value => typeof value === 'string' && value.trim())
         || (Array.isArray(source.content) && source.content.some(part => fields(part).type === 'thinking'))
-        || (Array.isArray(fields(candidate.content).parts) && (fields(candidate.content).parts as unknown[]).some(part => fields(part).thought === true));
+        || (Array.isArray(fields(candidate.content).parts) && (fields(candidate.content).parts as unknown[]).some(part => fields(part).thought === true))
+        || Number(fields(fields(source.usage).completion_tokens_details).reasoning_tokens) > 0;
     const tag = finish ? `（${finish}）` : '';
     if (/^(length|max_tokens|max_completion_tokens|max_output_tokens)$/i.test(finish))
         return `接口没有返回文字回复：输出字数用完了${tag}${thought ? '，模型想完就没额度写正文' : ''}，可以换个非思考型模型再试`;
