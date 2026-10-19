@@ -122,7 +122,7 @@ function useApiState() {
   }
   async function testConnection() {
     setLoading('test',true); setStatus({ type: '', title: '正在测试连接', desc: '正在发送极短测试请求…', badge: 'WAIT' });
-    try { const config = readFormConfig(), data = await requestChat([{ role: 'user', content: 'Reply with OK only.' }], { model: config.model, temperature: 0, maxTokens: 8, topP: 1, stream: false, fallbackEnabled: false }); setStatus({ type: 'ok', title: '连接正常', desc: data?.model || config.model || '接口返回成功', badge: 'ONLINE' }); saveConfig(true); }
+    try { const config = readFormConfig(), data = await requestChat([{ role: 'user', content: 'Reply with OK only.' }], { model: config.model, temperature: 0, maxTokens: 8, topP: 1, fallbackEnabled: false }); setStatus({ type: 'ok', title: '连接正常', desc: data?.model || config.model || '接口返回成功', badge: 'ONLINE' }); saveConfig(true); }
     catch (error) { setStatus({ type: 'error', title: '连接失败', desc: errMessage(error)||'未知错误', badge: 'ERROR' }); } finally { setLoading('test',false); }
   }
   const query = modelPicker.filterQuery.trim().toLowerCase(), modelName = (model: string) => model === API_DEFAULT_MODEL_SENTINEL ? '默认主模型' : model;

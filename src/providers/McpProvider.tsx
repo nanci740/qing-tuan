@@ -88,7 +88,7 @@ function useMcpState() {
     if (!name && !url) { setStatus({ message: '先填写名称或主机地址，再生成描述', type: 'error' }); return; }
     setGenerating(true);
     try {
-      const result = await api.requestChat([{ role: 'user', content: `请为一个 MCP 远程服务写一句简短中文描述，只输出描述本身。服务名称：${name || '未填写'}；地址：${url || '未填写'}。` }], { feature: 'summary', maxTokens: 120, temperature: 0.5, stream: false });
+      const result = await api.requestChat([{ role: 'user', content: `请为一个 MCP 远程服务写一句简短中文描述，只输出描述本身。服务名称：${name || '未填写'}；地址：${url || '未填写'}。` }], { feature: 'summary', maxTokens: 120, temperature: 0.5 });
       const content = result?.choices?.[0]?.message?.content || result?.content?.[0]?.text || result?.output_text || '';
       if (!content) throw new Error('接口没有返回描述');
       setDraft(current => ({ ...current, description: String(content).trim().replace(/^["“]|["”]$/g, '') })); setStatus({ message: '描述已生成', type: 'ok' });
