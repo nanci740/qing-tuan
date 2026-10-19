@@ -9,7 +9,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'public/space/room01');
 const LAYERS=['floor','wall','window','curtains','frame'];
 // 床拆成后半（床头、枕头）和前半（被子、床尾），床头柜夹在中间，被子才能盖过床头柜。
-const FURNITURE={bedBack:{x:1,y:28},bedFront:{x:1,y:32},nightstand:{x:0,y:15},lamp:{x:0,y:21}};
+const FURNITURE={bedBack:{x:1,y:28},bedFront:{x:1,y:32},nightstand:{x:0,y:15},lamp:{x:0,y:21},bookshelf:{x:2,y:48},plant:{x:1,y:20}};
 const assets={};
 const size=id=>{const b=fs.readFileSync(path.join(dir,`${id}.png`));return {width:b.readUInt32BE(16),height:b.readUInt32BE(20)};};
 for(const id of LAYERS){
