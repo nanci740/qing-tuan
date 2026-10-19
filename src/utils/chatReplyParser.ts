@@ -4,6 +4,22 @@ interface Envelope { [key: string]: unknown; replies?: unknown[]; quote_id?: unk
 // 属性读取保留原接口对非标准数据的兼容；解析结果在使用处收窄类型。
 function fields(value: unknown): Record<string, unknown> { return (value ?? {}) as Record<string, unknown>; }
 
+/** 接口回了但没有正文时，从结束原因和思考内容判断为什么空，写成一句给人看的说明。 */
+export function emptyChatReplyReason(data: unknown): string {
+    const source = fields(data), choice = fields(fields(source.choices)[0]), message = fields(choice.message), candidate = fields(fields(source.candidates)[0]);
+    const finish = String(choice.finish_reason ?? candidate.finishReason ?? source.stop_reason ?? '').trim();
+    const block = String(fields(source.promptFeedback ?? source.prompt_feedback).blockReason ?? '').trim();
+    const thought = [message.reasoning_content, message.reasoning, message.thinking].some(value => typeof value === 'string' && value.trim())
+        || (Array.isArray(source.content) && source.content.some(part => fields(part).type === 'thinking'))
+        || (Array.isArray(fields(candidate.content).parts) && (fields(candidate.content).parts as unknown[]).some(part => fields(part).thought === true));
+    const tag = finish ? `（${finish}）` : '';
+    if (/^(length|max_tokens|max_completion_tokens|max_output_tokens)$/i.test(finish))
+        return `接口没有返回文字回复：输出字数用完了${tag}${thought ? '，模型想完就没额度写正文' : ''}，可以换个非思考型模型再试`;
+    if (block || message.refusal || /safety|content_filter|prohibited|blocklist|recitation|spii|refusal/i.test(finish))
+        return `接口没有返回文字回复：被模型的安全过滤拦下${block ? `（${block}）` : tag}，换个说法或换个模型再试`;
+    if (thought) return `接口没有返回文字回复：模型只回了思考内容${tag}，没写正文，再试一次或换个模型`;
+    return `接口没有返回文字回复${tag}`;
+}
 export function extractChatAiReply(data: unknown): string {
     const source = fields(data);
     const content = fields(fields(fields(source.choices)[0]).message).content ?? source.content ?? source.text;

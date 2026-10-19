@@ -4,7 +4,7 @@ import type {MessageNodesApi,PeerMessageDetail} from '../types/chatMessages';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
-import {extractChatAiReply,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
+import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {voiceLength} from '../utils/chatMessageNodes';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[]):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
@@ -250,12 +250,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         pending.current.add(requestChatKey);
         setChatReplyTyping(true, requestChatKey);
         try {
-            const maxTokens = requestPreferences.replyLength === 'short' ? 500 : (requestPreferences.replyLength === 'detailed' ? 2200 : 1200);
             const requestOptions = {
                 feature: 'chat',
                 stream: false,
                 contextMessages: requestPreferences.contextMessages,
-                maxTokens,
+                // 不限字数：回复长短已经写在提示词里，硬限字数会让思考型模型想完就没额度写正文。
+                maxTokens: 0,
                 ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {})
             };
             let data;
@@ -268,7 +268,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 data = await api.requestChat(textOnlyMessages, requestOptions);
             }
             const rawReply = extractChatAiReply(data);
-            if (!rawReply) throw new Error('接口没有返回文字回复');
+            if (!rawReply) throw new Error(emptyChatReplyReason(data));
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);
             const segments = requestPreferences.segmented
