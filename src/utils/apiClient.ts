@@ -168,7 +168,7 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
         const inputMessages = trimMessagesForContext(messages, config.contextMessages);
         let endpoint = `${config.baseUrl}/chat/completions`;
         let body: Record<string, unknown>;
-        // maxTokens 为 0 表示不限字数：OpenAI 兼容接口不送上限，用模型自己的；Claude 必须送，给 8192。
+        // 单次回复上限留空或填 0 表示不限字数：OpenAI 兼容接口不送上限，用模型自己的；Claude 必须送，给 8192。
         // 思考型模型（如 Gemini 3.1 Pro）的思考也算在上限里，上限太小会想完就没额度，正文是空的。
         const unlimited = Number(config.maxTokens) === 0;
 

@@ -429,7 +429,7 @@ export function Api() {
                   </span>
                 </span>
                 {"\n                            "}
-                <input className="api-number-input" id="apiMaxTokens" value={api.form.maxTokens} onChange={event => api.field('maxTokens', event.currentTarget.value.replace(/\D/g, ''))} type="text" inputMode="numeric" min="1" max="32768" step="1" placeholder="范围 1–32768；常用 512–4096" />
+                <input className="api-number-input" id="apiMaxTokens" value={api.form.maxTokens} onChange={event => api.field('maxTokens', event.currentTarget.value.replace(/\D/g, ''))} type="text" inputMode="numeric" min="1" max="32768" step="1" placeholder="留空或 0 不限制；最多 32768" />
                 {"\n                        "}
               </label>
               {"\n                        "}

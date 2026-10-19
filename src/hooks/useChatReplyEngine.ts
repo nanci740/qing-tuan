@@ -254,8 +254,6 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 feature: 'chat',
                 stream: false,
                 contextMessages: requestPreferences.contextMessages,
-                // 不限字数：回复长短已经写在提示词里，硬限字数会让思考型模型想完就没额度写正文。
-                maxTokens: 0,
                 ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {})
             };
             let data;
