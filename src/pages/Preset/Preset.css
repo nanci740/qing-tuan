@@ -1,0 +1,22 @@
+/* 预设 App：沿用世界书的版面（.world-page），这里只补预设自己的小东西。 */
+.preset-page .preset-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.preset-page .preset-warn { border-style: dashed; }
+.preset-page .preset-note { display: block; margin: 0 2px 12px; line-height: 1.6; }
+.preset-page .preset-form { display: flex; flex-direction: column; gap: 12px; }
+.preset-page .preset-param-row { display: flex; flex-direction: column; gap: 6px; }
+.preset-page .preset-param-row + .preset-param-row { padding-top: 10px; border-top: .5px dashed var(--world-line); }
+.preset-page .preset-entry-controls { display: flex; align-items: center; gap: 6px; flex: none; }
+.preset-page .preset-move {
+  width: 26px; height: 26px; padding: 0; display: flex; align-items: center; justify-content: center;
+  border: .6px solid var(--world-line); border-radius: 6px; background: var(--color-surface); color: var(--world-ink);
+  font-size: 13px; line-height: 1; cursor: pointer;
+}
+.preset-page .preset-move:disabled { opacity: .35; cursor: default; }
+.preset-page .world-book-open:disabled { cursor: default; opacity: 1; color: inherit; }
+.preset-page .world-action-bar { flex-wrap: wrap; }
+.preset-page .world-action-bar + .preset-note { margin-top: 14px; }
+
+/* 主画面第二页的 App 图标：消息小窗下面一排，四个一行。 */
+#main-content .home-page2-apps {
+  width: 100%; margin: 30px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 0;
+}

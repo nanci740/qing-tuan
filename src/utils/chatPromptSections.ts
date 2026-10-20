@@ -1,9 +1,13 @@
-import type { WorldInjection } from './chatWorldContext';
+import type { WorldInjection, WorldMessage } from './chatWorldContext';
+import type { Preset, PresetBuiltinId } from '../types/preset';
+import { createPreset } from './presetStorage';
 
 /** 聊天系统提示词拆成几段，按设定和这一轮的内容决定送哪几段；用不到的说明不送，提示词短一点，模型也不容易混。
  * 各段的文字照原本那一整段搬过来，没有改写。 */
 export interface ChatPromptInput {
     characterName: string;
+    /** 你的名字，换进预设条目里的 {{user}}。 */
+    userName: string;
     persona: string;
     world: WorldInjection;
     /** 最近的聊天记录拼起来的文字，用来看这一轮有没有出现引用、编辑、撤回这些标记。 */
@@ -108,12 +112,34 @@ function outputCleanliness() {
     return '不要输出「【引用消息】」、「【本次回复】」或其他内部标签，也不要输出 Markdown 代码块。';
 }
 
-export function buildChatSystemPrompt(input: ChatPromptInput) {
-    const w = input.world.system;
-    return [
-        w.head, basics(input), w.before, persona(input), w.after,
-        time(input), w.middle, presence(input), contextMarkers(input), sameTurn(input),
-        replyFormat(input), recall(), voice(input), outputCleanliness(), quote(input),
-        w.tail,
-    ].join('');
+const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
+    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, output: outputCleanliness, quote,
+};
+/** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
+function expandMacros(text: string, input: ChatPromptInput) {
+    return text.replace(/\{\{\/\/[\s\S]*?\}\}/g, '').replace(/\{\{trim\}\}/gi, '')
+        .replace(/\{\{char\}\}/gi, input.characterName).replace(/\{\{user\}\}/gi, input.userName || '用户');
+}
+
+/** 按预设的顺序组出系统提示词。自带的段落照上面的规则送；回复格式一定送。
+ * 世界书的位置跟着自带段落走：头部在最前、人设前后夹着「角色人设」、中部接在「当前时间」后面、尾部在最后。
+ * 自己写的条目：放在系统提示词里的照顺序接上；其他的单独成一条消息，交给回复引擎插进聊天记录。 */
+export function buildChatSystemPrompt(input: ChatPromptInput, preset: Preset = createPreset()): { system: string; messages: WorldMessage[] } {
+    const w = input.world.system, parts = [w.head], messages: WorldMessage[] = [];
+    for (const entry of preset.entries) {
+        if (entry.builtin) {
+            const on = entry.enabled || entry.builtin === 'format';
+            if (entry.builtin === 'persona') { parts.push(w.before, on ? persona(input) : '', w.after); continue; }
+            if (on) parts.push(SECTIONS[entry.builtin](input));
+            if (entry.builtin === 'time') parts.push(w.middle);
+            continue;
+        }
+        if (!entry.enabled) continue;
+        const text = expandMacros(entry.content, input).trim();
+        if (!text) continue;
+        if (entry.placement === 'system') parts.push(`\n${text}\n`);
+        else messages.push({ role: entry.role, content: text, place: entry.placement, depth: entry.placement === 'depth' ? entry.depth : 0 });
+    }
+    parts.push(w.tail);
+    return { system: parts.join(''), messages };
 }

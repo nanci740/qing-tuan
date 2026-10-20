@@ -1,5 +1,6 @@
 import { RetroSelect } from '../../../components/shared/RetroSelect';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { readPresetStore, subscribePresets } from '../../../utils/presetStorage';
 import type { ReactNode } from 'react';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 import type { ChatPreferences } from '../../../types/chatPreferences';
@@ -10,6 +11,17 @@ export function ChatReplySelect({ id, setting, children }: {
   const { values, change } = useChatPreferences();
   return <RetroSelect title={setting === 'replyLength' ? '回复长度' : '引用方式'} className="chat-setting-select" id={id} value={values[setting]}
     onChange={value => change(setting, value as ChatPreferences[typeof setting])}>{children}</RetroSelect>;
+}
+/** 这个聊天用哪份预设：第一个选项是跟着默认走。 */
+export function ChatPresetSelect() {
+  const { values, change } = useChatPreferences();
+  const store = useSyncExternalStore(subscribePresets, readPresetStore);
+  const fallback = store.presets.find(item => item.id === store.defaultId)?.name || '默认预设';
+  const value = store.presets.some(item => item.id === values.presetId) ? values.presetId : '';
+  return <RetroSelect title="预设" className="chat-setting-select" id="chatSettingPreset" value={value} onChange={next => change('presetId', next)}>
+    <option value="">{`跟随默认（${fallback}）`}</option>
+    {store.presets.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+  </RetroSelect>;
 }
 export function ChatReplyRangeRow({ delayed = false, children }: { delayed?: boolean; children: ReactNode }) {
   const { values } = useChatPreferences();

@@ -2,6 +2,8 @@ export interface ChatPreferences {
   readReceipt: boolean; timeDisplay: 'all' | 'group' | 'hidden';
   segmented: boolean; segmentDelay: number; customModel: string; contextMessages: number;
   replyLength: 'short' | 'natural' | 'detailed'; quotePolicy: 'never' | 'necessary' | 'free';
+  /** 这个聊天另选的预设；空字符串就用预设 App 里的默认预设。 */
+  presetId: string;
   timeAware: boolean; voiceTranscribe: boolean; voiceDirect: boolean; aiVoice: boolean;
   voiceAutoText: boolean; voiceAutoTranslate: boolean; typingIndicator: boolean;
   linkedWorldBooks: string[]; openingText: string; wallpaperFade: number; wallpaperBlur: number;
@@ -9,7 +11,7 @@ export interface ChatPreferences {
   bubbleCss: string; soundFeedback: boolean; vibrationFeedback: boolean;
 }
 export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback';
-export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'timeAware';
+export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware';
 export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'voiceAutoText' | 'voiceAutoTranslate';
 export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks';
 export type BooleanChatSetting = { [K in MigratedChatSetting]: ChatPreferences[K] extends boolean ? K : never }[MigratedChatSetting];
