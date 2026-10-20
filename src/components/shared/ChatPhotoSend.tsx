@@ -2,18 +2,18 @@ import './ChatPhotoViewer.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
-import { chatPhotoReady, expandPhotoPrompt, generateUserPhoto, preparePickedPhoto } from '../../utils/chatPhoto';
+import { chatPhotoReady, generateUserPhoto, preparePickedPhoto } from '../../utils/chatPhoto';
 import { showToast } from '../../utils/toast';
 
 type Mode = 'pick' | 'draw';
 interface Draft {
   mode: Mode; image: Blob | null; text: string; includeMe: boolean; busy: '' | 'expand' | 'draw'; error: string;
-  /** 让 AI 补充描写：expanded 是补好的英文描述（可以改），expandedFrom 记下是照哪段话补的，话改了才重补。 */
+  /** 让 AI 补充描写：expanded 是补好的英文描述（可以改），expandedFrom 记下是照哪段话补的，话或「画面里有我」改了才重补。 */
   expand: boolean; expanded: string; expandedFrom: string;
 }
 type ChatBridge = Window & {
   smallphoneSendChatPhoto?: (image: Blob, caption: string) => Promise<void>;
-  smallphoneGetActiveCharacterProfile?: () => { name?: string; appearanceText?: string } | null;
+  smallphoneWritePhotoPrompt?: (keywords: string, includeMe: boolean) => Promise<string>;
 };
 
 /** 聊天加号里的「图片」「拍照」「生图」：选图或画图，先看一眼、写句话，再发出去。外观跟照片预览一样。 */
@@ -59,15 +59,16 @@ export function ChatPhotoSend() {
     let prompt = text;
     if (draft.expand) {
       // 话没改过就沿用补好（可能也改过）的描述，重画不用再补一次。
-      prompt = draft.expandedFrom === text && draft.expanded.trim() ? draft.expanded.trim() : '';
+      prompt = draft.expandedFrom === text + (draft.includeMe ? '\n#me' : '') && draft.expanded.trim() ? draft.expanded.trim() : '';
       if (!prompt) {
         update({ busy: 'expand', error: '' });
         try {
-          const profile = (window as ChatBridge).smallphoneGetActiveCharacterProfile?.() || null;
-          prompt = await expandPhotoPrompt(text, profile ? { name: String(profile.name || ''), appearance: String(profile.appearanceText || '') } : null);
+          const write = (window as ChatBridge).smallphoneWritePhotoPrompt;
+          if (!write) throw new Error('先打开一个聊天，才能补充描写');
+          prompt = await write(text, draft.includeMe);
         } catch (error) { fail(error); return; }
         if (id !== run.current) return;
-        update({ expanded: prompt, expandedFrom: text });
+        update({ expanded: prompt, expandedFrom: text + (draft.includeMe ? '\n#me' : '') });
       }
     }
     update({ busy: 'draw', error: '' });
@@ -101,7 +102,7 @@ export function ChatPhotoSend() {
           onChange={event => update({ text: event.currentTarget.value })} />
         {drawing ? <>
           <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.expand} disabled={busy}
-            onChange={event => update({ expand: event.currentTarget.checked })} />让 AI 补充描写（用聊天模型扩写成完整的画面）</label>
+            onChange={event => update({ expand: event.currentTarget.checked })} />让 AI 补充描写（用他平常回话的预设、世界书和聊天记录来写）</label>
           {draft.expand && draft.expanded ? <>
             <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendExpanded">补充后的描述（给生图模型看的，可以改，重画会照这段）</label>
             <textarea id="chatPhotoSendExpanded" className="chat-photo-viewer-prompt" rows={4} value={draft.expanded} disabled={busy}
