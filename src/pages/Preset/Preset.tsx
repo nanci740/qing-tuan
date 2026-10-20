@@ -196,7 +196,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
                 <div className="world-entry-preview">{info ? info.note : entry.content}</div>
                 <div className="preset-chips">{info ? <span className="world-chip">自带</span> : null}{info?.locked ? <span className="world-chip">锁定</span> : null}{info ? null : <span className="world-chip">{placementLabel(entry)}{entry.placement === 'system' ? '' : ' · ' + entry.role}</span>}{entry.warn ? <span className="world-chip preset-warn">需检查</span> : null}</div>
               </PressedButton>
-              {picking ? <div className="preset-entry-controls"><span className="preset-check" aria-hidden="true">{checked ? '✓' : ''}</span></div> : <div className="preset-entry-controls">
+              {picking ? null : <div className="preset-entry-controls">
                 <PressedButton className="preset-move" type="button" aria-label="往上移" disabled={position === 0} onClick={() => move(preset, index, -1)}>↑</PressedButton>
                 <PressedButton className="preset-move" type="button" aria-label="往下移" disabled={position === group.length - 1} onClick={() => move(preset, index, 1)}>↓</PressedButton>
                 <input className="world-toggle" type="checkbox" aria-label="启用条目" checked={entry.enabled || !!info?.locked} disabled={!!info?.locked} onChange={event => toggleEntry(preset, entry.id, event.currentTarget.checked)} />
