@@ -1,4 +1,4 @@
-import type { ImageCharacter } from '../types/voiceImage';
+import type { ImageCharacter, ImageConfig } from '../types/voiceImage';
 import { loadVoiceImageSettings, normalizeImageCharacters, testImage } from './voiceImageServices';
 
 /** 家机发照片：用「语音与生图设置」的生图服务把角色写的英文画面描述画出来。 */
@@ -45,8 +45,23 @@ export async function generateChatPhoto(prompt: string, character: { name: strin
   const characters = pickCharacters(cfg.characters, character.name, prompt);
   // 生图设置里没有这个角色的提示，就用档案里的外貌，长相才不会每张都不一样。
   const appearance = !characters.slice(1).some(slot => slot.prompt.trim()) && character.appearance.trim() ? `\nCharacter appearance (${character.name}): ${character.appearance.trim()}` : '';
-  const result = await testImage({ ...cfg, prompt: prompt.trim() + appearance, characters });
+  return draw({ ...cfg, prompt: prompt.trim() + appearance, characters });
+}
+
+/** 你自己在聊天里生图：照你写的描述画；勾了「画面里有我」才带上生图设置里「你」那一格的提示。 */
+export async function generateUserPhoto(prompt: string, includeMe: boolean) {
+  const cfg = loadVoiceImageSettings().image;
+  if (!cfg.enabled) throw new Error('生图没有开启');
+  const user = normalizeImageCharacters(cfg.characters)[0];
+  return draw({ ...cfg, prompt: prompt.trim(), characters: [includeMe ? user : { ...user, prompt: '', negativePrompt: '' }] });
+}
+
+async function draw(cfg: ImageConfig) {
+  const result = await testImage(cfg);
   const image = result && 'blob' in result ? result.blob : result?.src;
   if (!image) throw new Error('接口没有返回图片');
   return compress(image);
 }
+
+/** 你从相册选的、拍的照片：一样缩到长边 1024 存成 JPEG。 */
+export function preparePickedPhoto(file: Blob) { return compress(file); }

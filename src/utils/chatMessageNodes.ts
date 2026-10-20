@@ -202,10 +202,11 @@ export function voiceNode(voice: MessageVoice, factory: MessageFactory) {
     factory.element('div',{class:'chat-voice-wave','aria-hidden':'true'},Array.from({length:6},()=>factory.element('span'))),
     factory.element('span',{class:'chat-voice-length'},[factory.text(voice.lengthText ?? voiceLength(voice.seconds ?? 0))])]);
 }
-export function photoNode(photo: MessagePhoto, factory: MessageFactory) {
+/** note：你自己发的照片，把你写的话放在图片下面。 */
+export function photoNode(photo: MessagePhoto, factory: MessageFactory, note = false) {
   const label = photo.state === 'done' ? '查看照片' : photo.state === 'failed' ? '重新生成照片' : '照片接收中';
   const node = factory.element('div', { class: 'chat-photo is-' + photo.state, role: 'button', tabindex: '0', 'aria-label': label, 'data-photo-id': photo.id, 'data-photo-state': photo.state });
-  if (photo.state === 'done' && photo.src) node.children = [factory.element('img', { class: 'chat-photo-img', alt: photo.caption, src: photo.src, draggable: 'false' })];
+  if (photo.state === 'done' && photo.src) node.children = [factory.element('img', { class: 'chat-photo-img', alt: photo.caption, src: photo.src, draggable: 'false' }), ...(note && photo.caption ? [factory.element('span', { class: 'chat-photo-note' }, [factory.text(photo.caption)])] : [])];
   else if (photo.state === 'failed') node.children = [factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)]), factory.element('span', { class: 'chat-photo-status' }, [factory.text('没画出来，点一下重新生成')])];
   else node.children = [factory.element('span', { class: 'chat-photo-spinner', 'aria-hidden': 'true' }), factory.element('span', { class: 'chat-photo-status' }, [factory.text('照片接收中…')])];
   return node;
@@ -214,7 +215,7 @@ export function photoNode(photo: MessagePhoto, factory: MessageFactory) {
 export function setPhoto(row: MessageElement, photo: MessagePhoto, factory: MessageFactory) {
   const bubble = findClass(row, 'chat-bubble'); if (!bubble) return;
   const old = bubble.children.find(n => n.kind === 'element' && (hasClass(n, 'chat-photo') || n.tag === 'div' && !['chat-quoted-message','chat-bubble-shape','chat-bubble-shape-base'].some(c => hasClass(n, c))));
-  const node = photoNode(photo, factory);
+  const node = photoNode(photo, factory, hasClass(row, 'is-user'));
   if (old) bubble.children = bubble.children.map(n => n.key === old.key ? node : n); else bubble.children.push(node);
   toggleClass(bubble, 'chat-bubble--photo', true);
   setAttr(row, 'data-photo-id', photo.id); setAttr(row, 'data-photo-caption', photo.caption); setAttr(row, 'data-photo-prompt', photo.prompt); setAttr(row, 'data-chat-ai-content', '[照片] ' + photo.caption);
@@ -231,13 +232,14 @@ export function peerNode(text: string, avatar: string, factory: MessageFactory) 
     factory.element('img',{class:'chat-message-mini-avatar',alt:'',src:avatar}),
     factory.element('div',{class:'chat-bubble-wrap'},[factory.element('div',{class:'chat-bubble'},[caption]),factory.element('div',{class:'chat-bubble-time'})])]);
 }
-export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory) {
+export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory, photo?: MessagePhoto | null) {
   const row=factory.element('div',{class:'chat-message-row is-user','data-sent-at':String(Date.now()),'data-message-id':newMessageId()});
   if(text)setAttr(row,'data-chat-ai-content',text);
   const bubble=factory.element('div',{class:voice?'chat-bubble chat-bubble--voice':'chat-bubble'});
   if(quote.text)bubble.children.push(quoteNode(quote.text,quote.targetId,factory));
   if(voice)bubble.children.push(voiceNode(voice,factory));if(text)bubble.children.push(factory.element('div',{},[factory.text(text)]));
   row.children=[factory.element('div',{class:'chat-bubble-wrap'},[bubble,factory.element('div',{class:'chat-bubble-time'},[factory.text(new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}))])]),factory.element('img',{class:'chat-message-mini-avatar',alt:'',src:avatar})];
+  if(photo)setPhoto(row,photo,factory);
   return row;
 }
 export function setResult(row: MessageElement, className: string, text: string, factory: MessageFactory) {
