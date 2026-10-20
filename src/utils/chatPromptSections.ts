@@ -120,7 +120,10 @@ function photo(input: ChatPromptInput) {
         ? '{"text":"刚拍的晚霞","photo":"no humans, sunset, river, city skyline, silhouette, orange sky, pink clouds, reflection on water, phone photo, tilted angle"}'
         : '{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot"}';
     return '每一条 replies 还可以加上 "photo"，表示这条你发了一张照片（对方会收到一张真的图片）。发照片的那一条：text 写一句很短的中文，说明照片拍的是什么（例如「刚拍的晚霞」）；' + describe + who +
-        '照片单独一条，想说的话放在其他条。对方跟你要照片、自拍时就发；聊到你们见面、待在一起或一起做什么的时候，也可以发一张你们两个人在那一刻的画面（像合照，或那个场景的一张图），把两个人的动作和互动写清楚；其他时候按人设和当下情境偶尔自然地分享（像真人随手拍），不要每次回复都发。例如：' + example;
+        '照片单独一条，想说的话放在其他条。什么时候发：' +
+        '一、对方跟你要照片、自拍时一定发。' +
+        '二、聊到你们见面、待在一起或一起做什么（例如抱抱、牵手、靠在一起、一起吃饭、散步、躺着聊天）时，主动发一张你们两个人在那一刻的画面，把两个人的动作、表情和彼此的距离、接触写清楚。这是把那个场景画出来给对方看，不用管你们现在是不是真的在一起、是谁拍的；每一段新的互动发一张，同一个动作不用一直重复发。' +
+        '三、其他时候按人设和当下情境偶尔分享自己的日常（像真人随手拍），不要每次回复都发。例如：' + example;
 }
 
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
