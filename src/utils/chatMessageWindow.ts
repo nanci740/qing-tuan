@@ -1,5 +1,5 @@
 import type { MessageNode, MessageElement } from '../types/chatMessages';
-import { hasClass } from './chatMessageNodes';
+import { hasClass, sameNode } from './chatMessageNodes';
 
 export const CHAT_INITIAL_MESSAGES = 50;
 export const CHAT_MORE_MESSAGES = 30;
@@ -21,7 +21,7 @@ export function shareMessageNodes(previous: MessageNode[], next: MessageNode[]):
   const shared = next.map(node => {
     const old = byKey.get(node.key);
     if (old === node) return node;
-    return old && JSON.stringify(old) === JSON.stringify(node) ? old : node;
+    return old && sameNode(old, node) ? old : node;
   });
   return previous.length === shared.length && shared.every((node, index) => node === previous[index]) ? previous : shared;
 }

@@ -38,7 +38,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   const listeners = useRef(new Set<()=>void>());
   const queued = useRef(false), ready = useRef(false);
   const identity = () => sources.current?.identity() ?? { peer: '聊天', peerAvatar: DEFAULT_AVATAR, userAvatar: DEFAULT_BIRD_AVATAR };
-  const clone = () => structuredClone(current.current);
+  const clone = () => model.cloneNodes(current.current);
   function captureAnchor() {
     const list = listRef.current;
     if (!list || scrollAnchor.current) return;
@@ -100,7 +100,6 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     captureAnchor(); requestLayout(current.current,undefined,true,true); visibleRef.current += CHAT_MORE_MESSAGES;
     flushSync(() => setVisibleCount(visibleRef.current));
   }
-  function childSignature(nodes:MessageNode[]):string {return JSON.stringify(nodes.map(node=>node.kind==='element'?[node.key,node.tag,childSignature(node.children)]:[node.key,node.kind,node.text]));}
   function requestLayout(next:MessageNode[], row?:MessageElement, align=false, selection=false) {
     const rows=row?[row]:next.filter(n=>n.kind==='element'&&model.hasClass(n,'chat-message-row')) as MessageElement[];
     for(const item of rows){const old=layoutPending.current.get(item.key);layoutPending.current.set(item.key,{shape:true,align:align||!!old?.align,selection:selection||!!old?.selection});}
@@ -113,12 +112,13 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       // 原先历史保存观察器先于标签观察器执行，保留其保存顺序；标签更新不会再触发一次保存。
       listeners.current.forEach(listener=>listener());
       const shouldLabel=labelPending.current;labelPending.current=false;
-      if(shouldLabel){const next=structuredClone(current.current), before=JSON.stringify(next);model.labelMessages(next,identity().peer);if(JSON.stringify(next)!==before)render(next);}
+      if(shouldLabel){const next=model.cloneNodes(current.current);model.labelMessages(next,identity().peer);if(!model.sameNodes(next,current.current))render(next);}
     });
   }
-  function publish(next: MessageNode[], notify=true, resetWindow=false) { const before=current.current;render(next,true,resetWindow);if(notify&&(next.length||before.length))announce(childSignature(next)!==childSignature(before)); }
-  function mutate(action:(next:MessageNode[])=>MessageNode[]|void, notify=true) { const next=clone();const result=action(next)||next;publish(result,notify&&JSON.stringify(result)!==JSON.stringify(current.current)); }
-  function getNode(next:MessageNode[],element:Element) {const key=keys.current.get(element);return key===undefined?undefined:model.elements(next,n=>n.key===key)[0];}
+  // 比较整棵树一律用结构比较（一找到不同就停），不再整棵 JSON.stringify：消息一多，每个动作都要等它。
+  function publish(next: MessageNode[], notify=true, resetWindow=false) { const before=current.current;render(next,true,resetWindow);if(notify&&(next.length||before.length))announce(!model.sameShape(next,before)); }
+  function mutate(action:(next:MessageNode[])=>MessageNode[]|void, notify=true) { const next=clone();const result=action(next)||next;publish(result,notify&&!model.sameNodes(result,current.current)); }
+  function getNode(next:MessageNode[],element:Element) {const key=keys.current.get(element);return key===undefined?undefined:model.findKey(next,key);}
   function normalized(next:MessageNode[]) { const result=model.normalizeMessages(next,identity(),factory,bubble=>resized.current.add(bubble.key));requestLayout(result,undefined,true,true);return result; }
   function register(node:MessageElement,element:Element|null) {if(element){refs.current.set(node.key,element);keys.current.set(element,node.key);}else refs.current.delete(node.key);}
   function target<T extends HTMLElement=HTMLElement>(node:MessageElement|undefined):T {const result=node&&refs.current.get(node.key);if(!(result instanceof HTMLElement))throw Error('消息节点尚未挂载');return result as T;}
@@ -252,7 +252,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       const requested=new Map(layoutPending.current);layoutPending.current.clear();
       const initial=new Map(requested),after=new Map<number,{shape:boolean;align:boolean;selection:boolean}>();
       for(const[key,mode]of initial)if(mode.align&&mode.selection){initial.set(key,{...mode,selection:false});after.set(key,{shape:false,align:false,selection:true});}
-      const next=structuredClone(current.current);let changed=geometry(next,refs.current,listRef.current,initial);
+      const next=model.cloneNodes(current.current);let changed=geometry(next,refs.current,listRef.current,initial);
       if(changed&&after.size){for(const[key,mode]of after)layoutPending.current.set(key,mode);}
       else if(after.size)changed=geometry(next,refs.current,listRef.current,after)||changed;
       if(changed)render(next,false);
@@ -265,7 +265,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     restoreScroll();cancelAnimationFrame(scrollFrame.current);
     scrollFrame.current=requestAnimationFrame(()=>{restoreScroll();scrollAnchor.current=null;});
   },[nodes,visibleCount]);
-  useEffect(()=>{const resize=()=>{const next=structuredClone(current.current);const modes=new Map(model.elements(next,n=>model.hasClass(n,'chat-message-row')).map(n=>[n.key,{shape:false,align:false,selection:true}]));if(geometry(next,refs.current,listRef.current,modes))render(next);};window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
+  useEffect(()=>{const resize=()=>{const next=model.cloneNodes(current.current);const modes=new Map(model.elements(next,n=>model.hasClass(n,'chat-message-row')).map(n=>[n.key,{shape:false,align:false,selection:true}]));if(geometry(next,refs.current,listRef.current,modes))render(next);};window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
   const bindings=useMemo(()=>({register:registerRef,audio:onAudio}),[registerRef,onAudio]);
   const windowed=messageWindow(nodes,visibleCount);
   return <BindingsContext.Provider value={bindings}><Context.Provider value={{nodes:windowed.nodes,hidden:windowed.hidden,loadMore,register:registerRef,list:registerList,audio:onAudio,api}}>{children}</Context.Provider></BindingsContext.Provider>;

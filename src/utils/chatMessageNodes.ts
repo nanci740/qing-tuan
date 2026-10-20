@@ -32,25 +32,74 @@ export function readMessageNodes(parent: Node, factory: MessageFactory, existing
     return { kind: node.nodeType === Node.COMMENT_NODE ? 'comment' : 'text', key, text: node.textContent || '' } as MessageComment;
   });
 }
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr', 'param', 'keygen', 'basefont', 'bgsound', 'frame']);
+const RAW_TEXT = new Set(['style', 'script', 'xmp', 'iframe', 'noembed', 'noframes', 'plaintext']);
+const escapeText = (value: string) => value.replace(/&/g, '&amp;').replace(/\u00a0/g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escapeAttr = (value: string) => value.replace(/&/g, '&amp;').replace(/\u00a0/g, '&nbsp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/** 照浏览器 innerHTML 的规则直接拼字符串，不先建一整份 DOM（存聊天记录时每次都要整份序列化，消息一多就慢）。 */
 export function serializeMessageNodes(nodes: MessageNode[]): string {
-  const template = document.createElement('template');
-  const encode = (node: MessageNode): Node => {
-    if (node.kind !== 'element') return node.kind === 'comment' ? document.createComment(node.text) : document.createTextNode(node.text);
-    const element = document.createElementNS(node.namespace, node.tag);
-    for (const attr of node.attrs) {
-      const name = attr.prefix ? `${attr.prefix}:${attr.name}` : attr.name;
-      if (attr.namespace) element.setAttributeNS(attr.namespace, name, attr.value); else element.setAttribute(name, attr.value);
-    }
-    for (const child of node.children) element.appendChild(encode(child));
-    return element;
+  const out: string[] = [];
+  const write = (node: MessageNode, raw: boolean) => {
+    if (node.kind === 'text') { out.push(raw ? node.text : escapeText(node.text)); return; }
+    if (node.kind === 'comment') { out.push('<!--', node.text, '-->'); return; }
+    out.push('<', node.tag);
+    for (const attr of node.attrs) out.push(' ', attr.prefix ? `${attr.prefix}:${attr.name}` : attr.name, '="', escapeAttr(attr.value), '"');
+    out.push('>');
+    const html = node.namespace === HTML;
+    if (html && VOID_TAGS.has(node.tag)) return;
+    const childRaw = html && RAW_TEXT.has(node.tag);
+    for (const child of node.children) write(child, childRaw);
+    out.push('</', node.tag, '>');
   };
-  nodes.forEach(node => template.content.appendChild(encode(node)));
-  return template.innerHTML;
+  for (const node of nodes) write(node, false);
+  return out.join('');
 }
 export function elements(nodes: MessageNode[], predicate: (node: MessageElement) => boolean): MessageElement[] {
   const result: MessageElement[] = [];
   const visit = (node: MessageNode) => { if (node.kind !== 'element') return; if (predicate(node)) result.push(node); node.children.forEach(visit); };
   nodes.forEach(visit); return result;
+}
+/** 整棵消息树的复制：属性物件本身不会被改（setAttr 换新的），只复制阵列；比 structuredClone 快很多。 */
+export function cloneNodes(nodes: MessageNode[]): MessageNode[] {
+  return nodes.map(node => node.kind === 'element' ? { ...node, attrs: node.attrs.slice(), children: cloneNodes(node.children) } : { ...node });
+}
+/** 两棵树内容是否完全一样（取代整棵 JSON.stringify 比较；一找到不同就停）。 */
+export function sameNodes(a: MessageNode[], b: MessageNode[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (!sameNode(a[i], b[i])) return false;
+  return true;
+}
+export function sameNode(a: MessageNode, b: MessageNode): boolean {
+  if (a === b) return true;
+  if (a.kind !== b.kind || a.key !== b.key) return false;
+  if (a.kind !== 'element' || b.kind !== 'element') return (a as { text: string }).text === (b as { text: string }).text;
+  if (a.tag !== b.tag || a.namespace !== b.namespace || a.attrs.length !== b.attrs.length) return false;
+  for (let i = 0; i < a.attrs.length; i++) { const x = a.attrs[i], y = b.attrs[i]; if (x !== y && (x.name !== y.name || x.value !== y.value || x.namespace !== y.namespace || x.prefix !== y.prefix)) return false; }
+  return sameNodes(a.children, b.children);
+}
+/** 只比结构（编号、标签、文字），不管属性；取代原本整棵树的 childSignature 字符串比较。 */
+export function sameShape(a: MessageNode[], b: MessageNode[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    const x = a[i], y = b[i];
+    if (x.key !== y.key) return false;
+    if (x.kind === 'element' || y.kind === 'element') { if (x.kind !== 'element' || y.kind !== 'element' || x.tag !== y.tag || !sameShape(x.children, y.children)) return false; }
+    else if (x.kind !== y.kind || x.text !== y.text) return false;
+  }
+  return true;
+}
+/** 按编号找节点：同一棵树建一次索引，之后直接查；查不到（树后来又加了节点）就整棵找一次。 */
+const keyIndexes = new WeakMap<MessageNode[], Map<number, MessageElement>>();
+export function findKey(nodes: MessageNode[], key: number): MessageElement | undefined {
+  let index = keyIndexes.get(nodes);
+  if (!index) { index = new Map(); for (const node of elements(nodes, () => true)) index.set(node.key, node); keyIndexes.set(nodes, index); }
+  const hit = index.get(key);
+  if (hit) return hit;
+  const found = elements(nodes, n => n.key === key)[0];
+  if (found) index.set(key, found);
+  return found;
 }
 export function attr(node: MessageElement, name: string): string { return node.attrs.find(a => a.name === name && !a.namespace)?.value || ''; }
 export function setAttr(node: MessageElement, name: string, value: unknown) {
@@ -58,7 +107,7 @@ export function setAttr(node: MessageElement, name: string, value: unknown) {
   if (found) node.attrs[node.attrs.indexOf(found)] = { ...found, value: next }; else node.attrs.push({ name, value: next });
 }
 export function removeAttr(node: MessageElement, name: string) { node.attrs = node.attrs.filter(a => a.name !== name || !!a.namespace); }
-export function hasClass(node: MessageElement, token: string) { return attr(node, 'class').split(/\s+/).includes(token); }
+export function hasClass(node: MessageElement, token: string) { const value = attr(node, 'class'); return value.includes(token) && value.split(/\s+/).includes(token); }
 export function toggleClass(node: MessageElement, token: string, value?: boolean): boolean {
   const tokens = attr(node, 'class').split(/\s+/).filter(Boolean); const on = value ?? !tokens.includes(token);
   if (on && !tokens.includes(token)) tokens.push(token); if (!on) { const i = tokens.indexOf(token); if (i >= 0) tokens.splice(i, 1); }
