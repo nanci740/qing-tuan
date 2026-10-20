@@ -110,6 +110,9 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
   }
 
   const title = view.name === 'list' ? 'Preset' : view.name === 'preset' ? '预设' : (draft && preset?.entries.some(item => item.id === draft.id) ? '编辑条目' : '新建条目');
+  const cleanPath = (value: string) => value.replace(/[\\/]/g, '-'), root = 'C:\\青团\\预设\\';
+  const address = view.name === 'list' ? root : view.name === 'preset' ? root + cleanPath(preset?.name || '未命名预设') + '\\'
+    : root + cleanPath(preset?.name || '未命名预设') + '\\' + cleanPath(draft?.name.trim() || (title === '新建条目' ? '新建条目' : '未命名条目')) + '.txt';
   let body: ReactNode = null;
   if (view.name === 'list') {
     body = <>
@@ -213,6 +216,11 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
         <PressedButton className="world-icon-btn" id="presetBack" type="button" aria-label="返回" onClick={back}><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></PressedButton>
         <div className="world-main-title">{title}</div>
         <span />
+        {/* 跟世界书一样的跑马灯色带，显示现在在哪一层 */}
+        <div className="world-address" aria-hidden="true">
+          <span className="world-address-label">地址</span>
+          <span className="world-address-field"><span className="world-address-icon" /><span id="presetAddressText">{address}</span></span>
+        </div>
       </div>
       {body}
       <input id="presetImportFile" type="file" accept=".json,application/json" hidden ref={importInput} onChange={importFile} />
