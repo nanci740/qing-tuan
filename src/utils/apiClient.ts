@@ -1,5 +1,5 @@
 import type { ApiConfig, ApiConnection, ApiMessage, ApiResponse, ApiChunkHandler } from '../types/api';
-import { splitLeadingSystem } from './apiMessages';
+import { imagePartData, splitLeadingSystem } from './apiMessages';
 import { isGeminiNative, geminiHeaders, geminiRequest, normalizeGeminiResponse, parseGeminiStream, fetchGeminiModels } from './geminiNative';
 
 export function cleanBaseUrl(value: unknown) {
@@ -225,7 +225,10 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
                 .filter(Boolean)
                 .map(item => ({
                     role: item.role === 'assistant' ? 'assistant' : 'user',
-                    content: typeof item.content === 'string' ? item.content : String(item.content ?? '')
+                    // 带图片的消息拆成 Claude 的 text / image 区块；声音 Claude 收不了，略过。
+                    content: typeof item.content === 'string' ? item.content : Array.isArray(item.content)
+                        ? item.content.flatMap((part: { text?: unknown }): Record<string, unknown>[] => { const image = imagePartData(part); return image ? [{ type: 'image', source: { type: 'base64', media_type: image.mimeType, data: image.data } }] : typeof part?.text === 'string' ? [{ type: 'text', text: part.text }] : []; })
+                        : String(item.content ?? '')
                 }));
 
             body = {

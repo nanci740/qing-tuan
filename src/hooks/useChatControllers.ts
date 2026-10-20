@@ -35,6 +35,8 @@ import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
 import {showToast} from '../utils/toast';
 interface ChatPublicApi {
  smallphoneMessages:MessageNodesApi;
+ /** 你发一张照片（相册、拍照或自己生的图），caption 是你写的说明。 */
+ smallphoneSendChatPhoto(src:string,caption:string):void;
  smallphoneApi?:ApiService;
  smallphoneSyncRoomIdentity(character:ChatCharacter):void;
  smallphoneSetChatStatus(value:string):void;
@@ -311,6 +313,21 @@ function initChatApplication(){
         scheduleAutoReply();
     }
 
+    // 你发照片（相册、拍照、自己生图）：跟发文字一样进聊天、等家机回；图片本身之后会附给模型看。
+    function sendPhoto(src:string, caption:string) {
+        if (!messageList || !src) return;
+        const photo:MessagePhoto = { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: '', caption: caption.trim(), state: 'done', src };
+        messageNodes.appendUser('', null, messageOperations.quote(), photo);
+        triggerChatFeedback('send');
+        refreshChatBubbleGroups(messageList);
+        syncChatReadReceipts(messageList);
+        clearPendingQuote();
+        roomTools.closeQuick();
+        messageNodes.scrollLatest(true);
+        scheduleAutoReply();
+    }
+    bridge.smallphoneSendChatPhoto = sendPhoto;
+
     function showChatNotice(message:string) {
         if (true) showToast(message);
     }
@@ -335,6 +352,7 @@ function initChatApplication(){
     function openChatPhoto(row:HTMLElement){
         const box=row.querySelector<HTMLElement>('.chat-photo');const id=row.dataset.photoId||'';if(!box||!id)return;
         const state=(box.dataset.photoState||'pending') as MessagePhoto['state'];
+        if(row.classList.contains('is-user')){window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo:{id,prompt:'',caption:row.dataset.photoCaption||'',state,src:box.querySelector('img')?.getAttribute('src')||undefined,mine:true},redraw:()=>{}}}));return;}
         if(state==='pending'&&replyEngine.drawing(id)){showChatNotice('照片还在画，稍等一下');return;}
         const chatKey=history.current.activeKey;
         // 画到一半页面重新整理过：当成没画出来，可以重画。

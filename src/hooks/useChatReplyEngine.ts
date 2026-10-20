@@ -12,7 +12,9 @@ import type {WorldInjection} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
 import {readProfileText} from './usePersonalProfile';
-export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
+export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;
+ /** 你发的照片：图片本身（data URL），送的时候附给模型看。 */
+ imageSrc?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
  /** 重画一张照片（点了失败的照片、或在照片预览里改了描述）。 */
@@ -106,6 +108,14 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             // 编辑过的讯息：让 AI 知道这条改过、原本写的是什么
             if (isUserMessage && row.dataset.edited === 'true' && row.dataset.originalContent && row.dataset.originalContent !== content) {
                 content = '[已编辑，原本是：「' + row.dataset.originalContent + '」] ' + content;
+            }
+            // 你发的照片：文字写成「对方发来一张照片」加附言，图片本身另外附上。
+            if (isUserMessage && row.dataset.photoId) {
+                const caption = String(row.dataset.photoCaption || '').trim();
+                context.push({ role: 'user', content: withQuote('[对方发来一张照片' + (caption ? '，附言：「' + caption + '」' : '') + ']'),
+                    messageId: nodes.id(row), quoteCandidate: caption ? '[照片] ' + caption : '[照片]', quotedText,
+                    imageSrc: row.querySelector('.chat-photo-img')?.getAttribute('src') || '' });
+                continue;
             }
             // 将引用快照和正文一起传给 AI，较早原文超出上下文时仍可读到。
             // 引用候选仍只保留正文，避免把上下文说明显示在引用卡里。
@@ -266,6 +276,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 } catch (error) {}
             }
         }
+        // 你最近发的 3 张照片把图片本身附上（模型要能看图；看不了就退回只送文字）。
+        let imageAttached = false;
+        for (const { item, index } of recent.map((item, index) => ({ item, index })).filter(x => x.item.imageSrc?.startsWith('data:image/')).slice(-3)) {
+            messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url: item.imageSrc } }] };
+            imageAttached = true;
+        }
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
             ? { role: message.role, content: recent[messages.indexOf(message) - 1]?.content || message.content.filter(part => part.type === 'text').map((part:{text?:string}) => part.text).join(' ') }
             : message);
@@ -299,9 +315,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             try {
                 data = await api.requestChat(withWorld(messages), requestOptions);
             } catch (error) {
-                // 模型不支持音频（或音频太大）时，去掉音频改用文字再送一次
-                if (!audioAttached) throw error;
-                notice('这个模型听不了语音，已改用文字');
+                // 模型不支持音频、图片（或太大）时，去掉附件改用文字再送一次
+                if (!audioAttached && !imageAttached) throw error;
+                notice(imageAttached && !audioAttached ? '这个模型看不了图片，已改用文字' : audioAttached && !imageAttached ? '这个模型听不了语音，已改用文字' : '这个模型收不了语音和图片，已改用文字');
                 data = await api.requestChat(withWorld(textOnlyMessages), requestOptions);
             }
             const rawReply = extractChatAiReply(data);

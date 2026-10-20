@@ -1,5 +1,5 @@
 import type { ApiConfig, ApiConnection, ApiMessage, ApiResponse, ApiChunkHandler } from '../types/api';
-import { splitLeadingSystem } from './apiMessages';
+import { imagePartData, splitLeadingSystem } from './apiMessages';
 
 // Google 官方的 Gemini 地址走原生接口（generateContent），才能设安全过滤；
 // 中转站和其他地址照旧走 OpenAI 兼容格式。回来的结果整理成兼容格式的样子，其他地方不用改。
@@ -37,6 +37,8 @@ function toParts(content: unknown): GeminiPart[] {
     return content.flatMap((part): GeminiPart[] => {
         if (part?.type === 'input_audio' && part.input_audio?.data)
             return [{ inlineData: { mimeType: `audio/${part.input_audio.format || 'wav'}`, data: part.input_audio.data } }];
+        const image = imagePartData(part);
+        if (image) return [{ inlineData: image }];
         if (typeof part?.text === 'string') return [{ text: part.text }];
         return [];
     });
