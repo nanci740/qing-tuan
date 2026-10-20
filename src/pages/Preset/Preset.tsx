@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ChangeEvent, ReactNode } from 'react';
 import { PressedButton } from '../../components/shared/PressedButton';
-import { useChoice } from '../../providers/ChoiceProvider';
+import { useWorld } from '../../providers/WorldProvider';
 import { confirmChat } from '../../utils/chatConfirm';
 import { showToast } from '../../utils/toast';
 import type { Preset, PresetAnchor, PresetEntry, PresetParams, PresetPlacement, PresetRole } from '../../types/preset';
@@ -38,11 +38,12 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
     setViewState(next);
   }
   useLayoutEffect(() => { if (pageRef.current) pageRef.current.scrollTop = view.name === 'entry' ? 0 : scrollMemory.current[viewKey(view)] ?? 0; }, [viewKey(view)]);
-  const choice = useChoice();
+  const world = useWorld();
   const preset = view.name === 'list' ? undefined : store.presets.find(item => item.id === view.id);
   const save = (next: Preset) => writePresetStore({ ...store, presets: store.presets.map(item => item.id === next.id ? { ...next, updatedAt: Date.now() } : item) });
+  // 用世界书同一个选项弹窗，两边看起来一样。
   const pick = (title: string, options: [string, string][], selected: string, confirm: (value: string) => void) =>
-    choice.openChoice({ style: 'settings', title, options: options.map(([value, label]) => ({ value, label })), selected, confirm });
+    world.openPicker('preset-' + title, title, options, selected, confirm);
 
   function back() {
     if (view.name === 'entry') { setDraft(null); go({ name: 'preset', id: view.id }); }
