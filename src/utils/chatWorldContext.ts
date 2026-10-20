@@ -12,7 +12,9 @@ export interface WorldInjection {
     messages: WorldMessage[];
 }
 const POSITIONS:WorldPosition[] = ['head','before','after','middle','tail'];
-const LIMIT = 10000, RECURSION_ROUNDS = 3, STICKY_KEY = 'qingtuan_world_sticky_v1';
+/** 没另外设定时，每次最多带的字数。 */
+export const DEFAULT_WORLD_LIMIT = 10000;
+const RECURSION_ROUNDS = 3, STICKY_KEY = 'qingtuan_world_sticky_v1';
 export function readChatWorldBooks():ChatWorldBook[]{return readWorldBooks();}
 export function emptyWorldInjection():WorldInjection{return {system:{head:'',before:'',after:'',middle:'',tail:''},messages:[]};}
 
@@ -38,7 +40,9 @@ function writeSticky(value:Record<string,Record<string,number>>) { try { localSt
 /** 每次回复前调用：挑出这次要带上的世界书条目。
  * 带上的书：聊天设置里勾选的，加上「关联角色」是全部角色或这个角色的；书本身要开着。
  * 条目：常驻的一定带；关键词的在最近「扫描深度」条消息里命中才带，再按概率决定；触发后按「持续轮数」再带几轮。 */
-export function collectWorldInjection(options:{selectedIds:string[];characterId:string;chatKey:string;recentMessages:{content?:unknown}[]}):WorldInjection {
+export function collectWorldInjection(options:{selectedIds:string[];characterId:string;chatKey:string;recentMessages:{content?:unknown}[];
+    /** 每次最多带多少字，按优先级从高到低装；0 表示不限，没给就用 DEFAULT_WORLD_LIMIT。 */
+    limit?:number}):WorldInjection {
     const selected = new Set((options.selectedIds || []).map(String));
     const books = readChatWorldBooks().filter(book => book && book.enabled !== false && (selected.has(String(book.id)) || worldBookBoundTo(book, options.characterId)));
     const entries = books.flatMap(book => (Array.isArray(book.entries) ? book.entries : []).filter(entry => entry && entry.enabled !== false && String(entry.content || '').trim()));
@@ -75,7 +79,8 @@ export function collectWorldInjection(options:{selectedIds:string[];characterId:
     writeSticky(stickyAll);
 
     const chosen = [...active.keys()].sort((a, b) => (Number(b.priority) || 0) - (Number(a.priority) || 0));
-    let budget = LIMIT;
+    const limit = options.limit ?? DEFAULT_WORLD_LIMIT;
+    let budget = limit > 0 ? limit : Infinity;
     const take = (entry:ChatWorldEntry) => { const text = `${entry.title ? `[${String(entry.title)}] ` : ''}${String(entry.content)}`.slice(0, Math.max(0, budget)); budget -= text.length; return text; };
     const grouped:Record<WorldPosition,string[]> = {head:[],before:[],after:[],middle:[],tail:[]};
     for (const entry of chosen) {

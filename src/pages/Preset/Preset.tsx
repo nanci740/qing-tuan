@@ -41,7 +41,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
   }
   function addPreset() {
     const next = createPreset(`新预设 ${store.presets.length + 1}`);
-    writePresetStore({ ...store, presets: [...store.presets, next] });
+    if (!writePresetStore({ ...store, presets: [...store.presets, next] })) return;
     setView({ name: 'preset', id: next.id });
   }
   async function importFile(event: ChangeEvent<HTMLInputElement>) {
@@ -51,7 +51,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
       if (file.size > 5 * 1024 * 1024) throw Error('JSON 文件不可超过 5 MB');
       let parsed: unknown; try { parsed = JSON.parse(await file.text()); } catch { throw Error('JSON 文件无法读取'); }
       const imported = parsePresetImport(parsed, file.name), latest = readPresetStore();
-      writePresetStore({ ...latest, presets: [...latest.presets, ...imported] });
+      if (!writePresetStore({ ...latest, presets: [...latest.presets, ...imported] })) return;
       const warned = imported.reduce((count, item) => count + item.entries.filter(entry => entry.warn).length, 0);
       showToast(`已导入 ${imported.length} 份预设` + (warned ? `；${warned} 条可能跟回复格式冲突，已先关掉` : ''));
     } catch (error) { showToast((error as Error).message || '预设导入失败'); }
@@ -59,14 +59,14 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
   async function removePreset(target: Preset) {
     if (store.presets.length <= 1) { showToast('至少要留一份预设'); return; }
     if (!await confirmChat({ title: '删除预设？', message: `「${target.name}」和里面自己写的条目都会一起删掉。用这份预设的聊天会改回默认预设。`, confirmText: '删除', danger: true })) return;
-    writePresetStore({ ...store, presets: store.presets.filter(item => item.id !== target.id) });
+    if (!writePresetStore({ ...store, presets: store.presets.filter(item => item.id !== target.id) })) return;
     setView({ name: 'list' });
     showToast('预设已删除');
   }
   function copyPreset(target: Preset) {
     const copy = { ...structuredClone(target), id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7), name: target.name + '（副本）' };
     copy.entries = copy.entries.map(entry => entry.builtin ? entry : { ...entry, id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7) });
-    writePresetStore({ ...store, presets: [...store.presets, copy] });
+    if (!writePresetStore({ ...store, presets: [...store.presets, copy] })) return;
     setView({ name: 'preset', id: copy.id });
     showToast('已复制预设');
   }
@@ -85,12 +85,12 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
     if (!draft.name.trim() || !draft.content.trim()) { showToast('先填写名称和内容'); return; }
     const entry: PresetEntry = { ...draft, name: draft.name.trim(), role: draft.placement === 'system' ? 'system' : draft.role, depth: Math.max(0, Math.floor(Number(draft.depth) || 0)) };
     const exists = target.entries.some(item => item.id === entry.id);
-    save({ ...target, entries: exists ? target.entries.map(item => item.id === entry.id ? entry : item) : [...target.entries, entry] });
+    if (!save({ ...target, entries: exists ? target.entries.map(item => item.id === entry.id ? entry : item) : [...target.entries, entry] })) return;
     setDraft(null); setView({ name: 'preset', id: target.id }); showToast('条目已保存');
   }
   async function deleteEntry(target: Preset, id: string) {
     if (!await confirmChat({ title: '删除条目？', message: '删除后，这条不会再送给模型。', confirmText: '删除', danger: true })) return;
-    save({ ...target, entries: target.entries.filter(item => item.id !== id) });
+    if (!save({ ...target, entries: target.entries.filter(item => item.id !== id) })) return;
     setDraft(null); setView({ name: 'preset', id: target.id }); showToast('条目已删除');
   }
   function setParam(target: Preset, key: keyof PresetParams, patch: Partial<Preset['params'][typeof key]>) {
@@ -118,7 +118,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
         <PressedButton className="world-action secondary" type="button" id="presetImport" onClick={() => importInput.current?.click()}>导入</PressedButton>
         <PressedButton className="world-action secondary" type="button" id="presetExportAll" onClick={() => download('qingtuan-presets-' + new Date().toISOString().slice(0, 10) + '.json', exportPresetsJson(store.presets))}>导出全部</PressedButton>
       </div>
-      <p className="world-hint preset-note">可以导入我们自己导出的预设，也可以导入酒馆的预设：只取里面自己写的提示词条目，跟回复格式有关的会先关掉，提醒你检查。</p>
+      <p className="world-hint preset-note">预设可以导入、导出。</p>
     </>;
   } else if (view.name === 'preset' && preset) {
     const isDefault = preset.id === store.defaultId;
@@ -128,7 +128,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
         <label className="world-field"><span className="world-label">预设名称</span>
           <input className="world-input" id="presetName" defaultValue={preset.name} key={preset.id} maxLength={60} onBlur={event => { const name = event.currentTarget.value.trim(); if (name && name !== preset.name) save({ ...preset, name }); }} />
         </label>
-        {isDefault ? <span className="world-hint">这份是默认预设。</span> : <PressedButton className="world-action secondary" type="button" id="presetSetDefault" onClick={() => { writePresetStore({ ...store, defaultId: preset.id }); showToast('已设为默认预设'); }}>设为默认预设</PressedButton>}
+        {isDefault ? <span className="world-hint">这份是默认预设。</span> : <PressedButton className="world-action secondary" type="button" id="presetSetDefault" onClick={() => { if (writePresetStore({ ...store, defaultId: preset.id })) showToast('已设为默认预设'); }}>设为默认预设</PressedButton>}
       </div>
       <div className="world-section-head"><b>参数</b><small>打开的会盖过 API 设置</small></div>
       <div className="world-paper preset-form">

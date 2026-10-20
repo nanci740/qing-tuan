@@ -1,4 +1,5 @@
 import type { Preset, PresetBuiltinId, PresetEntry, PresetParams, PresetPlacement, PresetRole, PresetStore } from '../types/preset';
+import { showToast } from './toast';
 
 export const PRESET_STORAGE_KEY = 'qingtuan_presets_v1';
 const uid = () => String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7);
@@ -79,12 +80,19 @@ export function readPresetStore(): PresetStore {
   cache = { presets, defaultId };
   return cache;
 }
-export function writePresetStore(next: PresetStore) {
+/** 存进去了回 true。存不进去（多半是浏览器空间满了）就保留上次存的、提醒一声，回 false。 */
+export function writePresetStore(next: PresetStore): boolean {
   const presets = next.presets.length ? next.presets : [createPreset()];
-  cache = { presets, defaultId: presets.some(item => item.id === next.defaultId) ? next.defaultId : presets[0].id };
-  try { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(cache)); } catch { /* 存不进去时画面照样更新，重开会回到上次存的。 */ }
+  const candidate = { presets, defaultId: presets.some(item => item.id === next.defaultId) ? next.defaultId : presets[0].id };
+  try { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(candidate)); }
+  catch {
+    showToast('预设没有存进去：浏览器的存储空间可能满了，可以先导出备份，再删掉用不到的预设');
+    listeners.forEach(listener => listener());
+    return false;
+  }
+  cache = candidate;
   listeners.forEach(listener => listener());
-  return cache;
+  return true;
 }
 export function subscribePresets(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; }
 /** 聊天用哪份预设：聊天设置另选的那份，没选或找不到就用默认那份。 */
