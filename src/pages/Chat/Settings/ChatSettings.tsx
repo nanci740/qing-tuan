@@ -1,5 +1,5 @@
 import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
-import {ChatWorldBooks} from './ChatWorldBooks';
+import {ChatWorldBooks,ChatWorldBookLimit} from './ChatWorldBooks';
 import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/ChatIdentityField';
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
 import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft } from './ChatAppearanceControls';
@@ -232,8 +232,13 @@ export function ChatSettings() {
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-worldbook-list"},{"name":"id","value":"chatWorldBookList"}]}><ChatWorldBooks /></OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-setting-hint"}]}>
-                {"勾选后，只会把对应世界书的启用条目提供给当前角色。"}
+                {"关联到全部角色或这个角色的世界书会自动带上；其他的勾选后才会带上。"}
               </OriginalElement>
+              {"\n                        "}
+              <div className="chat-setting-field-row">
+                <span className="chat-setting-field-label"><strong>{"字数上限"}</strong><span>{"每次最多带多少字的世界书，按优先级从高到低装。留空或 0 表示不限。"}</span></span>
+                <ChatWorldBookLimit />
+              </div>
               {"\n                    "}
             </OriginalElement>
             {"\n                "}

@@ -321,7 +321,7 @@ function initChatApplication(){
     bridge.smallphoneLoadCurrentChatDraft = loadCurrentChatDraft;
     bridge.smallphoneDeleteChatDraft = key=>composer.erase(key);
     // 聊天的 key 就是角色档案的 archiveId，世界书的「关联角色」存的也是它。
-    function getLinkedWorldBookContext(recentMessages:ChatContextItem[],chatKey:string,selectedIds:string[]){return collectWorldInjection({selectedIds,characterId:chatKey,chatKey,recentMessages});}
+    function getLinkedWorldBookContext(recentMessages:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number){return collectWorldInjection({selectedIds,characterId:chatKey,chatKey,recentMessages,limit});}
     function getCharacterPersona(chatKey:string){return buildCharacterPrompt(characterStore?.read().find(item => item.archiveId === chatKey) || null);}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
     function loadChatPreferences() { return preferenceBridge.load(getCurrentChatPreferenceKey()); }

@@ -6,14 +6,17 @@ export interface ChatPreferences {
   presetId: string;
   timeAware: boolean; voiceTranscribe: boolean; voiceDirect: boolean; aiVoice: boolean;
   voiceAutoText: boolean; voiceAutoTranslate: boolean; typingIndicator: boolean;
-  linkedWorldBooks: string[]; openingText: string; wallpaperFade: number; wallpaperBlur: number;
+  linkedWorldBooks: string[];
+  /** 世界书每次最多带多少字；0 表示不限。 */
+  worldBookLimit: number;
+  openingText: string; wallpaperFade: number; wallpaperBlur: number;
   fontSize: number; fontType: 'inherit' | 'file' | 'url'; fontName: string; fontUrl: string;
   bubbleCss: string; soundFeedback: boolean; vibrationFeedback: boolean;
 }
 export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback';
 export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware';
 export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'voiceAutoText' | 'voiceAutoTranslate';
-export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks';
+export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks' | 'worldBookLimit';
 export type BooleanChatSetting = { [K in MigratedChatSetting]: ChatPreferences[K] extends boolean ? K : never }[MigratedChatSetting];
 export type BasicChatSettings = Pick<ChatPreferences, BasicChatSetting>;
 export interface ChatPreferenceServices {

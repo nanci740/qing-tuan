@@ -800,17 +800,17 @@ export function Home() {
                 <img className="app-custom-icon" alt="Preset icon" src={appearance.icons.app['preset'] || undefined} />
                 {/* 像素图标：一张纸上三条滑杆 */}
                 <svg className="px-icon" viewBox="0 0 16 16" aria-hidden="true" shapeRendering="crispEdges">
-                  <rect className="px-x" x="2" y="1" width="12" height="1" />
-                  <rect className="px-x" x="2" y="14" width="12" height="1" />
-                  <rect className="px-x" x="1" y="2" width="1" height="12" />
-                  <rect className="px-x" x="14" y="2" width="1" height="12" />
-                  <rect className="px-w" x="2" y="2" width="12" height="12" />
+                  <rect className="px-x" x="1" y="0" width="14" height="1" />
+                  <rect className="px-x" x="1" y="15" width="14" height="1" />
+                  <rect className="px-x" x="0" y="1" width="1" height="14" />
+                  <rect className="px-x" x="15" y="1" width="1" height="14" />
+                  <rect className="px-o" x="1" y="1" width="14" height="14" />
                   <rect className="px-x" x="3" y="4" width="10" height="1" />
                   <rect className="px-x" x="3" y="8" width="10" height="1" />
-                  <rect className="px-x" x="3" y="11" width="10" height="1" />
-                  <rect className="px-o" x="5" y="3" width="2" height="3" />
-                  <rect className="px-o" x="9" y="7" width="2" height="3" />
-                  <rect className="px-o" x="6" y="10" width="2" height="3" />
+                  <rect className="px-x" x="3" y="12" width="10" height="1" />
+                  <rect className="px-x" x="5" y="3" width="2" height="3" />
+                  <rect className="px-x" x="9" y="7" width="2" height="3" />
+                  <rect className="px-x" x="4" y="11" width="2" height="3" />
                 </svg>
               </div>
             </div>
