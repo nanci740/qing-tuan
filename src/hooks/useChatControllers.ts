@@ -591,11 +591,17 @@ initChatApplication();
     function getLastChatPreview(key:string) {
         const html = history.current.histories[key];
         if (!html) return '';
+        // 只拆最后几条消息来找最后一个气泡，不用每次把整份聊天记录都拆一遍（记录长了会很慢）。
         const template = document.createElement('template');
-        template.innerHTML = html;
-        const bubbles = template.content.querySelectorAll('.chat-bubble');
-        if (!bubbles.length) return '';
-        const lastBubble = bubbles[bubbles.length - 1];
+        let lastBubble: Element | undefined, from = html.length, tries = 0;
+        while (!lastBubble && from > 0) {
+            from = ++tries > 5 ? -1 : html.lastIndexOf('<div class="chat-message-row', from - 1);
+            if (from < 0) { template.innerHTML = html; from = 0; }
+            else template.innerHTML = html.slice(from);
+            const bubbles = template.content.querySelectorAll('.chat-bubble');
+            lastBubble = bubbles[bubbles.length - 1];
+        }
+        if (!lastBubble) return '';
         // 转发记录卡只显示消息类型，不把卡片标题、预览和页脚拼进聊天列表。
         if (lastBubble.querySelector('.chat-forward-record-card')) return '[聊天记录]';
         if (lastBubble.querySelector('.chat-photo')) return '[照片]';

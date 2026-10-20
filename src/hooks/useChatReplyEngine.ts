@@ -44,7 +44,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
  }
     function collectCurrentChatContext() {
         const context:ChatContextItem[] = [];
-        const rows = nodes.rows();
+        // 只读最近的消息就够：送给模型的最多是「上下文条数」那么多条，多拿一些给撤回、待发这类会被略过的。
+        const rows = nodes.rows(Math.max(60, (Number(preferences.current?.contextMessages) || 30) * 2 + 20));
         for (const row of rows) {
             // 我撤回的讯息：他有看到就知道原文，没看到只知道我撤回了一条
             if (row.classList.contains('chat-recall-notice') && row.dataset.recalledBy === 'user') {
