@@ -1,4 +1,4 @@
-import type { Preset, PresetBuiltinId, PresetEntry, PresetParams, PresetPlacement, PresetRole, PresetStore } from '../types/preset';
+import type { Preset, PresetAnchor, PresetBuiltinId, PresetEntry, PresetParams, PresetPlacement, PresetRole, PresetStore } from '../types/preset';
 import { showToast } from './toast';
 
 export const PRESET_STORAGE_KEY = 'qingtuan_presets_v1';
@@ -22,7 +22,8 @@ export const builtinInfo = (id: PresetBuiltinId) => PRESET_BUILTINS.find(item =>
 
 const defaultParams = (): PresetParams => ({ temperature: { enabled: false, value: 0.8 }, topP: { enabled: false, value: 1 }, maxTokens: { enabled: false, value: 0 } });
 const builtinEntry = (id: PresetBuiltinId): PresetEntry => ({ id: 'builtin-' + id, builtin: id, name: builtinInfo(id).name, content: '', enabled: true, role: 'system', placement: 'system', depth: 0 });
-export function newPresetEntry(): PresetEntry { return { id: uid(), name: '', content: '', enabled: true, role: 'system', placement: 'system', depth: 4 }; }
+export function newPresetEntry(): PresetEntry { return { id: uid(), name: '', content: '', enabled: true, role: 'system', placement: 'system', anchor: 'end', depth: 4 }; }
+const isAnchor = (value: unknown): value is PresetAnchor => value === 'start' || value === 'end' || PRESET_BUILTINS.some(item => item.id === value);
 export function createPreset(name = '默认预设'): Preset {
   return { id: uid(), name, entries: PRESET_BUILTINS.map(item => builtinEntry(item.id)), params: defaultParams(), updatedAt: Date.now() };
 }
@@ -40,7 +41,7 @@ function cleanEntry(value: unknown): PresetEntry | null {
     id: typeof value.id === 'string' && value.id && !value.id.startsWith('builtin-') ? value.id : uid(),
     name: String(value.name ?? '').slice(0, 80), content: String(value.content ?? ''), enabled: value.enabled !== false,
     role: placement === 'system' ? 'system' : ROLES.includes(value.role as PresetRole) ? value.role as PresetRole : 'system',
-    placement, depth: Math.floor(clampNumber(value.depth, 0, 999, 4)), ...(value.warn === true ? { warn: true } : {}),
+    placement, ...(isAnchor(value.anchor) ? { anchor: value.anchor } : {}), depth: Math.floor(clampNumber(value.depth, 0, 999, 4)), ...(value.warn === true ? { warn: true } : {}),
   };
 }
 function cleanParams(value: unknown): PresetParams {
@@ -48,16 +49,20 @@ function cleanParams(value: unknown): PresetParams {
   const param = (key: keyof PresetParams, min: number, max: number) => { const raw = isRaw(source[key]) ? source[key] as Raw : {}; return { enabled: raw.enabled === true, value: clampNumber(raw.value, min, max, defaults[key].value) }; };
   return { temperature: param('temperature', 0, 2), topP: param('topP', 0, 1), maxTokens: param('maxTokens', 0, 32768) };
 }
-/** 整理一份预设：缺少的自带段落补回原本的位置，回复格式一定开着，同一个自带段落只留一个。 */
+/** 整理一份预设：缺少的自带段落补回原本的位置，回复格式一定开着，同一个自带段落只留一个。
+ * 排成自带段落在上、自己写的在下；以前夹在自带段落中间的条目，记下它原本接在哪一段后面（anchor），送出去的位置不变。 */
 export function cleanPreset(value: unknown, keepId = true): Preset | null {
   if (!isRaw(value) || !Array.isArray(value.entries)) return null;
   const seen = new Set<string>(), entries: PresetEntry[] = [];
+  let lastBuiltin: PresetAnchor = 'start';
   for (const raw of value.entries) {
     const entry = cleanEntry(raw);
     if (!entry || (entry.builtin && seen.has(entry.builtin))) continue;
-    if (entry.builtin) seen.add(entry.builtin);
+    if (entry.builtin) { seen.add(entry.builtin); lastBuiltin = entry.builtin; }
+    else if (!entry.anchor) entry.anchor = lastBuiltin;
     entries.push(keepId || entry.builtin ? entry : { ...entry, id: uid() });
   }
+  entries.sort((a, b) => Number(!a.builtin) - Number(!b.builtin));
   PRESET_BUILTINS.forEach((item, index) => {
     if (seen.has(item.id)) return;
     const previous = PRESET_BUILTINS.slice(0, index).reverse().find(other => seen.has(other.id));
@@ -125,9 +130,8 @@ function convertSillyTavernPreset(source: Raw, name: string): Preset {
     (placement === 'system' ? systemEntries : messageEntries).push(entry);
   });
   const preset = createPreset(name);
-  // 酒馆的系统条目接在人设后面，单独成消息的放在最后。
-  preset.entries.splice(preset.entries.findIndex(entry => entry.builtin === 'persona') + 1, 0, ...systemEntries);
-  preset.entries.push(...messageEntries);
+  // 酒馆的系统条目接在「角色人设」后面，单独成消息的照原本顺序排在后面。
+  preset.entries.push(...systemEntries.map(entry => ({ ...entry, anchor: 'persona' as const })), ...messageEntries);
   // 单次回复上限先不打开：酒馆预设的数字常常太小，思考型模型会想完就没额度。
   if (typeof source.temperature === 'number') preset.params.temperature = { enabled: true, value: clampNumber(source.temperature, 0, 2, 0.8) };
   if (typeof source.top_p === 'number') preset.params.topP = { enabled: true, value: clampNumber(source.top_p, 0, 1, 1) };

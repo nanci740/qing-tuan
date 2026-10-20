@@ -121,25 +121,27 @@ function expandMacros(text: string, input: ChatPromptInput) {
         .replace(/\{\{char\}\}/gi, input.characterName).replace(/\{\{user\}\}/gi, input.userName || '用户');
 }
 
-/** 按预设的顺序组出系统提示词。自带的段落照上面的规则送；回复格式一定送。
+/** 按预设组出系统提示词。自带的段落照预设里的顺序送，回复格式一定送。
  * 世界书的位置跟着自带段落走：头部在最前、人设前后夹着「角色人设」、中部接在「当前时间」后面、尾部在最后。
- * 自己写的条目：放在系统提示词里的照顺序接上；其他的单独成一条消息，交给回复引擎插进聊天记录。 */
+ * 自己写的条目：放在系统提示词里的，接在它选的那段自带段落后面（同一段后面的照条目顺序）；
+ * 其他的单独成一条消息，交给回复引擎插进聊天记录。 */
 export function buildChatSystemPrompt(input: ChatPromptInput, preset: Preset = createPreset()): { system: string; messages: WorldMessage[] } {
     const w = input.world.system, parts = [w.head], messages: WorldMessage[] = [];
+    const custom = preset.entries.filter(entry => !entry.builtin && entry.enabled)
+        .map(entry => ({ entry, text: expandMacros(entry.content, input).trim() })).filter(item => item.text);
+    const systemAfter = (anchor: string) => custom.filter(item => item.entry.placement === 'system' && (item.entry.anchor || 'end') === anchor).forEach(item => parts.push(`\n${item.text}\n`));
+    systemAfter('start');
     for (const entry of preset.entries) {
-        if (entry.builtin) {
-            const on = entry.enabled || entry.builtin === 'format';
-            if (entry.builtin === 'persona') { parts.push(w.before, on ? persona(input) : '', w.after); continue; }
-            if (on) parts.push(SECTIONS[entry.builtin](input));
-            if (entry.builtin === 'time') parts.push(w.middle);
-            continue;
-        }
-        if (!entry.enabled) continue;
-        const text = expandMacros(entry.content, input).trim();
-        if (!text) continue;
-        if (entry.placement === 'system') parts.push(`\n${text}\n`);
-        else messages.push({ role: entry.role, content: text, place: entry.placement, depth: entry.placement === 'depth' ? entry.depth : 0 });
+        if (!entry.builtin) continue;
+        const on = entry.enabled || entry.builtin === 'format';
+        if (entry.builtin === 'persona') parts.push(w.before, on ? persona(input) : '', w.after);
+        else if (on) parts.push(SECTIONS[entry.builtin](input));
+        if (entry.builtin === 'time') parts.push(w.middle);
+        systemAfter(entry.builtin);
     }
+    systemAfter('end');
+    for (const { entry, text } of custom)
+        if (entry.placement !== 'system') messages.push({ role: entry.role, content: text, place: entry.placement, depth: entry.placement === 'depth' ? entry.depth : 0 });
     parts.push(w.tail);
     return { system: parts.join(''), messages };
 }

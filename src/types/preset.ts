@@ -3,6 +3,7 @@ export type PresetBuiltinId = 'basics' | 'persona' | 'time' | 'presence' | 'mark
 /** system：放进系统提示词，按条目顺序排；front / tail：聊天记录前面、最后，单独成一条消息；depth：插在倒数第几条消息之前。 */
 export type PresetPlacement = 'system' | 'front' | 'tail' | 'depth';
 export type PresetRole = 'system' | 'user' | 'assistant';
+export type PresetAnchor = 'start' | 'end' | PresetBuiltinId;
 export interface PresetEntry {
   id: string;
   /** 有值就是程序自带的那段；没有就是自己写的条目。 */
@@ -12,6 +13,8 @@ export interface PresetEntry {
   enabled: boolean;
   role: PresetRole;
   placement: PresetPlacement;
+  /** 放进系统提示词时接在哪一段自带段落后面；'start' 是最前面，'end' 是最后面。自带段落永远排在自己写的条目上面。 */
+  anchor?: PresetAnchor;
   depth: number;
   /** 导入时看起来跟回复格式有关，先关掉，提醒检查。 */
   warn?: boolean;
