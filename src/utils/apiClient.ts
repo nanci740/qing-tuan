@@ -1,4 +1,5 @@
 import type { ApiConfig, ApiConnection, ApiMessage, ApiResponse, ApiChunkHandler } from '../types/api';
+import { splitLeadingSystem } from './apiMessages';
 import { isGeminiNative, geminiHeaders, geminiRequest, normalizeGeminiResponse, parseGeminiStream, fetchGeminiModels } from './geminiNative';
 
 export function cleanBaseUrl(value: unknown) {
@@ -20,9 +21,17 @@ export function validateConfig(config: ApiConnection, needsModel = false) {
 
 export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
         const list = Array.isArray(messages) ? messages.filter(Boolean) : [];
-        const system = list.filter(item => item.role === 'system');
-        const normal = list.filter(item => item.role !== 'system');
-        return [...system, ...normal.slice(-Math.max(1, limit || 30))];
+        // 开头的 system 一定留着；夹在聊天记录中间的 system（世界书按深度插入的）留在原位，
+        // 只算 user / assistant 的条数，裁掉的范围里的 system 跟着一起裁掉。
+        let lead = 0;
+        while (lead < list.length && list[lead].role === 'system') lead++;
+        const rest = list.slice(lead), keep = Math.max(1, limit || 30);
+        let start = rest.length, count = 0;
+        for (let i = rest.length - 1; i >= 0; i--) {
+            if (rest[i].role !== 'system') { if (count >= keep) break; count++; }
+            start = i;
+        }
+        return [...list.slice(0, lead), ...rest.slice(start)];
     }
 
     export function getFeatureModel(config: ApiConfig, feature: string) {
@@ -210,13 +219,10 @@ export function trimMessagesForContext(messages: ApiMessage[], limit: number) {
         if (config.provider === 'claude') {
             endpoint = `${config.baseUrl}/messages`;
 
-            const systemParts = inputMessages
-                .filter(item => item && item.role === 'system')
-                .map(item => typeof item.content === 'string' ? item.content : '')
-                .filter(Boolean);
+            const { system: systemParts, rest } = splitLeadingSystem(inputMessages);
 
-            const claudeMessages = inputMessages
-                .filter(item => item && item.role !== 'system')
+            const claudeMessages = rest
+                .filter(Boolean)
                 .map(item => ({
                     role: item.role === 'assistant' ? 'assistant' : 'user',
                     content: typeof item.content === 'string' ? item.content : String(item.content ?? '')
