@@ -1,16 +1,17 @@
+import { kv } from '../utils/kvStorage';
 import { readChatCharacters } from '../utils/chatCharacterStorage';
 import { useEffect, useRef, useState } from 'react';
 import { chatReplyPreview } from '../utils/chatReplyParser';
 interface Notice { chatKey: string; title: string; body: string; avatar: string; time: number }
 interface Character { archiveId: string; name?: string; photoUrl?: string }
 const KEY = 'qt_home_notice_v1', UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
-function loadLast(): Notice | null { try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); return saved ? {...saved, body: chatReplyPreview(saved.body)} : null; } catch { return null; } }
+function loadLast(): Notice | null { try { const saved = JSON.parse(kv.getItem(KEY) || 'null'); return saved ? {...saved, body: chatReplyPreview(saved.body)} : null; } catch { return null; } }
 function loadCharacter(last: Notice | null): Character | null {
   if (!last?.chatKey) return null;
   return readChatCharacters().find(c => c.archiveId === last.chatKey) || null;
 }
 function unreadTotal() {
-  try { const map: Record<string, unknown> = JSON.parse(localStorage.getItem(UNREAD_KEY) || '{}'); return Object.values(map || {}).reduce<number>((sum, n) => sum + (Number(n) || 0), 0); } catch { return 0; }
+  try { const map: Record<string, unknown> = JSON.parse(kv.getItem(UNREAD_KEY) || '{}'); return Object.values(map || {}).reduce<number>((sum, n) => sum + (Number(n) || 0), 0); } catch { return 0; }
 }
 function ago(time: number) {
   const s = Math.max(0, (Date.now() - Number(time || 0)) / 1000);
@@ -29,7 +30,7 @@ export function useHomeNotice() {
     function reply(event: Event) {
       const d = (event as CustomEvent<Partial<Notice>>).detail || {};
       const next: Notice = { chatKey: String(d.chatKey || ''), title: String(d.title || ''), body: chatReplyPreview(d.body).replace(/\s+/g, ' ').trim(), avatar: typeof d.avatar === 'string' && d.avatar.length < 2048 ? d.avatar : '', time: Date.now() };
-      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* 原存储回退。 */ }
+      try { kv.setItem(KEY, JSON.stringify(next)); } catch { /* 原存储回退。 */ }
       lastRef.current = next; setLast(next); setCharacter(loadCharacter(next)); setImageFailed(false); refreshText();
     }
     const visible = () => { if (!document.hidden) refreshText(); };

@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { MemoFolder, MemoKind, MemoNote } from '../types/memos';
 import { MEMO_TABLES, openAppDatabase } from './appDatabase.ts';
 
@@ -113,7 +114,7 @@ export async function readMemos(options: MemoStorageOptions = {}): Promise<MemoS
   try {
     const existing = await memoTransaction(db, 'readonly', (_transaction, metadata, notes) => snapshotFromRows(metadata, notes));
     if (existing) return existing;
-    const raw = (options.legacyStorage ?? globalThis.localStorage).getItem(MEMO_STORAGE_KEY);
+    const raw = (options.legacyStorage ?? kv).getItem(MEMO_STORAGE_KEY);
     const initial = raw === null ? [] : validateMemoArchive(JSON.parse(raw));
     return await memoTransaction(db, 'readwrite', (transaction, metadata, notes) => {
       const latest = snapshotFromRows(metadata, notes);

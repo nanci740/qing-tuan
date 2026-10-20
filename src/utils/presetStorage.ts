@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { Preset, PresetAnchor, PresetBuiltinId, PresetEntry, PresetParams, PresetPlacement, PresetRole, PresetStore } from '../types/preset';
 import { showToast } from './toast';
 
@@ -72,13 +73,13 @@ export function cleanPreset(value: unknown, keepId = true): Preset | null {
   return { id: keepId && typeof value.id === 'string' && value.id ? value.id : uid(), name: String(value.name || '未命名预设').slice(0, 60), entries, params: cleanParams(value.params), updatedAt: Number(value.updatedAt) || Date.now() };
 }
 
-// ===== 存取：放在 localStorage，改了通知订阅的画面 =====
+// ===== 存取：放在 IndexedDB 设定库（kv），改了通知订阅的画面 =====
 let cache: PresetStore | null = null;
 const listeners = new Set<() => void>();
 export function readPresetStore(): PresetStore {
   if (cache) return cache;
   let saved: unknown = null;
-  try { saved = JSON.parse(localStorage.getItem(PRESET_STORAGE_KEY) || 'null'); } catch { saved = null; }
+  try { saved = JSON.parse(kv.getItem(PRESET_STORAGE_KEY) || 'null'); } catch { saved = null; }
   const presets = isRaw(saved) && Array.isArray(saved.presets) ? saved.presets.map(item => cleanPreset(item)).filter((item): item is Preset => !!item) : [];
   if (!presets.length) presets.push(createPreset());
   const defaultId = isRaw(saved) && presets.some(item => item.id === saved.defaultId) ? String(saved.defaultId) : presets[0].id;
@@ -89,7 +90,7 @@ export function readPresetStore(): PresetStore {
 export function writePresetStore(next: PresetStore): boolean {
   const presets = next.presets.length ? next.presets : [createPreset()];
   const candidate = { presets, defaultId: presets.some(item => item.id === next.defaultId) ? next.defaultId : presets[0].id };
-  try { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(candidate)); }
+  try { kv.setItem(PRESET_STORAGE_KEY, JSON.stringify(candidate)); }
   catch {
     showToast('预设没有存进去：浏览器的存储空间可能满了，可以先导出备份，再删掉用不到的预设');
     listeners.forEach(listener => listener());

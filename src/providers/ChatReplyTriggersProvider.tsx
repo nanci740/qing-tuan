@@ -12,7 +12,7 @@ export function ChatReplyTriggersProvider({children}:{children:ReactNode}){
  function manual(){if(locked.current||!service.current)return;busy(true);queue.current=queue.current.catch(()=>{}).then(()=>service.current!.reply()).finally(()=>busy(false));}
  // ===== 停顿后自动回复（取代月亮按钮）=====
  // 发出讯息后开始倒数；倒数中又打字、又发讯息或按麦克风就重新倒数；停下来够久才让角色一次读完这一串讯息回复。
- // 秒数存在 localStorage（smallphone_chat_auto_reply_delay），之后聊天设置会做调整的画面；预设 7 秒。
+ // 秒数存在设定库（smallphone_chat_auto_reply_delay），之后聊天设置会做调整的画面；预设 7 秒。
  function schedule(){const api=service.current;if(!api)return;window.clearTimeout(timer.current);chatKey.current=api.currentKey();timer.current=window.setTimeout(()=>{
   timer.current=0;const key=chatKey.current;chatKey.current='';
   // 切到其他页面（聊天列表、桌面…）也照样回；只有聊天对象已经换掉（或被删掉）才不回——

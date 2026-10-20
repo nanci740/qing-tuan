@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 interface BootState { run: boolean; ready: boolean; fading: boolean; hidden: boolean; mainVisible: boolean; mainOpaque: boolean; }
@@ -6,13 +7,13 @@ const Context = createContext<BootContextValue | null>(null);
 function initialBoot(): BootState {
   let play = true;
   try {
-    const mode = localStorage.getItem('smallphone_splash_mode') || 'always';
+    const mode = kv.getItem('smallphone_splash_mode') || 'always';
     if (mode === 'off') play = false;
     else if (mode === 'daily') {
       const now = new Date();
       const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-      play = (localStorage.getItem('smallphone_splash_last_shown') || '') !== today;
-      if (play) localStorage.setItem('smallphone_splash_last_shown', today);
+      play = (kv.getItem('smallphone_splash_last_shown') || '') !== today;
+      if (play) kv.setItem('smallphone_splash_last_shown', today);
     }
   } catch { play = true; }
   return { run: play, ready: false, fading: false, hidden: !play, mainVisible: !play, mainOpaque: !play };

@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
 import type {MessageNodesApi,PeerMessageDetail} from '../types/chatMessages';
@@ -119,7 +120,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
     }
     // 在线 / 状态：每个角色一笔，AI 回复时想改才改
     function readChatPresenceMap() {
-        try { const map = JSON.parse(localStorage.getItem(CHAT_PRESENCE_KEY) || '{}'); return map && typeof map === 'object' ? map : {}; }
+        try { const map = JSON.parse(kv.getItem(CHAT_PRESENCE_KEY) || '{}'); return map && typeof map === 'object' ? map : {}; }
         catch (error) { return {}; }
     }
     function getChatPresence(chatKey:unknown) {
@@ -135,7 +136,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (PRESENCE_STATES.includes(String(fields.online || '').trim())) next.online = String(fields.online).trim();
         if (typeof fields.status === 'string') next.status = fields.status.trim().slice(0, 30);
         map[String(chatKey)] = next;
-        try { localStorage.setItem(CHAT_PRESENCE_KEY, JSON.stringify(map)); } catch (error) {}
+        try { kv.setItem(CHAT_PRESENCE_KEY, JSON.stringify(map)); } catch (error) {}
         presenceRef.current=map;setPresenceMap(map);
     }
     

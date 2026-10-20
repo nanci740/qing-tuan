@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import {writeSettingsBatch} from '../utils/settingsPersistence';
 import { readImageSlot, saveImageSlots, prepareImage } from '../utils/imageAssets';
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -14,13 +15,13 @@ import { showToast } from '../utils/toast';
 export const iconConfigs = {app:[{key:'ledger',label:'Ledger'},{key:'memos',label:'Memos'},{key:'world',label:'World'},{key:'memories',label:'Memories'}],dock:[{key:'home',label:'Home'},{key:'chat',label:'Chat'},{key:'diary',label:'Diary'},{key:'space',label:'Space'},{key:'settings',label:'Settings'}]};
 export type IconKind = keyof typeof iconConfigs;
 type Icons = Record<IconKind,Record<string,string>>;
-function read(key:string,fallback=''){try{return localStorage.getItem(key)||fallback;}catch{return fallback;}}
+function read(key:string,fallback=''){try{return kv.getItem(key)||fallback;}catch{return fallback;}}
 
 function readIcons():Icons{return Object.fromEntries(Object.entries(iconConfigs).map(([kind,items])=>[kind,Object.fromEntries(items.map(({key})=>[key,readImageSlot(`smallphone_${kind}_icon_${key}`)]))])) as Icons;}
-function initialAppearance(){let color=DEFAULT_THEME_COLOR,wallpaper='',opacity=100;try{color=localStorage.getItem('smallphone_theme_color')||color;
+function initialAppearance(){let color=DEFAULT_THEME_COLOR,wallpaper='',opacity=100;try{color=kv.getItem('smallphone_theme_color')||color;
  // 旧的淡青 #C0D6D8 已换成新的淡青 #DDF2F4，之前存的旧值自动换成新色。
- if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;localStorage.setItem('smallphone_theme_color',color);}wallpaper=readImageSlot('smallphone_main_wallpaper');opacity=Number(localStorage.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
- let glass=50;try{const value=Number(localStorage.getItem('smallphone_glass_strength'));if(Number.isFinite(value))glass=value;}catch{}
+ if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;kv.setItem('smallphone_theme_color',color);}wallpaper=readImageSlot('smallphone_main_wallpaper');opacity=Number(kv.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
+ let glass=50;try{const value=Number(kv.getItem('smallphone_glass_strength'));if(Number.isFinite(value))glass=value;}catch{}
  const splash=read('smallphone_splash_mode','always');return{tone:normalizeThemeTone(read('smallphone_theme_tone')),color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
 function useAppearanceState(){
  const navigation=useSettingsNavigation(),home=useHomeTexts(),music=useMusic();

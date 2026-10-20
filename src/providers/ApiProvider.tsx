@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ApiConfig, ApiConnection, ApiMessage, ApiOverrides, ApiResponse, ApiService } from '../types/api';
@@ -41,7 +42,7 @@ function useApiState() {
   const renderStats = useCallback(() => { setStats(getApiStats()); setLogs(getApiLogs()); }, []);
   const saveConfig = useCallback((lastOk = false) => {
     const stored = { ...readFormConfig(), lastOk: !!lastOk, updatedAt: Date.now() };
-    try { localStorage.setItem(API_STORAGE_KEY, JSON.stringify(stored)); return stored; } catch { throw new Error('浏览器本地储存空间不足，无法保存设置'); }
+    try { kv.setItem(API_STORAGE_KEY, JSON.stringify(stored)); return stored; } catch { throw new Error('浏览器本地储存空间不足，无法保存设置'); }
   }, [readFormConfig]);
   const requestChat = useCallback(async (messages: ApiMessage[], overrides: ApiOverrides = {}): Promise<ApiResponse> => {
     const baseConfig = { ...readFormConfig(), ...overrides }; baseConfig.model = overrides.model || getFeatureModel(baseConfig, overrides.feature || '');
@@ -84,7 +85,7 @@ function useApiState() {
   }
   function changeFallback(enabled: boolean) {
     // 备用 API 开关单独即时保存；不需要再额外按“保存设置”
-    try { let stored; try { stored = JSON.parse(localStorage.getItem(API_STORAGE_KEY) || '{}') || {}; } catch { stored = {}; } stored.fallbackEnabled = !!enabled; stored.updatedAt = Date.now(); localStorage.setItem(API_STORAGE_KEY,JSON.stringify(stored)); field('fallbackEnabled', enabled); } catch { showToast('备用 API 开关保存失败'); }
+    try { let stored; try { stored = JSON.parse(kv.getItem(API_STORAGE_KEY) || '{}') || {}; } catch { stored = {}; } stored.fallbackEnabled = !!enabled; stored.updatedAt = Date.now(); kv.setItem(API_STORAGE_KEY,JSON.stringify(stored)); field('fallbackEnabled', enabled); } catch { showToast('备用 API 开关保存失败'); }
   }
   function openProvider(target: 'provider' | 'fallbackProvider') { setProviderPicker(previous => ({ open: true, target, title: target === 'provider' ? '选择接口类型' : '选择备用接口类型', selected: formRef.current[target] || 'openai-compatible', revision: previous.revision+1 })); }
   function openModels(models: string[], target: ModelTarget, title: string) {

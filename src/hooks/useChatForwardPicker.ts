@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useChatNavigation } from '../providers/ChatNavigationProvider';
@@ -6,7 +7,7 @@ import type { ForwardPayload, ForwardPickerApi, ForwardPickerServices, ForwardTa
 const RECENTS_KEY = 'smallphone_chat_forward_recent_targets_v1';
 function loadRecents(): unknown[] {
   try {
-    const data: unknown = JSON.parse(localStorage.getItem(RECENTS_KEY) || '[]');
+    const data: unknown = JSON.parse(kv.getItem(RECENTS_KEY) || '[]');
     return Array.isArray(data) ? data : [];
   } catch { return []; }
 }
@@ -71,7 +72,7 @@ export function useChatForwardPicker() {
       recents.current = [targetKey, ...recents.current.filter(key => key !== targetKey)].slice(0, 8);
       window.dispatchEvent(new CustomEvent('smallphone-forward-message', { detail: { ...payload.current, targetKey } }));
     }
-    try { localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.current)); }
+    try { kv.setItem(RECENTS_KEY, JSON.stringify(recents.current)); }
     catch { /* 原存储失败继续关闭。 */ }
     close();
     // 转发完成后明确恢复原聊天页面，而不是停留在选择聊天层。

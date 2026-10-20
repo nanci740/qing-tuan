@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import { CATALOG_TABLES, APP_DATABASE_BLOCKED_MESSAGE } from './appDatabase.ts';
 import { catalogSnapshot, CatalogConflictError, migrateCatalogDatabase, readCatalogDatabase, writeCatalogDatabase } from './catalogDatabase.ts';
 import type { CatalogSnapshot } from './catalogDatabase.ts';
@@ -43,7 +44,7 @@ async function initialize(): Promise<string> {
         states[kind].snapshot = saved;
       } else {
         // 未迁移且数据库为空才访问旧键；整个清单通过检查后才处理图片。
-        const raw = localStorage.getItem(keys[kind]);
+        const raw = kv.getItem(keys[kind]);
         const checked = validateCatalogRows(kind, raw === null ? [] : JSON.parse(raw));
         initial[kind] = await prepare(kind, checked);
       }

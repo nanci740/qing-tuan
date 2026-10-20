@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
 import {transcriptionConnection,recordingExtension,transcriptionError} from '../utils/voiceTranscription';
@@ -226,7 +227,7 @@ export function useChatVoice(messages:MessageNodesApi){
         update({label:'录制语音'});
     }
     function readSavedVoiceService() {
-        try { return JSON.parse(localStorage.getItem('smallphone_voice_image_settings_v1') || '{}')?.voice || {}; }
+        try { return JSON.parse(kv.getItem('smallphone_voice_image_settings_v1') || '{}')?.voice || {}; }
         catch (_) { return {}; }
     }
     function pauseOtherChatVoiceBubbles(currentAudio:HTMLAudioElement) {
