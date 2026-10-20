@@ -23,3 +23,14 @@
 /* 跑马灯色带的前后两句换成预设的 */
 .world-page.preset-page .world-address-field::before { content: '★ welcome to my preset ★ 现在位置 → '; }
 .world-page.preset-page .world-address-field::after { content: ' ★ 决定角色怎么读懂这场对话 ★'; }
+
+/* 多选：勾选框代替上下箭头和开关，勾上的卡片框线和勾选框用标题那个青色（主题色在浅色主题下太淡） */
+.preset-page .preset-check {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  border: .6px solid var(--world-line); border-radius: 5px; background: var(--color-surface);
+  color: var(--color-surface); font-size: 14px; line-height: 1;
+}
+.preset-page .preset-entry.is-selected { --preset-pick: var(--world-teal, var(--win-deep)); border-color: var(--preset-pick); box-shadow: inset 0 0 0 1px var(--preset-pick); }
+.preset-page .preset-entry.is-selected .preset-check { background: var(--preset-pick); border-color: var(--preset-pick); color: var(--color-surface); font-weight: 700; }
+.preset-page .preset-entry.is-picking .world-book-open { -webkit-touch-callout: none; user-select: none; }
+.preset-page .preset-entry .world-book-open { -webkit-touch-callout: none; }

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import type { ChangeEvent, ReactNode } from 'react';
+import type { ChangeEvent, MouseEvent, PointerEvent, ReactNode } from 'react';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { useWorld } from '../../providers/WorldProvider';
 import { confirmChat } from '../../utils/chatConfirm';
@@ -35,7 +35,33 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
   const viewKey = (value: View) => value.name === 'preset' ? 'preset:' + value.id : value.name;
   function go(next: View) {
     if (pageRef.current) scrollMemory.current[viewKey(view)] = pageRef.current.scrollTop;
+    setSelected(null);
     setViewState(next);
+  }
+  // 自己写的条目长按进入多选：按住 0.5 秒勾上那一条；之后点条目就是勾选／取消，不会点进去编辑。
+  const [selected, setSelected] = useState<Set<string> | null>(null);
+  const pressed = useRef<{ timer?: ReturnType<typeof setTimeout>; fired: boolean; x: number; y: number }>({ fired: false, x: 0, y: 0 });
+  const stopPress = () => { clearTimeout(pressed.current.timer); pressed.current.timer = undefined; };
+  const longPress = (id: string) => ({
+    onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
+      stopPress(); pressed.current = { fired: false, x: event.clientX, y: event.clientY };
+      pressed.current.timer = setTimeout(() => {
+        pressed.current.fired = true; pressed.current.timer = undefined;
+        setSelected(current => { const next = new Set(current || []); next.add(id); return next; });
+        navigator.vibrate?.(15);
+      }, 500);
+    },
+    onPointerMove: (event: PointerEvent<HTMLButtonElement>) => { if (Math.hypot(event.clientX - pressed.current.x, event.clientY - pressed.current.y) > 10) stopPress(); },
+    onPointerUp: stopPress, onPointerCancel: stopPress, onPointerLeave: stopPress,
+    onContextMenu: (event: MouseEvent<HTMLButtonElement>) => event.preventDefault(),
+  });
+  const toggleSelected = (id: string) => setSelected(current => { const next = new Set(current || []); if (next.has(id)) next.delete(id); else next.add(id); return next; });
+  async function deleteSelected(target: Preset) {
+    if (!selected?.size) return;
+    if (!await confirmChat({ title: '删除条目？', message: `勾选的 ${selected.size} 条会一起删掉，删除后不会再送给模型。`, confirmText: '删除', danger: true })) return;
+    const count = selected.size;
+    if (!save({ ...target, entries: target.entries.filter(entry => entry.builtin || !selected.has(entry.id)) })) return;
+    setSelected(null); showToast(`已删除 ${count} 条`);
   }
   useLayoutEffect(() => { if (pageRef.current) pageRef.current.scrollTop = view.name === 'entry' ? 0 : scrollMemory.current[viewKey(view)] ?? 0; }, [viewKey(view)]);
   const world = useWorld();
@@ -157,31 +183,38 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
         const group = preset.entries.map((entry, index) => ({ entry, index })).filter(item => !!item.entry.builtin === builtinGroup);
         return <div key={builtinGroup ? 'builtin' : 'custom'}>
           <div className="world-section-head"><b>{builtinGroup ? '自带规矩' : '自己写的条目'}</b><small>{group.length} ENTRIES</small></div>
-          <p className="world-hint preset-note">{builtinGroup ? '程序自己的规矩，固定排在最上面，只能用 ↑ ↓ 排顺序、开关；「回复格式」锁住不能关。' : '用 ↑ ↓ 排顺序。放进系统提示词的，会接在你选的那段自带规矩后面。'}</p>
+          <p className="world-hint preset-note">{builtinGroup ? '程序自己的规矩，固定排在最上面，只能用 ↑ ↓ 排顺序、开关；「回复格式」锁住不能关。' : selected ? '点条目勾选或取消，选好后按下面的「删除」。' : '用 ↑ ↓ 排顺序；长按条目可以多选删除。放进系统提示词的，会接在你选的那段自带规矩后面。'}</p>
           {!builtinGroup && !group.length ? <div className="world-empty-note">还没有自己写的条目，点下面的「新增条目」写一条吧。</div> : null}
           {group.map(({ entry, index }, position) => {
             const info = entry.builtin ? builtinInfo(entry.builtin) : null;
-            return <div className="world-paper world-entry-card preset-entry" key={entry.id} data-preset-entry={entry.id}><div className="world-row">
-              <PressedButton className="world-book-open" type="button" disabled={!!info} onClick={() => { if (!info) openEntry(preset, entry); }}>
+            const picking = !info && !!selected, checked = picking && selected!.has(entry.id);
+            return <div className={'world-paper world-entry-card preset-entry' + (picking ? ' is-picking' : '') + (checked ? ' is-selected' : '')} key={entry.id} data-preset-entry={entry.id}><div className="world-row">
+              <PressedButton className="world-book-open" type="button" disabled={!!info} aria-pressed={picking ? checked : undefined}
+                {...(info ? {} : longPress(entry.id))}
+                onClick={() => { if (info) return; if (pressed.current.fired) { pressed.current.fired = false; return; } if (selected) toggleSelected(entry.id); else openEntry(preset, entry); }}>
                 <div className="world-entry-title"><span className="world-entry-no">No.{String(position + 1).padStart(2, '0')}</span>{entry.name || '未命名条目'}</div>
                 <div className="world-entry-preview">{info ? info.note : entry.content}</div>
                 <div className="preset-chips">{info ? <span className="world-chip">自带</span> : null}{info?.locked ? <span className="world-chip">锁定</span> : null}{info ? null : <span className="world-chip">{placementLabel(entry)}{entry.placement === 'system' ? '' : ' · ' + entry.role}</span>}{entry.warn ? <span className="world-chip preset-warn">需检查</span> : null}</div>
               </PressedButton>
-              <div className="preset-entry-controls">
+              {picking ? <div className="preset-entry-controls"><span className="preset-check" aria-hidden="true">{checked ? '✓' : ''}</span></div> : <div className="preset-entry-controls">
                 <PressedButton className="preset-move" type="button" aria-label="往上移" disabled={position === 0} onClick={() => move(preset, index, -1)}>↑</PressedButton>
                 <PressedButton className="preset-move" type="button" aria-label="往下移" disabled={position === group.length - 1} onClick={() => move(preset, index, 1)}>↓</PressedButton>
                 <input className="world-toggle" type="checkbox" aria-label="启用条目" checked={entry.enabled || !!info?.locked} disabled={!!info?.locked} onChange={event => toggleEntry(preset, entry.id, event.currentTarget.checked)} />
-              </div>
+              </div>}
             </div></div>;
           })}
         </div>;
       })}
-      <div className="world-action-bar">
+      {selected ? <div className="world-action-bar">
+        <PressedButton className="world-action secondary" type="button" id="presetSelectAll" onClick={() => { const all = preset.entries.filter(entry => !entry.builtin).map(entry => entry.id); setSelected(new Set(selected.size === all.length ? [] : all)); }}>{selected.size && selected.size === preset.entries.filter(entry => !entry.builtin).length ? '全不选' : '全选'}</PressedButton>
+        <PressedButton className="world-action danger" type="button" id="presetDeleteSelected" disabled={!selected.size} onClick={() => deleteSelected(preset)}>{`删除（${selected.size}）`}</PressedButton>
+        <PressedButton className="world-action secondary" type="button" id="presetSelectCancel" onClick={() => setSelected(null)}>取消</PressedButton>
+      </div> : <div className="world-action-bar">
         <PressedButton className="world-action" type="button" id="presetAddEntry" onClick={() => openEntry(preset, newPresetEntry())}>新增条目</PressedButton>
         <PressedButton className="world-action secondary" type="button" onClick={() => copyPreset(preset)}>复制</PressedButton>
         <PressedButton className="world-action secondary" type="button" onClick={() => download(preset.name.replace(/[\\/:*?"<>|]/g, '-') + '.json', exportPresetsJson([preset]))}>导出</PressedButton>
         <PressedButton className="world-action danger" type="button" id="presetDelete" onClick={() => removePreset(preset)}>删除</PressedButton>
-      </div>
+      </div>}
     </>;
   } else if (view.name === 'entry' && preset && draft) {
     const exists = preset.entries.some(item => item.id === draft.id);
