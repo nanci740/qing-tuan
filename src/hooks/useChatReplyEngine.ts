@@ -9,7 +9,7 @@ import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {voiceLength} from '../utils/chatMessageNodes';
-import type {WorldInjection} from '../utils/chatWorldContext';
+import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
 import {readProfileText} from './usePersonalProfile';
@@ -21,7 +21,20 @@ export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;r
  /** 重画一张照片（点了失败的照片、或在照片预览里改了描述）。 */
  photo(chatKey:string,photo:MessagePhoto):void;
  /** 这张照片现在是不是正在画（重新整理后留下的「接收中」不算）。 */
- drawing(id:string):boolean;}
+ drawing(id:string):boolean;
+ /** 你生图时的「补充描写」：用跟他回话一样的预设、世界书、人设和聊天记录，把你写的几个词写成完整的画面描述。 */
+ photoPrompt(keywords:string,includeMe:boolean):Promise<string>;}
+/** 世界书和预设单独成一条的消息插进聊天记录：front 放在聊天记录前面，tail 放在最后，depth 插在倒数第几条消息之前。 */
+function insertInjected(list:ApiMessage[], injected:WorldMessage[]):ApiMessage[] {
+    if (!injected.length) return list;
+    const pick = (place:string) => injected.filter(item => item.place === place).map(({ role, content }) => ({ role, content }));
+    const history = list.slice(1), inserts = new Map<number, ApiMessage[]>();
+    for (const item of injected.filter(item => item.place === 'depth')) {
+        const at = Math.max(0, history.length - item.depth);
+        inserts.set(at, [...(inserts.get(at) || []), { role: item.role, content: item.content }]);
+    }
+    return [...list.slice(0, 1), ...pick('front'), ...history.flatMap((message, index) => [...(inserts.get(index) || []), message]), ...(inserts.get(history.length) || []), ...pick('tail')];
+}
 const CHAT_PRESENCE_KEY = 'smallphone_chat_presence_v1';
 const PRESENCE_STATES = ['在线', '忙碌', '离开', '隐身'];
 export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
@@ -181,6 +194,47 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (isActiveReplyChat(chatKey)) notice('照片没画出来：' + message);
         } finally { drawing.current.delete(photo.id); }
     }
+    // 你生图的补充描写：跟他回话同一套底子（预设、世界书、人设、最近的聊天、预设参数），只是最后多一句「这次帮对方写照片的画面」，
+    // 回传沿用平常的 JSON，取 photo 栏位；没写出 photo 就当作被拒绝，不拿去画。
+    async function writeUserPhotoPrompt(keywords:string, includeMe:boolean) {
+        const requestPreferences = { ...services.current!.preferences() };
+        preferences.current = requestPreferences;
+        const chatKey = services.current!.currentKey();
+        const api = target.smallphoneApi, config = api?.getConfig?.();
+        if (!api?.requestChat || !config?.baseUrl || !config?.apiKey) throw new Error('先在 API 设置填好聊天模型，才能补充描写');
+        const characterName = services.current!.identity().name;
+        const recent = collectCurrentChatContext().slice(-Math.max(1, Number(requestPreferences.contextMessages) || 30));
+        const world = services.current!.worldContext(recent, chatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
+        const currentPresence = getChatPresence(chatKey);
+        const preset = resolvePreset(requestPreferences.presetId);
+        const userName = readProfileText('personal_profile_name').trim();
+        const prompt = buildChatSystemPrompt({
+            characterName, userName, persona: services.current!.persona(chatKey), world,
+            recentText: recent.map(item => String(item.content || '')).join('\n'), trailingUserMessages: 0,
+            timeText: requestPreferences.timeAware ? new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date()) : '',
+            presence: { mine: services.current!.myPresence() || '在线', online: currentPresence.online, status: currentPresence.status },
+            segmented: false, replyLength: requestPreferences.replyLength, quotePolicy: 'never', quoteChoicesText: '', voice: 'off', photo: 'on',
+        }, preset);
+        const ask = `[系统提示] 这一次不用回话：对方（${userName || '用户'}）想自己画一张照片发给你，请你照对方给的关键词，把这张照片的画面写完整。关键词：「${keywords.trim()}」。` +
+            `照着关键词的意思补上合理的细节，关键词指定的内容不要改掉；${includeMe ? '画面里有对方本人，写作 "the user"；' : ''}画面里有你自己时要写出你的外貌特征。` +
+            '只输出一条：{"replies":[{"text":"照片的一句中文说明","photo":"给生图模型看的英文画面描述"}]}，不要加其他回复。';
+        const messages:ApiMessage[] = [{ role: 'system', content: prompt.system }, ...recent.map(({ role, content }) => ({ role, content })), { role: 'user', content: ask }];
+        const injected = [...world.messages, ...prompt.messages], extra = injected.filter(item => item.role !== 'system').length;
+        const data = await api.requestChat(insertInjected(messages, injected), {
+            feature: 'chat',
+            contextMessages: (Number(requestPreferences.contextMessages) || 30) + extra + 1,
+            ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {}),
+            ...(preset.params.temperature.enabled ? { temperature: preset.params.temperature.value } : {}),
+            ...(preset.params.topP.enabled ? { topP: preset.params.topP.value } : {}),
+            ...(preset.params.maxTokens.enabled ? { maxTokens: preset.params.maxTokens.value } : {})
+        });
+        const raw = extractChatAiReply(data);
+        if (!raw) throw new Error(emptyChatReplyReason(data));
+        const parsed = parseChatAiSegmentedReply(raw, []);
+        const photo = (parsed.photos || []).find(Boolean);
+        if (!photo) throw new Error('补充描写没有写出画面，模型可能拒绝了：' + parsed.segments.join(' ').slice(0, 60));
+        return photo;
+    }
     // 家机的语音：用语音服务念出来，回传 { dataUrl, seconds }；wav 会先压成 16kHz 单声道，聊天记录比较不占空间
     async function requestCurrentChatAiReply() {
         const requestPreferences = { ...services.current!.preferences() };
@@ -290,17 +344,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
             ? { role: message.role, content: recent[messages.indexOf(message) - 1]?.content || message.content.filter(part => part.type === 'text').map((part:{text?:string}) => part.text).join(' ') }
             : message);
-        // front 放在聊天记录前面，tail 放在最后，depth 插在倒数第几条消息之前。
-        const withWorld = (list:ApiMessage[]):ApiMessage[] => {
-            if (!injected.length) return list;
-            const pick = (place:string) => injected.filter(item => item.place === place).map(({ role, content }) => ({ role, content }));
-            const history = list.slice(1), inserts = new Map<number, ApiMessage[]>();
-            for (const item of injected.filter(item => item.place === 'depth')) {
-                const at = Math.max(0, history.length - item.depth);
-                inserts.set(at, [...(inserts.get(at) || []), { role: item.role, content: item.content }]);
-            }
-            return [...list.slice(0, 1), ...pick('front'), ...history.flatMap((message, index) => [...(inserts.get(index) || []), message]), ...(inserts.get(history.length) || []), ...pick('tail')];
-        };
+        const withWorld = (list:ApiMessage[]):ApiMessage[] => insertInjected(list, injected);
         const extraMessages = injected.filter(item => item.role !== 'system').length;
         const pendingRows:HTMLElement[] = [];
         pending.current.add(requestChatKey);
@@ -439,7 +483,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
     }
 
  const apiRef=useRef<ChatReplyEngineApi|null>(null);
- if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},reloadPresence(){const map=readChatPresenceMap();presenceRef.current=map;setPresenceMap(map);},presence:getChatPresence,photo(chatKey,photo){void drawPhoto(chatKey,photo);},drawing:id=>drawing.current.has(id),status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
+ if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},reloadPresence(){const map=readChatPresenceMap();presenceRef.current=map;setPresenceMap(map);},presence:getChatPresence,photo(chatKey,photo){void drawPhoto(chatKey,photo);},drawing:id=>drawing.current.has(id),photoPrompt:writeUserPhotoPrompt,status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
  useEffect(()=>()=>{timers.current.forEach(clearTimeout);},[]);
  return {services,api:apiRef.current,status,presenceMap};
 }

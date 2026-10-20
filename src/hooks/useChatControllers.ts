@@ -38,6 +38,8 @@ interface ChatPublicApi {
  smallphoneMessages:MessageNodesApi;
  /** 你发一张照片（相册、拍照或自己生的图），caption 是你写的说明。 */
  smallphoneSendChatPhoto(image:Blob,caption:string):Promise<void>;
+ /** 你生图的补充描写，交给回复引擎用跟他回话一样的底子来写。 */
+ smallphoneWritePhotoPrompt(keywords:string,includeMe:boolean):Promise<string>;
  smallphoneApi?:ApiService;
  smallphoneSyncRoomIdentity(character:ChatCharacter):void;
  smallphoneSetChatStatus(value:string):void;
@@ -331,6 +333,7 @@ function initChatApplication(){
         scheduleAutoReply();
     }
     bridge.smallphoneSendChatPhoto = sendPhoto;
+    bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
 
     function showChatNotice(message:string) {
         if (true) showToast(message);

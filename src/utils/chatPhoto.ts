@@ -1,6 +1,4 @@
 import type { ImageCharacter, ImageConfig } from '../types/voiceImage';
-import type { ApiService } from '../types/api';
-import { extractChatAiReply } from './chatReplyParser';
 import { loadVoiceImageSettings, normalizeImageCharacters, testImage } from './voiceImageServices';
 
 /** 家机发照片：用「语音与生图设置」的生图服务把角色写的英文画面描述画出来。 */
@@ -64,18 +62,3 @@ async function draw(cfg: ImageConfig) {
 
 /** 你从相册选的、拍的照片：一样缩到长边 1024 存成 JPEG。 */
 export function preparePickedPhoto(file: Blob) { return compress(file); }
-
-/** 你写几个词，先请聊天模型扩写成完整的英文画面描述，再拿去画。character 是现在聊天的对象，画面里有他时照着外貌写。 */
-export async function expandPhotoPrompt(text: string, character: { name: string; appearance: string } | null) {
-  const api = (window as Window & { smallphoneApi?: ApiService }).smallphoneApi;
-  const config = api?.getConfig?.();
-  if (!api?.requestChat || !config?.baseUrl || !config?.apiKey) throw new Error('先在 API 设置填好聊天模型，才能补充描写');
-  const who = character?.name ? `现在的聊天对象是「${character.name}」${character.appearance.trim() ? `，外貌：${character.appearance.trim()}` : ''}；画面里有他（她）时要写出外貌特征，不要只写名字。` : '';
-  const data = await api.requestChat([
-    { role: 'system', content: `你帮忙写生图提示词。用户会给几个关键词或一句很短的画面描述，请扩写成给生图模型看的英文画面描述：40 到 80 个英文单词，一段话，只写看得见的东西（画面主体、动作和表情、穿着、地点和环境、光线、镜头与构图），照用户的意思补上合理的细节，用户指定的内容不要改掉，不要写心理、声音、对话或剧情。画面里有用户本人时写 "the user"。${who}只输出描述本身，不要加引号、标题、JSON 或任何说明。` },
-    { role: 'user', content: text.trim() },
-  ], { feature: 'chat' });
-  const result = extractChatAiReply(data).replace(/^```[a-z]*\s*|```$/gi, '').replace(/^["“]|["”]$/g, '').trim();
-  if (!result) throw new Error('补充描写没有回传内容');
-  return result;
-}
