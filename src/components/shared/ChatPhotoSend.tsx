@@ -1,18 +1,33 @@
 import './ChatPhotoViewer.css';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
-import { chatPhotoReady, generateUserPhoto, preparePickedPhoto } from '../../utils/chatPhoto';
+import { chatPhotoReady, expandPhotoPrompt, generateUserPhoto, preparePickedPhoto } from '../../utils/chatPhoto';
 import { showToast } from '../../utils/toast';
 
 type Mode = 'pick' | 'draw';
-interface Draft { mode: Mode; src: string; text: string; includeMe: boolean; busy: boolean; error: string }
+interface Draft {
+  mode: Mode; image: Blob | null; text: string; includeMe: boolean; busy: '' | 'expand' | 'draw'; error: string;
+  /** 让 AI 补充描写：expanded 是补好的英文描述（可以改），expandedFrom 记下是照哪段话补的，话改了才重补。 */
+  expand: boolean; expanded: string; expandedFrom: string;
+}
+type ChatBridge = Window & {
+  smallphoneSendChatPhoto?: (image: Blob, caption: string) => Promise<void>;
+  smallphoneGetActiveCharacterProfile?: () => { name?: string; appearanceText?: string } | null;
+};
 
 /** 聊天加号里的「图片」「拍照」「生图」：选图或画图，先看一眼、写句话，再发出去。外观跟照片预览一样。 */
 export function ChatPhotoSend() {
   const [draft, setDraft] = useState<Draft | null>(null);
   const album = useRef<HTMLInputElement>(null), camera = useRef<HTMLInputElement>(null);
   const run = useRef(0);
+  const [preview, setPreview] = useState('');
+  useEffect(() => {
+    if (!draft?.image) { setPreview(''); return; }
+    const url = URL.createObjectURL(draft.image);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [draft?.image]);
   useLayoutEffect(() => {
     const start = (event: Event) => {
       const action = (event as CustomEvent<string>).detail;
@@ -21,7 +36,7 @@ export function ChatPhotoSend() {
       else if (action === 'camera') camera.current?.click();
       else if (action === 'draw') {
         if (!chatPhotoReady()) { showToast('请先在「语音与生图设置」开启生图并填好服务'); return; }
-        setDraft({ mode: 'draw', src: '', text: '', includeMe: true, busy: false, error: '' });
+        setDraft({ mode: 'draw', image: null, text: '', includeMe: true, busy: '', error: '', expand: true, expanded: '', expandedFrom: '' });
       }
     };
     window.addEventListener('qingtuan:chat-action', start);
@@ -32,49 +47,74 @@ export function ChatPhotoSend() {
     input.value = '';
     if (!file) return;
     if (!file.type.startsWith('image/')) { showToast('请选一张图片'); return; }
-    try { setDraft({ mode: 'pick', src: await preparePickedPhoto(file), text: '', includeMe: false, busy: false, error: '' }); }
+    try { setDraft({ mode: 'pick', image: await preparePickedPhoto(file), text: '', includeMe: false, busy: '', error: '', expand: false, expanded: '', expandedFrom: '' }); }
     catch { showToast('这张图片读不出来，换一张试试'); }
   }
+  const update = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch });
   async function drawNow() {
-    if (!draft || !draft.text.trim()) { showToast('先写想画什么'); return; }
-    const id = ++run.current;
-    setDraft({ ...draft, busy: true, error: '' });
-    try {
-      const src = await generateUserPhoto(draft.text, draft.includeMe);
-      if (id === run.current) setDraft(current => current && { ...current, src, busy: false });
-    } catch (error) {
-      if (id === run.current) setDraft(current => current && { ...current, busy: false, error: String((error as { message?: unknown } | null)?.message || error || '生图失败').slice(0, 120) });
+    if (!draft) return;
+    const text = draft.text.trim();
+    if (!text) { showToast('先写想画什么'); return; }
+    const id = ++run.current, fail = (error: unknown) => { if (id === run.current) update({ busy: '', error: String((error as { message?: unknown } | null)?.message || error || '生图失败').slice(0, 120) }); };
+    let prompt = text;
+    if (draft.expand) {
+      // 话没改过就沿用补好（可能也改过）的描述，重画不用再补一次。
+      prompt = draft.expandedFrom === text && draft.expanded.trim() ? draft.expanded.trim() : '';
+      if (!prompt) {
+        update({ busy: 'expand', error: '' });
+        try {
+          const profile = (window as ChatBridge).smallphoneGetActiveCharacterProfile?.() || null;
+          prompt = await expandPhotoPrompt(text, profile ? { name: String(profile.name || ''), appearance: String(profile.appearanceText || '') } : null);
+        } catch (error) { fail(error); return; }
+        if (id !== run.current) return;
+        update({ expanded: prompt, expandedFrom: text });
+      }
     }
+    update({ busy: 'draw', error: '' });
+    try {
+      const image = await generateUserPhoto(prompt, draft.includeMe);
+      if (id === run.current) update({ image, busy: '' });
+    } catch (error) { fail(error); }
   }
   function close() { ++run.current; setDraft(null); }
-  function send() {
-    if (!draft?.src) return;
-    (window as Window & { smallphoneSendChatPhoto?: (src: string, caption: string) => void }).smallphoneSendChatPhoto?.(draft.src, draft.text);
+  async function send() {
+    if (!draft?.image) return;
+    const { image, text } = draft;
     close();
+    await (window as ChatBridge).smallphoneSendChatPhoto?.(image, text);
   }
   const inputs = <>
     <input ref={album} type="file" accept="image/*" hidden onChange={event => picked(event.currentTarget)} />
     <input ref={camera} type="file" accept="image/*" capture="environment" hidden onChange={event => picked(event.currentTarget)} />
   </>;
   if (!draft) return inputs;
-  const drawing = draft.mode === 'draw';
-  return <>{inputs}{createPortal(<div className="sp-confirm-overlay chat-photo-viewer" onClick={event => { if (event.target === event.currentTarget && !draft.busy) close(); }}>
+  const drawing = draft.mode === 'draw', busy = !!draft.busy;
+  return <>{inputs}{createPortal(<div className="sp-confirm-overlay chat-photo-viewer" onClick={event => { if (event.target === event.currentTarget && !busy) close(); }}>
     <div className="sp-confirm" role="dialog" aria-modal="true" aria-label={drawing ? '生图' : '发送照片'}>
       <div className="sp-confirm-bar"><span className="sp-confirm-title">{drawing ? '生图' : '发送照片'}</span></div>
       <div className="sp-confirm-body">
-        {draft.src ? <img className="chat-photo-viewer-img" src={draft.src} alt="" />
-          : draft.busy ? <div className="chat-photo-viewer-wait"><span className="chat-photo-spinner" aria-hidden="true" />正在画…</div>
+        {preview && !busy ? <img className="chat-photo-viewer-img" src={preview} alt="" />
+          : busy ? <div className="chat-photo-viewer-wait"><span className="chat-photo-spinner" aria-hidden="true" />{draft.busy === 'expand' ? '正在补充描写…' : '正在画…'}</div>
           : draft.error ? <div className="sp-confirm-msg">{'没画出来：' + draft.error}</div> : null}
-        <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendText">{drawing ? '想画什么（会照这段描述画，发出去时也是这张照片的说明）' : '想说的话（可以不写）'}</label>
-        <textarea id="chatPhotoSendText" className="chat-photo-viewer-prompt" rows={drawing ? 4 : 2} value={draft.text} disabled={draft.busy}
-          onChange={event => { const text = event.currentTarget.value; setDraft(current => current && { ...current, text }); }} />
-        {drawing ? <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.includeMe} disabled={draft.busy}
-          onChange={event => { const includeMe = event.currentTarget.checked; setDraft(current => current && { ...current, includeMe }); }} />画面里有我（带上生图设置里「你」的提示）</label> : null}
+        <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendText">{drawing ? (draft.expand ? '想画什么（写几个词就好，发出去时是这张照片的说明）' : '想画什么（会照这段描述画，发出去时也是这张照片的说明）') : '想说的话（可以不写）'}</label>
+        <textarea id="chatPhotoSendText" className="chat-photo-viewer-prompt" rows={drawing && !draft.expand ? 4 : 2} value={draft.text} disabled={busy}
+          onChange={event => update({ text: event.currentTarget.value })} />
+        {drawing ? <>
+          <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.expand} disabled={busy}
+            onChange={event => update({ expand: event.currentTarget.checked })} />让 AI 补充描写（用聊天模型扩写成完整的画面）</label>
+          {draft.expand && draft.expanded ? <>
+            <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendExpanded">补充后的描述（给生图模型看的，可以改，重画会照这段）</label>
+            <textarea id="chatPhotoSendExpanded" className="chat-photo-viewer-prompt" rows={4} value={draft.expanded} disabled={busy}
+              onChange={event => update({ expanded: event.currentTarget.value })} />
+          </> : null}
+          <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.includeMe} disabled={busy}
+            onChange={event => update({ includeMe: event.currentTarget.checked })} />画面里有我（带上生图设置里「你」的提示）</label>
+        </> : null}
       </div>
       <div className="sp-confirm-actions">
         <PressedButton type="button" className="sp-confirm-btn" onClick={close}>取消</PressedButton>
-        {drawing ? <PressedButton type="button" className="sp-confirm-btn" disabled={draft.busy} onClick={drawNow}>{draft.src || draft.error ? '重画' : '生成'}</PressedButton> : null}
-        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!draft.src || draft.busy} onClick={send}>发送</PressedButton>
+        {drawing ? <PressedButton type="button" className="sp-confirm-btn" disabled={busy} onClick={drawNow}>{draft.image || draft.error ? '重画' : '生成'}</PressedButton> : null}
+        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!draft.image || busy} onClick={send}>发送</PressedButton>
       </div>
     </div>
   </div>, document.body)}</>;

@@ -1,6 +1,7 @@
 import type { NativeAttribute } from '../types/dom';
 import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageNode, MessagePhoto, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
 import { parseChatAiSegmentedReply } from './chatReplyParser';
+import { adoptInlinePhoto, chatPhotoUrl } from './chatPhotoStore';
 const HTML = 'http://www.w3.org/1999/xhtml';
 export const SVG = 'http://www.w3.org/2000/svg';
 export function messageFactory(): MessageFactory {
@@ -167,6 +168,12 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
       if (caption.kind !== 'element' || caption.tag !== 'div' || ['chat-quoted-message','chat-voice-control','chat-voice-text-result','chat-bubble-shape','chat-bubble-shape-base','chat-photo'].some(c => hasClass(caption, c)) || attr(caption,'data-md') === '1' || caption.children.some(n => n.kind === 'element')) continue;
       const raw = attr(row, 'data-chat-ai-content') || textOf(caption);
       if (needsMessageMarkdown(raw)) { caption.children = parseMessageHtml(formatMessageMarkdown(raw), factory); setAttr(caption, 'data-md', '1'); }
+    }
+    // 照片按编号换成这次开机的网址；旧的、图片直接写在记录里的，顺手搬进照片库。
+    const photoId = attr(row, 'data-photo-id'), photoImg = photoId ? findClass(row, 'chat-photo-img') : undefined;
+    if (photoId && photoImg) {
+      const url = chatPhotoUrl(photoId), src = attr(photoImg, 'src');
+      if (url && src !== url) setAttr(photoImg, 'src', url); else if (!url) adoptInlinePhoto(photoId, src);
     }
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {

@@ -3,6 +3,7 @@ import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
 import type {MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
 import {chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
+import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
@@ -13,8 +14,8 @@ import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
 import {readProfileText} from './usePersonalProfile';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;
- /** 你发的照片：图片本身（data URL），送的时候附给模型看。 */
- imageSrc?:string;}
+ /** 你发的照片的编号：送的时候从照片库拿出图片附给模型看。 */
+ photoId?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
  /** 重画一张照片（点了失败的照片、或在照片预览里改了描述）。 */
@@ -114,7 +115,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const caption = String(row.dataset.photoCaption || '').trim();
                 context.push({ role: 'user', content: withQuote('[对方发来一张照片' + (caption ? '，附言：「' + caption + '」' : '') + ']'),
                     messageId: nodes.id(row), quoteCandidate: caption ? '[照片] ' + caption : '[照片]', quotedText,
-                    imageSrc: row.querySelector('.chat-photo-img')?.getAttribute('src') || '' });
+                    photoId: row.dataset.photoId });
                 continue;
             }
             // 将引用快照和正文一起传给 AI，较早原文超出上下文时仍可读到。
@@ -171,7 +172,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         drawing.current.add(photo.id);
         services.current?.photo({ chatKey, photo: { ...photo, state: 'pending', src: undefined, error: undefined } });
         try {
-            const src = await generateChatPhoto(photo.prompt, services.current!.character(chatKey));
+            const src = await saveChatPhoto(photo.id, await generateChatPhoto(photo.prompt, services.current!.character(chatKey)));
             services.current?.photo({ chatKey, photo: { ...photo, state: 'done', src, error: undefined } });
         } catch (error) {
             const message = String((error as {message?:unknown}|null)?.message || error || '生图失败').slice(0, 120);
@@ -278,8 +279,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         }
         // 你最近发的 3 张照片把图片本身附上（模型要能看图；看不了就退回只送文字）。
         let imageAttached = false;
-        for (const { item, index } of recent.map((item, index) => ({ item, index })).filter(x => x.item.imageSrc?.startsWith('data:image/')).slice(-3)) {
-            messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url: item.imageSrc } }] };
+        for (const { item, index } of recent.map((item, index) => ({ item, index })).filter(x => x.item.photoId).slice(-3)) {
+            let url = '';
+            try { url = await chatPhotoDataUrl(item.photoId!); } catch (error) {}
+            if (!url) continue;
+            messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url } }] };
             imageAttached = true;
         }
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
