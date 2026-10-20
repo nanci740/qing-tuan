@@ -1,7 +1,8 @@
 import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import type {MessageNodesApi,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
+import {chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
@@ -12,8 +13,12 @@ import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
 import {readProfileText} from './usePersonalProfile';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
-export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
-export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;}
+export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
+export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
+ /** 重画一张照片（点了失败的照片、或在照片预览里改了描述）。 */
+ photo(chatKey:string,photo:MessagePhoto):void;
+ /** 这张照片现在是不是正在画（重新整理后留下的「接收中」不算）。 */
+ drawing(id:string):boolean;}
 const CHAT_PRESENCE_KEY = 'smallphone_chat_presence_v1';
 const PRESENCE_STATES = ['在线', '忙碌', '离开', '隐身'];
 export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
@@ -150,6 +155,20 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         }
         services.current?.recallStored({ chatKey, messageId: row?.dataset?.messageId || '', reply, recallNotice: noticeText });
     }
+    // 家机的照片：先放一张「照片接收中」，背景慢慢画，画好或失败再换掉那一张（换了聊天也找得到）。
+    const drawing = useRef(new Set<string>());
+    async function drawPhoto(chatKey:string, photo:MessagePhoto) {
+        drawing.current.add(photo.id);
+        services.current?.photo({ chatKey, photo: { ...photo, state: 'pending', src: undefined, error: undefined } });
+        try {
+            const src = await generateChatPhoto(photo.prompt, services.current!.character(chatKey));
+            services.current?.photo({ chatKey, photo: { ...photo, state: 'done', src, error: undefined } });
+        } catch (error) {
+            const message = String((error as {message?:unknown}|null)?.message || error || '生图失败').slice(0, 120);
+            services.current?.photo({ chatKey, photo: { ...photo, state: 'failed', src: undefined, error: message } });
+            if (isActiveReplyChat(chatKey)) notice('照片没画出来：' + message);
+        } finally { drawing.current.delete(photo.id); }
+    }
     // 家机的语音：用语音服务念出来，回传 { dataUrl, seconds }；wav 会先压成 16kHz 单声道，聊天记录比较不占空间
     async function requestCurrentChatAiReply() {
         const requestPreferences = { ...services.current!.preferences() };
@@ -203,6 +222,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
+        const aiPhotoAllowed = !!requestPreferences.aiPhoto && chatPhotoReady();
         let trailingUserMessages = 0;
         for (let i = recent.length - 1; i >= 0 && recent[i].role === 'user'; i--) trailingUserMessages++;
         // 聊天设置另选的预设，没选就用预设 App 里设成默认的那份。
@@ -221,6 +241,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             quotePolicy: requestPreferences.quotePolicy,
             quoteChoicesText: choicesText,
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
+            photo: aiPhotoAllowed ? 'on' : (requestPreferences.aiPhoto ? 'unavailable' : 'off'),
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -287,9 +308,16 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (!rawReply) throw new Error(emptyChatReplyReason(data));
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);
+            // 照片一张一条；没分条时文字合成一条，照片接在后面。
+            const replyPhotos = aiPhotoAllowed ? (parsedReply.photos || []) : [];
+            const photoIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index]);
+            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index]);
             const segments = requestPreferences.segmented
                 ? parsedReply.segments
-                : [parsedReply.segments.join('\n')];
+                : [...(textOnly.length ? [textOnly.join('\n')] : []), ...photoIndexes.map(index => parsedReply.segments[index])];
+            const segmentPhotos = requestPreferences.segmented
+                ? replyPhotos
+                : [...(textOnly.length ? [''] : []), ...photoIndexes.map(index => replyPhotos[index])];
             // 每则自己的引用；没分段时整则用第一个引用
             const segmentQuotes = requestPreferences.segmented
                 ? (parsedReply.quotes || [])
@@ -300,7 +328,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 : [(parsedReply.voices || []).length > 0 && (parsedReply.voices || []).every(Boolean)]);
             const recallNoticeText = `${characterName}撤回了一条消息`;
             for (let index = 0; index < segments.length; index++) {
-                const reply = segments[index];
+                const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index], caption: segments[index], state: 'pending' } : null;
+                const reply = photo ? '[照片] ' + photo.caption : segments[index];
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
@@ -313,12 +342,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && !willRecall) {
+                    if (segmentVoices[index] && !willRecall && !photo) {
                         try { voiceAudio = await voice.prepare(reply); } catch (error) { voiceAudio = null; }
                     }
-                    const pending = appendChatAiReplyBubble(reply);
+                    const pending = appendChatAiReplyBubble(photo ? photo.caption : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -336,7 +365,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index]) {
+                    if (segmentVoices[index] && !photo) {
                         try {
                             const voiceAudio = await voice.prepare(reply);
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
@@ -351,6 +380,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     services.current?.background({
                         chatKey: requestChatKey,
                         reply,
+                        photo,
                         quote,
                         quoteTargetId,
                         sentAt: Date.now(),
@@ -359,6 +389,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         translation: backgroundTranslation
                     });
                 }
+                if (photo && !willRecall) void drawPhoto(requestChatKey, photo);
                 // 每个气泡就是一条独立消息：出现时立即计算已读、未读与通知。
                 const segmentWasViewed = isActiveReplyChat(requestChatKey) &&
                     services.current!.viewed();
@@ -387,7 +418,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
     }
 
  const apiRef=useRef<ChatReplyEngineApi|null>(null);
- if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},reloadPresence(){const map=readChatPresenceMap();presenceRef.current=map;setPresenceMap(map);},presence:getChatPresence,status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
+ if(!apiRef.current)apiRef.current={request:requestCurrentChatAiReply,syncTyping(){const key=services.current!.currentKey();setChatReplyTyping(pending.current.has(key),key);},reloadPresence(){const map=readChatPresenceMap();presenceRef.current=map;setPresenceMap(map);},presence:getChatPresence,photo(chatKey,photo){void drawPhoto(chatKey,photo);},drawing:id=>drawing.current.has(id),status(text){update({text,typing:undefined,key:undefined,resting:undefined});}};
  useEffect(()=>()=>{timers.current.forEach(clearTimeout);},[]);
  return {services,api:apiRef.current,status,presenceMap};
 }

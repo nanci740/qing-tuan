@@ -177,7 +177,8 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       const quote=el.closest<HTMLElement>('.chat-quoted-message');if(quote){event.preventDefault();const id=quote.dataset.quoteTarget;const node=id?current.current.find(n=>n.kind==='element'&&model.hasClass(n,'chat-message-row')&&model.attr(n,'data-message-id')===id):null;const row=node?.kind==='element'?showRow(snapshot(node)):null;
         if(!(row instanceof HTMLElement)){sources.current?.notice('原消息已不存在');return;}apiRef.current!.toggle(row,'is-quote-target',false);void row.offsetWidth;apiRef.current!.toggle(row,'is-quote-target',true);const timer=setTimeout(()=>{apiRef.current!.toggle(row,'is-quote-target',false);timers.current.delete(timer);},1300);timers.current.add(timer);return;}
       const transcript=el.closest<HTMLElement>('.chat-voice-text-result');if(transcript){event.preventDefault();const row=transcript.closest<HTMLElement>('.chat-message-row');if(row&&!transcript.classList.contains('is-collapsed'))apiRef.current!.toggleTranscript(row);return;}
-      const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill){event.preventDefault();sources.current?.play(pill);}
+      const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill){event.preventDefault();sources.current?.play(pill);return;}
+      const photo=el.closest<HTMLElement>('.chat-photo');const photoRow=photo?.closest<HTMLElement>('.chat-message-row');if(photoRow){event.preventDefault();sources.current?.photo(photoRow);}
     },
     keyDown(event){const el=event.target;if(!(el instanceof Element))return;const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill&&(event.key==='Enter'||event.key===' ')){event.preventDefault();sources.current?.play(pill);}},
     appendHtml(html){publish([...clone(),...model.parseMessageHtml(html,factory)]);},
@@ -201,6 +202,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       if(detail.voice){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));
         if(caption)model.replaceKey(bubble.children,caption.key,model.voiceNode(detail.voice,factory));model.toggleClass(bubble,'chat-bubble--voice',true);model.setAttr(node,'data-voice-transcript',detail.reply);if(detail.voiceAutoText)model.setResult(node,'chat-voice-text-result',detail.reply,factory);
       }
+      if(detail.photo)model.setPhoto(node,detail.photo,factory);
       if(detail.quote){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));const quote=model.quoteNode(detail.quote,detail.quoteTargetId||'',factory);if(caption)model.insertBeforeKey(bubble.children,caption.key,quote);else bubble.children.push(quote);}
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
       model.setAttr(node,'data-chat-ai-content',detail.reply);model.setAttr(node,'data-sent-at',String(detail.sentAt??Date.now()));if(selectionStyle)model.setAttr(node,'style',selectionStyle);if(time)model.setText(time,new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}),factory);
@@ -218,6 +220,8 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     forwardHtml(html,text,items,source,mode,record){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);next.push(model.forwardNode(text,items,source,mode,record,isolated));return model.serializeMessageNodes(next);},
     backgroundHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);if(!detail.recalled)for(const row of model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user'))){model.toggleClass(row,'is-read',true);model.setAttr(row,'data-read','true');}next.push(model.backgroundNode(detail,isolated));return model.serializeMessageNodes(next);},
     recallHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);const row=model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.attr(n,'data-message-id')===detail.messageId)[0];if(!row)return null;model.replaceKey(next,row.key,model.recallNode(detail,isolated));return model.serializeMessageNodes(next);},
+    photo(photo){let found=false;mutate(next=>{const row=model.photoRow(next,photo.id);if(row){model.setPhoto(row,photo,factory);requestLayout(next,row);found=true;}});return found;},
+    photoHtml(html,photo){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);const row=model.photoRow(next,photo.id);if(!row)return null;model.setPhoto(row,photo,isolated);return model.serializeMessageNodes(next);},
     onChange(listener){listeners.current.add(listener);return()=>listeners.current.delete(listener);}
   };
   const api=apiRef.current;

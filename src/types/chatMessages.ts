@@ -6,7 +6,9 @@ export interface MessageComment { kind: 'comment'; key: number; text: string }
 export interface MessageFactory { element(tag: string, attrs?: Record<string, unknown> | NativeAttribute[], children?: MessageNode[], namespace?: string): MessageElement; text(value: unknown): MessageText; comment(value: string): MessageComment; key(): number }
 export interface MessageIdentity { peer: string; peerAvatar: string; userAvatar: string }
 export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: string }
-export interface PeerMessageDetail { reply: string; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
+/** 家机发的照片。state：pending 正在画、done 画好了、failed 没画出来（可以重画）。prompt 是给生图模型的英文描述，caption 是一句中文说明。 */
+export interface MessagePhoto { id: string; prompt: string; caption: string; state: 'pending' | 'done' | 'failed'; src?: string; error?: string }
+export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
 export interface MessageNodesApi {
   container(): HTMLDivElement|null;
   rows(limit?: number): HTMLElement[];
@@ -36,6 +38,9 @@ export interface MessageNodesApi {
   forwardHtml(html: string, text: string, items: unknown, source: unknown, mode: unknown, record: unknown): string;
   backgroundHtml(html: string, detail: PeerMessageDetail): string;
   recallHtml(html: string, detail: PeerMessageDetail & {messageId?: string}): string | null;
+  /** 照片画好、画失败或要重画：用照片编号找到那一行换掉；找不到就回传 false / null。 */
+  photo(photo: MessagePhoto): boolean;
+  photoHtml(html: string, photo: MessagePhoto): string | null;
   onChange(listener: ()=>void): ()=>void;
 }
-export interface MessagesConnection { canInteract(): boolean; play(pill: HTMLElement): void; notice(message: string): void; identity(): MessageIdentity; accept(api: MessageNodesApi): void }
+export interface MessagesConnection { canInteract(): boolean; play(pill: HTMLElement): void; photo(row: HTMLElement): void; notice(message: string): void; identity(): MessageIdentity; accept(api: MessageNodesApi): void }

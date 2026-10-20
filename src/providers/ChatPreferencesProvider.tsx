@@ -10,6 +10,7 @@ import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import type { MigratedChatSetting, ChatPreferences, ChatPreferenceBridge, ChatPreferenceServices } from '../types/chatPreferences';
 import { getChatPreferenceDefaults, loadChatPreferences, saveChatPreferences } from '../utils/chatPreferences';
+import { chatPhotoReady } from '../utils/chatPhoto';
 interface PreferenceConnect { services: ChatPreferenceServices; accept(api: ChatPreferenceBridge): void; }
 interface PreferenceContext {
   data: ReturnType<typeof useChatData>;
@@ -60,9 +61,12 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
       // 勾选世界书仅保存，不重新构造其他设置控件。
     } else if (key === 'linkedWorldBooks') {
       // 勾选世界书仅保存，不重新构造其他设置控件。
-    } else if (key === 'openingText' || key === 'voiceTranscribe' || key === 'voiceDirect' || key === 'aiVoice' || key === 'voiceAutoText' || key === 'voiceAutoTranslate') {
+    } else if (key === 'openingText' || key === 'voiceTranscribe' || key === 'voiceDirect' || key === 'aiVoice' || key === 'aiPhoto' || key === 'voiceAutoText' || key === 'voiceAutoTranslate') {
       if (key === 'aiVoice' && value && !window.smallphoneVoiceReady?.()) {
         showToast('请先在「语音与生图设置」开启语音并填好服务，家机才发得出语音');
+      }
+      if (key === 'aiPhoto' && value && !chatPhotoReady()) {
+        showToast('请先在「语音与生图设置」开启生图并填好服务，家机才发得出照片');
       }
     } else service.apply();
   }
