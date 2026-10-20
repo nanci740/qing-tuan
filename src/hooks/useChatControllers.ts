@@ -10,7 +10,7 @@ import {useSettingsNavigation} from '../providers/SettingsNavigationProvider';
 import type {ChatNavigationServices,ChatNavigationApi} from '../providers/ChatNavigationProvider';
 import type {ChatIdentityApi} from '../providers/ChatIdentityProvider';
 import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsProvider';
-import type {MessageNodesApi,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageNodesApi,MessagePhoto,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
 import type {ChatComposerApi,ChatComposerServices} from '../types/chatComposer';
@@ -81,7 +81,7 @@ function initChatApplication(){
             peerAvatar: refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc || refs.get<HTMLImageElement>('chatRoomAvatar')?.src || getCurrentUserAvatarSrc(),
             userAvatar: getCurrentUserAvatarSrc() }),
         canInteract: () => Date.now() >= state.current.suppressVoiceUntil && !messageSelection.active(),
-        play: toggleChatVoiceBubble, notice: showChatNotice,
+        play: toggleChatVoiceBubble, notice: showChatNotice, photo: openChatPhoto,
         accept: api => { messageNodes = api; bridge.smallphoneMessages = api; }
     } }));
     let composer!:ChatComposerApi;
@@ -97,7 +97,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -323,6 +323,24 @@ function initChatApplication(){
     bridge.smallphoneDeleteChatDraft = key=>composer.erase(key);
     // 聊天的 key 就是角色档案的 archiveId，世界书的「关联角色」存的也是它。
     function getLinkedWorldBookContext(recentMessages:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number){return collectWorldInjection({selectedIds,characterId:chatKey,chatKey,recentMessages,limit});}
+    function getCharacterLook(chatKey:string){const character=characterStore?.read().find(item => item.archiveId === chatKey);return {name:character?.name||'',appearance:character?.appearanceText||''};}
+    // 家机的照片：画好、失败、重画都用照片编号换掉那一张；正在看的聊天直接换，其他聊天改存档。
+    function updateChatPhoto({chatKey,photo}:{chatKey:string;photo:MessagePhoto}){
+        const key=String(chatKey||'');if(!key)return;
+        if(key===history.current.activeKey){messageNodes.photo(photo);return;}
+        const html=messageNodes.photoHtml(history.current.histories[key]||'',photo);if(html===null)return;
+        history.current.histories[key]=html;saveChatHistories();
+    }
+    // 点照片：正在画就提示一下；画好或失败都打开照片预览，可以看大图、存图、改描述重画。
+    function openChatPhoto(row:HTMLElement){
+        const box=row.querySelector<HTMLElement>('.chat-photo');const id=row.dataset.photoId||'';if(!box||!id)return;
+        const state=(box.dataset.photoState||'pending') as MessagePhoto['state'];
+        if(state==='pending'&&replyEngine.drawing(id)){showChatNotice('照片还在画，稍等一下');return;}
+        const chatKey=history.current.activeKey;
+        // 画到一半页面重新整理过：当成没画出来，可以重画。
+        const photo:MessagePhoto={id,prompt:row.dataset.photoPrompt||'',caption:row.dataset.photoCaption||'',state:state==='pending'?'failed':state,src:box.querySelector('img')?.getAttribute('src')||undefined,error:row.dataset.photoError||undefined};
+        window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo,redraw:(prompt:string)=>replyEngine.photo(chatKey,{...photo,prompt:prompt.trim()||photo.prompt})}}));
+    }
     function getCharacterPersona(chatKey:string){return buildCharacterPrompt(characterStore?.read().find(item => item.archiveId === chatKey) || null);}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
     function loadChatPreferences() { return preferenceBridge.load(getCurrentChatPreferenceKey()); }
@@ -350,6 +368,7 @@ function initChatApplication(){
     function getMessageText(row:HTMLElement|null) {
         if (!row) return '';
         if (row.dataset.voiceTranscript) return row.dataset.voiceTranscript.trim();
+        if (row.dataset.photoCaption) return '[照片] ' + row.dataset.photoCaption.trim();
         const bubble = row.querySelector('.chat-bubble');
         if (!bubble) return '';
         const clone = bubble.cloneNode(true) as HTMLElement;
@@ -374,6 +393,7 @@ function initChatApplication(){
         return refs.get<HTMLElement>('chatRoomName')?.textContent?.trim() || '当前聊天';
     }
     function getForwardItemText(row:HTMLElement|null) {
+        if (row?.dataset?.photoCaption) return '[照片] ' + row.dataset.photoCaption;
         const length = row?.querySelector('.chat-voice-length')?.textContent?.trim();
         if (length && row?.querySelector('.chat-voice-control, .chat-voice-audio')) return `[语音] ${length}`;
         if (length && row?.dataset?.voiceTranscript) return `[语音] ${length}`;
@@ -556,6 +576,7 @@ initChatApplication();
         const lastBubble = bubbles[bubbles.length - 1];
         // 转发记录卡只显示消息类型，不把卡片标题、预览和页脚拼进聊天列表。
         if (lastBubble.querySelector('.chat-forward-record-card')) return '[聊天记录]';
+        if (lastBubble.querySelector('.chat-photo')) return '[照片]';
         // 语音消息：显示「[语音] 4″」，不要只剩秒数
         if (lastBubble.querySelector('.chat-voice-control')) {
             const seconds = lastBubble.querySelector('.chat-voice-length')?.textContent?.trim() || '';

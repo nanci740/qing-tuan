@@ -9,6 +9,8 @@ export interface ChatSegmentedReply {
   presence?: object | null;
   recalls?: boolean[];
   voices?: boolean[];
+  /** 每一条要发的照片：给生图模型的英文画面描述，没有就是空字符串。 */
+  photos?: string[];
 }
 export interface ChatReplyParserApi {
   extract(data: unknown): string;

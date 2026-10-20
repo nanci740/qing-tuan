@@ -22,6 +22,8 @@ export interface ChatPromptInput {
     quoteChoicesText: string;
     /** 'on'：可以发语音；'unavailable'：开了但语音服务没设定好；'off'：没开。 */
     voice: 'on' | 'unavailable' | 'off';
+    /** 'on'：可以发照片；'unavailable'：开了但生图服务没设定好；'off'：没开。 */
+    photo?: 'on' | 'unavailable' | 'off';
 }
 
 const MARKERS = {
@@ -29,6 +31,7 @@ const MARKERS = {
     edited: '[已编辑，原本是：',
     theirRecall: '[对方撤回了一条消息',
     myRecall: '[你撤回了一条消息',
+    photo: '[照片] ',
 };
 
 /** 基本说明：现在在用手机聊天。 */
@@ -61,6 +64,8 @@ function contextMarkers(input: ChatPromptInput) {
         parts.push('上下文里「[对方撤回了一条消息，你在撤回前看到了，原本写的是：「…」]」表示对方撤回了一条消息、但你在撤回前已经看到内容：要装作没看见还是点破，按人设和情境决定；「[对方撤回了一条消息，你没看到内容]」表示你只知道对方撤回了，不知道写了什么，不要编造内容，可以按人设好奇地问。');
     if (text.includes(MARKERS.myRecall))
         parts.push('上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。');
+    if (text.includes(MARKERS.photo))
+        parts.push('上下文里你自己的消息如果是「[照片] …」，表示那是你之前发出去的一张照片，后面是照片内容的说明；对方看到的是图片，不是这行字。回复里不要照抄这个格式，要发照片请用 photo 栏位。');
     return parts.join('');
 }
 
@@ -97,6 +102,13 @@ function voice(input: ChatPromptInput) {
     return '';
 }
 
+/** 照片：开了才送；开了但生图服务还没设定好，就说清楚现在发不了。 */
+function photo(input: ChatPromptInput) {
+    if (input.photo === 'on') return '每一条 replies 还可以加上 "photo"，表示这条你发了一张照片（对方会收到一张真的图片）。发照片的那一条：text 写一句很短的中文，说明照片拍的是什么（例如「刚拍的晚霞」）；photo 写给生图模型看的英文画面描述，40 到 80 个英文单词，只写看得见的东西：画面主体、动作和表情、穿着、地点和环境、光线、镜头与构图（自拍、近景、远景等），不要写心理、声音、对话或剧情。画面里有你自己时要写出外貌特征，不要只写名字；有对方时写 "the user"。照片单独一条，想说的话放在其他条。对方跟你要照片、自拍时就发；其他时候按人设和当下情境偶尔自然地分享（像真人随手拍），不要每次回复都发。例如：{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot"}';
+    if (input.photo === 'unavailable') return '你现在发不了照片（生图服务还没设定好），只能发文字；对方跟你要照片时，照实说现在发不了，不要假装发了照片，也不要用括号描写照片内容。';
+    return '';
+}
+
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
 function quote(input: ChatPromptInput) {
     if (input.quotePolicy === 'never') return '不要引用任何消息，quote_id 必须始终留空。';
@@ -113,7 +125,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, output: outputCleanliness, quote,
+    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {

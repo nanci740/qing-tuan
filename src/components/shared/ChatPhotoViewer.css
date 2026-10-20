@@ -1,0 +1,31 @@
+/* 家机发的照片：气泡里放图片；正在画时是一张浅色卡片转圈圈，没画出来就显示照片说明，点一下可以重画。 */
+/* 聊天室把气泡里的 div 一律设成 inline !important，照片卡这里用更具体的选择器改回 flex。 */
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-photo { display: flex !important; }
+#chatAppPage#chatAppPage .chat-photo { flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; -webkit-touch-callout: none; }
+#chatAppPage#chatAppPage .chat-photo.is-pending, #chatAppPage#chatAppPage .chat-photo.is-failed {
+  width: 168px; min-height: 210px; padding: 14px; box-sizing: border-box; text-align: center;
+  border: 1px dashed var(--spc-line, rgba(0,0,0,.2)); border-radius: 6px; background: color-mix(in srgb, var(--theme-color) 35%, transparent);
+}
+#chatAppPage#chatAppPage .chat-photo-img { display: block; width: 200px; max-width: 100%; height: auto; max-height: 280px; border-radius: 6px; object-fit: cover; }
+#chatAppPage#chatAppPage .chat-photo-status { display: block; font-size: 11px; line-height: 1.5; opacity: .7; }
+#chatAppPage#chatAppPage .chat-photo-caption { display: block; font-size: 12px; line-height: 1.6; word-break: break-word; }
+#chatAppPage#chatAppPage .chat-photo-spinner {
+  display: block;
+  width: 22px; height: 22px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent;
+  opacity: .55; animation: chat-photo-spin .9s linear infinite;
+}
+@keyframes chat-photo-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .chat-photo-spinner { animation-duration: 3s; } }
+
+/* 照片预览：用聊天确认窗口的外框，宽一点放得下图片。 */
+.chat-photo-viewer .sp-confirm { width: min(340px, 92vw); }
+.chat-photo-viewer .sp-confirm-body { display: flex; flex-direction: column; gap: 8px; }
+.chat-photo-viewer-img { display: block; width: 100%; max-height: 52vh; object-fit: contain; border-radius: 3px; background: var(--color-surface); }
+.chat-photo-viewer-label { font-size: 11px; opacity: .7; }
+.chat-photo-viewer-prompt {
+  width: 100%; box-sizing: border-box; resize: vertical; min-height: 72px; padding: 6px 8px;
+  border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title);
+  font: inherit; font-size: 12px; line-height: 1.5;
+}
+.chat-photo-viewer .sp-confirm-actions { grid-auto-flow: column; grid-auto-columns: 1fr; grid-template-columns: none; }
+#chatAppPage#chatAppPage .chat-photo.is-done { align-items: flex-start; }

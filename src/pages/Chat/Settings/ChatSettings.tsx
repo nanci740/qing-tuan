@@ -413,6 +413,18 @@ export function ChatSettings() {
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>
                   <OriginalElement tag="strong" attributes={[]}>
+                    {"家机发照片"}
+                  </OriginalElement>
+                  <OriginalElement tag="span" attributes={[]}>
+                    {"开启后家机会在想分享、或你跟他要照片时发照片（用「语音与生图设置」的生图服务）；关闭时不发。"}
+                  </OriginalElement>
+                </OriginalElement>
+                <ChatSettingCheckbox id="chatSettingAiPhoto" setting="aiPhoto" />
+              </OriginalElement>
+              {"\n                        "}
+              <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
+                <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>
+                  <OriginalElement tag="strong" attributes={[]}>
                     {"语音自动转文字"}
                   </OriginalElement>
                   <OriginalElement tag="span" attributes={[]}>

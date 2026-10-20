@@ -307,11 +307,12 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     text: String(fields(item).text ?? fields(item).content ?? fields(item).message ?? '').trim(),
                     quoteId: String(fields(item).quote_id ?? fields(item).quoteId ?? '').trim(),
                     recall: fields(item).recall === true || fields(item).recall === 'true',
-                    voice: fields(item).voice === true || fields(item).voice === 'true'
+                    voice: fields(item).voice === true || fields(item).voice === 'true',
+                    photo: String(fields(item).photo ?? fields(item).image ?? '').trim()
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false };
-        }).filter(item => fields(item).text)
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '' };
+        }).map(item => item.photo && !item.text ? { ...item, text: '照片' } : item).filter(item => fields(item).text)
         : [];
     if (structuredItems.length) {
         // 旧格式：整包只有一个 quote_id → 挂在第一则
@@ -327,6 +328,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             segments: structuredItems.map(item => item.text),
             recalls: structuredItems.map(item => item.recall),
             voices: structuredItems.map(item => item.voice),
+            photos: structuredItems.map(item => item.photo),
             quotes,
             quote: firstQuote?.quote || '',
             quoteTargetId: firstQuote?.quoteTargetId || ''
