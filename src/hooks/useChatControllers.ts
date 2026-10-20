@@ -33,10 +33,11 @@ import {collectWorldInjection} from '../utils/chatWorldContext';
 import {loadChatPreferences as readPreferences} from '../utils/chatPreferences';
 import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
 import {showToast} from '../utils/toast';
+import {saveChatPhoto} from '../utils/chatPhotoStore';
 interface ChatPublicApi {
  smallphoneMessages:MessageNodesApi;
  /** 你发一张照片（相册、拍照或自己生的图），caption 是你写的说明。 */
- smallphoneSendChatPhoto(src:string,caption:string):void;
+ smallphoneSendChatPhoto(image:Blob,caption:string):Promise<void>;
  smallphoneApi?:ApiService;
  smallphoneSyncRoomIdentity(character:ChatCharacter):void;
  smallphoneSetChatStatus(value:string):void;
@@ -314,9 +315,12 @@ function initChatApplication(){
     }
 
     // 你发照片（相册、拍照、自己生图）：跟发文字一样进聊天、等家机回；图片本身之后会附给模型看。
-    function sendPhoto(src:string, caption:string) {
-        if (!messageList || !src) return;
-        const photo:MessagePhoto = { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: '', caption: caption.trim(), state: 'done', src };
+    async function sendPhoto(image:Blob, caption:string) {
+        if (!messageList) return;
+        const id = 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        let src = '';
+        try { src = await saveChatPhoto(id, image); } catch { showChatNotice('照片存不进去，请检查浏览器储存空间'); return; }
+        const photo:MessagePhoto = { id, prompt: '', caption: caption.trim(), state: 'done', src };
         messageNodes.appendUser('', null, messageOperations.quote(), photo);
         triggerChatFeedback('send');
         refreshChatBubbleGroups(messageList);
