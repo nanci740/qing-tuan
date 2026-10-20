@@ -1,17 +1,19 @@
-import { useRef, useState, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ChangeEvent, ReactNode } from 'react';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { useChoice } from '../../providers/ChoiceProvider';
 import { confirmChat } from '../../utils/chatConfirm';
 import { showToast } from '../../utils/toast';
-import type { Preset, PresetEntry, PresetParams, PresetPlacement, PresetRole } from '../../types/preset';
-import { builtinInfo, createPreset, exportPresetsJson, newPresetEntry, parsePresetImport, readPresetStore, subscribePresets, writePresetStore } from '../../utils/presetStorage';
+import type { Preset, PresetAnchor, PresetEntry, PresetParams, PresetPlacement, PresetRole } from '../../types/preset';
+import { PRESET_BUILTINS, builtinInfo, createPreset, exportPresetsJson, newPresetEntry, parsePresetImport, readPresetStore, subscribePresets, writePresetStore } from '../../utils/presetStorage';
 import './Preset.css';
 
 type View = { name: 'list' } | { name: 'preset'; id: string } | { name: 'entry'; id: string; entryId: string };
-const PLACEMENTS: [PresetPlacement, string][] = [['system', '系统提示词里（照条目顺序）'], ['front', '聊天记录前面'], ['tail', '聊天记录最后'], ['depth', '聊天记录中（按插入深度）']];
+const PLACEMENTS: [PresetPlacement, string][] = [['system', '系统提示词里'], ['front', '聊天记录前面'], ['tail', '聊天记录最后'], ['depth', '聊天记录中（按插入深度）']];
 const ROLES: [PresetRole, string][] = [['system', 'system'], ['user', 'user'], ['assistant', 'assistant']];
-const placementLabel = (entry: PresetEntry) => entry.placement === 'system' ? '系统提示词' : entry.placement === 'front' ? '记录前面' : entry.placement === 'tail' ? '记录最后' : `倒数第 ${entry.depth} 条前`;
+const ANCHORS: [PresetAnchor, string][] = [['start', '最前面'], ...PRESET_BUILTINS.map(item => [item.id, `「${item.name}」后面`] as [PresetAnchor, string]), ['end', '最后面']];
+const anchorLabel = (anchor: PresetAnchor | undefined) => ANCHORS.find(item => item[0] === (anchor || 'end'))?.[1] || '最后面';
+const placementLabel = (entry: PresetEntry) => entry.placement === 'system' ? '系统提示词 · ' + anchorLabel(entry.anchor) : entry.placement === 'front' ? '记录前面' : entry.placement === 'tail' ? '记录最后' : `倒数第 ${entry.depth} 条前`;
 const PARAMS: { key: keyof PresetParams; label: string; hint: string; min: number; max: number; step: string }[] = [
   { key: 'temperature', label: '温度', hint: '0–2，越高越随性', min: 0, max: 2, step: '0.05' },
   { key: 'topP', label: 'Top P', hint: '0–1', min: 0, max: 1, step: '0.05' },
@@ -25,9 +27,17 @@ function download(name: string, text: string) {
 /** 预设 App：列出预设、编辑一份预设的条目和参数、编辑自己写的条目。资料存在 presetStorage，改了马上存。 */
 export function PresetApp({ onClose }: { onClose: () => void }) {
   const store = useSyncExternalStore(subscribePresets, readPresetStore);
-  const [view, setView] = useState<View>({ name: 'list' });
+  const [view, setViewState] = useState<View>({ name: 'list' });
   const [draft, setDraft] = useState<PresetEntry | null>(null);
   const importInput = useRef<HTMLInputElement>(null);
+  // 每一层页面滑到哪里：换页前记下，回来时停回原处（条目编辑页每次都从最上面开始）。
+  const pageRef = useRef<HTMLElement>(null), scrollMemory = useRef<Record<string, number>>({});
+  const viewKey = (value: View) => value.name === 'preset' ? 'preset:' + value.id : value.name;
+  function go(next: View) {
+    if (pageRef.current) scrollMemory.current[viewKey(view)] = pageRef.current.scrollTop;
+    setViewState(next);
+  }
+  useLayoutEffect(() => { if (pageRef.current) pageRef.current.scrollTop = view.name === 'entry' ? 0 : scrollMemory.current[viewKey(view)] ?? 0; }, [viewKey(view)]);
   const choice = useChoice();
   const preset = view.name === 'list' ? undefined : store.presets.find(item => item.id === view.id);
   const save = (next: Preset) => writePresetStore({ ...store, presets: store.presets.map(item => item.id === next.id ? { ...next, updatedAt: Date.now() } : item) });
@@ -35,14 +45,14 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
     choice.openChoice({ style: 'settings', title, options: options.map(([value, label]) => ({ value, label })), selected, confirm });
 
   function back() {
-    if (view.name === 'entry') { setDraft(null); setView({ name: 'preset', id: view.id }); }
-    else if (view.name === 'preset') setView({ name: 'list' });
+    if (view.name === 'entry') { setDraft(null); go({ name: 'preset', id: view.id }); }
+    else if (view.name === 'preset') go({ name: 'list' });
     else onClose();
   }
   function addPreset() {
     const next = createPreset(`新预设 ${store.presets.length + 1}`);
     if (!writePresetStore({ ...store, presets: [...store.presets, next] })) return;
-    setView({ name: 'preset', id: next.id });
+    go({ name: 'preset', id: next.id });
   }
   async function importFile(event: ChangeEvent<HTMLInputElement>) {
     const input = event.currentTarget, file = input.files?.[0]; input.value = '';
@@ -60,38 +70,39 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
     if (store.presets.length <= 1) { showToast('至少要留一份预设'); return; }
     if (!await confirmChat({ title: '删除预设？', message: `「${target.name}」和里面自己写的条目都会一起删掉。用这份预设的聊天会改回默认预设。`, confirmText: '删除', danger: true })) return;
     if (!writePresetStore({ ...store, presets: store.presets.filter(item => item.id !== target.id) })) return;
-    setView({ name: 'list' });
+    go({ name: 'list' });
     showToast('预设已删除');
   }
   function copyPreset(target: Preset) {
     const copy = { ...structuredClone(target), id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7), name: target.name + '（副本）' };
     copy.entries = copy.entries.map(entry => entry.builtin ? entry : { ...entry, id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7) });
     if (!writePresetStore({ ...store, presets: [...store.presets, copy] })) return;
-    setView({ name: 'preset', id: copy.id });
+    go({ name: 'preset', id: copy.id });
     showToast('已复制预设');
   }
   function move(target: Preset, index: number, step: number) {
     const entries = [...target.entries], to = index + step;
-    if (to < 0 || to >= entries.length) return;
+    // 只在同一组里移：自带的在自带里排，自己写的在自己写的里排。
+    if (to < 0 || to >= entries.length || !!entries[index].builtin !== !!entries[to].builtin) return;
     [entries[index], entries[to]] = [entries[to], entries[index]];
     save({ ...target, entries });
   }
   function toggleEntry(target: Preset, id: string, enabled: boolean) {
     save({ ...target, entries: target.entries.map(entry => entry.id === id ? { ...entry, enabled, ...(enabled ? { warn: undefined } : {}) } : entry) });
   }
-  function openEntry(target: Preset, entry: PresetEntry) { setDraft({ ...entry }); setView({ name: 'entry', id: target.id, entryId: entry.id }); }
+  function openEntry(target: Preset, entry: PresetEntry) { setDraft({ ...entry }); go({ name: 'entry', id: target.id, entryId: entry.id }); }
   function saveEntry(target: Preset) {
     if (!draft) return;
     if (!draft.name.trim() || !draft.content.trim()) { showToast('先填写名称和内容'); return; }
     const entry: PresetEntry = { ...draft, name: draft.name.trim(), role: draft.placement === 'system' ? 'system' : draft.role, depth: Math.max(0, Math.floor(Number(draft.depth) || 0)) };
     const exists = target.entries.some(item => item.id === entry.id);
     if (!save({ ...target, entries: exists ? target.entries.map(item => item.id === entry.id ? entry : item) : [...target.entries, entry] })) return;
-    setDraft(null); setView({ name: 'preset', id: target.id }); showToast('条目已保存');
+    setDraft(null); go({ name: 'preset', id: target.id }); showToast('条目已保存');
   }
   async function deleteEntry(target: Preset, id: string) {
     if (!await confirmChat({ title: '删除条目？', message: '删除后，这条不会再送给模型。', confirmText: '删除', danger: true })) return;
     if (!save({ ...target, entries: target.entries.filter(item => item.id !== id) })) return;
-    setDraft(null); setView({ name: 'preset', id: target.id }); showToast('条目已删除');
+    setDraft(null); go({ name: 'preset', id: target.id }); showToast('条目已删除');
   }
   function setParam(target: Preset, key: keyof PresetParams, patch: Partial<Preset['params'][typeof key]>) {
     save({ ...target, params: { ...target.params, [key]: { ...target.params[key], ...patch } } });
@@ -106,7 +117,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
       {store.presets.map((item, index) => {
         const custom = item.entries.filter(entry => !entry.builtin), params = PARAMS.filter(param => item.params[param.key].enabled).map(param => param.label);
         return <div className="world-paper world-entry-card" key={item.id}><div className="world-row">
-          <PressedButton className="world-book-open" type="button" data-open-preset={item.id} onClick={() => setView({ name: 'preset', id: item.id })}>
+          <PressedButton className="world-book-open" type="button" data-open-preset={item.id} onClick={() => go({ name: 'preset', id: item.id })}>
             <div className="world-entry-title"><span className="world-entry-no">No.{String(index + 1).padStart(2, '0')}</span>{item.name}</div>
             <div className="world-entry-preview">{`自己写的条目 ${custom.length} 条` + (params.length ? `；参数：${params.join('、')}` : '；参数跟着 API 设置')}</div>
             <div className="preset-chips">{item.id === store.defaultId ? <span className="world-chip">默认</span> : null}<span className="world-chip">{custom.filter(entry => entry.enabled).length} 条启用</span></div>
@@ -139,22 +150,28 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
             onBlur={event => { const value = Math.min(param.max, Math.max(param.min, Number(event.currentTarget.value) || 0)); event.currentTarget.value = String(value); setParam(preset, param.key, { value }); }} /> : null}
         </div>)}
       </div>
-      <div className="world-section-head"><b>条目档案</b><small>{preset.entries.length} ENTRIES</small></div>
-      <p className="world-hint preset-note">用 ↑ ↓ 调整顺序。标着「自带」的是程序自己的规矩，只能排顺序、开关；「回复格式」锁住不能关。</p>
-      {preset.entries.map((entry, index) => {
-        const info = entry.builtin ? builtinInfo(entry.builtin) : null;
-        return <div className="world-paper world-entry-card preset-entry" key={entry.id} data-preset-entry={entry.id}><div className="world-row">
-          <PressedButton className="world-book-open" type="button" disabled={!!info} onClick={() => { if (!info) openEntry(preset, entry); }}>
-            <div className="world-entry-title"><span className="world-entry-no">No.{String(index + 1).padStart(2, '0')}</span>{entry.name || '未命名条目'}</div>
-            <div className="world-entry-preview">{info ? info.note : entry.content}</div>
-            <div className="preset-chips"><span className="world-chip">{info ? '自带' : '自己写的'}</span>{info?.locked ? <span className="world-chip">锁定</span> : null}{info ? null : <span className="world-chip">{placementLabel(entry)}{entry.placement === 'system' ? '' : ' · ' + entry.role}</span>}{entry.warn ? <span className="world-chip preset-warn">需检查</span> : null}</div>
-          </PressedButton>
-          <div className="preset-entry-controls">
-            <PressedButton className="preset-move" type="button" aria-label="往上移" disabled={index === 0} onClick={() => move(preset, index, -1)}>↑</PressedButton>
-            <PressedButton className="preset-move" type="button" aria-label="往下移" disabled={index === preset.entries.length - 1} onClick={() => move(preset, index, 1)}>↓</PressedButton>
-            <input className="world-toggle" type="checkbox" aria-label="启用条目" checked={entry.enabled || !!info?.locked} disabled={!!info?.locked} onChange={event => toggleEntry(preset, entry.id, event.currentTarget.checked)} />
-          </div>
-        </div></div>;
+      {[true, false].map(builtinGroup => {
+        const group = preset.entries.map((entry, index) => ({ entry, index })).filter(item => !!item.entry.builtin === builtinGroup);
+        return <div key={builtinGroup ? 'builtin' : 'custom'}>
+          <div className="world-section-head"><b>{builtinGroup ? '自带规矩' : '自己写的条目'}</b><small>{group.length} ENTRIES</small></div>
+          <p className="world-hint preset-note">{builtinGroup ? '程序自己的规矩，固定排在最上面，只能用 ↑ ↓ 排顺序、开关；「回复格式」锁住不能关。' : '用 ↑ ↓ 排顺序。放进系统提示词的，会接在你选的那段自带规矩后面。'}</p>
+          {!builtinGroup && !group.length ? <div className="world-empty-note">还没有自己写的条目，点下面的「新增条目」写一条吧。</div> : null}
+          {group.map(({ entry, index }, position) => {
+            const info = entry.builtin ? builtinInfo(entry.builtin) : null;
+            return <div className="world-paper world-entry-card preset-entry" key={entry.id} data-preset-entry={entry.id}><div className="world-row">
+              <PressedButton className="world-book-open" type="button" disabled={!!info} onClick={() => { if (!info) openEntry(preset, entry); }}>
+                <div className="world-entry-title"><span className="world-entry-no">No.{String(position + 1).padStart(2, '0')}</span>{entry.name || '未命名条目'}</div>
+                <div className="world-entry-preview">{info ? info.note : entry.content}</div>
+                <div className="preset-chips">{info ? <span className="world-chip">自带</span> : null}{info?.locked ? <span className="world-chip">锁定</span> : null}{info ? null : <span className="world-chip">{placementLabel(entry)}{entry.placement === 'system' ? '' : ' · ' + entry.role}</span>}{entry.warn ? <span className="world-chip preset-warn">需检查</span> : null}</div>
+              </PressedButton>
+              <div className="preset-entry-controls">
+                <PressedButton className="preset-move" type="button" aria-label="往上移" disabled={position === 0} onClick={() => move(preset, index, -1)}>↑</PressedButton>
+                <PressedButton className="preset-move" type="button" aria-label="往下移" disabled={position === group.length - 1} onClick={() => move(preset, index, 1)}>↓</PressedButton>
+                <input className="world-toggle" type="checkbox" aria-label="启用条目" checked={entry.enabled || !!info?.locked} disabled={!!info?.locked} onChange={event => toggleEntry(preset, entry.id, event.currentTarget.checked)} />
+              </div>
+            </div></div>;
+          })}
+        </div>;
       })}
       <div className="world-action-bar">
         <PressedButton className="world-action" type="button" id="presetAddEntry" onClick={() => openEntry(preset, newPresetEntry())}>新增条目</PressedButton>
@@ -173,6 +190,9 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
           <span className="world-hint">可以用 {'{{char}}'} 代表角色名字、{'{{user}}'} 代表你的名字。</span></label>
         <label className="world-field"><span className="world-label">放在哪里</span>
           <PressedButton className="world-select-btn api-model-select-btn" type="button" id="presetEntryPlacement" onClick={() => pick('放在哪里', PLACEMENTS, draft.placement, value => setDraft(current => current && { ...current, placement: value as PresetPlacement }))}>{PLACEMENTS.find(item => item[0] === draft.placement)?.[1]}</PressedButton></label>
+        {draft.placement === 'system' ? <label className="world-field"><span className="world-label">接在哪一段后面</span>
+          <PressedButton className="world-select-btn api-model-select-btn" type="button" id="presetEntryAnchor" onClick={() => pick('接在哪一段后面', ANCHORS, draft.anchor || 'end', value => setDraft(current => current && { ...current, anchor: value as PresetAnchor }))}>{anchorLabel(draft.anchor)}</PressedButton>
+          <span className="world-hint">世界书的「人设前」「人设后」夹着「角色人设」；接在「角色人设」后面的条目会排在世界书「人设后」之后。</span></label> : null}
         {draft.placement !== 'system' ? <label className="world-field"><span className="world-label">用什么身份送</span>
           <PressedButton className="world-select-btn api-model-select-btn" type="button" id="presetEntryRole" onClick={() => pick('用什么身份送', ROLES, draft.role, value => setDraft(current => current && { ...current, role: value as PresetRole }))}>{draft.role}</PressedButton></label> : null}
         {draft.placement === 'depth' ? <label className="world-field"><span className="world-label">插入深度（插在倒数第几条消息之前，0 = 最后）</span><input className="world-input" type="number" id="presetEntryDepth" min={0} value={draft.depth} onChange={event => setDraft({ ...draft, depth: Number(event.currentTarget.value) })} /></label> : null}
@@ -187,7 +207,7 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
     </>;
   }
 
-  return <section id="presetPage" className="world-page open preset-page" aria-label="预设">
+  return <section id="presetPage" className="world-page open preset-page" aria-label="预设" ref={pageRef}>
     <div className="world-shell">
       <div className="world-top">
         <PressedButton className="world-icon-btn" id="presetBack" type="button" aria-label="返回" onClick={back}><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></PressedButton>
