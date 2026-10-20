@@ -6,6 +6,11 @@ export function chatPhotoReady() {
   const cfg = loadVoiceImageSettings().image;
   return !!(cfg.enabled && cfg.baseUrl && cfg.apiKey && cfg.model);
 }
+/** 告诉他照片怎么写：NovelAI 用英文标签；还有生图设置里「你」那一格，让他知道你长什么样。 */
+export function chatPhotoLook() {
+  const cfg = loadVoiceImageSettings().image;
+  return { style: cfg.provider === 'novelai' ? 'tags' as const : 'sentence' as const, user: normalizeImageCharacters(cfg.characters)[0]?.prompt || '' };
+}
 
 /** 生图设置里的角色提示：名字跟这个角色一样的那一格拿来用；画面里写到 the user 才带上「你」那一格。 */
 function pickCharacters(slots: ImageCharacter[], name: string, prompt: string) {
@@ -40,9 +45,9 @@ export async function generateChatPhoto(prompt: string, character: { name: strin
   const cfg = loadVoiceImageSettings().image;
   if (!cfg.enabled) throw new Error('生图没有开启');
   const characters = pickCharacters(cfg.characters, character.name, prompt);
-  // 生图设置里没有这个角色的提示，就用档案里的外貌，长相才不会每张都不一样。
-  const appearance = !characters.slice(1).some(slot => slot.prompt.trim()) && character.appearance.trim() ? `\nCharacter appearance (${character.name}): ${character.appearance.trim()}` : '';
-  return draw({ ...cfg, prompt: prompt.trim() + appearance, characters });
+  // 生图设置里没有这个角色的提示，就用档案里的外貌，长相才不会每张都不一样。NovelAI 看不懂中文，外貌由他直接写在标签里。
+  const appearance = cfg.provider !== 'novelai' && !characters.slice(1).some(slot => slot.prompt.trim()) && character.appearance.trim() ? `\nCharacter appearance (${character.name}): ${character.appearance.trim()}` : '';
+  return draw({ ...cfg, prompt: scene(cfg, prompt) + appearance, characters });
 }
 
 /** 你自己在聊天里生图：照你写的描述画；勾了「画面里有我」才带上生图设置里「你」那一格的提示。 */
@@ -50,7 +55,13 @@ export async function generateUserPhoto(prompt: string, includeMe: boolean) {
   const cfg = loadVoiceImageSettings().image;
   if (!cfg.enabled) throw new Error('生图没有开启');
   const user = normalizeImageCharacters(cfg.characters)[0];
-  return draw({ ...cfg, prompt: prompt.trim(), characters: [includeMe ? user : { ...user, prompt: '', negativePrompt: '' }] });
+  return draw({ ...cfg, prompt: scene(cfg, prompt), characters: [includeMe ? user : { ...user, prompt: '', negativePrompt: '' }] });
+}
+
+/** NovelAI 的标签里那个 the user 只是让程序知道画面里有你，送出去前拿掉。 */
+function scene(cfg: ImageConfig, prompt: string) {
+  if (cfg.provider !== 'novelai') return prompt.trim();
+  return prompt.split(',').map(tag => tag.trim()).filter(tag => tag && !/^the user$/i.test(tag)).join(', ');
 }
 
 async function draw(cfg: ImageConfig) {

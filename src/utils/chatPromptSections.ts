@@ -24,6 +24,8 @@ export interface ChatPromptInput {
     voice: 'on' | 'unavailable' | 'off';
     /** 'on'：可以发照片；'unavailable'：开了但生图服务没设定好；'off'：没开。 */
     photo?: 'on' | 'unavailable' | 'off';
+    /** 照片怎么写：tags 是 NovelAI 用的英文标签，sentence 是一般的英文句子；user 是生图设置里「你」那一格，让他知道你长什么样。 */
+    photoLook?: { style: 'tags' | 'sentence'; user: string };
 }
 
 const MARKERS = {
@@ -68,7 +70,7 @@ function contextMarkers(input: ChatPromptInput) {
     if (text.includes(MARKERS.userPhoto))
         parts.push('上下文里「[对方发来一张照片…]」是对方发给你的照片，附言是对方写的话。附上了图片时你看得到图片本身，请照着图片内容自然回应；看不到图片时只知道对方发了照片和附言，不要编造照片内容，可以自然地问。回复里不要照抄这个标记。');
     if (text.includes(MARKERS.photo))
-        parts.push('上下文里你自己的消息如果是「[照片] …」，表示那是你之前发出去的一张照片，后面是照片内容的说明；对方看到的是图片，不是这行字。回复里不要照抄这个格式，要发照片请用 photo 栏位。');
+        parts.push('上下文里你自己的消息如果是「[照片] …」，表示那是你之前发出去的一张照片，后面是照片内容的说明；对方看到的是图片，不是这行字。后面如果跟着一条「[系统附图…]」，那就是这张照片本身，你看得到它实际画成什么样，被问起时照着图说。回复里不要照抄这个格式，要发照片请用 photo 栏位。');
     return parts.join('');
 }
 
@@ -107,9 +109,18 @@ function voice(input: ChatPromptInput) {
 
 /** 照片：开了才送；开了但生图服务还没设定好，就说清楚现在发不了。 */
 function photo(input: ChatPromptInput) {
-    if (input.photo === 'on') return '每一条 replies 还可以加上 "photo"，表示这条你发了一张照片（对方会收到一张真的图片）。发照片的那一条：text 写一句很短的中文，说明照片拍的是什么（例如「刚拍的晚霞」）；photo 写给生图模型看的英文画面描述，40 到 80 个英文单词，只写看得见的东西：画面主体、动作和表情、穿着、地点和环境、光线、镜头与构图（自拍、近景、远景等），不要写心理、声音、对话或剧情。画面里有你自己时要写出外貌特征，不要只写名字；有对方时写 "the user"。照片单独一条，想说的话放在其他条。对方跟你要照片、自拍时就发；其他时候按人设和当下情境偶尔自然地分享（像真人随手拍），不要每次回复都发。例如：{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot"}';
     if (input.photo === 'unavailable') return '你现在发不了照片（生图服务还没设定好），只能发文字；对方跟你要照片时，照实说现在发不了，不要假装发了照片，也不要用括号描写照片内容。';
-    return '';
+    if (input.photo !== 'on') return '';
+    const tags = input.photoLook?.style === 'tags', userLook = input.photoLook?.user.trim() || '';
+    const describe = tags
+        ? 'photo 写给生图模型（NovelAI）看的英文标签，用逗号分隔，不要写成句子：先写人数（例如 1boy、1girl、2people），再写外貌、表情、动作和姿势、穿着、地点和环境、光线、镜头与构图，只写看得见的东西，不要写心理、声音、对话或剧情；两个人的画面要写清楚谁在做什么、彼此的位置和接触（例如 hugging from behind、holding hands、looking at each other）。'
+        : 'photo 写给生图模型看的英文画面描述，40 到 80 个英文单词，只写看得见的东西：画面主体、动作和表情、穿着、地点和环境、光线、镜头与构图（自拍、近景、远景等），不要写心理、声音、对话或剧情。';
+    const who = '画面里有你自己时要写出外貌特征，不要只写名字；画面里有对方时' + (tags ? '加上 the user 这个标签' : '写 "the user"') + (userLook ? `，对方的样子是：${userLook}，也照着写进画面` : '') + '。';
+    const example = tags
+        ? '{"text":"刚拍的晚霞","photo":"no humans, sunset, river, city skyline, silhouette, orange sky, pink clouds, reflection on water, phone photo, tilted angle"}'
+        : '{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot"}';
+    return '每一条 replies 还可以加上 "photo"，表示这条你发了一张照片（对方会收到一张真的图片）。发照片的那一条：text 写一句很短的中文，说明照片拍的是什么（例如「刚拍的晚霞」）；' + describe + who +
+        '照片单独一条，想说的话放在其他条。对方跟你要照片、自拍时就发；聊到你们见面、待在一起或一起做什么的时候，也可以发一张你们两个人在那一刻的画面（像合照，或那个场景的一张图），把两个人的动作和互动写清楚；其他时候按人设和当下情境偶尔自然地分享（像真人随手拍），不要每次回复都发。例如：' + example;
 }
 
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */

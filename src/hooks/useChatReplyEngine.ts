@@ -2,7 +2,7 @@ import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
 import type {MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
-import {chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
+import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
@@ -135,7 +135,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             // 将引用快照和正文一起传给 AI，较早原文超出上下文时仍可读到。
             // 引用候选仍只保留正文，避免把上下文说明显示在引用卡里。
             context.push({ role: isUserMessage ? 'user' : 'assistant', content: withQuote(content),
-                messageId: nodes.id(row), quoteCandidate: quoteText, quotedText });
+                messageId: nodes.id(row), quoteCandidate: quoteText, quotedText,
+                // 他自己发过、已经画好的照片：之后也把图片附给他看。
+                photoId: !isUserMessage && row.dataset.photoId && row.querySelector('.chat-photo.is-done') ? row.dataset.photoId : undefined });
         }
         return context;
     }
@@ -213,11 +215,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             recentText: recent.map(item => String(item.content || '')).join('\n'), trailingUserMessages: 0,
             timeText: requestPreferences.timeAware ? new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date()) : '',
             presence: { mine: services.current!.myPresence() || '在线', online: currentPresence.online, status: currentPresence.status },
-            segmented: false, replyLength: requestPreferences.replyLength, quotePolicy: 'never', quoteChoicesText: '', voice: 'off', photo: 'on',
+            segmented: false, replyLength: requestPreferences.replyLength, quotePolicy: 'never', quoteChoicesText: '', voice: 'off', photo: 'on', photoLook: chatPhotoLook(),
         }, preset);
         const ask = `[系统提示] 这一次不用回话：对方（${userName || '用户'}）想自己画一张照片发给你，请你照对方给的关键词，把这张照片的画面写完整。关键词：「${keywords.trim()}」。` +
-            `照着关键词的意思补上合理的细节，关键词指定的内容不要改掉；${includeMe ? '画面里有对方本人，写作 "the user"；' : ''}画面里有你自己时要写出你的外貌特征。` +
-            '只输出一条：{"replies":[{"text":"照片的一句中文说明","photo":"给生图模型看的英文画面描述"}]}，不要加其他回复。';
+            `照着关键词的意思补上合理的细节，关键词指定的内容不要改掉；${includeMe ? '画面里有对方本人；' : ''}画面里有你自己时要写出你的外貌特征。` +
+            '只输出一条：{"replies":[{"text":"照片的一句中文说明","photo":"给生图模型看的画面描述（照上面照片的写法）"}]}，不要加其他回复。';
         const messages:ApiMessage[] = [{ role: 'system', content: prompt.system }, ...recent.map(({ role, content }) => ({ role, content })), { role: 'user', content: ask }];
         const injected = [...world.messages, ...prompt.messages], extra = injected.filter(item => item.role !== 'system').length;
         const data = await api.requestChat(insertInjected(messages, injected), {
@@ -308,6 +310,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             quoteChoicesText: choicesText,
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
             photo: aiPhotoAllowed ? 'on' : (requestPreferences.aiPhoto ? 'unavailable' : 'off'),
+            photoLook: chatPhotoLook(),
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -332,20 +335,25 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 } catch (error) {}
             }
         }
-        // 你最近发的 3 张照片把图片本身附上（模型要能看图；看不了就退回只送文字）。
+        // 最近 3 张照片（你发的、他自己发的都算）把图片本身附上（模型要能看图；看不了就退回只送文字）。
+        // 你发的那条直接换成「文字 + 图片」；他发的照片不能放在他自己那条里（多数接口不收助手带图），
+        // 就在那条后面补一条「附图」给他看。
         let imageAttached = false;
+        const photoFollowUps = new Map<number, ApiMessage>();
         for (const { item, index } of recent.map((item, index) => ({ item, index })).filter(x => x.item.photoId).slice(-3)) {
             let url = '';
             try { url = await chatPhotoDataUrl(item.photoId!); } catch (error) {}
             if (!url) continue;
-            messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url } }] };
+            if (item.role === 'user') messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url } }] };
+            else photoFollowUps.set(index + 1, { role: 'user', content: [{ type: 'text', text: '[系统附图：这是你上面发给对方的那张照片，你看得到它的样子。这条不是对方说的话，不用回应这条]' }, { type: 'image_url', image_url: { url } }] });
             imageAttached = true;
         }
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
             ? { role: message.role, content: recent[messages.indexOf(message) - 1]?.content || message.content.filter(part => part.type === 'text').map((part:{text?:string}) => part.text).join(' ') }
             : message);
+        if (photoFollowUps.size) messages.splice(0, messages.length, ...messages.flatMap((message, index) => photoFollowUps.has(index) ? [message, photoFollowUps.get(index)!] : [message]));
         const withWorld = (list:ApiMessage[]):ApiMessage[] => insertInjected(list, injected);
-        const extraMessages = injected.filter(item => item.role !== 'system').length;
+        const extraMessages = injected.filter(item => item.role !== 'system').length + photoFollowUps.size;
         const pendingRows:HTMLElement[] = [];
         pending.current.add(requestChatKey);
         setChatReplyTyping(true, requestChatKey);
