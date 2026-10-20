@@ -28,7 +28,7 @@ import type {ForwardPickerApi,ForwardPickerServices,ForwardPayload} from '../typ
 import type {CharacterChatServices} from '../types/characterDossier';
 import type {ChatThreadSnapshot} from '../types/chatThread';
 import type {ApiService} from '../types/api';
-import {linkedWorldContext} from '../utils/chatWorldContext';
+import {collectWorldInjection} from '../utils/chatWorldContext';
 import {loadChatPreferences as readPreferences} from '../utils/chatPreferences';
 import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
 import {showToast} from '../utils/toast';
@@ -96,7 +96,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -320,7 +320,9 @@ function initChatApplication(){
     bridge.smallphoneGetChatDraft = key=>composer.read(key);
     bridge.smallphoneLoadCurrentChatDraft = loadCurrentChatDraft;
     bridge.smallphoneDeleteChatDraft = key=>composer.erase(key);
-    function getLinkedWorldBookContext(recentMessages:ChatContextItem[]){return linkedWorldContext(state.current.preferences.linkedWorldBooks,recentMessages);}
+    // 聊天的 key 就是角色档案的 archiveId，世界书的「关联角色」存的也是它。
+    function getLinkedWorldBookContext(recentMessages:ChatContextItem[],chatKey:string,selectedIds:string[]){return collectWorldInjection({selectedIds,characterId:chatKey,chatKey,recentMessages});}
+    function getCharacterPersona(chatKey:string){return buildCharacterPrompt(characterStore?.read().find(item => item.archiveId === chatKey) || null);}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
     function loadChatPreferences() { return preferenceBridge.load(getCurrentChatPreferenceKey()); }
     function applyChatRoomPreferences() {
