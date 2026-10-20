@@ -129,7 +129,6 @@ export function PresetApp({ onClose }: { onClose: () => void }) {
         <PressedButton className="world-action secondary" type="button" id="presetImport" onClick={() => importInput.current?.click()}>导入</PressedButton>
         <PressedButton className="world-action secondary" type="button" id="presetExportAll" onClick={() => download('qingtuan-presets-' + new Date().toISOString().slice(0, 10) + '.json', exportPresetsJson(store.presets))}>导出全部</PressedButton>
       </div>
-      <p className="world-hint preset-note">预设可以导入、导出。</p>
     </>;
   } else if (view.name === 'preset' && preset) {
     const isDefault = preset.id === store.defaultId;

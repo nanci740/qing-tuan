@@ -14,8 +14,6 @@
 .preset-page .preset-move:disabled { opacity: .35; cursor: default; }
 .preset-page .world-book-open:disabled { cursor: default; opacity: 1; color: inherit; }
 .preset-page .world-action-bar { flex-wrap: wrap; }
-.preset-page .world-action-bar + .preset-note { margin-top: 14px; }
-
 /* 主画面第二页的 App 图标：消息小窗下面一排。跟第一页的图标区一样宽（最宽 330px、置中），
    每格也一样宽，所以第一个图标跟第一页的「记账」左右对齐。 */
 #main-content .home-page2 .home-page2-apps {
