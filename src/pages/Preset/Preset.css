@@ -19,3 +19,7 @@
 #main-content .home-page2 .home-page2-apps {
   width: 100%; max-width: 330px; margin: 30px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 0;
 }
+
+/* 跑马灯色带的前后两句换成预设的 */
+.world-page.preset-page .world-address-field::before { content: '★ welcome to my preset ★ 现在位置 → '; }
+.world-page.preset-page .world-address-field::after { content: ' ★ 决定角色怎么读懂这场对话 ★'; }
