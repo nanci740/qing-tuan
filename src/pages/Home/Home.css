@@ -3032,3 +3032,14 @@
 /* @qingtuan-order:003840 */
 
         #chatAppPage#chatAppPage #chatListView svg.px-icon .px-l { fill: color-mix(in srgb, var(--color-muted) 70%, var(--theme-color)); }
+
+        /* 消息小窗按下去时：共用的按压效果会把所有投影换成内凹线，后面叠着的两扇小窗就跟着不见了。
+           这里只把前面那扇换成内凹，后面两扇照样留着。 */
+        :is(html, #_#_#_#_#_) #main-content .home-notice.sp-press:is(:active, .sp-is-pressed) {
+            box-shadow:
+                var(--effect-sunken),
+                5px -6px 0 -1px var(--color-surface),
+                5px -6px 0 0 var(--win-deep),
+                10px -12px 0 -1px var(--color-surface),
+                10px -12px 0 0 var(--win-deep) !important;
+        }

@@ -23,3 +23,14 @@
 /* 跑马灯色带的前后两句换成预设的 */
 .world-page.preset-page .world-address-field::before { content: '★ welcome to my preset ★ 现在位置 → '; }
 .world-page.preset-page .world-address-field::after { content: ' ★ 决定角色怎么读懂这场对话 ★'; }
+
+/* 多选：选上的卡片外框变粗，用主题色，不加光。原本的框线换成同色，外面再贴一圈同色 outline：四边一样粗，卡片标题的花纹也挡不到，卡片不会因为框变粗而跳动。
+   主题色本身很浅（例如 #DDF2F4），直接当框线看不出来，所以用同一个色相、调深加饱和的版本。多选时箭头和开关先收起来。 */
+.preset-page .preset-entry.is-selected {
+  --preset-pick: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 2.2 + 0.02) h);
+  border-color: var(--preset-pick);
+  outline: 1px solid var(--preset-pick);
+  outline-offset: 0;
+}
+.preset-page .preset-entry.is-picking .world-book-open { -webkit-touch-callout: none; user-select: none; }
+.preset-page .preset-entry .world-book-open { -webkit-touch-callout: none; }
