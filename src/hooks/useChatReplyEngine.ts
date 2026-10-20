@@ -8,6 +8,8 @@ import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseC
 import {voiceLength} from '../utils/chatMessageNodes';
 import type {WorldInjection} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
+import {resolvePreset} from '../utils/presetStorage';
+import {readProfileText} from './usePersonalProfile';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[]):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;}
@@ -202,8 +204,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
         let trailingUserMessages = 0;
         for (let i = recent.length - 1; i >= 0 && recent[i].role === 'user'; i--) trailingUserMessages++;
-        const systemPrompt = buildChatSystemPrompt({
+        // 聊天设置另选的预设，没选就用预设 App 里设成默认的那份。
+        const preset = resolvePreset(requestPreferences.presetId);
+        const prompt = buildChatSystemPrompt({
             characterName,
+            userName: readProfileText('personal_profile_name').trim(),
             persona: services.current!.persona(requestChatKey),
             world,
             recentText: recent.map(item => String(item.content || '')).join('\n'),
@@ -215,9 +220,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             quotePolicy: requestPreferences.quotePolicy,
             quoteChoicesText: choicesText,
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
-        });
+        }, preset);
+        // 单独成一条消息的：世界书条目和预设里自己写的条目。
+        const injected = [...world.messages, ...prompt.messages];
         const messages:ApiMessage[] = [
-            { role: 'system', content: systemPrompt },
+            { role: 'system', content: prompt.system },
             ...recent.map(({ role, content }) => ({ role, content }))
         ];
         // 直接听语音：最近 3 条你发的语音改成「说明文字 + wav 音频」一起送（Claude 不收音频，略过）
@@ -240,18 +247,18 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
             ? { role: message.role, content: recent[messages.indexOf(message) - 1]?.content || message.content.filter(part => part.type === 'text').map((part:{text?:string}) => part.text).join(' ') }
             : message);
-        // 单独成一条消息的世界书条目：front 放在聊天记录前面，tail 放在最后，depth 插在倒数第几条消息之前。
+        // front 放在聊天记录前面，tail 放在最后，depth 插在倒数第几条消息之前。
         const withWorld = (list:ApiMessage[]):ApiMessage[] => {
-            if (!world.messages.length) return list;
-            const pick = (place:string) => world.messages.filter(item => item.place === place).map(({ role, content }) => ({ role, content }));
+            if (!injected.length) return list;
+            const pick = (place:string) => injected.filter(item => item.place === place).map(({ role, content }) => ({ role, content }));
             const history = list.slice(1), inserts = new Map<number, ApiMessage[]>();
-            for (const item of world.messages.filter(item => item.place === 'depth')) {
+            for (const item of injected.filter(item => item.place === 'depth')) {
                 const at = Math.max(0, history.length - item.depth);
                 inserts.set(at, [...(inserts.get(at) || []), { role: item.role, content: item.content }]);
             }
             return [...list.slice(0, 1), ...pick('front'), ...history.flatMap((message, index) => [...(inserts.get(index) || []), message]), ...(inserts.get(history.length) || []), ...pick('tail')];
         };
-        const extraMessages = world.messages.filter(item => item.role !== 'system').length;
+        const extraMessages = injected.filter(item => item.role !== 'system').length;
         const pendingRows:HTMLElement[] = [];
         pending.current.add(requestChatKey);
         setChatReplyTyping(true, requestChatKey);
@@ -260,7 +267,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 feature: 'chat',
                 // 世界书多插的消息不占上下文条数，否则最前面那条会被裁掉。
                 contextMessages: extraMessages ? (Number(requestPreferences.contextMessages) || 30) + extraMessages : requestPreferences.contextMessages,
-                ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {})
+                ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {}),
+                // 预设里打开的参数盖过 API 设置。
+                ...(preset.params.temperature.enabled ? { temperature: preset.params.temperature.value } : {}),
+                ...(preset.params.topP.enabled ? { topP: preset.params.topP.value } : {}),
+                ...(preset.params.maxTokens.enabled ? { maxTokens: preset.params.maxTokens.value } : {})
             };
             let data;
             try {

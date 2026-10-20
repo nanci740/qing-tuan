@@ -9,6 +9,7 @@ import { DeviceStatusBar } from './components/DeviceStatusBar';
 import { HomeNotice } from './components/HomeNotice';
 import { memo, useState } from 'react';
 import { Memos } from '../Memos/Memos';
+import { PresetApp } from '../Preset/Preset';
 import { Ledger } from '../Ledger/Ledger';
 import { HomeAvatar } from './components/HomeAvatar';
 import { useBoot } from '../../providers/BootProvider';
@@ -30,6 +31,7 @@ export function Home() {
  const world=useWorld();
   const [memosOpen, setMemosOpen] = useState(false);
   const [ledgerOpen, setLedgerOpen] = useState(false);
+  const [presetOpen, setPresetOpen] = useState(false);
   const appearance = useAppearance();
   const boot = useBoot();
   const player = useHomePlayer();
@@ -791,6 +793,31 @@ export function Home() {
         {"\n"}
         <HomeNotice />
         {"\n"}
+        <div className="app-grid-container home-page2-apps">
+          <div className="app-item" data-app-icon-key="preset" role="button" tabIndex={0} aria-label="打开预设" onClick={event => { event.stopPropagation(); setPresetOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setPresetOpen(true); } }}>
+            <div className="app-card">
+              <div className={"icon-box icon-preset" + (appearance.icons.app['preset'] ? ' has-custom-icon' : '')}>
+                <img className="app-custom-icon" alt="Preset icon" src={appearance.icons.app['preset'] || undefined} />
+                {/* 像素图标：一张纸上三条滑杆 */}
+                <svg className="px-icon" viewBox="0 0 16 16" aria-hidden="true" shapeRendering="crispEdges">
+                  <rect className="px-x" x="2" y="1" width="12" height="1" />
+                  <rect className="px-x" x="2" y="14" width="12" height="1" />
+                  <rect className="px-x" x="1" y="2" width="1" height="12" />
+                  <rect className="px-x" x="14" y="2" width="1" height="12" />
+                  <rect className="px-w" x="2" y="2" width="12" height="12" />
+                  <rect className="px-x" x="3" y="4" width="10" height="1" />
+                  <rect className="px-x" x="3" y="8" width="10" height="1" />
+                  <rect className="px-x" x="3" y="11" width="10" height="1" />
+                  <rect className="px-o" x="5" y="3" width="2" height="3" />
+                  <rect className="px-o" x="9" y="7" width="2" height="3" />
+                  <rect className="px-o" x="6" y="10" width="2" height="3" />
+                </svg>
+              </div>
+            </div>
+            <span className="app-label-cn">{"Preset"}</span>
+          </div>
+        </div>
+        {"\n"}
       </div>
       {"\n"}
       <div className="home-dots" id="homeDots" role="tablist" aria-label="主画面页数" inert={navigation.spaceOpen}>
@@ -809,6 +836,7 @@ export function Home() {
       <StableDock />
       {navigation.spaceOpen && <Space onClose={navigation.closeSpace} />}
       {memosOpen && <Memos onClose={() => setMemosOpen(false)} />}
+      {presetOpen && <PresetApp onClose={() => setPresetOpen(false)} />}
       {ledgerOpen && <Ledger onClose={() => setLedgerOpen(false)} />}
       {"\n"}
     </div>;

@@ -4,7 +4,7 @@ import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/Cha
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
 import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft } from './ChatAppearanceControls';
 import { ChatOpeningInput, ChatRestartButton } from './ChatOpeningControls';
-import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel } from './ChatReplyControls';
+import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect } from './ChatReplyControls';
 import { ChatSettingCheckbox } from './ChatSettingCheckbox';
 import { ChatSettingTimeDisplay } from './ChatSettingTimeDisplay';
 import { ChatSettingsAccordion, ChatSettingsEntry, ChatSettingsEntryButton } from './ChatSettingsAccordion';
@@ -329,6 +329,11 @@ export function ChatSettings() {
                   </OriginalElement>
                 </ChatReplySelect>
               </OriginalElement>
+              {"\n                        "}
+              <div className="chat-setting-field-row">
+                <span className="chat-setting-field-label"><strong>{"预设"}</strong><span>{"这个聊天用哪份预设，不选就用预设 App 里的默认预设。"}</span></span>
+                <ChatPresetSelect />
+              </div>
               {"\n                        "}
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>
