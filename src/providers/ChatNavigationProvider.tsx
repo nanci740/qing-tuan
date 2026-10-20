@@ -16,7 +16,9 @@ export interface ChatNavigationApi {
   activeKey(value:string):void;
   selectionMode(enabled:boolean):void;
   restoreForwardRoom(): void;
-  showList(): void; showRoom(): void; openApp(): void; closeApp(): void;
+  showList(): void; showRoom(): void;
+  /** 打开聊天 App。直接要进某个聊天时传 'room'：列表先藏起来，不会在聊天室准备好之前闪一下。 */
+  openApp(target?: 'room'): void; closeApp(): void;
   openSettings(): void; closeSettings(): void;
   appearanceClass(token: string, enabled: boolean): void;
   appearanceStyle(key: string, value: string): void;
@@ -86,10 +88,11 @@ export function ChatNavigationProvider({ children }: { children: ReactNode }) {
           }
         }));
       },
-      openApp() {
+      openApp(target) {
         services.current?.syncIdentity();
         toggle('app', 'active', true, false);
-        showList();
+        if (target === 'room') { closeSettings(); toggle('list', 'is-hidden', true); }
+        else showList();
         window.dispatchEvent(new CustomEvent('qingtuan:dock', { detail: 'chat' }));
         toggle('dock', 'chat-hidden', true, true);
       },

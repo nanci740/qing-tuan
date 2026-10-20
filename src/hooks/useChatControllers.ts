@@ -574,7 +574,8 @@ initChatApplication();
         otherPages.current.settingsNavigation.closeSettings();
         otherPages.current.world.closeWorld();
         document.body.style.overflow = '';
-        bridge.smallphoneOpenChatApp?.();
+        // 直接进聊天室：列表先藏着，聊天室准备好才出现，不会先闪一下聊天列表。
+        navigation.openApp('room');
         activateCharacter(character);
         return true;
     };
