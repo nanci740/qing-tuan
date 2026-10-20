@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import {readChatRecords, saveChatRecords} from '../utils/chatRecords';
 import {useProfileAvatar} from '../providers/ProfileAvatarProvider';
 import {readMyPresence} from '../utils/chatPresence';
@@ -733,7 +734,7 @@ initChatApplication();
         setUnreadCount(history.current.activeKey, 0);
         navigation.activeKey(history.current.activeKey);
         try {
-            localStorage.setItem(ACTIVE_KEY, JSON.stringify(character));
+            kv.setItem(ACTIVE_KEY, JSON.stringify(character));
         } catch (error) {}
 
     
@@ -821,7 +822,7 @@ initChatApplication();
             navigation.showList();
             history.current.activeKey = '';
             navigation.activeKey(history.current.activeKey);
-            try { localStorage.removeItem(ACTIVE_KEY); } catch (error) {}
+            try { kv.removeItem(ACTIVE_KEY); } catch (error) {}
             history.current.restoring = true;
             bridge.smallphoneMessages.clear();
             history.current.restoring = false;

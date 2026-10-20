@@ -1,10 +1,11 @@
+import { kv } from '../utils/kvStorage';
 import { defaultHomeTexts as defaults, useHomeTexts } from '../providers/HomeTextsProvider';
 import { useMusic } from '../providers/MusicProvider';
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, MouseEvent, TouchEvent } from 'react';
 interface Note { id: number; char: string; style: CSSProperties }
-function read(key: string, fallback = '') { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } }
-function save(key: string, value: string) { try { localStorage.setItem(key, value); } catch { /* 原储存回退。 */ } }
+function read(key: string, fallback = '') { try { return kv.getItem(key) || fallback; } catch { return fallback; } }
+function save(key: string, value: string) { try { kv.setItem(key, value); } catch { /* 原储存回退。 */ } }
 export function formatPlayerTime(sec: number) { const m = Math.floor(sec / 60), s = Math.floor(sec % 60); return `${m}:${s < 10 ? '0' : ''}${s}`; }
 export function useHomePlayer() {
   const music = useMusic();

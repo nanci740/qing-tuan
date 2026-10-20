@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import type { ReplyDetail, ReplyNotificationBridge, ReplyNotificationServices } from '../types/replyNotification';
@@ -6,7 +7,7 @@ import { chatReplyPreview } from '../utils/chatReplyParser';
 const UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
 function loadUnread() {
   try {
-    const saved: unknown = JSON.parse(localStorage.getItem(UNREAD_KEY) || '{}');
+    const saved: unknown = JSON.parse(kv.getItem(UNREAD_KEY) || '{}');
     return saved && typeof saved === 'object' ? saved as Record<string, unknown> : {};
   } catch {
     return {};
@@ -42,7 +43,7 @@ export function useReplyNotification() {
       ...unread.current
     });
     try {
-      localStorage.setItem(UNREAD_KEY, JSON.stringify(unread.current));
+      kv.setItem(UNREAD_KEY, JSON.stringify(unread.current));
     } catch {/* 原未读存储失败不弹提示。 */}
     api.current!.updateThread(key);
   }

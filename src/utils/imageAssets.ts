@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import { readCatalogImageReferences } from './catalogDatabase';
 /** 青团机图片库：数据库保存 Blob，界面继续使用可导出的 data URL。 */
 const DB_NAME = 'qingtuan_image_assets_v1';
@@ -7,7 +8,7 @@ const references = new Map<string, string>();
 const slots = new Map<string, string>();
 const pendingImages = new Set<string>();
 const imageKeys = ['personal_profile_polaroid_photo', ...['chatMemoryStar','chatMemoryPolaroid','chatMemoryMoon','chatMemoryExtra'].map(id => `smallphone_chat_memory_photo_v1_${id}`), 'smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`)];
-function legacy(key: string) { try { return localStorage.getItem(key) || ''; } catch { return ''; } }
+function legacy(key: string) { try { return kv.getItem(key) || ''; } catch { return ''; } }
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
@@ -88,7 +89,7 @@ async function commitImageSlots(values: Record<string, string>) {
   for (const [key, ref] of entries) {
     slots.set(key, ref);
     // 数据库事务已经成功；即使旧数据暂时删不掉，也不会覆盖新绑定。
-    try { localStorage.setItem(key, ref); } catch { /* 数据库绑定仍为权威资料。 */ }
+    try { kv.setItem(key, ref); } catch { /* 数据库绑定仍为权威资料。 */ }
   }
 }
 export function decodePhotoRecords<T extends {photoUrl?: string}>(records: T[]): T[] { return records.map(record => ({...record, photoUrl: record.photoUrl ? resolveImage(record.photoUrl) : record.photoUrl})); }
@@ -120,7 +121,7 @@ export async function initializeImageAssets() {
     for (const [ref, blob] of imageRows) { const value=await blobDataUrl(blob);images.set(ref,value);references.set(value,ref); }
     restored = true;
     for (const key of imageKeys) {
-      if (slots.has(key)) { try { localStorage.setItem(key, slots.get(key)!); } catch {} continue; }
+      if (slots.has(key)) { try { kv.setItem(key, slots.get(key)!); } catch {} continue; }
       const value = legacy(key); if(value) await saveImageSlots({[key]:value});
     }
   } catch (cause) { error=cause; }
@@ -170,9 +171,9 @@ function persistedImageReferences(): Set<string> {
   const refs = new Set<string>();
   // Read failures and damaged records must stop cleanup, rather than treating them as empty.
   try {
-    for (let index=0; index<localStorage.length; index++) {
-      const key=localStorage.key(index); if(key===null)continue;
-      const value=localStorage.getItem(key)||'';
+    for (let index=0; index<kv.length; index++) {
+      const key=kv.key(index); if(key===null)continue;
+      const value=kv.getItem(key)||'';
       for (const ref of value.match(/qt-image:[a-f0-9]{64}/g)||[]) refs.add(ref);
       const ref=references.get(value);if(ref)refs.add(ref);
     }

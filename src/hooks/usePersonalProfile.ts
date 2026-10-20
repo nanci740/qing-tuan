@@ -1,10 +1,11 @@
+import { kv } from '../utils/kvStorage';
 import { prepareImage, readImageSlot, saveImageSlots } from '../utils/imageAssets';
 import { showToast } from '../utils/toast';
 import { useSettingsNavigation } from './useSettingsNavigation';
 import { useEffect, useRef, useState } from 'react';
 export const PROFILE_TEXT_KEYS = ['personal_profile_name', 'personal_profile_birthday', 'personal_profile_mbti', 'personal_profile_location', 'personal_profile_mood', 'personal_profile_today_text', 'personal_profile_special', 'personal_profile_love_1', 'personal_profile_love_2', 'personal_profile_love_3', 'personal_profile_love_4', 'personal_profile_dislike_1', 'personal_profile_dislike_2', 'personal_profile_dislike_3'];
-export function readProfileText(key: string, fallback = '') { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } }
-function saveText(key: string, value: string) { try { localStorage.setItem(key, value); } catch { /* 原存储回退。 */ } }
+export function readProfileText(key: string, fallback = '') { try { return kv.getItem(key) ?? fallback; } catch { return fallback; } }
+function saveText(key: string, value: string) { try { kv.setItem(key, value); } catch { /* 原存储回退。 */ } }
 function readTodayText() {
   const value = readProfileText('personal_profile_today_text', readProfileText('personal_profile_mood'));
   // 初始化时就保存独立副本，避免只改 mood 后刷新又带动今日文字。
@@ -21,11 +22,11 @@ export function usePersonalProfile() {
   const [counter] = useState(() => {
     let today = 1, total = 1;
     try {
-      total = parseInt(localStorage.getItem('qingtuan_visitor_count') || '', 10) || 1;
+      total = parseInt(kv.getItem('qingtuan_visitor_count') || '', 10) || 1;
       const d = new Date().toDateString();
-      const saved = JSON.parse(localStorage.getItem('qingtuan_profile_today') || '{}');
+      const saved = JSON.parse(kv.getItem('qingtuan_profile_today') || '{}');
       today = saved.d === d ? (saved.n || 0) + 1 : 1;
-      localStorage.setItem('qingtuan_profile_today', JSON.stringify({ d, n: today }));
+      kv.setItem('qingtuan_profile_today', JSON.stringify({ d, n: today }));
     } catch { /* 原访客计数回退。 */ }
     return { today, total };
   });

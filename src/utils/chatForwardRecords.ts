@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { ForwardSourceItem, StoredForwardRecord } from '../types/chatForwardRecords';
 export const FORWARD_RECORDS_KEY = 'smallphone_chat_forward_records_v1';
 export type ForwardRecordsStorage = Record<string, StoredForwardRecord>;
@@ -37,7 +38,7 @@ export function validateForwardRecords(value: unknown): ForwardRecordsStorage {
   return saved;
 }
 /** 只在资料库确认没有转发记录、且未标记迁移时读取旧键；失败不能返回默认空存档。 */
-export function loadLegacyForwardRecords(storage: Pick<Storage, 'getItem'> = localStorage): ForwardRecordsStorage {
+export function loadLegacyForwardRecords(storage: Pick<Storage, 'getItem'> = kv): ForwardRecordsStorage {
   const raw = storage.getItem(FORWARD_RECORDS_KEY);
   return validateForwardRecords(raw === null ? {} : JSON.parse(raw));
 }

@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { ImageCharacter, VoiceConfig, ImageConfig, VoiceImageSettings } from '../types/voiceImage';
 import type { ChoiceOption } from '../providers/ChoiceProvider';
 export const choiceMaps: Record<string,ChoiceOption[]> = {
@@ -672,4 +673,4 @@ export async function testImage(cfg: ImageConfig) {
 }
 
 // 页面进入 / 返回
-export function loadVoiceImageSettings(): VoiceImageSettings { try {const stored=JSON.parse(localStorage.getItem('smallphone_voice_image_settings_v1')||'null');if(stored&&typeof stored==='object'){return{voice:{...defaults.voice,...(stored.voice||{})},image:{...defaults.image,...(stored.image||{}),characters:normalizeImageCharacters(stored.image?.characters||defaults.image.characters)}};}}catch{}return structuredClone(defaults);}
+export function loadVoiceImageSettings(): VoiceImageSettings { try {const stored=JSON.parse(kv.getItem('smallphone_voice_image_settings_v1')||'null');if(stored&&typeof stored==='object'){return{voice:{...defaults.voice,...(stored.voice||{})},image:{...defaults.image,...(stored.image||{}),characters:normalizeImageCharacters(stored.image?.characters||defaults.image.characters)}};}}catch{}return structuredClone(defaults);}

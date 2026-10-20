@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { LedgerCategory, LedgerCurrency, LedgerData, LedgerIcon, LedgerTransaction } from '../types/ledger';
 import { ledgerMinor, LEDGER_MAX_MINOR, validLedgerDate } from './ledgerMath.ts';
 import { LEDGER_TABLES, openAppDatabase } from './appDatabase.ts';
@@ -187,7 +188,7 @@ export async function readLedgerData(options: LedgerStorageOptions = {}): Promis
     const existing = await runLedgerTransaction(db, 'readonly', (_transaction, rows) => snapshotFromRows(rows));
     if (existing) return { ...existing, data: upgradeLedgerData(existing.data) };
     // 数据库确认尚未初始化后才读取旧键；读取或校验失败时不写入默认值。
-    const raw = (options.legacyStorage ?? globalThis.localStorage).getItem(LEDGER_STORAGE_KEY);
+    const raw = (options.legacyStorage ?? kv).getItem(LEDGER_STORAGE_KEY);
     const initial = raw === null ? defaultLedgerData() : upgradeLedgerData(validateLedgerData(JSON.parse(raw)));
     return await runLedgerTransaction(db, 'readwrite', (transaction, rows) => {
       // 两个分页同时迁移时，后一个必须使用先完成者的资料，不得再次初始化。

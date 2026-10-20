@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import { readWorldBooks, worldBookBoundTo } from './worldStorage';
 interface ChatWorldEntry {id?:unknown;enabled?:boolean;keys?:unknown;secondaryKeys?:unknown;trigger?:unknown;match?:unknown;caseSensitive?:boolean;content?:unknown;priority?:unknown;title?:unknown;probability?:unknown;position?:unknown;role?:unknown;depth?:unknown;insertDepth?:unknown;sticky?:unknown;recursive?:boolean;}
 interface ChatWorldBook {id?:unknown;name?:unknown;enabled?:boolean;bindId?:unknown;bindIds?:unknown;entries?:ChatWorldEntry[];}
@@ -34,8 +35,8 @@ function keywordActive(entry:ChatWorldEntry, text:string) {
     const secondary = splitKeys(entry.secondaryKeys);
     return !secondary.length || hits(secondary, text, entry);
 }
-function readSticky():Record<string,Record<string,number>> { try { const value = JSON.parse(localStorage.getItem(STICKY_KEY) || '{}'); return value && typeof value === 'object' ? value : {}; } catch { return {}; } }
-function writeSticky(value:Record<string,Record<string,number>>) { try { localStorage.setItem(STICKY_KEY, JSON.stringify(value)); } catch {} }
+function readSticky():Record<string,Record<string,number>> { try { const value = JSON.parse(kv.getItem(STICKY_KEY) || '{}'); return value && typeof value === 'object' ? value : {}; } catch { return {}; } }
+function writeSticky(value:Record<string,Record<string,number>>) { try { kv.setItem(STICKY_KEY, JSON.stringify(value)); } catch {} }
 
 /** 每次回复前调用：挑出这次要带上的世界书条目。
  * 带上的书：聊天设置里勾选的，加上「关联角色」是全部角色或这个角色的；书本身要开着。

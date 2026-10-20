@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { useEffect, useState } from 'react';
 interface Battery extends EventTarget { level: number; charging: boolean }
 interface Connection { type?: string; effectiveType?: string; downlink: number }
@@ -27,10 +28,10 @@ export function useDeviceStatus() {
         }
       } catch {
         // 更新状态栏数据（真实状态不可用时保留原模拟电量）。
-        let currentBattery = parseInt(localStorage.getItem('simBattery') || '') || 85;
+        let currentBattery = parseInt(kv.getItem('simBattery') || '') || 85;
         if (Math.random() < 0.05) {
           currentBattery = Math.random() > 0.8 ? Math.min(100, currentBattery + 1) : Math.max(1, currentBattery - 1);
-          localStorage.setItem('simBattery', String(currentBattery));
+          kv.setItem('simBattery', String(currentBattery));
         }
         batteryWidth = Math.max(1, currentBattery / 100 * 14);
       }

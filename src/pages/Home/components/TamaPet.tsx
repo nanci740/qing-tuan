@@ -1,3 +1,4 @@
+import { kv } from '../../../utils/kvStorage';
 import { PressedDiv } from '../../../components/shared/PressedDiv';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { flushSync } from 'react-dom';
@@ -39,11 +40,11 @@ function PetPixels({ rows, classes, extra = [], className, underlay = false }: {
 }
 function loadPet(): PetState {
   let state: PetState = { hunger: 3, happy: 3, sleeping: false, last: Date.now(), poops: [] };
-  try { const saved: unknown = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') state = Object.assign(state, saved); } catch { /* 原默认状态。 */ }
+  try { const saved: unknown = JSON.parse(kv.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') state = Object.assign(state, saved); } catch { /* 原默认状态。 */ }
   if (!Array.isArray(state.poops)) state.poops = [];
   return state;
 }
-function savePet(state: PetState) { try { localStorage.setItem(KEY,JSON.stringify(state)); } catch { /* 原存储失败回退。 */ } }
+function savePet(state: PetState) { try { kv.setItem(KEY,JSON.stringify(state)); } catch { /* 原存储失败回退。 */ } }
 function applyDecay(state: PetState): PetState {
   const steps = Math.floor((Date.now()-state.last)/DECAY_MS);
   if (steps <= 0) return state;

@@ -2203,3 +2203,9 @@
 
         :is(html, #_#_#_) .world-page .world-action-menu-item:active svg { stroke: var(--color-surface) !important; }
 
+
+/* 条目多选：跟预设一样，选上的卡片外框换成主题色、四边一样粗，不加光；多选时复制钮和开关先收起来。 */
+.world-page .world-entry-card.is-selected { border-color: var(--theme-color); outline: 1px solid var(--theme-color); outline-offset: 0; }
+.world-page .world-entry-card.is-picking .world-entry-copy,
+.world-page .world-entry-card.is-picking .world-entry-controls { visibility: hidden; }
+.world-page .world-entry-card .world-book-open { -webkit-touch-callout: none; }

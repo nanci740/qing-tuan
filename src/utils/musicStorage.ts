@@ -1,12 +1,13 @@
+import { kv } from './kvStorage';
 import type { MusicTrack, MusicMode } from '../types/music';
 const DB_NAME = 'smallphone_music_db', DB_STORE = 'tracks';
 export const PLAYLIST_KEY = 'smallphone_music_playlist', CURRENT_KEY = 'smallphone_music_current', MODE_KEY = 'smallphone_music_mode', AUTO_KEY = 'smallphone_music_autoplay', SHOW_NOTES_KEY = 'smallphone_music_show_notes';
-export function readMusicBool(key: string, fallback: boolean) { try { const value = localStorage.getItem(key); return value === null ? fallback : value === '1'; } catch { return fallback; } }
-export function saveMusicBool(key: string, value: boolean) { try { localStorage.setItem(key, value ? '1' : '0'); } catch {} }
-export function saveMusicValue(key: string, value: string) { try { localStorage.setItem(key, value); } catch {} }
+export function readMusicBool(key: string, fallback: boolean) { try { const value = kv.getItem(key); return value === null ? fallback : value === '1'; } catch { return fallback; } }
+export function saveMusicBool(key: string, value: boolean) { try { kv.setItem(key, value ? '1' : '0'); } catch {} }
+export function saveMusicValue(key: string, value: string) { try { kv.setItem(key, value); } catch {} }
 export function createTrackId(prefix: string) { return prefix + Date.now() + '_' + Math.random().toString(36).slice(2, 8); }
 export function normalizeMusicTrack(track: Partial<MusicTrack> & { cover?: string } | null): MusicTrack | null { if (!track || typeof track !== 'object') return null; return { id: track.id || createTrackId('t_'), type: track.type === 'url' ? 'url' : 'file', title: (track.title || '').trim() || '未命名音乐', name: track.name || '', url: track.url || '', coverData: track.coverData || track.cover || '' }; }
-export function loadMusicState() { let playlist: MusicTrack[] = [], currentId = '', mode: string = 'list'; try { const raw = JSON.parse(localStorage.getItem(PLAYLIST_KEY) || '[]'); playlist = (Array.isArray(raw) ? raw : []).map(normalizeMusicTrack).filter((track): track is MusicTrack => !!track).slice(0, 3); } catch {} try { currentId = localStorage.getItem(CURRENT_KEY) || ''; } catch {} try { mode = localStorage.getItem(MODE_KEY) || 'list'; } catch {} if (!['list', 'single', 'random'].includes(mode)) mode = 'list'; if (!playlist.some(track => track.id === currentId)) currentId = playlist[0]?.id || ''; return { playlist, currentId, mode: mode as MusicMode }; }
+export function loadMusicState() { let playlist: MusicTrack[] = [], currentId = '', mode: string = 'list'; try { const raw = JSON.parse(kv.getItem(PLAYLIST_KEY) || '[]'); playlist = (Array.isArray(raw) ? raw : []).map(normalizeMusicTrack).filter((track): track is MusicTrack => !!track).slice(0, 3); } catch {} try { currentId = kv.getItem(CURRENT_KEY) || ''; } catch {} try { mode = kv.getItem(MODE_KEY) || 'list'; } catch {} if (!['list', 'single', 'random'].includes(mode)) mode = 'list'; if (!playlist.some(track => track.id === currentId)) currentId = playlist[0]?.id || ''; return { playlist, currentId, mode: mode as MusicMode }; }
 
     function openDb(): Promise<IDBDatabase> {
         return new Promise((resolve, reject) => {

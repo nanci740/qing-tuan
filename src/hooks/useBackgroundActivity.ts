@@ -1,3 +1,4 @@
+import { kv } from '../utils/kvStorage';
 import { useSettingsNavigation } from './useSettingsNavigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -14,7 +15,7 @@ export interface ReplyNotification { title?: string; body?: string; tag?: string
 const STORAGE_KEY = 'smallphone_background_activity_v1';
 const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false };
 function loadSettings(): BackgroundSettings {
-  try { return { ...defaults, ...(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {}) }; }
+  try { return { ...defaults, ...(JSON.parse(kv.getItem(STORAGE_KEY) || 'null') || {}) }; }
   catch { return { ...defaults }; }
 }
 
@@ -63,7 +64,7 @@ export function useBackgroundActivity() {
   const resumeRef = useRef<() => void>(() => {});
 
   const save = useCallback((next: BackgroundSettings) => {
-    try {localStorage.setItem(STORAGE_KEY, JSON.stringify(next));}
+    try {kv.setItem(STORAGE_KEY, JSON.stringify(next));}
     catch {setSettings({...current.current});showToast('后台活动设置保存失败，请重试');return false;}
     current.current = next;setSettings(next);return true;
   }, []);

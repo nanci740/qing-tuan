@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { McpService, McpState } from '../types/mcp';
 const KEY = 'smallphone_mcp_settings_v1';
 export function createMcpId() { return 'mcp_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7); }
@@ -11,7 +12,7 @@ export function normalizeMcpService(service: Partial<McpService>): McpService {
   };
 }
 export function loadMcpState(): McpState {
-  try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') return { enabled: saved.enabled === true, services: Array.isArray(saved.services) ? saved.services.map(normalizeMcpService) : [] }; } catch { /* 原存档回退。 */ }
+  try { const saved = JSON.parse(kv.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') return { enabled: saved.enabled === true, services: Array.isArray(saved.services) ? saved.services.map(normalizeMcpService) : [] }; } catch { /* 原存档回退。 */ }
   return { enabled: false, services: [] };
 }
-export function saveMcpState(state: McpState) { localStorage.setItem(KEY, JSON.stringify(state)); }
+export function saveMcpState(state: McpState) { kv.setItem(KEY, JSON.stringify(state)); }

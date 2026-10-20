@@ -1,3 +1,4 @@
+import { kv } from '../../utils/kvStorage';
 import { DEFAULT_PHOTO } from '../../utils/defaultPhoto';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { OriginalComment } from '../../components/shared/OriginalComment';
@@ -159,7 +160,7 @@ export function PersonalProfile() {
 {"\n                "}
 <input className={"pp2-polaroid-caption"} type={"text"} aria-label={"编辑拍立得文字"} spellCheck={"false"} defaultValue={readProfileText("personal_profile_polaroid_caption", "memories")} onChange={event => {
                     try {
-                      localStorage.setItem("personal_profile_polaroid_caption", event.currentTarget.value);
+                      kv.setItem("personal_profile_polaroid_caption", event.currentTarget.value);
                     } catch {}
                   }} onKeyDown={event => {
                     if (event.key === "Enter") {
@@ -495,7 +496,7 @@ export function PersonalProfile() {
 {"\n          "}
 <input className={"pp2-torn-note-text"} type={"text"} aria-label={"编辑纸条文字"} placeholder={"点击这里写点什么……"} spellCheck={"false"} defaultValue={readProfileText("personal_profile_torn_note", "")} onChange={event => {
           try {
-            localStorage.setItem("personal_profile_torn_note", event.currentTarget.value);
+            kv.setItem("personal_profile_torn_note", event.currentTarget.value);
           } catch {}
         }} onKeyDown={event => {
           if (event.key === "Enter") {
@@ -509,7 +510,7 @@ export function PersonalProfile() {
 {"\n          "}
 <input className={"pp2-torn-note-text mh-note-extra"} type={"text"} aria-label={"编辑留言板第二行"} spellCheck={"false"} defaultValue={readProfileText("personal_profile_torn_note_2", "")} onChange={event => {
           try {
-            localStorage.setItem("personal_profile_torn_note_2", event.currentTarget.value);
+            kv.setItem("personal_profile_torn_note_2", event.currentTarget.value);
           } catch {}
         }} onKeyDown={event => {
           if (event.key === "Enter") {
@@ -523,7 +524,7 @@ export function PersonalProfile() {
 {"\n          "}
 <input className={"pp2-torn-note-text mh-note-extra"} type={"text"} aria-label={"编辑留言板第三行"} spellCheck={"false"} defaultValue={readProfileText("personal_profile_torn_note_3", "")} onChange={event => {
           try {
-            localStorage.setItem("personal_profile_torn_note_3", event.currentTarget.value);
+            kv.setItem("personal_profile_torn_note_3", event.currentTarget.value);
           } catch {}
         }} onKeyDown={event => {
           if (event.key === "Enter") {

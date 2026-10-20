@@ -1,3 +1,4 @@
+import { kv } from './kvStorage';
 import type { StoredForwardRecord } from '../types/chatForwardRecords';
 import { loadLegacyForwardRecords, validateForwardRecord, validateForwardRecords } from './chatForwardRecords.ts';
 import type { ForwardRecordsStorage } from './chatForwardRecords.ts';
@@ -54,7 +55,7 @@ function serialize<T>(action: () => Promise<T>): Promise<T> {
   return next;
 }
 function legacyMap(key: string): Record<string, unknown> {
-  const value: unknown = JSON.parse(localStorage.getItem(key) || '{}');
+  const value: unknown = JSON.parse(kv.getItem(key) || '{}');
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('旧聊天数据格式异常，请先备份原数据');
   return value as Record<string, unknown>;
 }
@@ -144,7 +145,7 @@ export async function initializeChatRecords(): Promise<string> {
       ? CHAT_RECORDS_BLOCKED_MESSAGE : '转发记录暂时无法读取，原来的资料已保留';
   }
   records = loaded.records; committed = {...records}; drafts = loaded.drafts; initialized = true;
-  try {for (const key of [LEGACY_HISTORY, LEGACY_TIMES, LEGACY_DRAFTS]) localStorage.removeItem(key);}
+  try {for (const key of [LEGACY_HISTORY, LEGACY_TIMES, LEGACY_DRAFTS]) kv.removeItem(key);}
   catch {return [forwardWarning, '聊天数据已迁移，旧数据清理未完成；下次打开会重试'].filter(Boolean).join('；');}
   return forwardWarning;
 }

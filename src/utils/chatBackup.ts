@@ -1,9 +1,10 @@
+import { kv } from './kvStorage';
 import { CHAT_PREFERENCES_BY_CHAT_KEY, getChatPreferenceDefaults } from './chatPreferences';
 /** 与原数据操作相同：写入失败向调用者报告，保留数组 / 原始 JSON 值的旧行为。 */
 export function replaceChatPreferences(key: string, patch: object = {}): void {
- const store: unknown = JSON.parse(localStorage.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}');
+ const store: unknown = JSON.parse(kv.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}');
  if (store === null || typeof store === 'object') (store as Record<string, unknown>)[key] = { ...getChatPreferenceDefaults(), ...patch };
- localStorage.setItem(CHAT_PREFERENCES_BY_CHAT_KEY, JSON.stringify(store));
+ kv.setItem(CHAT_PREFERENCES_BY_CHAT_KEY, JSON.stringify(store));
 }
     export function blobToDataUrl(blob: Blob): Promise<string> {
         return new Promise<string>((resolve, reject) => {
