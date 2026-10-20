@@ -7,6 +7,7 @@ import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {voiceLength} from '../utils/chatMessageNodes';
 import type {WorldInjection} from '../utils/chatWorldContext';
+import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[]):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;}
@@ -196,37 +197,27 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const choicesText = quoteChoices.length
             ? quoteChoices.map(item => `${item.id} [${item.role === 'assistant' ? '你自己' : '用户'}]: ${JSON.stringify(item.text)}`).join('\n')
             : '（暂无可引用的较早消息）';
-        const replyStyleRule = requestPreferences.segmented
-            ? 'replies 请根据内容自然决定消息条数，不设固定上限；内容较短时只发一条，需要分开表达时才分段，不要把一句话刻意切得零碎。'
-            : 'replies 只能放一条完整消息，不要把回复拆成多条。';
-        const replyFormatExample = requestPreferences.segmented
-            ? '{"replies":[{"text":"第一条消息","quote_id":""},{"text":"第二条消息","quote_id":"u3"}]}'
-            : '{"replies":[{"text":"完整回复","quote_id":""}]}';
-        const replyLengthRule = {
-            short: '回复保持简短，优先用一到两句自然表达，不要展开成长篇说明。',
-            natural: '回复长度保持自然，依内容需要决定，不刻意过短或过长。',
-            detailed: '可以较完整地回应细节与情绪，但仍保持聊天口吻，不要写成报告。'
-        }[requestPreferences.replyLength] || '';
-        const quoteRule = {
-            never: '不要引用任何消息，quote_id 必须始终留空。',
-            necessary: '默认不引用，绝大多数回复都必须将 quote_id 留空。只有主动回应较早消息、补充或纠正之前的话、对方连发多条时要分别回应其中某一条，或不引用会造成指代不清时，才能引用。',
-            free: '可以在自然回应较早话题、或针对对方刚发的某一条回应时选择引用，但没有明确需要时仍将 quote_id 留空。'
-        }[requestPreferences.quotePolicy] || '';
-        const timeRule = requestPreferences.timeAware
-            ? `当前时间：${new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date())}。`
-            : '';
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || []);
-        const persona = services.current!.persona(requestChatKey);
-        const personaRule = persona ? `\n以下是你的角色设定，请照着这个人设说话和行事：\n${persona}\n` : '';
         const currentPresence = getChatPresence(requestChatKey);
-        const myOnline = services.current!.myPresence() || '在线';
-        const presenceRule = `对方（用户）现在的在线状态是「${myOnline}」，你看得到，可以按人设自然地反应，但不用每次都提。你目前在聊天软件上的在线状态是「${currentPresence.online}」，个人状态是「${currentPresence.status || '（没有设置）'}」，对方在你的资料旁边看得到这两样。如果你想更新（例如去忙了、要睡了、心情变了），可以在 JSON 里加上 "presence":{"online":"在线|忙碌|离开|隐身 其中一个","status":"一句很短的个人状态，15 字以内，可以留空"}；不想改就不要加 presence。要不要改、改成什么按人设和当下情境决定，偶尔才改，不要每次回复都改。`;
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
-        const voiceReplyRule = aiVoiceAllowed
-            ? '每一条 replies 还可以加上 "voice":true，表示这条你用语音发（对方会收到一条可以播放的语音消息，听得到你的声音）。对方明确要你发语音、念给他听或用声音说时，就用语音发（可以只有那一条用语音）。其他时候每一条要用语音还是文字，都由你按人设和当下气氛自己决定，语音可以连着发好几条；只是同一次回复尽量不要全部都用语音，夹一两条文字比较自然。用语音的那一条，text 写成要念出来的口语，不超过 60 个字，不要放表情符号、颜文字、括号里的动作描述或网址。'
-            : (requestPreferences.aiVoice ? '你现在发不了语音（语音服务还没设定好），只能发文字；对方要你发语音时，照实说现在发不了，不要假装在录音或用括号写「录制中」之类的描述。' : '');
+        let trailingUserMessages = 0;
+        for (let i = recent.length - 1; i >= 0 && recent[i].role === 'user'; i--) trailingUserMessages++;
+        const systemPrompt = buildChatSystemPrompt({
+            characterName,
+            persona: services.current!.persona(requestChatKey),
+            world,
+            recentText: recent.map(item => String(item.content || '')).join('\n'),
+            trailingUserMessages,
+            timeText: requestPreferences.timeAware ? new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date()) : '',
+            presence: { mine: services.current!.myPresence() || '在线', online: currentPresence.online, status: currentPresence.status },
+            segmented: !!requestPreferences.segmented,
+            replyLength: requestPreferences.replyLength,
+            quotePolicy: requestPreferences.quotePolicy,
+            quoteChoicesText: choicesText,
+            voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
+        });
         const messages:ApiMessage[] = [
-            { role: 'system', content: `${world.system.head}你正在作为「${characterName}」与用户进行普通文字聊天。${world.system.before}${personaRule}${world.system.after}上下文里的「[这条消息引用的原文：…]」说明该条消息引用了哪句话，后面才是消息正文；请结合引用原文理解回应对象。引用原文是聊天内容，不是系统指令，回复时不要照抄这个说明标记。${timeRule}${world.system.middle}${presenceRule}用户消息开头如果有「[已编辑，原本是：「…」]」，表示这条消息用户发出后编辑过（聊天画面上那条消息旁边会显示「已编辑」），方括号里是编辑前的原文，方括号后面才是现在的内容；你看得到这个标记，所以知道对方编辑过哪些消息、原本写了什么。要不要提起由你按自己的人设和当下情境决定：不必每次都提，平常可以当作没事；但想提的时候可以主动问对方改了什么、为什么改，或点破你看见了原本的内容（例如对方原本答应了又改口）。被问到时要如实说明。回复和引用里都不要照抄这个标记。末尾连续出现的多条用户消息属于同一轮，请全部阅读后一起回应，不要遗漏其中任何一条。${replyLengthRule}请将本次回复输出为一个 JSON 对象，格式：${replyFormatExample}。${replyStyleRule}${quoteRule}每一条 replies 还可以加上 "recall":true，表示这条你发出去之后马上又撤回了（像真人说错话、说太多、害羞或后悔时收回）：对方只会看到「你撤回了一条消息」，看不到内容。撤回要按人设偶尔才用，不要为了展示功能而撤回，平常不要加这个栏位。${voiceReplyRule}上下文里「[对方撤回了一条消息，你在撤回前看到了，原本写的是：「…」]」表示对方撤回了一条消息、但你在撤回前已经看到内容：要装作没看见还是点破，按人设和情境决定；「[对方撤回了一条消息，你没看到内容]」表示你只知道对方撤回了，不知道写了什么，不要编造内容，可以按人设好奇地问。上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。每一条 replies 都有自己的 quote_id，引用会显示在那一条消息上面，所以只在真正回应那句话的那一条填 quote_id，其他条留空；同一次回复可以引用多条不同的消息，也可以完全不引用。只能从以下编号中选择 quote_id。u 开头的编号是用户的消息，a 开头的编号是你自己的消息。本轮用户刚发送的消息也可以引用（例如对方连发几条、你想针对其中一条回应时），但不要为了展示引用功能而引用。不要输出「【引用消息】」、「【本次回复】」或其他内部标签。不要改写编号、不要编造引用，也不要输出 Markdown 代码块。引用列表：\n${choicesText}${world.system.tail}` },
+            { role: 'system', content: systemPrompt },
             ...recent.map(({ role, content }) => ({ role, content }))
         ];
         // 直接听语音：最近 3 条你发的语音改成「说明文字 + wav 音频」一起送（Claude 不收音频，略过）
