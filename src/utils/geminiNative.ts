@@ -1,4 +1,5 @@
 import type { ApiConfig, ApiConnection, ApiMessage, ApiResponse, ApiChunkHandler } from '../types/api';
+import { splitLeadingSystem } from './apiMessages';
 
 // Google 官方的 Gemini 地址走原生接口（generateContent），才能设安全过滤；
 // 中转站和其他地址照旧走 OpenAI 兼容格式。回来的结果整理成兼容格式的样子，其他地方不用改。
@@ -42,10 +43,9 @@ function toParts(content: unknown): GeminiPart[] {
 }
 
 export function geminiRequest(messages: ApiMessage[], config: ApiConfig, unlimited: boolean) {
-    const system = messages.filter(item => item.role === 'system').map(item => typeof item.content === 'string' ? item.content : '').filter(Boolean);
+    const { system, rest } = splitLeadingSystem(messages);
     const contents: GeminiContent[] = [];
-    for (const item of messages) {
-        if (item.role === 'system') continue;
+    for (const item of rest) {
         const role = item.role === 'assistant' ? 'model' : 'user', parts = toParts(item.content);
         if (!parts.length) continue;
         // 同一方连续几条并成一段，Gemini 要求一问一答交替。

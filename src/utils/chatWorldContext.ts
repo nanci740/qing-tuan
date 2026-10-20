@@ -1,12 +1,15 @@
-import { readWorldBooks } from './worldStorage';
-interface ChatWorldEntry {id?:unknown;enabled?:boolean;keys?:unknown;secondaryKeys?:unknown;trigger?:unknown;match?:unknown;caseSensitive?:boolean;content?:unknown;priority?:unknown;title?:unknown;probability?:unknown;position?:unknown;role?:unknown;depth?:unknown;sticky?:unknown;recursive?:boolean;}
-interface ChatWorldBook {id?:unknown;name?:unknown;enabled?:boolean;bindId?:unknown;entries?:ChatWorldEntry[];}
+import { readWorldBooks, worldBookBoundTo } from './worldStorage';
+interface ChatWorldEntry {id?:unknown;enabled?:boolean;keys?:unknown;secondaryKeys?:unknown;trigger?:unknown;match?:unknown;caseSensitive?:boolean;content?:unknown;priority?:unknown;title?:unknown;probability?:unknown;position?:unknown;role?:unknown;depth?:unknown;insertDepth?:unknown;sticky?:unknown;recursive?:boolean;}
+interface ChatWorldBook {id?:unknown;name?:unknown;enabled?:boolean;bindId?:unknown;bindIds?:unknown;entries?:ChatWorldEntry[];}
 export type WorldPosition = 'head'|'before'|'after'|'middle'|'tail';
+export interface WorldMessage {role:'system'|'user'|'assistant';content:string;
+    /** front：聊天记录前面；tail：聊天记录最后；depth：插在倒数第 depth 条消息之前（0 就是最后）。 */
+    place:'front'|'tail'|'depth';depth:number}
 export interface WorldInjection {
-    /** role 为 system 的条目，按注入位置拼好的文字，放进系统提示词。 */
+    /** 放进系统提示词的条目，按注入位置拼好的文字。 */
     system: Record<WorldPosition, string>;
-    /** role 为 user / assistant 的条目，单独当成一条消息；tail 放在聊天记录最后，其他放在聊天记录前面。 */
-    messages: {role:'user'|'assistant';content:string;tail:boolean}[];
+    /** 单独成一条消息的条目：注入角色是 user / assistant 的，或位置选「聊天记录中」的。 */
+    messages: WorldMessage[];
 }
 const POSITIONS:WorldPosition[] = ['head','before','after','middle','tail'];
 const LIMIT = 10000, RECURSION_ROUNDS = 3, STICKY_KEY = 'qingtuan_world_sticky_v1';
@@ -22,7 +25,9 @@ function hits(keys:string[], text:string, entry:ChatWorldEntry) {
 }
 function keywordActive(entry:ChatWorldEntry, text:string) {
     const keys = splitKeys(entry.keys);
-    if (!keys.length || !hits(keys, text, entry)) return false;
+    // 没写关键词就当作每次都触发，跟以前一样。
+    if (!keys.length) return true;
+    if (!hits(keys, text, entry)) return false;
     // 辅助关键词：填了就要再命中其中一个才算。
     const secondary = splitKeys(entry.secondaryKeys);
     return !secondary.length || hits(secondary, text, entry);
@@ -35,7 +40,7 @@ function writeSticky(value:Record<string,Record<string,number>>) { try { localSt
  * 条目：常驻的一定带；关键词的在最近「扫描深度」条消息里命中才带，再按概率决定；触发后按「持续轮数」再带几轮。 */
 export function collectWorldInjection(options:{selectedIds:string[];characterId:string;chatKey:string;recentMessages:{content?:unknown}[]}):WorldInjection {
     const selected = new Set((options.selectedIds || []).map(String));
-    const books = readChatWorldBooks().filter(book => book && book.enabled !== false && (selected.has(String(book.id)) || book.bindId === 'all' || (!!options.characterId && String(book.bindId) === options.characterId)));
+    const books = readChatWorldBooks().filter(book => book && book.enabled !== false && (selected.has(String(book.id)) || worldBookBoundTo(book, options.characterId)));
     const entries = books.flatMap(book => (Array.isArray(book.entries) ? book.entries : []).filter(entry => entry && entry.enabled !== false && String(entry.content || '').trim()));
     const result = emptyWorldInjection();
     if (!entries.length) return result;
@@ -57,7 +62,7 @@ export function collectWorldInjection(options:{selectedIds:string[];characterId:
         const extra = [...active.keys()].filter(entry => entry.recursive).map(entry => String(entry.content || '')).join('\n');
         if (!extra) break;
         let added = false;
-        entries.forEach(entry => { if (!active.has(entry) && entry.trigger !== 'always' && keywordActive(entry, extra)) { active.set(entry, true); added = true; } });
+        entries.forEach(entry => { if (!active.has(entry) && entry.trigger !== 'always' && splitKeys(entry.keys).length && keywordActive(entry, extra)) { active.set(entry, true); added = true; } });
         if (!added) break;
     }
     // 持续轮数：这一轮触发的记下来，之后几轮没触发也照样带。
@@ -75,10 +80,13 @@ export function collectWorldInjection(options:{selectedIds:string[];characterId:
     const grouped:Record<WorldPosition,string[]> = {head:[],before:[],after:[],middle:[],tail:[]};
     for (const entry of chosen) {
         if (budget <= 0) break;
-        const position:WorldPosition = POSITIONS.includes(entry.position as WorldPosition) ? entry.position as WorldPosition : 'after';
         const text = take(entry);
         if (!text) continue;
-        if (entry.role === 'user' || entry.role === 'assistant') result.messages.push({ role: entry.role, content: text, tail: position === 'tail' });
+        const role = entry.role === 'user' || entry.role === 'assistant' ? entry.role : 'system';
+        // 「聊天记录中」：不管注入角色，都单独成一条消息，插在倒数第几条消息之前。
+        if (entry.position === 'depth') { result.messages.push({ role, content: text, place: 'depth', depth: Math.max(0, Math.floor(Number(entry.insertDepth) || 0)) }); continue; }
+        const position:WorldPosition = POSITIONS.includes(entry.position as WorldPosition) ? entry.position as WorldPosition : 'after';
+        if (role !== 'system') result.messages.push({ role, content: text, place: position === 'tail' ? 'tail' : 'front', depth: 0 });
         else grouped[position].push(text);
     }
     for (const position of POSITIONS) if (grouped[position].length) result.system[position] = `\n以下是世界书设定，请自然遵守：\n${grouped[position].join('\n')}\n`;

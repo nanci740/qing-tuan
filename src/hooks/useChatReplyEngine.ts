@@ -249,13 +249,18 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
             ? { role: message.role, content: recent[messages.indexOf(message) - 1]?.content || message.content.filter(part => part.type === 'text').map((part:{text?:string}) => part.text).join(' ') }
             : message);
-        // 注入角色是 user / assistant 的世界书条目单独成一条消息：尾部的放在聊天记录最后，其他的放在聊天记录前面。
-        const withWorld = (list:ApiMessage[]):ApiMessage[] => world.messages.length ? [
-            ...list.slice(0, 1),
-            ...world.messages.filter(item => !item.tail).map(({ role, content }) => ({ role, content })),
-            ...list.slice(1),
-            ...world.messages.filter(item => item.tail).map(({ role, content }) => ({ role, content }))
-        ] : list;
+        // 单独成一条消息的世界书条目：front 放在聊天记录前面，tail 放在最后，depth 插在倒数第几条消息之前。
+        const withWorld = (list:ApiMessage[]):ApiMessage[] => {
+            if (!world.messages.length) return list;
+            const pick = (place:string) => world.messages.filter(item => item.place === place).map(({ role, content }) => ({ role, content }));
+            const history = list.slice(1), inserts = new Map<number, ApiMessage[]>();
+            for (const item of world.messages.filter(item => item.place === 'depth')) {
+                const at = Math.max(0, history.length - item.depth);
+                inserts.set(at, [...(inserts.get(at) || []), { role: item.role, content: item.content }]);
+            }
+            return [...list.slice(0, 1), ...pick('front'), ...history.flatMap((message, index) => [...(inserts.get(index) || []), message]), ...(inserts.get(history.length) || []), ...pick('tail')];
+        };
+        const extraMessages = world.messages.filter(item => item.role !== 'system').length;
         const pendingRows:HTMLElement[] = [];
         pending.current.add(requestChatKey);
         setChatReplyTyping(true, requestChatKey);
@@ -263,7 +268,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const requestOptions = {
                 feature: 'chat',
                 // 世界书多插的消息不占上下文条数，否则最前面那条会被裁掉。
-                contextMessages: world.messages.length ? (Number(requestPreferences.contextMessages) || 30) + world.messages.length : requestPreferences.contextMessages,
+                contextMessages: extraMessages ? (Number(requestPreferences.contextMessages) || 30) + extraMessages : requestPreferences.contextMessages,
                 ...(requestPreferences.customModel ? { model: requestPreferences.customModel } : {})
             };
             let data;

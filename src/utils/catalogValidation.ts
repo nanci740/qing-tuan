@@ -26,10 +26,11 @@ export function validateCatalogRows(kind: CatalogKind, value: unknown): CatalogR
     if (kind === 'worldBooks') {
       fields(row, ['name', 'description', 'bindId', 'cover'], 'string');
       fields(row, ['enabled'], 'boolean');
+      if (row.bindIds !== undefined && (!Array.isArray(row.bindIds) || row.bindIds.some(v => typeof v !== 'string'))) throw Error('世界书关联角色格式异常');
       for (const entry of ids(row.entries)) {
         fields(entry, ['title', 'keys', 'secondaryKeys', 'content', 'trigger', 'match', 'position', 'role'], 'string');
         fields(entry, ['enabled', 'caseSensitive', 'recursive'], 'boolean');
-        fields(entry, ['probability', 'depth', 'sticky', 'priority'], 'number');
+        fields(entry, ['probability', 'depth', 'insertDepth', 'sticky', 'priority'], 'number');
       }
     } else {
       fields(row, ['fileNo', 'tabLabel', 'sealNo', 'quote', 'photoUrl', 'photoCaption', 'name', 'nickname',
