@@ -23,8 +23,12 @@ function useWorldState(){
  const bindLabel=(value:{bindId?:string;bindIds?:string[]})=>{const ids=worldBookCharacterIds(value);return ids==='all'?'全部角色':ids.length?ids.map(roleName).join('、'):'未关联角色';};
  async function commit(next:WorldBook[],persist=true){liveBooks.current=next;setBooks(next);if(persist&&!await writeWorldBooks(next)){liveBooks.current=readWorldBooks();setBooks(liveBooks.current);return false;}return true;}
  function setEntryFilter(next:string){setUsedFilters(current=>[...new Set([...current,entryFilter,next])]);setEntryFilterState(next);}
- function rerender(nextView:WorldView){setUsedFilters([]);setPickerExpanded({});setPicker(current=>({...current,field:''}));setView(nextView);setRevision(value=>value+1);if(nextView!=='list')setMenuOpen(false);}
- function openWorld(){++coverRevision.current;coverSaving.current=false;setMenuOpen(false);setBookId('');setEntryId('');setDraft(null);setBookDraft(null);setOpen(true);rerender('list');}
+ // 书架和某本书滑到哪里：换页前记下，回来时停回原处；编辑书和编辑条目每次从最上面开始。
+ const scrollMemory=useRef<Record<string,number>>({});
+ const scrollKey=(value:WorldView,id:string)=>value==='book'?'book:'+id:value;
+ useLayoutEffect(()=>{const page=pageRef.current;if(page)page.scrollTop=view==='entry'||view==='bookForm'?0:scrollMemory.current[scrollKey(view,bookId)]??0;},[revision]);
+ function rerender(nextView:WorldView){if(pageRef.current)scrollMemory.current[scrollKey(view,bookId)]=pageRef.current.scrollTop;setUsedFilters([]);setPickerExpanded({});setPicker(current=>({...current,field:''}));setView(nextView);setRevision(value=>value+1);if(nextView!=='list')setMenuOpen(false);}
+ function openWorld(){scrollMemory.current={};++coverRevision.current;coverSaving.current=false;setMenuOpen(false);setBookId('');setEntryId('');setDraft(null);setBookDraft(null);setOpen(true);rerender('list');}
  function closeWorld(){++coverRevision.current;coverSaving.current=false;setMenuOpen(false);setOpen(false);}
  function back(){++coverRevision.current;coverSaving.current=false;if(menuOpen){setMenuOpen(false);return;}setPicker(value=>({...value,open:false}));if(view==='entry'){setDraft(null);setEntryId('');rerender('book');}else if(view==='bookForm'){setBookDraft(null);rerender(bookId?'book':'list');}else if(view==='book'){setBookId('');rerender('list');}else closeWorld();}
  function newBook(){++coverRevision.current;coverSaving.current=false;setMenuOpen(false);setBookId('');setBookDraft({name:'',description:'',enabled:true,bindId:'all'});setCoverName('');rerender('bookForm');}
