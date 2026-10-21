@@ -9,6 +9,7 @@ const uid = () => String(Date.now()) + '-' + Math.random().toString(36).slice(2,
 export const PRESET_BUILTINS: readonly { id: PresetBuiltinId; name: string; note: string; locked?: boolean }[] = [
   { id: 'basics', name: '基本说明', note: '告诉模型它正在扮演这个角色，跟你用手机聊天。' },
   { id: 'persona', name: '角色人设', note: '角色档案整理成的人设。世界书的「人设前」「人设后」放在它前后。' },
+  { id: 'userPersona', name: '你的人设', note: '聊天 App「我」里正在用的人设：名字、外貌、关于你。没选人设就不送。' },
   { id: 'time', name: '当前时间', note: '聊天设置开了时间感知才送。世界书的「中部」放在它后面。' },
   { id: 'presence', name: '在线状态', note: '双方的在线状态，以及角色怎么更新自己的状态。' },
   { id: 'markers', name: '聊天标记说明', note: '聊天记录里出现引用、编辑、撤回的标记时，才送对应的说明。' },

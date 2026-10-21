@@ -1,5 +1,4 @@
 import {useButtonPress} from '../../hooks/useButtonPress';
-import {showToast} from '../../utils/toast';
 import {useNativeRefs} from '../../providers/NativeRefsProvider';
 import { createElement, useCallback, useState } from 'react';
 import type { OriginalElementProps } from '../../types/dom';
@@ -15,7 +14,7 @@ export function OriginalElement({ tag, attributes = [], children, initialText, o
   const baseClass=attributes.find(attribute=>attribute.name==='class')?.value;
   const press=useButtonPress(baseClass);
   const pressable=tag==='button'||attributes.some(attribute=>attribute.name==='role'&&attribute.value==='button')||baseClass?.split(/\s+/).some(token=>['btn','back-btn','vi-btn'].includes(token));
-  const handleClick:typeof onClick=event=>{onClick?.(event);const action=attributes.find(attribute=>attribute.name==='data-chat-action')?.value;if(action)window.dispatchEvent(new CustomEvent('qingtuan:chat-action',{detail:action}));if(event.currentTarget.matches('.chat-subnav-item:not(.active)'))showToast(`${event.currentTarget.querySelector('span')?.textContent||'这个页面'} 之后接入`);};
+  const handleClick:typeof onClick=event=>{onClick?.(event);const action=attributes.find(attribute=>attribute.name==='data-chat-action')?.value;if(action)window.dispatchEvent(new CustomEvent('qingtuan:chat-action',{detail:action}));if(event.currentTarget.matches('.chat-subnav-item'))window.dispatchEvent(new CustomEvent('qingtuan:chat-tab',{detail:event.currentTarget.getAttribute('aria-label')||''}));};
   const pressProps=pressable?{className:press.className,'data-sp-press':press['data-sp-press'],onPointerDownCapture:press.onPointerDownCapture}:{};
   const id=attributes.find(attribute=>attribute.name==='id')?.value;
   // 静态兼容输入保留原默认值，但 type 必须交给 React，避免输入事件后的恢复移除原生 type 属性。

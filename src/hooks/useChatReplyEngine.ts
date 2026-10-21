@@ -13,6 +13,9 @@ import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
 import {readProfileText} from './usePersonalProfile';
+import {activePersona,activePersonaPrompt} from '../utils/meStorage';
+/** 他怎么叫你：「我」里正在用的人设名字，没有就用主画面个人资料的名字。 */
+const myName = () => activePersona()?.name.trim() || readProfileText('personal_profile_name').trim();
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;
  /** 你发的照片的编号：送的时候从照片库拿出图片附给模型看。 */
  photoId?:string;}
@@ -209,9 +212,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, chatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(chatKey);
         const preset = resolvePreset(requestPreferences.presetId);
-        const userName = readProfileText('personal_profile_name').trim();
+        const userName = myName();
         const prompt = buildChatSystemPrompt({
-            characterName, userName, persona: services.current!.persona(chatKey), world,
+            characterName, userName, persona: services.current!.persona(chatKey), userPersona: activePersonaPrompt(), world,
             recentText: recent.map(item => String(item.content || '')).join('\n'), trailingUserMessages: 0,
             timeText: requestPreferences.timeAware ? new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date()) : '',
             presence: { mine: services.current!.myPresence() || '在线', online: currentPresence.online, status: currentPresence.status },
@@ -297,7 +300,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const preset = resolvePreset(requestPreferences.presetId);
         const prompt = buildChatSystemPrompt({
             characterName,
-            userName: readProfileText('personal_profile_name').trim(),
+            userName: myName(),
+            userPersona: activePersonaPrompt(),
             persona: services.current!.persona(requestChatKey),
             world,
             recentText: recent.map(item => String(item.content || '')).join('\n'),
