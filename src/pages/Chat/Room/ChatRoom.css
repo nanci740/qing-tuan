@@ -2192,3 +2192,8 @@
             text-align: center !important;
             cursor: pointer;
         }
+
+/* 侧栏个人状态那一格：对方正在回你时显示「正在输入中…」，字用主题色的深色、轻轻闪一下。 */
+#chatAppPage#chatAppPage #chatRoomView .cr-status.is-typing { color: var(--color-accent-strong); animation: cr-typing-blink 1.4s ease-in-out infinite; }
+@keyframes cr-typing-blink { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { #chatAppPage#chatAppPage #chatRoomView .cr-status.is-typing { animation: none; } }
