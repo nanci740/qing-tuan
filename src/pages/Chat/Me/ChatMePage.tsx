@@ -9,6 +9,7 @@ import { newPersona, readMe, readMeAvatar, saveMeAvatar, subscribeMe, writeMe } 
 import type { MePersona, MeStore } from '../../../utils/meStorage';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
+import { readMyPresence } from '../../../utils/chatPresence';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
@@ -49,12 +50,12 @@ function readFavorites() {
 }
 const when = (at: number) => at ? new Date(at).toLocaleString('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
 
-/** 聊天 App 底下的「Me」：会员证、陪伴纪录、人设抽屉、收藏和之后的入口。 */
+/** 聊天 App 底下的「Me」：会员证（含陪伴纪录、状态列）、人设抽屉、收藏和之后的入口。整页都用旧电脑程序视窗的样子。 */
 export function ChatMePage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null);
   const me = useSyncExternalStore(subscribeMe, readMe), avatar = useSyncExternalStore(subscribeMe, readMeAvatar);
   const [editing, setEditing] = useState<MePersona | null>(null), [favorites, setFavorites] = useState<ReturnType<typeof readFavorites> | null>(null);
-  const file = useRef<HTMLInputElement>(null), refs = useNativeRefs();
+  const file = useRef<HTMLInputElement>(null), refs = useNativeRefs(), [picked, setPicked] = useState('');
   const stats = useMemo(() => open ? companionStats() : null, [open]);
   useLayoutEffect(() => {
     const tab = (event: Event) => {
@@ -93,6 +94,7 @@ export function ChatMePage() {
     const exists = me.personas.some(item => item.id === persona.id);
     const personas = exists ? me.personas.map(item => item.id === persona.id ? persona : item) : [...me.personas, persona];
     save({ personas, activeId: me.activeId || persona.id });
+    setPicked(persona.id);
     setEditing(null);
   }
   async function removePersona(persona: MePersona) {
@@ -100,9 +102,12 @@ export function ChatMePage() {
     save({ personas: me.personas.filter(item => item.id !== persona.id), activeId: me.activeId === persona.id ? '' : me.activeId });
     setEditing(null);
   }
-  const stamp = active ? `使用中 · ${active.name || '未命名人设'}` : '还没选人设';
+  const status = active ? `使用中：${active.name || '未命名人设'}` : '还没选人设';
+  // 人设清单：点一下选中（反白），工具列的「使用 / 停用」「编辑」对选中的那个动作；双击直接编辑。
+  const selected = me.personas.find(item => item.id === picked) || active || me.personas[0] || null;
+  const using = !!selected && selected.id === me.activeId;
   return createPortal(<>
-    <section className="chat-memory-block chat-me-window chat-me-card" data-menu="Profile   Edit   Help" data-foot="✧ tap the photo to change it · saved on this phone only">
+    <section className="chat-memory-block chat-me-window chat-me-card" data-menu="Profile   Edit   Help" data-foot="">
       <div className="chat-memory-head"><span className="chat-memory-title">member_card.exe</span><span className="chat-memory-subtitle">who you are here</span></div>
       <div className="chat-me-card-body">
         <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined}>{avatar ? null : <span>＋</span>}</button>
@@ -113,35 +118,33 @@ export function ChatMePage() {
           <input className="chat-me-signature" placeholder="写一句个性签名…" maxLength={60} defaultValue={me.signature} onBlur={event => save({ signature: event.currentTarget.value.trim() })} aria-label="个性签名" />
         </div>
       </div>
-      <div className={'chat-me-stamp' + (active ? '' : ' is-empty')}>{stamp}</div>
+      <fieldset className="chat-me-group">
+        <legend>陪伴纪录</legend>
+        {stats && stats.total ? <dl>
+          <div><dt>认识</dt><dd>第 {stats.days} 天</dd></div>
+          <div><dt>一共聊了</dt><dd>{stats.total} 条</dd></div>
+          {stats.top ? <div><dt>最常聊</dt><dd>{stats.top}</dd></div> : null}
+          {stats.last ? <div><dt>上次聊天</dt><dd>{when(stats.last)}</dd></div> : null}
+        </dl> : <p className="chat-me-group-empty">还没开始聊天，第一条消息会从这里开始记。</p>}
+      </fieldset>
+      <div className="chat-me-statusbar"><span><i className="chat-me-dot" aria-hidden="true" />{readMyPresence().online}</span><span>{status}</span></div>
     </section>
 
-    <section className="chat-me-receipt" aria-label="陪伴纪录">
-      <div className="chat-me-receipt-head">COMPANION RECEIPT</div>
-      {stats && stats.total ? <>
-        <div><span>认识第</span><b>{stats.days} 天</b></div>
-        <div><span>一共聊了</span><b>{stats.total} 条</b></div>
-        {stats.top ? <div><span>最常聊的是</span><b>{stats.top}</b></div> : null}
-        {stats.last ? <div><span>上次聊天</span><b>{when(stats.last)}</b></div> : null}
-      </> : <div className="chat-me-receipt-empty">还没开始聊天，第一条消息会从这里开始记。</div>}
-      <div className="chat-me-receipt-foot">— thank you for staying —</div>
-    </section>
-
-    <section className="chat-memory-block chat-me-window chat-me-drawer" data-menu="New   Use   Help" data-foot="✧ 同时只用一个人设，全部聊天一起换">
+    <section className="chat-memory-block chat-me-window chat-me-drawer" data-menu="File   Edit   View   Help" data-foot="✧ 同时只用一个人设，全部聊天一起换 · 双击可以编辑">
       <div className="chat-memory-head"><span className="chat-memory-title">persona_drawer</span><span className="chat-memory-subtitle">tell him who you are</span></div>
-      <div className="chat-me-persona-row">
-        {me.personas.map(persona => {
-          const on = persona.id === me.activeId;
-          return <div className={'chat-me-persona' + (on ? ' is-active' : '')} key={persona.id}>
-            <b>{persona.name || '未命名人设'}</b>
-            <p>{persona.about.trim() || persona.appearance.trim() || '还没写关于你的事'}</p>
-            <div className="chat-me-persona-actions">
-              <button type="button" aria-pressed={on} onClick={() => save({ activeId: on ? '' : persona.id })}>{on ? '使用中' : '使用'}</button>
-              <button type="button" onClick={() => setEditing({ ...persona })}>编辑</button>
-            </div>
-          </div>;
-        })}
-        <button type="button" className="chat-me-persona chat-me-persona-add" onClick={() => setEditing(newPersona())}><span>＋</span>新增人设</button>
+      <div className="chat-me-toolbar">
+        <button type="button" onClick={() => setEditing(newPersona())}>新增</button>
+        <button type="button" disabled={!selected} aria-pressed={using} onClick={() => selected && save({ activeId: using ? '' : selected.id })}>{using ? '停用' : '使用'}</button>
+        <button type="button" disabled={!selected} onClick={() => selected && setEditing({ ...selected })}>编辑</button>
+      </div>
+      <div className="chat-me-listview" role="listbox" aria-label="人设">
+        <div className="chat-me-listhead" aria-hidden="true"><span>名称</span><span>状态</span></div>
+        {me.personas.length ? me.personas.map(persona => <button type="button" role="option" key={persona.id} aria-selected={persona.id === selected?.id}
+          className="chat-me-listrow" onClick={() => setPicked(persona.id)} onDoubleClick={() => setEditing({ ...persona })}>
+          <span className="chat-me-listicon" aria-hidden="true" />
+          <span className="chat-me-listname">{persona.name || '未命名人设'}<small>{persona.about.trim() || persona.appearance.trim() || '还没写关于你的事'}</small></span>
+          <span className="chat-me-liststate">{persona.id === me.activeId ? '使用中' : ''}</span>
+        </button>) : <div className="chat-me-listempty">还没有人设，按「新增」建一个。</div>}
       </div>
     </section>
 
@@ -175,9 +178,12 @@ export function ChatMePage() {
       <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="收藏">
         <div className="sp-confirm-bar"><span className="sp-confirm-title">收藏</span></div>
         <div className="sp-confirm-body chat-me-favorites">
-          {favorites.length ? favorites.map((item, index) => <button type="button" className="chat-me-favorite" key={index} onClick={() => { setFavorites(null); (window as Bridge).smallphoneOpenCharacterChat?.(item.key); }}>
-            <small>{item.chat} · {item.who === '我' ? '我说的' : '他说的'} · {when(item.at)}</small><span>{item.text || '[消息]'}</span>
-          </button>) : <div className="sp-confirm-msg">还没有收藏的消息。在聊天里长按一条消息，选「收藏」就会出现在这里。</div>}
+          {favorites.length ? <div className="chat-me-listview chat-me-favorite-list">
+            <div className="chat-me-listhead chat-me-favorite-row" aria-hidden="true"><span>来自</span><span>内容</span><span>时间</span></div>
+            {favorites.map((item, index) => <button type="button" className="chat-me-listrow chat-me-favorite-row" key={index} onClick={() => { setFavorites(null); (window as Bridge).smallphoneOpenCharacterChat?.(item.key); }}>
+              <span>{item.who === '我' ? '我' : item.chat}</span><span>{item.text || '[消息]'}</span><span>{when(item.at).replace(/^\d+\//, '')}</span>
+            </button>)}
+          </div> : <div className="sp-confirm-msg">还没有收藏的消息。在聊天里长按一条消息，选「收藏」就会出现在这里。</div>}
         </div>
         <div className="sp-confirm-actions chat-me-form-actions"><PressedButton type="button" className="sp-confirm-btn is-primary" onClick={() => setFavorites(null)}>关闭</PressedButton></div>
       </div>
