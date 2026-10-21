@@ -10,7 +10,9 @@ export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: 
 export interface MessagePhoto { id: string; prompt: string; caption: string; state: 'pending' | 'done' | 'failed'; src?: string; error?: string;
   /** 你自己发的照片（预览里不能重画）。只在打开预览时用，不存。 */
   mine?: boolean }
-export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
+/** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */
+export interface MessageLocation { place: string; address?: string; distance?: string }
+export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
 export interface MessageNodesApi {
   container(): HTMLDivElement|null;
   rows(limit?: number): HTMLElement[];
@@ -32,7 +34,7 @@ export interface MessageNodesApi {
   recall(row: HTMLElement, content: string, notice: string, by: string, sentAt: number, seen?: boolean): void;
   appendPeer(text: string): { row: HTMLElement; caption: HTMLElement; time: HTMLElement };
   finishPeer(row: HTMLElement, detail: PeerMessageDetail): void;
-  appendUser(text: string, voice: MessageVoice | null, quote: {text: string;targetId: string}, photo?: MessagePhoto | null): {row:HTMLElement; time:HTMLElement};
+  appendUser(text: string, voice: MessageVoice | null, quote: {text: string;targetId: string}, photo?: MessagePhoto | null, location?: MessageLocation | null): {row:HTMLElement; time:HTMLElement};
   result(row: HTMLElement, className: string, text: string): void; translation(row: HTMLElement, text: string): void; toggleTranscript(row: HTMLElement): boolean;
   markRead(row?: HTMLElement | null, all?: boolean): void; identity(): void;
   unread(count: number): {divider:HTMLElement;firstUnread:HTMLElement} | null; repair(): boolean;

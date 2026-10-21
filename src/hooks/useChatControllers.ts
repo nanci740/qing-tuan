@@ -10,7 +10,7 @@ import {useSettingsNavigation} from '../providers/SettingsNavigationProvider';
 import type {ChatNavigationServices,ChatNavigationApi} from '../providers/ChatNavigationProvider';
 import type {ChatIdentityApi} from '../providers/ChatIdentityProvider';
 import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsProvider';
-import type {MessageNodesApi,MessagePhoto,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageLocation,MessageNodesApi,MessagePhoto,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
 import type {ChatComposerApi,ChatComposerServices} from '../types/chatComposer';
@@ -38,6 +38,8 @@ interface ChatPublicApi {
  smallphoneMessages:MessageNodesApi;
  /** 你发一张照片（相册、拍照或自己生的图），caption 是你写的说明。 */
  smallphoneSendChatPhoto(image:Blob,caption:string):Promise<void>;
+ /** 你发一张定位卡片（地点是写出来的，不是真的定位）。 */
+ smallphoneSendChatLocation(location:MessageLocation):void;
  /** 你生图的补充描写，交给回复引擎用跟他回话一样的底子来写。 */
  smallphoneWritePhotoPrompt(keywords:string,includeMe:boolean):Promise<string>;
  smallphoneApi?:ApiService;
@@ -333,6 +335,18 @@ function initChatApplication(){
         scheduleAutoReply();
     }
     bridge.smallphoneSendChatPhoto = sendPhoto;
+    // 你发定位：跟发文字一样进聊天、等家机回。
+    bridge.smallphoneSendChatLocation = location => {
+        if (!messageList || !location.place.trim()) return;
+        messageNodes.appendUser('', null, messageOperations.quote(), null, location);
+        triggerChatFeedback('send');
+        refreshChatBubbleGroups(messageList);
+        syncChatReadReceipts(messageList);
+        clearPendingQuote();
+        roomTools.closeQuick();
+        messageNodes.scrollLatest(true);
+        scheduleAutoReply();
+    };
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
 
     function showChatNotice(message:string) {
@@ -394,6 +408,7 @@ function initChatApplication(){
         if (!row) return '';
         if (row.dataset.voiceTranscript) return row.dataset.voiceTranscript.trim();
         if (row.dataset.photoCaption) return '[照片] ' + row.dataset.photoCaption.trim();
+        if (row.dataset.locationPlace) return row.dataset.chatAiContent || '[位置] ' + row.dataset.locationPlace;
         const bubble = row.querySelector('.chat-bubble');
         if (!bubble) return '';
         const clone = bubble.cloneNode(true) as HTMLElement;
@@ -608,6 +623,7 @@ initChatApplication();
         // 转发记录卡只显示消息类型，不把卡片标题、预览和页脚拼进聊天列表。
         if (lastBubble.querySelector('.chat-forward-record-card')) return '[聊天记录]';
         if (lastBubble.querySelector('.chat-photo')) return '[照片]';
+        if (lastBubble.querySelector('.chat-location')) return '[位置]';
         // 语音消息：显示「[语音] 4″」，不要只剩秒数
         if (lastBubble.querySelector('.chat-voice-control')) {
             const seconds = lastBubble.querySelector('.chat-voice-length')?.textContent?.trim() || '';

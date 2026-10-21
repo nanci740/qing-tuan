@@ -293,6 +293,15 @@ export function parseChatAiQuotedReply(raw: unknown, quoteChoices: unknown = [])
     }
     return { reply: plain.replace(/^```(?:text)?\s*|\s*```$/gi, '').trim(), quote: '' };
 }
+/** 回复里的 "location"：可以是 {"place","address","distance"}，也可以只是一个地点字符串。 */
+function readReplyLocation(value: unknown): { place: string; address?: string; distance?: string } | null {
+    if (typeof value === 'string') return value.trim() ? { place: value.trim().slice(0, 60) } : null;
+    if (!value || typeof value !== 'object') return null;
+    const item = value as Record<string, unknown>, text = (key: string) => String(item[key] ?? '').trim();
+    const place = text('place') || text('name');
+    if (!place) return null;
+    return { place: place.slice(0, 60), ...(text('address') ? { address: text('address').slice(0, 80) } : {}), ...(text('distance') ? { distance: text('distance').slice(0, 20) } : {}) };
+}
 export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = []): ChatSegmentedReply {
     const plain = String(raw || '').trim();
     const availableQuotes = Array.isArray(quoteChoices) ? quoteChoices as ChatQuoteChoice[] : [];
@@ -308,11 +317,12 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     quoteId: String(fields(item).quote_id ?? fields(item).quoteId ?? '').trim(),
                     recall: fields(item).recall === true || fields(item).recall === 'true',
                     voice: fields(item).voice === true || fields(item).voice === 'true',
-                    photo: String(fields(item).photo ?? fields(item).image ?? '').trim()
+                    photo: String(fields(item).photo ?? fields(item).image ?? '').trim(),
+                    location: readReplyLocation(fields(item).location)
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '' };
-        }).map(item => item.photo && !item.text ? { ...item, text: '照片' } : item).filter(item => fields(item).text)
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', location: null };
+        }).map(item => !item.text && (item.photo || item.location) ? { ...item, text: item.photo ? '照片' : '位置' } : item).filter(item => fields(item).text)
         : [];
     if (structuredItems.length) {
         // 旧格式：整包只有一个 quote_id → 挂在第一则
@@ -329,6 +339,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             recalls: structuredItems.map(item => item.recall),
             voices: structuredItems.map(item => item.voice),
             photos: structuredItems.map(item => item.photo),
+            locations: structuredItems.map(item => item.location),
             quotes,
             quote: firstQuote?.quote || '',
             quoteTargetId: firstQuote?.quoteTargetId || ''

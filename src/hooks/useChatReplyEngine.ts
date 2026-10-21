@@ -1,14 +1,14 @@
 import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import type {MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageLocation,MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
 import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
-import {voiceLength} from '../utils/chatMessageNodes';
+import {locationText,voiceLength} from '../utils/chatMessageNodes';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
@@ -381,16 +381,20 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (!rawReply) throw new Error(emptyChatReplyReason(data));
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);
-            // 照片一张一条；没分条时文字合成一条，照片接在后面。
+            // 照片、定位一张一条；没分条时文字合成一条，照片和定位接在后面。
             const replyPhotos = aiPhotoAllowed ? (parsedReply.photos || []) : [];
-            const photoIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index]);
-            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index]);
+            const replyLocations = parsedReply.locations || [];
+            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index]);
+            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index]);
             const segments = requestPreferences.segmented
                 ? parsedReply.segments
-                : [...(textOnly.length ? [textOnly.join('\n')] : []), ...photoIndexes.map(index => parsedReply.segments[index])];
+                : [...(textOnly.length ? [textOnly.join('\n')] : []), ...cardIndexes.map(index => parsedReply.segments[index])];
             const segmentPhotos = requestPreferences.segmented
                 ? replyPhotos
-                : [...(textOnly.length ? [''] : []), ...photoIndexes.map(index => replyPhotos[index])];
+                : [...(textOnly.length ? [''] : []), ...cardIndexes.map(index => replyPhotos[index] || '')];
+            const segmentLocations:(MessageLocation|null)[] = requestPreferences.segmented
+                ? replyLocations
+                : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPhotos[index] ? null : replyLocations[index] || null)];
             // 每则自己的引用；没分段时整则用第一个引用
             const segmentQuotes = requestPreferences.segmented
                 ? (parsedReply.quotes || [])
@@ -402,7 +406,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const recallNoticeText = `${characterName}撤回了一条消息`;
             for (let index = 0; index < segments.length; index++) {
                 const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index], caption: segments[index], state: 'pending' } : null;
-                const reply = photo ? '[照片] ' + photo.caption : segments[index];
+                const location = photo ? null : segmentLocations[index] || null;
+                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : segments[index];
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
@@ -415,12 +420,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && !willRecall && !photo) {
+                    if (segmentVoices[index] && !willRecall && !photo && !location) {
                         try { voiceAudio = await voice.prepare(reply); } catch (error) { voiceAudio = null; }
                     }
-                    const pending = appendChatAiReplyBubble(photo ? photo.caption : reply);
+                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -438,7 +443,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index] && !photo) {
+                    if (segmentVoices[index] && !photo && !location) {
                         try {
                             const voiceAudio = await voice.prepare(reply);
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
@@ -454,6 +459,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         chatKey: requestChatKey,
                         reply,
                         photo,
+                        location,
                         quote,
                         quoteTargetId,
                         sentAt: Date.now(),
