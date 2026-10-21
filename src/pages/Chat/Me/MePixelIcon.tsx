@@ -92,19 +92,19 @@ const ART = {
     '.....llllll.....',
     '................',
   ],
-  tongue: [
+  cry: [
     '....xxxxxx......',
     '..xxwwwwwwxx....',
     '.xwwwwwwwwwwx...',
+    '.xwxxwwwwxxwxl..',
+    'xwwwxwwwwxwwwx..',
+    'xwwwxwwwwxwwwxl.',
+    'xwxwwwwwwwwxwxl.',
+    'xwwwwwwwwwwwwxl.',
+    'xwxwwwxxwwwxwxl.',
+    'xwwwwxxxxwwwwxl.',
+    '.xwwwxxxxwwwxll.',
     '.xwwwwwwwwwwxl..',
-    'xwwxxwwwwxxwwx..',
-    'xwwwwwwwwwwwwxl.',
-    'xwwwwwwwwwwwwxl.',
-    'xwwwwwwwwwwwwxl.',
-    'xwwwxxxxxxwwwxl.',
-    'xwwwwxooxwwwwxl.',
-    '.xwwwxooxwwwxll.',
-    '.xwwwwxxwwwwxl..',
     '..xxwwwwwwxxll..',
     '...lxxxxxxlll...',
     '.....llllll.....',
@@ -164,7 +164,7 @@ const ART = {
     '.....llllll.....',
     '................',
   ],
-  sad: [
+  angry: [
     '....xxxxxx......',
     '..xxwwwwwwxx....',
     '.xwwwwwwwwwwx...',
@@ -383,7 +383,7 @@ const ART = {
 } as const;
 
 export type MeIconName = keyof typeof ART;
-export const MOODS = ['smile', 'grin', 'wink', 'cool', 'love', 'tongue', 'wow', 'meh', 'dizzy', 'sad'] as const satisfies readonly MeIconName[];
+export const MOODS = ['smile', 'grin', 'wink', 'cool', 'love', 'cry', 'wow', 'meh', 'dizzy', 'angry'] as const satisfies readonly MeIconName[];
 const CLASS: Record<string, string> = { x: 'px-x', o: 'px-o', w: 'px-w', l: 'px-l' };
 
 // 每一行同色相连的像素并成一条，画出来跟主画面图标一样是 rect。
