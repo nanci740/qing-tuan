@@ -17,6 +17,7 @@ export const PRESET_BUILTINS: readonly { id: PresetBuiltinId; name: string; note
   { id: 'recall', name: '撤回', note: '角色可以把刚发的消息撤回。' },
   { id: 'voice', name: '语音', note: '聊天设置开了语音才送。' },
   { id: 'photo', name: '照片', note: '聊天设置开了发照片才送。' },
+  { id: 'location', name: '位置', note: '角色可以发定位卡片，什么时候发、怎么写。' },
   { id: 'output', name: '输出规则', note: '不要输出内部标签和 Markdown 代码块。' },
   { id: 'quote', name: '引用', note: '引用规则和可以引用的消息编号。设成不引用时只留一句。' },
 ];

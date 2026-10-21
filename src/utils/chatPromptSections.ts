@@ -37,6 +37,7 @@ const MARKERS = {
     myRecall: '[你撤回了一条消息',
     photo: '[照片] ',
     userPhoto: '[对方发来一张照片',
+    location: '[位置] ',
 };
 
 /** 基本说明：现在在用手机聊天。 */
@@ -69,6 +70,8 @@ function contextMarkers(input: ChatPromptInput) {
         parts.push('上下文里「[对方撤回了一条消息，你在撤回前看到了，原本写的是：「…」]」表示对方撤回了一条消息、但你在撤回前已经看到内容：要装作没看见还是点破，按人设和情境决定；「[对方撤回了一条消息，你没看到内容]」表示你只知道对方撤回了，不知道写了什么，不要编造内容，可以按人设好奇地问。');
     if (text.includes(MARKERS.myRecall))
         parts.push('上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。');
+    if (text.includes(MARKERS.location))
+        parts.push('上下文里的「[位置] 地点（地址）· 距你约…」是一张定位卡片：用户发的就是对方现在在哪或想让你知道的地方，你发的就是你那时在的地方。定位是聊天里写出来的，不是真的卫星定位；回应时照着地点自然地反应（例如问对方去那里做什么、说你过去找对方），回复里不要照抄这个标记，要发定位请用 location 栏位。');
     if (text.includes(MARKERS.userPhoto))
         parts.push('上下文里「[对方发来一张照片…]」是对方发给你的照片，附言是对方写的话。附上了图片时你看得到图片本身，请照着图片内容自然回应；看不到图片时只知道对方发了照片和附言，不要编造照片内容，可以自然地问。回复里不要照抄这个标记。');
     if (text.includes(MARKERS.photo))
@@ -128,8 +131,13 @@ function photo(input: ChatPromptInput) {
             rare: '对方想看，或那一刻对你们特别重要时，才发一张你们两个人在那一刻的画面',
             often: '大方地多发你们两个人在那一刻的画面：互动有了变化（换了动作、地点或气氛）就发一张新的，可以接连着发',
             normal: '主动发一张你们两个人在那一刻的画面；每一段新的互动发一张',
-        } as Record<string, string>)[input.photoInteraction || 'normal'] + '，把两个人的动作、表情和彼此的距离、接触写清楚。这是把那个场景画出来给对方看，不用管你们现在是不是真的在一起、是谁拍的；同一个画面不要重复发。' +
+        } as Record<string, string>)[input.photoInteraction || 'normal'] + '，把两个人的动作、表情和彼此的距离、接触写清楚。这是把那个场景画出来给对方看，不用管你们现在是不是真的在一起、是谁拍的；聊天里最近有人发过定位的话，场景就画在那个地方；同一个画面不要重复发。' +
         '三、其他时候按人设和当下情境偶尔分享自己的日常（像真人随手拍），不要每次回复都发。例如：' + example;
+}
+
+/** 位置：角色也可以发定位卡片。 */
+function location() {
+    return '每一条 replies 还可以加上 "location"，表示这条你发了一张定位卡片给对方：{"place":"地点名称","address":"详细地址，可以不写","distance":"离对方多远，例如 500 米、3 公里，不知道就不写"}。定位单独一条，text 可以留空，想说的话放在其他条。什么时候发：到了约好的地方、出门或到了某个地方想让对方知道、对方问你在哪、要约对方来找你的时候；其他时候不要发，不要每次回复都发。地点要符合你的人设和当下情境，可以是真实的地名，也可以是你们故事里的地方。例如：{"text":"","location":{"place":"星巴克（滨江店）","address":"滨江路 88 号一楼","distance":"1.2 公里"}}';
 }
 
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
@@ -148,7 +156,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, output: outputCleanliness, quote,
+    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {
