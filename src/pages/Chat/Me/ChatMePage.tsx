@@ -18,7 +18,7 @@ import { MePixelIcon, MOODS } from './MePixelIcon';
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
 type Tab = 'me' | 'favorites';
 const LATER = '之后开放';
-const APPS = [['表情', 'sticker'], ['钱包', 'wallet'], ['日记', 'book'], ['足迹', 'paw'], ['回忆', 'photo']] as const;
+const APPS = [['表情', 'sticker'], ['钱包', 'wallet']] as const;
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
 function companionStats() {
@@ -125,7 +125,7 @@ export function ChatMePage() {
     setEditing(null);
   }
   const editProfile = () => setProfile({ name: me.name, handle: me.handle, signature: me.signature });
-  const active = me.personas.find(item => item.id === me.activeId);
+  const active = me.personas.find(item => item.id === me.activeId), presence = readMyPresence();
   // 名字旁边的表情：点一下换下一个，存在「我」的资料里；没选过就是笑脸。
   const mood = MOODS.find(item => item === me.mood) || MOODS[0];
 
@@ -191,7 +191,7 @@ export function ChatMePage() {
       </div>
 
       <div className="chat-me-statusbar" aria-label="状态">
-        <span><i className="chat-me-dot" aria-hidden="true" />{readMyPresence().online}</span>
+        <span data-state={presence.custom ? '自定义' : presence.online}><i className="chat-me-dot" aria-hidden="true" />{presence.online}</span>
         <span>{active ? `使用中：${active.name || '未命名人设'}` : '还没选人设'}</span>
         {stats?.last ? <span>上次聊天 {when(stats.last)}</span> : null}
       </div>
