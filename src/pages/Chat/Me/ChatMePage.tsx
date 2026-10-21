@@ -10,6 +10,7 @@ import { newPersona, readMe, readMeAvatar, saveMeAvatar, subscribeMe, writeMe } 
 import type { MePersona, MeStore } from '../../../utils/meStorage';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
+import { DEFAULT_BIRD_AVATAR } from '../../../utils/defaultAvatar';
 import { readMyPresence } from '../../../utils/chatPresence';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import { MePixelIcon } from './MePixelIcon';
@@ -54,7 +55,7 @@ function readFavorites() {
 }
 const when = (at: number) => at ? new Date(at).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
 
-/** 一组可以收起来的清单，标题前面一颗圆钮（像以前聊天软件的好友分组）。 */
+/** 一组可以收起来的清单，标题前面一个小三角（像以前聊天软件的好友分组）。 */
 function Group({ title, count, open, onToggle, children }: { title: string; count?: number; open: boolean; onToggle: () => void; children: ReactNode }) {
   return <div className="chat-me-group">
     <button type="button" className="chat-me-group-head" aria-expanded={open} onClick={onToggle}>
@@ -131,9 +132,7 @@ export function ChatMePage() {
       <div className="chat-me-profile-window">
         <div className="chat-memory-head"><span className="chat-memory-title">my_profile.exe</span><span className="chat-memory-subtitle">who you are here</span></div>
         <div className="chat-me-profile">
-          <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined}>
-            {avatar ? null : <MePixelIcon name="tuan" size={48} />}
-          </button>
+          <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={{ backgroundImage: `url("${avatar || DEFAULT_BIRD_AVATAR}")` }} />
           <input ref={file} type="file" accept="image/*" hidden onChange={event => pickAvatar(event.currentTarget)} />
           <button type="button" className="chat-me-info" aria-label="编辑资料" onClick={editProfile}>
             <span className="chat-me-name"><MePixelIcon name="smile" size={20} /><span>[{me.name || '你的名字'}]</span></span>
