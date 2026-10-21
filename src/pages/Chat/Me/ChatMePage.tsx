@@ -10,6 +10,7 @@ import { newPersona, readMe, readMeAvatar, saveMeAvatar, subscribeMe, writeMe } 
 import type { MePersona, MeStore } from '../../../utils/meStorage';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
+import { readMyPresence } from '../../../utils/chatPresence';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import { MePixelIcon } from './MePixelIcon';
 
@@ -52,7 +53,6 @@ function readFavorites() {
   }).sort((a, b) => (b.items[0]?.at || 0) - (a.items[0]?.at || 0));
 }
 const when = (at: number) => at ? new Date(at).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-const has = (text: string, query: string) => text.toLowerCase().includes(query.toLowerCase());
 
 /** 一组可以收起来的清单，标题前面一颗圆钮（像以前聊天软件的好友分组）。 */
 function Group({ title, count, open, onToggle, children }: { title: string; count?: number; open: boolean; onToggle: () => void; children: ReactNode }) {
@@ -64,11 +64,11 @@ function Group({ title, count, open, onToggle, children }: { title: string; coun
   </div>;
 }
 
-/** 聊天 App 底下的「Me」：照旧聊天软件主视窗的里面那几块排——资料框、一排功能、左边直排分页、右边清单、底下搜索列。 */
+/** 聊天 App 底下的「Me」：照旧聊天软件主视窗的里面那几块排——资料小窗、一排功能、左边直排分页、右边清单、底下状态列。 */
 export function ChatMePage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null);
   const me = useSyncExternalStore(subscribeMe, readMe), avatar = useSyncExternalStore(subscribeMe, readMeAvatar);
-  const [tab, setTab] = useState<Tab>('me'), [query, setQuery] = useState(''), [folded, setFolded] = useState<Record<string, boolean>>({});
+  const [tab, setTab] = useState<Tab>('me'), [folded, setFolded] = useState<Record<string, boolean>>({});
   const [editing, setEditing] = useState<MePersona | null>(null), [profile, setProfile] = useState<Pick<MeStore, 'name' | 'handle' | 'signature'> | null>(null);
   const file = useRef<HTMLInputElement>(null), refs = useNativeRefs();
   const stats = useMemo(() => open ? companionStats() : null, [open]);
@@ -96,7 +96,7 @@ export function ChatMePage() {
     setHost(box);
     return () => { box.remove(); view.removeAttribute('data-chat-tab'); };
   }, [open]);
-  useEffect(() => { if (open) { setTab('me'); setQuery(''); } }, [open]);
+  useEffect(() => { if (open) setTab('me'); }, [open]);
   if (!open || !host) return null;
 
   const save = (patch: Partial<MeStore>) => writeMe({ ...readMe(), ...patch });
@@ -124,23 +124,24 @@ export function ChatMePage() {
     setEditing(null);
   }
   const editProfile = () => setProfile({ name: me.name, handle: me.handle, signature: me.signature });
-  const q = query.trim();
-  const personas = q ? me.personas.filter(item => has(item.name + item.about + item.appearance, q)) : me.personas;
-  const favoriteGroups = q ? favorites.map(group => ({ ...group, items: group.items.filter(item => has(item.text, q)) })).filter(group => group.items.length) : favorites;
+  const active = me.personas.find(item => item.id === me.activeId);
 
   return createPortal(<>
     <section className="chat-me-buddy" aria-label="我">
-      <div className="chat-me-profile">
-        <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined}>
-          {avatar ? null : <MePixelIcon name="tuan" size={48} />}
-        </button>
-        <input ref={file} type="file" accept="image/*" hidden onChange={event => pickAvatar(event.currentTarget)} />
-        <button type="button" className="chat-me-info" aria-label="编辑资料" onClick={editProfile}>
-          <span className="chat-me-name"><MePixelIcon name="smile" size={20} /><span>[{me.name || '你的名字'}]</span></span>
-          <span className="chat-me-handle">@{me.handle || 'your_id'}</span>
-          <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
-        </button>
-        <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="people" size={24} /></button>
+      <div className="chat-me-profile-window">
+        <div className="chat-memory-head"><span className="chat-memory-title">my_profile.exe</span><span className="chat-memory-subtitle">who you are here</span></div>
+        <div className="chat-me-profile">
+          <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined}>
+            {avatar ? null : <MePixelIcon name="tuan" size={48} />}
+          </button>
+          <input ref={file} type="file" accept="image/*" hidden onChange={event => pickAvatar(event.currentTarget)} />
+          <button type="button" className="chat-me-info" aria-label="编辑资料" onClick={editProfile}>
+            <span className="chat-me-name"><MePixelIcon name="smile" size={20} /><span>[{me.name || '你的名字'}]</span></span>
+            <span className="chat-me-handle">@{me.handle || 'your_id'}</span>
+            <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
+          </button>
+          <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="people" size={24} /></button>
+        </div>
       </div>
 
       <nav className="chat-me-apps" aria-label="功能">
@@ -157,7 +158,7 @@ export function ChatMePage() {
 
         <div className="chat-me-content" role="tabpanel">
           {tab === 'me' ? <>
-            {q ? null : <Group title="陪伴纪录" open={!folded.stats} onToggle={() => fold('stats')}>
+            <Group title="陪伴纪录" open={!folded.stats} onToggle={() => fold('stats')}>
               {stats && stats.total ? <>
                 <div className="chat-me-cards">
                   <div><MePixelIcon name="star" size={24} /><b>{stats.days}</b><small>认识天数</small></div>
@@ -166,10 +167,10 @@ export function ChatMePage() {
                 </div>
                 {stats.last ? <p className="chat-me-note">上次聊天 {when(stats.last)}</p> : null}
               </> : <p className="chat-me-note">还没开始聊天，第一条消息会从这里开始记。</p>}
-            </Group>}
-            <Group title="我的人设" count={personas.length} open={!folded.personas} onToggle={() => fold('personas')}>
+            </Group>
+            <Group title="我的人设" count={me.personas.length} open={!folded.personas} onToggle={() => fold('personas')}>
               <div className="chat-me-rows">
-                {personas.map(persona => {
+                {me.personas.map(persona => {
                   const using = persona.id === me.activeId;
                   return <div className={'chat-me-row' + (using ? ' is-active' : '')} key={persona.id}>
                     <button type="button" className="chat-me-row-main" onClick={() => setEditing({ ...persona })}>
@@ -179,28 +180,24 @@ export function ChatMePage() {
                     <button type="button" className="chat-me-row-state" onClick={() => save({ activeId: using ? '' : persona.id })}>{using ? '✓ 使用中' : '使用'}</button>
                   </div>;
                 })}
-                {q && !personas.length ? <p className="chat-me-note">没有找到「{q}」。</p> : null}
-                {q ? null : <button type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</button>}
+                <button type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</button>
               </div>
             </Group>
-          </> : favoriteGroups.length ? favoriteGroups.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
+          </> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
             <div className="chat-me-rows">
               {group.items.map((item, index) => <button type="button" className="chat-me-fav" key={index} onClick={() => (window as Bridge).smallphoneOpenCharacterChat?.(group.key)}>
                 <span>{item.mine ? '我：' : ''}{item.text || '[消息]'}</span><small>{when(item.at)}</small>
               </button>)}
             </div>
-          </Group>) : <p className="chat-me-note">{q ? `没有找到「${q}」。` : '还没有收藏的消息。在聊天里长按一条消息，选「收藏」就会出现在这里。'}</p>}
+          </Group>) : <p className="chat-me-note">还没有收藏的消息。在聊天里长按一条消息，选「收藏」就会出现在这里。</p>}
         </div>
       </div>
 
-      <form className="chat-me-search" role="search" onSubmit={event => { event.preventDefault(); (document.activeElement as HTMLElement | null)?.blur(); }}>
-        <select aria-label="搜索范围" value={tab} onChange={event => setTab(event.currentTarget.value as Tab)}>
-          <option value="me">人设</option>
-          <option value="favorites">收藏</option>
-        </select>
-        <input type="search" aria-label="搜索" value={query} onChange={event => setQuery(event.currentTarget.value)} />
-        <button type="submit">搜索</button>
-      </form>
+      <div className="chat-me-statusbar" aria-label="状态">
+        <span><i className="chat-me-dot" aria-hidden="true" />{readMyPresence().online}</span>
+        <span>{active ? `使用中：${active.name || '未命名人设'}` : '还没选人设'}</span>
+        {stats?.days ? <span>♡ 第 {stats.days} 天</span> : null}
+      </div>
     </section>
 
     {profile ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setProfile(null); }}>
