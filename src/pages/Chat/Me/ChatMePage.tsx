@@ -18,7 +18,7 @@ import { MePixelIcon } from './MePixelIcon';
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
 type Tab = 'me' | 'favorites';
 const LATER = '之后开放';
-const APPS = ['表情', '钱包', '日记', '足迹', '回忆'];
+const APPS = [['表情', 'sticker'], ['钱包', 'wallet'], ['日记', 'book'], ['足迹', 'paw'], ['回忆', 'photo']] as const;
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
 function companionStats() {
@@ -65,7 +65,7 @@ function Group({ title, count, open, onToggle, children }: { title: string; coun
   </div>;
 }
 
-/** 聊天 App 底下的「Me」：照旧聊天软件主视窗的里面那几块排——资料小窗、一排功能、左边直排分页、右边清单、底下状态列。 */
+/** 聊天 App 底下的「Me」：照旧聊天软件主视窗的里面那几块排——资料小窗、陪伴纪录三张小卡、左边直排分页（我、收藏和之后的功能）、右边清单、底下状态列。 */
 export function ChatMePage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null);
   const me = useSyncExternalStore(subscribeMe, readMe), avatar = useSyncExternalStore(subscribeMe, readMeAvatar);
@@ -143,30 +143,23 @@ export function ChatMePage() {
         </div>
       </div>
 
-      <nav className="chat-me-apps" aria-label="功能">
-        {APPS.map(name => <button type="button" key={name} onClick={() => later(name)}>{name}</button>)}
-      </nav>
+      <div className="chat-me-cards" aria-label="陪伴纪录">
+        <div><MePixelIcon name="star" size={24} /><b>{stats?.days || 0}</b><small>认识天数</small></div>
+        <div><MePixelIcon name="mail" size={24} /><b>{stats?.total || 0}</b><small>聊天条数</small></div>
+        <div><MePixelIcon name="smile" size={24} /><b className="is-text">{stats?.top || '—'}</b><small>最常聊</small></div>
+      </div>
 
       <div className="chat-me-main">
         <div className="chat-me-side" role="tablist" aria-label="分页">
           <button type="button" role="tab" aria-selected={tab === 'me'} onClick={() => setTab('me')}><MePixelIcon name="smile" />我</button>
           <button type="button" role="tab" aria-selected={tab === 'favorites'} onClick={() => setTab('favorites')}><MePixelIcon name="gift" />收藏</button>
+          {APPS.map(([name, icon]) => <button type="button" key={name} onClick={() => later(name)}><MePixelIcon name={icon} />{name}</button>)}
           <span className="chat-me-side-fill" />
           <button type="button" className="chat-me-side-last" onClick={() => later('设置')}><MePixelIcon name="tama" />设置</button>
         </div>
 
         <div className="chat-me-content" role="tabpanel">
           {tab === 'me' ? <>
-            <Group title="陪伴纪录" open={!folded.stats} onToggle={() => fold('stats')}>
-              {stats && stats.total ? <>
-                <div className="chat-me-cards">
-                  <div><MePixelIcon name="star" size={24} /><b>{stats.days}</b><small>认识天数</small></div>
-                  <div><MePixelIcon name="mail" size={24} /><b>{stats.total}</b><small>聊天条数</small></div>
-                  <div><MePixelIcon name="smile" size={24} /><b className="is-text">{stats.top || '—'}</b><small>最常聊</small></div>
-                </div>
-                {stats.last ? <p className="chat-me-note">上次聊天 {when(stats.last)}</p> : null}
-              </> : <p className="chat-me-note">还没开始聊天，第一条消息会从这里开始记。</p>}
-            </Group>
             <Group title="我的人设" count={me.personas.length} open={!folded.personas} onToggle={() => fold('personas')}>
               <div className="chat-me-rows">
                 {me.personas.map(persona => {
@@ -195,7 +188,7 @@ export function ChatMePage() {
       <div className="chat-me-statusbar" aria-label="状态">
         <span><i className="chat-me-dot" aria-hidden="true" />{readMyPresence().online}</span>
         <span>{active ? `使用中：${active.name || '未命名人设'}` : '还没选人设'}</span>
-        {stats?.days ? <span>♡ 第 {stats.days} 天</span> : null}
+        {stats?.last ? <span>上次聊天 {when(stats.last)}</span> : null}
       </div>
     </section>
 
