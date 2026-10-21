@@ -1,18 +1,21 @@
-/* 聊天 App「我」：列表中间那几块藏起来，换成「我」；窗口外框沿用 snapshot.jpg 那一套（标题列、选单字、底下小字）。 */
+/* 聊天 App「我」：列表中间那几块藏起来，换成「我」。整页都是旧电脑程序视窗的样子：
+   外框沿用 snapshot.jpg 那一套（标题列、选单字、底下小字），里面用群组框、状态列、工具列、清单检视。 */
 #chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] > :is(.chat-memory-block, .chat-search, .chat-filter-tabs, .chat-conversation-panel) { display: none !important; }
+#chatListView .chat-me-page { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 14px 14px 20px; box-sizing: border-box; }
+
 /* 底下分页：在「我」的时候，Me 那格亮起来、Chats 那格回到没选的样子（跟原本 .active 同一套）。 */
 #chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Chats"] { background: transparent !important; font-weight: normal; box-shadow: none; margin-top: 0; border-top: 0; opacity: .7; color: var(--win-ink); }
 #chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Chats"] svg { color: var(--chat-teal); }
 #chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"] { background: var(--effect-face-white) !important; font-weight: 600; box-shadow: -1px 0 0 var(--effect-drop-color), 1px 0 0 var(--effect-drop-color); margin-top: -1px; border-top: 2px solid var(--chat-teal); opacity: 1; }
 #chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"] svg { color: var(--wk-accent); }
-#chatListView .chat-me-page { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 14px 14px 20px; box-sizing: border-box; }
 
-/* 窗口：选单字、底下小字换成各自的 */
+/* 视窗：选单字、底下小字换成各自的；没有小字的视窗底下不留空 */
 #chatListView .chat-memory-block.chat-me-window { flex: none; margin: 0; padding-bottom: 22px; }
+#chatListView .chat-memory-block.chat-me-window[data-foot=""] { padding-bottom: 0; }
 #chatListView .chat-memory-block.chat-me-window::before { content: attr(data-menu); }
 #chatListView .chat-memory-block.chat-me-window::after { content: attr(data-foot); }
 
-/* 会员证：左边头像，右边名字、@ID、签名；右下角一个章 */
+/* 会员证：凹进去的白框，左边头像，右边名字、@ID、签名 */
 .chat-me-card-body { display: flex; gap: 12px; align-items: center; margin: 8px 8px 0; padding: 10px; border: 1px solid var(--win-line); border-radius: 2px; background: var(--color-surface); box-shadow: var(--chat-sunken); }
 .chat-me-avatar {
   flex: none; width: 72px; height: 72px; padding: 0; border: 1px solid var(--win-line); border-radius: 2px; cursor: pointer;
@@ -28,46 +31,43 @@
 .chat-me-handle span { padding-left: 4px; }
 .chat-me-handle input { padding-left: 1px !important; font-size: 11px; color: var(--color-muted) !important; }
 .chat-me-signature { font-size: 11.5px; }
-.chat-me-stamp {
-  align-self: flex-end; margin: 8px 10px 0 auto; padding: 2px 8px; transform: rotate(-4deg);
-  border: 1.5px solid #c46a62; border-radius: 3px; color: #c46a62; font-size: 10.5px; letter-spacing: 1px; opacity: .85;
-}
-.chat-me-stamp.is-empty { border-color: var(--color-muted); color: var(--color-muted); opacity: .6; }
 
-/* 陪伴纪录：一张收据纸条 */
-.chat-me-receipt {
-  flex: none; position: relative; padding: 12px 16px 14px; background: var(--color-surface); color: var(--color-text);
-  border: 1px solid var(--win-line); border-bottom: 0; filter: drop-shadow(0 1px 0 var(--win-line)) drop-shadow(1px 2px 1px color-mix(in srgb, var(--color-muted) 25%, transparent));
-  font-family: ui-monospace, 'Courier New', monospace; font-size: 11.5px; line-height: 1.9;
-  margin-bottom: 6px;
-}
-.chat-me-receipt::after {
-  content: ''; position: absolute; left: -1px; right: -1px; bottom: -7px; height: 7px;
-  background: linear-gradient(135deg, var(--color-surface) 50%, transparent 50%) 0 0 / 10px 7px repeat-x, linear-gradient(-135deg, var(--color-surface) 50%, transparent 50%) 0 0 / 10px 7px repeat-x;
-}
-.chat-me-receipt > div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed color-mix(in srgb, var(--color-muted) 45%, transparent); }
-.chat-me-receipt > div > b { font-weight: 600; text-align: right; }
-.chat-me-receipt .chat-me-receipt-head { justify-content: center; border: 0; letter-spacing: 3px; font-weight: 600; }
-.chat-me-receipt .chat-me-receipt-foot { justify-content: center; border: 0; padding-bottom: 4px; opacity: .55; font-size: 10px; letter-spacing: 1px; }
-.chat-me-receipt .chat-me-receipt-empty { display: block; border: 0; text-align: center; opacity: .7; }
+/* 群组框：一圈刻痕细框，左上角压一个小标题 */
+.chat-me-group { margin: 10px 8px 0; padding: 4px 10px 8px; border: 2px groove color-mix(in srgb, var(--win-line) 80%, var(--color-surface)); border-radius: 0; min-width: 0; }
+.chat-me-group legend { padding: 0 4px; color: var(--win-ink); font-size: 11px; letter-spacing: .5px; }
+.chat-me-group dl { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.chat-me-group dl > div { display: flex; align-items: center; gap: 8px; font-size: 11.5px; }
+.chat-me-group dt { flex: none; width: 4.5em; color: var(--win-ink); }
+.chat-me-group dd { flex: 1; min-width: 0; margin: 0; padding: 2px 6px; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-me-group-empty { margin: 2px 0; font-size: 11px; color: var(--win-ink); }
 
-/* 人设抽屉：一排可以左右滑的小名片，最后一张是新增 */
-.chat-me-persona-row { display: flex; gap: 10px; overflow-x: auto; margin: 8px 8px 0; padding: 4px 2px 8px; scroll-snap-type: x proximity; }
-.chat-me-persona {
-  flex: none; width: 128px; min-height: 112px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 9px 9px 8px; scroll-snap-align: start;
-  border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised), var(--effect-drop); color: var(--color-text);
+/* 状态列：视窗最下面一条，分成几格凹进去的小框 */
+.chat-me-statusbar { display: flex; gap: 3px; margin-top: 10px; padding: 3px; border-top: 1px solid var(--win-line); }
+.chat-me-statusbar span { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; padding: 1px 6px; border: 1px solid var(--win-line); box-shadow: var(--chat-sunken); color: var(--win-ink); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-me-statusbar span:first-child { flex: none; }
+.chat-me-dot { width: 6px; height: 6px; border-radius: 50%; background: #5cb85c; box-shadow: 0 0 0 1px rgba(0,0,0,.15); }
+
+/* 人设抽屉：上面一排工具列，下面一个清单检视（栏位标题、一行一个，选中的反白） */
+.chat-me-toolbar { display: flex; gap: 4px; margin: 6px 8px 0; }
+.chat-me-toolbar button {
+  height: 24px; padding: 0 12px; border: 1px solid var(--color-muted); border-radius: 2px; cursor: pointer;
+  background: var(--effect-face-white); box-shadow: var(--effect-raised), var(--effect-drop); color: var(--color-text); font: inherit; font-size: 11px;
 }
-.chat-me-persona.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
-.chat-me-persona b { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chat-me-persona p { flex: 1; margin: 0; font-size: 10.5px; line-height: 1.5; opacity: .75; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.chat-me-persona-actions { display: flex; gap: 5px; }
-.chat-me-persona-actions button {
-  flex: 1; height: 22px; padding: 0; border: 1px solid var(--color-muted); border-radius: 2px; cursor: pointer;
-  background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 10.5px;
+.chat-me-toolbar button[aria-pressed="true"] { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-me-toolbar button:disabled { opacity: .45; cursor: default; }
+.chat-me-listview { display: flex; flex-direction: column; margin: 6px 8px 0; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--chat-sunken); max-height: 220px; overflow-y: auto; }
+.chat-me-listhead { position: sticky; top: 0; display: grid; grid-template-columns: 1fr 64px; font-size: 10.5px; color: var(--win-ink); }
+.chat-me-listhead span { padding: 2px 8px; border-right: 1px solid var(--win-line); border-bottom: 1px solid var(--win-line); background: var(--effect-face-white); box-shadow: var(--effect-raised); }
+.chat-me-listrow {
+  display: grid; grid-template-columns: 16px 1fr 56px; align-items: center; gap: 6px; width: 100%; padding: 5px 8px; text-align: left; cursor: pointer;
+  border: 0; border-bottom: 1px dotted color-mix(in srgb, var(--win-line) 60%, transparent); background: transparent; color: var(--color-text); font: inherit;
 }
-.chat-me-persona-actions button[aria-pressed="true"] { background: var(--win-bar); box-shadow: var(--effect-sunken); }
-.chat-me-persona-add { align-items: center; justify-content: center; cursor: pointer; font: inherit; font-size: 11.5px; border-style: dashed; box-shadow: none; background: transparent; }
-.chat-me-persona-add span { font-size: 22px; line-height: 1; opacity: .7; }
+.chat-me-listrow[aria-selected="true"] { background: var(--win-bar); outline: 1px dotted var(--color-text); outline-offset: -3px; }
+.chat-me-listicon { width: 14px; height: 14px; border: 1px solid currentColor; border-radius: 50% 50% 2px 2px; opacity: .7; }
+.chat-me-listname { min-width: 0; display: flex; flex-direction: column; font-size: 12px; }
+.chat-me-listname small { font-size: 10px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-me-liststate { font-size: 10.5px; text-align: right; }
+.chat-me-listempty { padding: 14px 10px; font-size: 11px; color: var(--win-ink); text-align: center; }
 
 /* 下面一排入口：凸起的小钮，之后开放的淡一点 */
 .chat-me-entries { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -86,7 +86,8 @@
 .chat-me-form label small { margin-left: 6px; font-size: 10.5px; opacity: .6; }
 .chat-me-form :is(input, textarea) { width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; font-size: 12px; line-height: 1.5; resize: vertical; }
 .chat-me-dialog .sp-confirm-actions.chat-me-form-actions { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; }
-.chat-me-favorites { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-.chat-me-favorite { display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; text-align: left; cursor: pointer; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; }
-.chat-me-favorite small { font-size: 10px; opacity: .6; }
-.chat-me-favorite span { font-size: 12px; line-height: 1.5; word-break: break-word; }
+.chat-me-favorites { overflow-y: auto; }
+.chat-me-favorite-list { margin: 0; max-height: 50vh; }
+.chat-me-favorite-row { grid-template-columns: 52px 1fr 64px; }
+.chat-me-favorite-row > span { min-width: 0; font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-me-favorite-row > span:last-child { font-size: 10px; opacity: .7; text-align: right; }
