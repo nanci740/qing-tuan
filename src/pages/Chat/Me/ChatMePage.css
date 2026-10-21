@@ -27,10 +27,12 @@
   border: 2px solid var(--me-line); background: var(--color-surface) center / cover no-repeat;
   box-shadow: 0 0 0 4px var(--color-surface), 0 0 0 5px var(--me-line);
 }
-.chat-me-info { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 2px 0 2px 10px; border: 0; border-left: 1px dotted var(--me-line); background: none; text-align: left; }
-.chat-me-info > span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chat-me-name { display: flex; align-items: center; gap: 5px; color: var(--color-text); font-size: 16px; font-weight: 700; }
-.chat-me-name span { overflow: hidden; text-overflow: ellipsis; }
+.chat-me-info { position: relative; flex: 1; min-width: 0; padding: 2px 0 2px 10px; border-left: 1px dotted var(--me-line); }
+/* 名字前面的表情：自己一颗按钮，点一下换下一个；名字往右让出位置 */
+.chat-me-mood { position: absolute; left: 10px; top: 4px; width: 22px; height: 22px; padding: 1px; border: 0; background: none; }
+.chat-me-edit { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 0; border: 0; background: none; text-align: left; }
+.chat-me-edit > span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-me-edit > .chat-me-name { box-sizing: border-box; padding-left: 26px; color: var(--color-text); font-size: 16px; font-weight: 700; line-height: 26px; }
 .chat-me-handle { color: var(--color-muted); font-size: 11px; }
 .chat-me-signature { color: var(--color-text); font-size: 12px; }
 .chat-me-round { flex: none; align-self: flex-start; width: 42px; height: 42px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--me-line); background: radial-gradient(circle at 40% 35%, var(--color-surface), var(--me-soft)); }

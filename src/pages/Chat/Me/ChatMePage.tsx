@@ -13,7 +13,7 @@ import { confirmChat } from '../../../utils/chatConfirm';
 import { DEFAULT_BIRD_AVATAR } from '../../../utils/defaultAvatar';
 import { readMyPresence } from '../../../utils/chatPresence';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
-import { MePixelIcon } from './MePixelIcon';
+import { MePixelIcon, MOODS } from './MePixelIcon';
 
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
 type Tab = 'me' | 'favorites';
@@ -126,6 +126,8 @@ export function ChatMePage() {
   }
   const editProfile = () => setProfile({ name: me.name, handle: me.handle, signature: me.signature });
   const active = me.personas.find(item => item.id === me.activeId);
+  // 名字旁边的表情：点一下换下一个，存在「我」的资料里；没选过就是笑脸。
+  const mood = MOODS.find(item => item === me.mood) || MOODS[0];
 
   return createPortal(<>
     <section className="chat-me-buddy" aria-label="我">
@@ -134,11 +136,14 @@ export function ChatMePage() {
         <div className="chat-me-profile">
           <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={{ backgroundImage: `url("${avatar || DEFAULT_BIRD_AVATAR}")` }} />
           <input ref={file} type="file" accept="image/*" hidden onChange={event => pickAvatar(event.currentTarget)} />
-          <button type="button" className="chat-me-info" aria-label="编辑资料" onClick={editProfile}>
-            <span className="chat-me-name"><MePixelIcon name="smile" size={20} /><span>[{me.name || '你的名字'}]</span></span>
-            <span className="chat-me-handle">@{me.handle || 'your_id'}</span>
-            <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
-          </button>
+          <div className="chat-me-info">
+            <button type="button" className="chat-me-mood" aria-label="换表情" onClick={() => save({ mood: MOODS[(MOODS.indexOf(mood) + 1) % MOODS.length] })}><MePixelIcon name={mood} size={20} /></button>
+            <button type="button" className="chat-me-edit" aria-label="编辑资料" onClick={editProfile}>
+              <span className="chat-me-name">[{me.name || '你的名字'}]</span>
+              <span className="chat-me-handle">@{me.handle || 'your_id'}</span>
+              <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
+            </button>
+          </div>
           <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="people" size={24} /></button>
         </div>
       </div>
@@ -166,7 +171,7 @@ export function ChatMePage() {
                   const using = persona.id === me.activeId;
                   return <div className={'chat-me-row' + (using ? ' is-active' : '')} key={persona.id}>
                     <button type="button" className="chat-me-row-main" onClick={() => setEditing({ ...persona })}>
-                      <MePixelIcon name={using ? 'smile' : 'folder'} size={22} />
+                      <MePixelIcon name="folder" size={22} />
                       <span>{persona.name || '未命名人设'}</span>
                     </button>
                     <button type="button" className="chat-me-row-state" onClick={() => save({ activeId: using ? '' : persona.id })}>{using ? '✓ 使用中' : '使用'}</button>
