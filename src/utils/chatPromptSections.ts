@@ -9,6 +9,8 @@ export interface ChatPromptInput {
     /** 你的名字，换进预设条目里的 {{user}}。 */
     userName: string;
     persona: string;
+    /** 聊天 App「我」里正在用的人设，整理好的文字；没有就是空字符串。 */
+    userPersona?: string;
     world: WorldInjection;
     /** 最近的聊天记录拼起来的文字，用来看这一轮有没有出现引用、编辑、撤回这些标记。 */
     recentText: string;
@@ -47,6 +49,11 @@ function basics(input: ChatPromptInput) {
 
 function persona(input: ChatPromptInput) {
     return input.persona ? `\n以下是你的角色设定，请照着这个人设说话和行事：\n${input.persona}\n` : '';
+}
+
+/** 你的人设：让他知道你是谁、长什么样。 */
+function userPersona(input: ChatPromptInput) {
+    return input.userPersona ? `\n以下是对方（用户）的设定，你知道对方是这样的人，请照这个认识对方：\n${input.userPersona}\n` : '';
 }
 
 function time(input: ChatPromptInput) {
@@ -156,7 +163,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, output: outputCleanliness, quote,
+    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {
