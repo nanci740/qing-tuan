@@ -79,12 +79,13 @@
 .chat-me-statusbar { flex: none; display: flex; gap: 4px; padding: 5px 6px; border: 1px solid var(--me-line); border-radius: 0 0 4px 4px; background: var(--me-soft); }
 .chat-me-statusbar span { min-width: 0; display: flex; align-items: center; gap: 5px; padding: 2px 7px; border: 1px solid var(--me-line); border-radius: 2px; background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--me-ink); font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-me-statusbar span:nth-child(2) { flex: 1; }
-/* 在线小圆点：跟聊天室侧栏的在线状态同一套颜色——在线主题色、忙碌豆沙红、离开淡黄、隐身灰、自定义淡主题色 */
-.chat-me-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent-strong); box-shadow: 0 0 0 1px var(--color-surface), 0 0 0 2px color-mix(in srgb, var(--win-line) 45%, transparent); }
-.chat-me-statusbar [data-state="忙碌"] .chat-me-dot { background: var(--color-danger); }
-.chat-me-statusbar [data-state="离开"] .chat-me-dot { background: #D8B871; }
-.chat-me-statusbar [data-state="隐身"] .chat-me-dot { background: var(--color-divider); }
-.chat-me-statusbar [data-state="自定义"] .chat-me-dot { background: var(--theme-color); }
+/* 在线小圆点：样子跟聊天列表头像上的在线点一样（左上一点亮光）；颜色跟聊天室侧栏的在线状态同一套——
+   在线主题色、忙碌豆沙红、离开淡黄、隐身灰、自定义淡主题色 */
+.chat-me-dot { --dot: var(--color-accent-strong); flex: none; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--color-surface) 0 1px, var(--dot) 2px); box-shadow: 0 0 0 1px var(--win-line); }
+.chat-me-statusbar [data-state="忙碌"] .chat-me-dot { --dot: var(--color-danger); }
+.chat-me-statusbar [data-state="离开"] .chat-me-dot { --dot: #D8B871; }
+.chat-me-statusbar [data-state="隐身"] .chat-me-dot { --dot: var(--color-divider); }
+.chat-me-statusbar [data-state="自定义"] .chat-me-dot { --dot: var(--theme-color); }
 
 /* 编辑资料、编辑人设的窗口 */
 .chat-me-dialog .sp-confirm { width: min(340px, 92vw); max-height: 84vh; display: flex; flex-direction: column; }
