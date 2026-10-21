@@ -16,7 +16,6 @@ import { MePixelIcon } from './MePixelIcon';
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
 type Tab = 'me' | 'favorites';
 const LATER = '之后开放';
-const MENU = [['文件', 'F'], ['编辑', 'E'], ['人设', 'P'], ['工具', 'T'], ['帮助', 'H']];
 const APPS = ['表情', '钱包', '日记', '足迹', '回忆'];
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
@@ -65,7 +64,7 @@ function Group({ title, count, open, onToggle, children }: { title: string; coun
   </div>;
 }
 
-/** 聊天 App 底下的「Me」：整页是一个旧聊天软件的主视窗——资料框、一排功能、左边直排分页、右边清单、底下搜索列。 */
+/** 聊天 App 底下的「Me」：照旧聊天软件主视窗的里面那几块排——资料框、一排功能、左边直排分页、右边清单、底下搜索列。 */
 export function ChatMePage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null);
   const me = useSyncExternalStore(subscribeMe, readMe), avatar = useSyncExternalStore(subscribeMe, readMeAvatar);
@@ -131,15 +130,6 @@ export function ChatMePage() {
 
   return createPortal(<>
     <section className="chat-me-buddy" aria-label="我">
-      <header className="chat-me-titlebar">
-        <MePixelIcon name="tuan" size={24} />
-        <b>QINGTUAN</b>
-        <span className="chat-me-winbtns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
-      </header>
-      <div className="chat-me-menubar" aria-hidden="true">
-        {MENU.map(([name, key]) => <span key={key}>{name}(<u>{key}</u>)</span>)}
-      </div>
-
       <div className="chat-me-profile">
         <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={avatar ? { backgroundImage: `url("${avatar}")` } : undefined}>
           {avatar ? null : <MePixelIcon name="tuan" size={48} />}
