@@ -1,0 +1,169 @@
+/** 「我」用的像素小图示：跟主画面 App 图标同一套，16×16，只用四种颜色——
+   x 描边、o 主题色、w 白、l 浅一级描边，颜色交给 svg.px-icon 的 CSS，换主题会跟着变。 */
+const ART = {
+  smile: [
+    '................',
+    '....xxxxxxxx....',
+    '..xxooooooooxx..',
+    '.xoooooooooooox.',
+    '.xoooooooooooox.',
+    'xoooxxooooxxooox',
+    'xoooxxooooxxooox',
+    'xoooooooooooooox',
+    'xoloooooooooolox',
+    'xooxooooooooxoox',
+    'xoooxxxxxxxxooox',
+    '.xoooooooooooox.',
+    '.xoooooooooooox.',
+    '..xxooooooooxx..',
+    '....xxxxxxxx....',
+    '................',
+  ],
+  gift: [
+    '................',
+    '...xx......xx...',
+    '..xwwx....xwwx..',
+    '...xxwx..xwxx...',
+    'xxxxxxxxxxxxxxxx',
+    'xoooooolloooooox',
+    'xoooooolloooooox',
+    'xxxxxxxxxxxxxxxx',
+    '.xwwwwwoowwwwwx.',
+    '.xwwwwwoowwwwwx.',
+    '.xwwwwwoowwwwwx.',
+    '.xwwwwwoowwwwwx.',
+    '.xwwwwwoowwwwwx.',
+    '.xxxxxxxxxxxxxx.',
+    '................',
+    '................',
+  ],
+  star: [
+    '................',
+    '.......xx.......',
+    '......xoox......',
+    '......xoox......',
+    '.....xoooox.....',
+    'xxxxxxooooxxxxxx',
+    'xoooooooooooooox',
+    '.xoooooooooooox.',
+    '..xoooooooooox..',
+    '...xoooooooox...',
+    '...xoooooooox...',
+    '..xooooxxoooox..',
+    '..xooox..xooox..',
+    '.xooox....xooox.',
+    '.xxx........xxx.',
+    '................',
+  ],
+  mail: [
+    '................',
+    '................',
+    'xxxxxxxxxxxxxxxx',
+    'xxooooooooooooxx',
+    'xwxooooooooooxwx',
+    'xwwxooooooooxwwx',
+    'xwwwxooooooxwwwx',
+    'xwwwwxooooxwwwwx',
+    'xwwwwwxooxwwwwwx',
+    'xwwwwwwxxwwwwwwx',
+    'xwwwwwwwwwwwwwwx',
+    'xwwwwwwwwwwwwwwx',
+    'xxxxxxxxxxxxxxxx',
+    '................',
+    '................',
+    '................',
+  ],
+  folder: [
+    '................',
+    '................',
+    'xxxxxx..........',
+    'xllllxxxxxxxxx..',
+    'xllllllllllllx..',
+    'xxxxxxxxxxxxxxxx',
+    'xwwwwwwwwwwwwwwx',
+    'xoooooooooooooox',
+    'xoooooooooooooox',
+    'xoooooooooooooox',
+    'xoooooooooooooox',
+    'xoooooooooooooox',
+    'xxxxxxxxxxxxxxxx',
+    '................',
+    '................',
+    '................',
+  ],
+  people: [
+    '................',
+    '................',
+    '....xxxx.....x..',
+    '...xoooox....x..',
+    '...xoooox..xxxxx',
+    '...xoooox....x..',
+    '....xxxx.....x..',
+    '..xxxxxxxx......',
+    '.xoooooooox.....',
+    'xoooooooooox....',
+    'xoooooooooox....',
+    'xoooooooooox....',
+    'xoooooooooox....',
+    'xxxxxxxxxxxx....',
+    '................',
+    '................',
+  ],
+  tama: [
+    '................',
+    '.....xxxxxx.....',
+    '...xxwwwwwwxx...',
+    '..xwwwwwwwwwwx..',
+    '.xwwxxxxxxxxwwx.',
+    '.xwwxooooooxwwx.',
+    'xwwwxoxooxoxwwwx',
+    'xwwwxooooooxwwwx',
+    'xwwwxoxxxxoxwwwx',
+    'xwwwxxxxxxxxwwwx',
+    'xwwwwwwwwwwwwwwx',
+    'xwwwoowoowoowwwx',
+    '.xwwwwwwwwwwwwx.',
+    '..xwwwwwwwwwwx..',
+    '...xxwwwwwwxx...',
+    '.....xxxxxx.....',
+  ],
+  tuan: [
+    '................',
+    '................',
+    '....xxxxxxxx....',
+    '..xxwwooooooxx..',
+    '.xwwoooooooooox.',
+    'xwooooooooooooox',
+    'xoooooooooooooox',
+    'xoooxooooooxooox',
+    'xoolooooooooloox',
+    'xooooooxxoooooox',
+    'xoooooooooooooox',
+    '.xoooooooooooox.',
+    '..xxllllllllxx..',
+    '....xxxxxxxx....',
+    '................',
+    '................',
+  ],
+} as const;
+
+export type MeIconName = keyof typeof ART;
+const CLASS: Record<string, string> = { x: 'px-x', o: 'px-o', w: 'px-w', l: 'px-l' };
+
+// 每一行同色相连的像素并成一条，画出来跟主画面图标一样是 rect。
+const RECTS = Object.fromEntries(Object.entries(ART).map(([name, rows]) => [name, rows.flatMap((row, y) => {
+  const runs: { x: number; y: number; w: number; c: string }[] = [];
+  [...row].forEach((c, x) => {
+    if (!CLASS[c]) return;
+    const last = runs[runs.length - 1];
+    if (last && last.c === c && last.y === y && last.x + last.w === x) last.w += 1;
+    else runs.push({ x, y, w: 1, c });
+  });
+  return runs;
+})])) as Record<MeIconName, { x: number; y: number; w: number; c: string }[]>;
+
+export function MePixelIcon({ name, size = 32 }: { name: MeIconName; size?: number }) {
+  return <svg className="px-icon chat-me-px" viewBox="0 0 16 16" width={size} height={size} aria-hidden="true" shapeRendering="crispEdges">
+    {RECTS[name].map(run => <rect key={run.y * 16 + run.x} className={CLASS[run.c]} x={run.x} y={run.y} width={run.w} height={1} />)}
+  </svg>;
+}
