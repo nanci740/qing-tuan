@@ -27,6 +27,7 @@ import { ChatCharacterActions } from './pages/Chat/List/ChatCharacterActions';
 import { ChatConfirmation } from './components/shared/ChatConfirmation';
 import { ChatPhotoViewer } from './components/shared/ChatPhotoViewer';
 import { ChatPhotoSend } from './components/shared/ChatPhotoSend';
+import { ChatWorldPanel } from './components/shared/ChatWorldPanel';
 import { CharacterArchive } from './pages/Chat/Characters/CharacterArchive';
 import { ChatMyPresenceMenu } from './pages/Chat/Room/ChatMyPresenceMenu';
 import { ChatSidebarProvider } from './providers/ChatSidebarProvider';
@@ -150,7 +151,7 @@ export function App() {
       {"\n\n"}
       
       {"\n\n"}
-      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatMyPresenceMenu /><ChatControllers />
+      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatWorldPanel /><ChatMyPresenceMenu /><ChatControllers />
       {"\n\n\n"}
     </BootProvider></ChatSidebarProvider></WorldProvider></VoiceImageProvider></AppearanceProvider></MusicProvider></HomeTextsProvider></McpProvider></ApiProvider></ChoiceProvider></ChatPinsProvider></ChatIdentityProvider></ChatRoomToolsProvider></ChatReplyEngineProvider></ChatVoiceProvider></ChatMessagesProvider></ChatReplyTriggersProvider></ChatComposerProvider></ChatSelectionProvider></ChatMessageOperationsProvider></ChatPreferencesProvider></ChatNavigationProvider></SettingsNavigationProvider></NativeRefsProvider></ChatMemoryProvider></ProfileAvatarProvider>
   );
