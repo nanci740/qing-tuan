@@ -310,7 +310,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             quoteChoicesText: choicesText,
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
             photo: aiPhotoAllowed ? 'on' : (requestPreferences.aiPhoto ? 'unavailable' : 'off'),
-            photoLook: chatPhotoLook(),
+            photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];

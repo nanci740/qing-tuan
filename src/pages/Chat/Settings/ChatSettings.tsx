@@ -422,6 +422,22 @@ export function ChatSettings() {
                 <ChatSettingCheckbox id="chatSettingAiPhoto" setting="aiPhoto" />
               </OriginalElement>
               {"\n                        "}
+              <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-setting-field-row"}]}>
+                <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-field-label"}]}>
+                  <OriginalElement tag="strong" attributes={[]}>
+                    {"互动画面"}
+                  </OriginalElement>
+                  <OriginalElement tag="span" attributes={[]}>
+                    {"聊到见面、一起做什么的时候，家机多常发一张你们两个人的画面（要开「家机发照片」）。"}
+                  </OriginalElement>
+                </OriginalElement>
+                <ChatReplySelect id="chatSettingPhotoInteraction" setting="photoInteraction">
+                  <option value="rare">少</option>
+                  <option value="normal">适中</option>
+                  <option value="often">多</option>
+                </ChatReplySelect>
+              </OriginalElement>
+              {"\n                        "}
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>
                   <OriginalElement tag="strong" attributes={[]}>

@@ -97,19 +97,19 @@ export function ChatPhotoSend() {
         {preview && !busy ? <img className="chat-photo-viewer-img" src={preview} alt="" />
           : busy ? <div className="chat-photo-viewer-wait"><span className="chat-photo-spinner" aria-hidden="true" />{draft.busy === 'expand' ? '正在补充描写…' : '正在画…'}</div>
           : draft.error ? <div className="sp-confirm-msg">{'没画出来：' + draft.error}</div> : null}
-        <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendText">{drawing ? (draft.expand ? '想画什么（写几个词就好，发出去时是这张照片的说明）' : '想画什么（会照这段描述画，发出去时也是这张照片的说明）') : '想说的话（可以不写）'}</label>
+        <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendText">{drawing ? (draft.expand ? '想画什么（发出去时也是这张照片的说明）' : '想画什么（会照这段描述画，发出去时也是这张照片的说明）') : '想说的话（可以不写）'}</label>
         <textarea id="chatPhotoSendText" className="chat-photo-viewer-prompt" rows={drawing && !draft.expand ? 4 : 2} value={draft.text} disabled={busy}
           onChange={event => update({ text: event.currentTarget.value })} />
         {drawing ? <>
           <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.expand} disabled={busy}
-            onChange={event => update({ expand: event.currentTarget.checked })} />让 AI 补充描写（用他平常回话的预设、世界书和聊天记录来写）</label>
+            onChange={event => update({ expand: event.currentTarget.checked })} /><span>让 AI 补充描写<small>简单写几个词就好，他会照你们的聊天把画面补完整</small></span></label>
           {draft.expand && draft.expanded ? <>
             <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendExpanded">补充后的描述（给生图模型看的，可以改，重画会照这段）</label>
             <textarea id="chatPhotoSendExpanded" className="chat-photo-viewer-prompt" rows={4} value={draft.expanded} disabled={busy}
               onChange={event => update({ expanded: event.currentTarget.value })} />
           </> : null}
           <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.includeMe} disabled={busy}
-            onChange={event => update({ includeMe: event.currentTarget.checked })} />画面里有我（带上生图设置里「你」的提示）</label>
+            onChange={event => update({ includeMe: event.currentTarget.checked })} /><span>画面里有我<small>照生图设置里「你」的样子画</small></span></label>
         </> : null}
       </div>
       <div className="sp-confirm-actions">
