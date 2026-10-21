@@ -6,10 +6,10 @@ import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 import type { ChatPreferences } from '../../../types/chatPreferences';
 
 export function ChatReplySelect({ id, setting, children }: {
-  id: string; setting: 'replyLength' | 'quotePolicy'; children: ReactNode;
+  id: string; setting: 'replyLength' | 'quotePolicy' | 'photoInteraction'; children: ReactNode;
 }) {
   const { values, change } = useChatPreferences();
-  return <RetroSelect title={setting === 'replyLength' ? '回复长度' : '引用方式'} className="chat-setting-select" id={id} value={values[setting]}
+  return <RetroSelect title={setting === 'replyLength' ? '回复长度' : setting === 'photoInteraction' ? '互动画面' : '引用方式'} className="chat-setting-select" id={id} value={values[setting]}
     onChange={value => change(setting, value as ChatPreferences[typeof setting])}>{children}</RetroSelect>;
 }
 /** 这个聊天用哪份预设：第一个选项是跟着默认走。 */

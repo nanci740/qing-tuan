@@ -1,7 +1,6 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { Fragment } from 'react';
-import { createPortal } from 'react-dom';
-import { useWorldEntrySort } from '../../../hooks/useWorldEntrySort';
+import { useWorldEntryPress } from '../../../hooks/useWorldEntryPress';
 import type { WorldEntry } from '../../../types/world';
 import { useWorld } from '../../../providers/WorldProvider';
 import type { WorldBook, WorldBookDraft } from '../../../types/world';
@@ -58,20 +57,15 @@ export function WorldEntryList() {
   })).filter(({
     entry
   }) => (!query || [entry.title, entry.keys, entry.secondaryKeys].some(value => String(value || '').toLocaleLowerCase().includes(query))) && (entryFilter === 'all' || (entryFilter === 'enabled' ? entry.enabled !== false : entry.enabled === false)));
-  const sort = useWorldEntrySort(filtered);
+  const press = useWorldEntryPress();
   function renderCard({
     entry: e,
     index: i
   }: {
     entry: WorldEntry;
     index: number;
-  }, ghost = false) {
-    return <div data-world-entry-card={e.id} className={'world-paper world-entry-card' + (ghost ? ' world-sort-ghost' : sort.drag?.id === e.id ? ' world-sort-active' : '') + (world.picked ? ' is-picking' : '') + (world.picked?.has(e.id) ? ' is-selected' : '')} style={ghost && sort.drag ? {
-        width: sort.drag.width + 'px',
-        height: sort.drag.height + 'px',
-        left: sort.drag.left + 'px',
-        top: sort.drag.top + 'px'
-      } : undefined} {...ghost ? {} : sort.bind(e.id)}>{"" + "\n          "}<PressedButton className={"world-entry-copy"} type={"button"} data-copy-entry={e.id} aria-label={"复制条目"} data-title={"复制条目"} onClick={() => world.copyEntry(e.id)}><svg viewBox={"0 0 24 24"} aria-hidden={"true"}><rect x={"8"} y={"8"} width={"12"} height={"12"} rx={"2"}></rect><path d={"M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"}></path></svg></PressedButton>{"" + "\n          "}<div className={"world-row"}>{"" + "\n            "}<PressedButton className={"world-book-open" + (ghost && sort.drag?.buttonPressed ? " sp-press-bare" : "")} data-sp-press={ghost && sort.drag?.buttonPressed ? "1" : undefined} type={"button"} data-open-entry={e.id} aria-pressed={world.picked ? world.picked.has(e.id) : undefined} onClick={() => world.openEntry(e.id)}>{"" + "\n              "}<div className={"world-entry-title"}><span className={"world-entry-no"}>{"" + "No."}{String(i + 1).padStart(2, '0')}</span>{"" + (e.title || '未命名条目')}</div>{"" + "\n              "}<div className={"world-entry-preview"}>{"" + (e.content || '尚未填写条目内容')}</div>{"" + "\n              "}<div style={{
+  }) {
+    return <div data-world-entry-card={e.id} className={'world-paper world-entry-card' + (world.picked ? ' is-picking' : '') + (world.picked?.has(e.id) ? ' is-selected' : '')} {...press(e.id)}>{"" + "\n          "}<PressedButton className={"world-entry-copy"} type={"button"} data-copy-entry={e.id} aria-label={"复制条目"} data-title={"复制条目"} onClick={() => world.copyEntry(e.id)}><svg viewBox={"0 0 24 24"} aria-hidden={"true"}><rect x={"8"} y={"8"} width={"12"} height={"12"} rx={"2"}></rect><path d={"M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"}></path></svg></PressedButton>{"" + "\n          "}<div className={"world-row"}>{"" + "\n            "}<PressedButton className={"world-book-open"} type={"button"} data-open-entry={e.id} aria-pressed={world.picked ? world.picked.has(e.id) : undefined} onClick={() => world.openEntry(e.id)}>{"" + "\n              "}<div className={"world-entry-title"}><span className={"world-entry-no"}>{"" + "No."}{String(i + 1).padStart(2, '0')}</span>{"" + (e.title || '未命名条目')}</div>{"" + "\n              "}<div className={"world-entry-preview"}>{"" + (e.content || '尚未填写条目内容')}</div>{"" + "\n              "}<div style={{
               "display": "flex",
               "gap": "5px",
               "marginTop": "9px"
@@ -84,8 +78,7 @@ export function WorldEntryList() {
                   depth: '聊天记录中'
                 } as Record<string, string>)[e.position] || '人设后')}</span>{"" + "\n              "}</div>{"" + "\n            "}</PressedButton>{"" + "\n            "}<div className={"world-entry-controls"}>{"" + "\n              "}<input className={"world-toggle"} type={"checkbox"} data-entry-toggle={e.id} checked={e.enabled !== false} aria-label={"启用条目"} onChange={event => world.toggleEntry(e.id, event.currentTarget.checked)}></input>{"" + "\n            "}</div>{"" + "\n          "}</div>{"" + "\n        "}</div>;
   }
-  const layout = sort.drag?.layout || [{text:"\n        ",key:"start"},...sort.items.flatMap((item,index)=>[{id:item.entry.id},{text:index<sort.items.length-1?"\n      \n        ":"\n      ",key:"gap"+index}])];
-  return <>{sort.items.length ? layout.map(token => <Fragment key={"id" in token ? token.id : token.key}>{"id" in token ? renderCard(sort.items.find(item=>item.entry.id===token.id)!) : token.text}</Fragment>) : <div className="world-empty-note">{all.length ? '没有符合条件的条目。' : '暂无条目，点右上角 ＋ 新建一条世界设定吧。'}</div>}{sort.drag && world.pageRef.current ? createPortal(renderCard(sort.ghost!, true), world.pageRef.current) : null}</>;
+  return <>{filtered.length ? filtered.map((item, index) => <Fragment key={item.entry.id}>{index ? "\n      \n        " : "\n        "}{renderCard(item)}</Fragment>) : <div className="world-empty-note">{all.length ? '没有符合条件的条目。' : '暂无条目，点右上角 ＋ 新建一条世界设定吧。'}</div>}</>;
 }
 export function WorldBookView() {
   const world = useWorld(),
@@ -117,7 +110,7 @@ export function WorldBookView() {
       }} onClick={world.editBook}>{"" + "编辑世界书资料与绑定"}</PressedButton>{"" + "\n      "}</div>{"" + "\n\n      "}<div className={"world-section-head"}>{"" + "\n        "}<b>{"" + "条目档案"}</b>{"" + "\n        "}<small id={"worldEntryCount"}>{entrySearch || entryFilter !== 'all' ? `${world.filteredEntryCount} / ${(b.entries || []).length} ENTRIES` : `${(b.entries || []).length} ENTRIES`}</small>{"" + "\n      "}</div>{"" + "\n      "}{(b.entries || []).length ? <>{"" + "\n        "}<div className={"world-entry-tools"}>{"" + "\n          "}<div className={"world-entry-search-wrap"}>{"" + "\n            "}<input className={"world-entry-search"} id={"worldEntrySearch"} type={"search"} placeholder={"搜索条目标题或关键词"} aria-label={"搜索世界书条目"} value={entrySearch} ref={world.searchRef} onChange={event => world.setEntrySearch(event.currentTarget.value)}></input>{"" + "\n            "}<PressedButton className={"world-entry-clear"} id={"worldEntryClear"} type={"button"} aria-label={"清空搜索"} hidden={!entrySearch} onClick={() => {
             world.setEntrySearch('');
             world.searchRef.current?.focus();
-          }}><svg viewBox={"0 0 24 24"} aria-hidden={"true"}><path d={"M6 6l12 12M18 6L6 18"}></path></svg></PressedButton>{"" + "\n          "}</div>{"" + "\n          "}<div className={"world-sort-hint"}>{"" + (world.picked ? "点条目勾选或取消，选好后按下面的「删除」" : "长按拖动可排序，长按放开可多选删除（搜索或筛选时只能多选）")}</div>{"" + "\n          "}<div className={"world-entry-filters"} role={"group"} aria-label={"按启用状态筛选条目"}>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'all' ? ' is-active' : world.usedFilters.includes('all') ? '' : ' ')} data-world-entry-filter={"all"} onClick={() => world.setEntryFilter("all")}>{"" + "全部"}</PressedButton>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'enabled' ? ' is-active' : world.usedFilters.includes('enabled') ? '' : ' ')} data-world-entry-filter={"enabled"} onClick={() => world.setEntryFilter("enabled")}>{"" + "已启用"}</PressedButton>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'disabled' ? ' is-active' : world.usedFilters.includes('disabled') ? '' : ' ')} data-world-entry-filter={"disabled"} onClick={() => world.setEntryFilter("disabled")}>{"" + "未启用"}</PressedButton>{"" + "\n          "}</div>{"" + "\n        "}</div></> : ''}{"" + "\n      "}<div id={"worldEntryList"}><WorldEntryList /></div>{world.picked ? <div className="world-action-bar world-pick-bar">
+          }}><svg viewBox={"0 0 24 24"} aria-hidden={"true"}><path d={"M6 6l12 12M18 6L6 18"}></path></svg></PressedButton>{"" + "\n          "}</div>{"" + "\n          "}<div className={"world-sort-hint"}>{"" + (world.picked ? "点条目勾选或取消，选好后按下面的「删除」" : "长按条目可以多选删除")}</div>{"" + "\n          "}<div className={"world-entry-filters"} role={"group"} aria-label={"按启用状态筛选条目"}>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'all' ? ' is-active' : world.usedFilters.includes('all') ? '' : ' ')} data-world-entry-filter={"all"} onClick={() => world.setEntryFilter("all")}>{"" + "全部"}</PressedButton>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'enabled' ? ' is-active' : world.usedFilters.includes('enabled') ? '' : ' ')} data-world-entry-filter={"enabled"} onClick={() => world.setEntryFilter("enabled")}>{"" + "已启用"}</PressedButton>{"" + "\n            "}<PressedButton type={"button"} className={"world-entry-filter" + (entryFilter === 'disabled' ? ' is-active' : world.usedFilters.includes('disabled') ? '' : ' ')} data-world-entry-filter={"disabled"} onClick={() => world.setEntryFilter("disabled")}>{"" + "未启用"}</PressedButton>{"" + "\n          "}</div>{"" + "\n        "}</div></> : ''}{"" + "\n      "}<div id={"worldEntryList"}><WorldEntryList /></div>{world.picked ? <div className="world-action-bar world-pick-bar">
         <PressedButton className="world-action secondary" type="button" id="worldPickAll" onClick={() => { const ids = world.visibleEntryIds; world.setPicked(new Set(ids.every(id => world.picked!.has(id)) ? [] : ids)); }}>{world.visibleEntryIds.length && world.visibleEntryIds.every(id => world.picked!.has(id)) ? '全不选' : '全选'}</PressedButton>
         <PressedButton className="world-action danger" type="button" id="worldDeletePicked" disabled={!world.picked.size} onClick={world.deletePicked}>{`删除（${world.picked.size}）`}</PressedButton>
         <PressedButton className="world-action secondary" type="button" id="worldPickCancel" onClick={() => world.setPicked(null)}>取消</PressedButton>

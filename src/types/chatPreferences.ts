@@ -7,6 +7,8 @@ export interface ChatPreferences {
   timeAware: boolean; voiceTranscribe: boolean; voiceDirect: boolean; aiVoice: boolean;
   /** 家机可以发照片（用「语音与生图设置」的生图服务）。 */
   aiPhoto: boolean;
+  /** 聊到见面互动时多常发你们两个人的画面：rare 少、normal 适中、often 多。 */
+  photoInteraction: 'rare' | 'normal' | 'often';
   voiceAutoText: boolean; voiceAutoTranslate: boolean; typingIndicator: boolean;
   linkedWorldBooks: string[];
   /** 世界书每次最多带多少字；0 表示不限。 */
@@ -16,7 +18,7 @@ export interface ChatPreferences {
   bubbleCss: string; soundFeedback: boolean; vibrationFeedback: boolean;
 }
 export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback';
-export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware';
+export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware' | 'photoInteraction';
 export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'aiPhoto' | 'voiceAutoText' | 'voiceAutoTranslate';
 export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks' | 'worldBookLimit';
 export type BooleanChatSetting = { [K in MigratedChatSetting]: ChatPreferences[K] extends boolean ? K : never }[MigratedChatSetting];
