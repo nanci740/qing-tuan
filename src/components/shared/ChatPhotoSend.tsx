@@ -102,7 +102,7 @@ export function ChatPhotoSend() {
           onChange={event => update({ text: event.currentTarget.value })} />
         {drawing ? <>
           <label className="chat-photo-viewer-check"><input type="checkbox" checked={draft.expand} disabled={busy}
-            onChange={event => update({ expand: event.currentTarget.checked })} /><span>让 AI 补充描写<small>简单写几个词就好，他会照你们的聊天把画面补完整</small></span></label>
+            onChange={event => update({ expand: event.currentTarget.checked })} /><span>让 AI 补充描写<small>简单写几个词就好，他会照你的内容把画面补完整</small></span></label>
           {draft.expand && draft.expanded ? <>
             <label className="chat-photo-viewer-label" htmlFor="chatPhotoSendExpanded">补充后的描述（给生图模型看的，可以改，重画会照这段）</label>
             <textarea id="chatPhotoSendExpanded" className="chat-photo-viewer-prompt" rows={4} value={draft.expanded} disabled={busy}
