@@ -3,7 +3,7 @@ import { readImageSlot, saveImageSlots } from './imageAssets';
 
 /** 聊天 App「我」：名片（跟主画面的个人资料分开）和人设。人设可以有好几个，全部聊天同时只用一个。 */
 export interface MePersona { id: string; name: string; appearance: string; about: string }
-export interface MeStore { name: string; handle: string; signature: string; personas: MePersona[]; activeId: string }
+export interface MeStore { name: string; handle: string; signature: string; mood: string; personas: MePersona[]; activeId: string }
 
 const KEY = 'qingtuan_me_v1', AVATAR_KEY = 'qingtuan_me_avatar', EVENT = 'qingtuan:me-changed';
 const uid = () => 'me-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -17,7 +17,7 @@ function clean(value: unknown): MeStore {
     return [{ id: typeof row.id === 'string' && row.id ? row.id : uid(), name: text(row.name, 40), appearance: text(row.appearance, 2000), about: text(row.about, 4000) }];
   });
   const activeId = personas.some(item => item.id === raw.activeId) ? String(raw.activeId) : '';
-  return { name: text(raw.name, 40), handle: text(raw.handle, 30), signature: text(raw.signature, 60), personas, activeId };
+  return { name: text(raw.name, 40), handle: text(raw.handle, 30), signature: text(raw.signature, 60), mood: text(raw.mood, 20), personas, activeId };
 }
 
 let cache: MeStore | null = null;
