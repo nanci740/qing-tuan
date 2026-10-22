@@ -144,23 +144,23 @@ export function ChatMePage() {
               <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
             </button>
           </div>
-          <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="people" size={24} /></button>
+          <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="personPlus" size={24} /></button>
         </div>
       </div>
 
       <div className="chat-me-cards" aria-label="陪伴纪录">
         <div><MePixelIcon name="star" size={24} /><b>{stats?.days || 0}</b><small>认识天数</small></div>
-        <div><MePixelIcon name="mail" size={24} /><b>{stats?.total || 0}</b><small>聊天条数</small></div>
-        <div><MePixelIcon name="smile" size={24} /><b className="is-text">{stats?.top || '—'}</b><small>最常聊</small></div>
+        <div><MePixelIcon name="letter" size={24} /><b>{stats?.total || 0}</b><small>聊天条数</small></div>
+        <div><MePixelIcon name="bubbleHeart" size={24} /><b className="is-text">{stats?.top || '—'}</b><small>最常聊</small></div>
       </div>
 
       <div className="chat-me-main">
         <div className="chat-me-side" role="tablist" aria-label="分页">
-          <button type="button" role="tab" aria-selected={tab === 'me'} onClick={() => setTab('me')}><MePixelIcon name="smile" />我</button>
+          <button type="button" role="tab" aria-selected={tab === 'me'} onClick={() => setTab('me')}><MePixelIcon name="person" />我</button>
           <button type="button" role="tab" aria-selected={tab === 'favorites'} onClick={() => setTab('favorites')}><MePixelIcon name="gift" />收藏</button>
           {APPS.map(([name, icon]) => <button type="button" key={name} onClick={() => later(name)}><MePixelIcon name={icon} />{name}</button>)}
           <span className="chat-me-side-fill" />
-          <button type="button" className="chat-me-side-last" onClick={() => later('设置')}><MePixelIcon name="tama" />设置</button>
+          <button type="button" className="chat-me-side-last" onClick={() => later('设置')}><MePixelIcon name="gear" />设置</button>
         </div>
 
         <div className="chat-me-content" role="tabpanel">
