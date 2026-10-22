@@ -150,7 +150,7 @@ export function ChatMePage() {
 
       <div className="chat-me-cards" aria-label="陪伴纪录">
         <div><MePixelIcon name="star" size={24} /><b>{stats?.days || 0}</b><small>认识天数</small></div>
-        <div><MePixelIcon name="bubble" size={24} /><b>{stats?.total || 0}</b><small>聊天条数</small></div>
+        <div><MePixelIcon name="letter" size={24} /><b>{stats?.total || 0}</b><small>聊天条数</small></div>
         <div><MePixelIcon name="bubbleHeart" size={24} /><b className="is-text">{stats?.top || '—'}</b><small>最常聊</small></div>
       </div>
 

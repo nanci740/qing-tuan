@@ -92,7 +92,7 @@ const ART = {
     '................',
     '................',
   ],
-  // 哭脸照她自己画的那张：往下垂的眼睛、两边各两滴泪、张开的嘴；圆脸放大成跟其他表情一样的 14 格
+  // 哭脸照作者自己画的那张：往下垂的眼睛、两边各两滴泪、张开的嘴；圆脸放大成跟其他表情一样的 14 格
   cry: [
     '....xxxxxx......',
     '..xxwwwwwwxx....',
@@ -219,22 +219,22 @@ const ART = {
     '.xxx........xxx.',
     '................',
   ],
-  // 对话框：外形和小尾巴跟聊天 App 底下「Chats」一样；bubble 里三个点，bubbleHeart 里一颗心
-  bubble: [
+  // 聊天条数：信封，盖子浅浅一折，下面一颗实心爱心
+  letter: [
     '................',
     '................',
-    '...xxxxxxxxxx...',
-    '..xoooooooooox..',
-    '.xoooooooooooox.',
-    '.xoooooooooooox.',
-    '.xooxxoxxoxxoox.',
-    '.xooxxoxxoxxoox.',
-    '.xoooooooooooox.',
-    '.xoooooooooooox.',
-    '..xoooooooooox..',
-    '...xxxooxxxxx...',
-    '......xox.......',
-    '......xx........',
+    'xxxxxxxxxxxxxxxx',
+    'xxxooooooooooxxx',
+    'xwwxxooooooxxwwx',
+    'xwwwwxxooxxwwwwx',
+    'xwwwwwwxxwwwwwwx',
+    'xwwwwwwwwwwwwwwx',
+    'xwwwwxxwwxxwwwwx',
+    'xwwwwxxxxxxwwwwx',
+    'xwwwwwxxxxwwwwwx',
+    'xwwwwwwxxwwwwwwx',
+    'xwwwwwwwwwwwwwwx',
+    'xxxxxxxxxxxxxxxx',
     '................',
     '................',
   ],
@@ -275,6 +275,7 @@ const ART = {
     '................',
     '................',
   ],
+  // 最常聊：外形和小尾巴跟聊天 App 底下「Chats」一样的对话框，里面一颗心
   bubbleHeart: [
     '................',
     '................',
