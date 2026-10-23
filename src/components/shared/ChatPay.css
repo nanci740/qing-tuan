@@ -8,7 +8,7 @@
 #chatAppPage#chatAppPage .chat-pay { width: 196px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); cursor: pointer; text-align: left; }
 #chatAppPage#chatAppPage .chat-pay-top { display: flex !important; align-items: center; gap: 10px; padding: 12px 11px; background: var(--color-surface); color: var(--cr-title, var(--color-text)); }
 #chatAppPage#chatAppPage .chat-pay-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; background: var(--theme-color); color: var(--color-text); }
-#chatAppPage#chatAppPage .chat-pay.is-packet :is(.chat-pay-top, .chat-pay-foot) { background: var(--theme-color); }
+#chatAppPage#chatAppPage .chat-pay.is-packet :is(.chat-pay-top, .chat-pay-foot) { background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); }
 #chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-icon { background: var(--color-surface); }
 /* 红包矮一点：上面那块和图示都收小 */
 #chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-top { padding: 7px 11px; }
