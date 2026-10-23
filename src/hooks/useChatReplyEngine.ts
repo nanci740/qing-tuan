@@ -9,7 +9,7 @@ import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {locationText,stickerText,voiceLength} from '../utils/chatMessageNodes';
-import {aiStickers,findAiSticker} from '../utils/stickerStorage';
+import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
@@ -32,7 +32,9 @@ function looseStickerTag(text:string):string|null {
 const LOOSE_PHOTO = '\u0000loose-photo';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;
  /** 你发的照片的编号：送的时候从照片库拿出图片附给模型看。 */
- photoId?:string;}
+ photoId?:string;
+ /** 表情的图（qt-image: 编号或网址）：最近几张也附上图，他才知道表情长什么样。 */
+ stickerImage?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
  /** 重画一张照片（点了失败的照片、或在照片预览里改了描述）。 */
@@ -154,7 +156,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             context.push({ role: isUserMessage ? 'user' : 'assistant', content: withQuote(content),
                 messageId: nodes.id(row), quoteCandidate: quoteText, quotedText,
                 // 他自己发过、已经画好的照片：之后也把图片附给他看。
-                photoId: !isUserMessage && row.dataset.photoId && row.querySelector('.chat-photo.is-done') ? row.dataset.photoId : undefined });
+                photoId: !isUserMessage && row.dataset.photoId && row.querySelector('.chat-photo.is-done') ? row.dataset.photoId : undefined,
+                stickerImage: row.dataset.stickerImage || undefined });
         }
         return context;
     }
@@ -378,6 +381,14 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (!url) continue;
             if (item.role === 'user') messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url } }] };
             else photoFollowUps.set(index + 1, { role: 'user', content: [{ type: 'text', text: '[系统附图：这是你上面发给对方的那张照片，你看得到它的样子。这条不是对方说的话，不用回应这条]' }, { type: 'image_url', image_url: { url } }] });
+            imageAttached = true;
+        }
+        // 最近 3 张表情（你发的、他发的都算）也附上图：你发的那条换成「文字 + 图」，他发的在后面补一条附图。
+        for (const { item, index } of recent.map((item, index) => ({ item, index })).filter(x => x.item.stickerImage).slice(-3)) {
+            const url = await stickerDataUrl(item.stickerImage!);
+            if (!url) continue;
+            if (item.role === 'user') messages[index + 1] = { role: 'user', content: [{ type: 'text', text: item.content }, { type: 'image_url', image_url: { url } }] };
+            else photoFollowUps.set(index + 1, { role: 'user', content: [{ type: 'text', text: '[系统附图：这是你上面发给对方的那张表情的样子。这条不是对方说的话，不用回应这条]' }, { type: 'image_url', image_url: { url } }] });
             imageAttached = true;
         }
         const textOnlyMessages = messages.map(message => Array.isArray(message.content)
