@@ -10,9 +10,9 @@ export type PayState = 'pending' | 'done' | 'returned';
     ownCard：用的是他自己给你开的亲属卡（拿他的卡付给他）。
     亲属卡（kind family）的 amount 是每月额度。 */
 export interface PayRecord { id: string; kind: PayKind; from: 'me' | 'peer'; chatKey: string; name: string; amount: number; note: string; at: number; state: PayState; settledAt?: number; expired?: boolean; source?: string; sourceLabel?: string; ownCard?: boolean }
-/** 卡：debit 储蓄卡（balance 是卡里的钱）、credit 信用卡（limit 额度，used 已用，due 还款期限）、family 他给你的亲属卡（limit 每月额度，used 这个月用了多少，month 是哪个月）。 */
+/** 卡：debit 储蓄卡（balance 是卡里的钱）、credit 信用卡（limit 额度，used 已用，due 还款期限，feeAt 下一次加手续费的时间）、family 他给你的亲属卡（limit 每月额度，used 这个月用了多少，month 是哪个月）。 */
 export type CardKind = 'debit' | 'credit' | 'family';
-export interface WalletCard { id: string; kind: CardKind; bank: string; last4: string; at: number; balance: number; limit: number; used: number; due?: number; owner?: string; chatKey?: string; month?: string }
+export interface WalletCard { id: string; kind: CardKind; bank: string; last4: string; at: number; balance: number; limit: number; used: number; due?: number; feeAt?: number; owner?: string; chatKey?: string; month?: string }
 /** 余额和卡之间搬钱：in 从卡转进余额、out 从余额转到卡（信用卡就是还款）、fee 信用卡逾期手续费（记在卡上，不动余额）。 */
 export interface WalletMove { id: string; type: 'in' | 'out' | 'fee'; cardId: string; label: string; credit: boolean; amount: number; at: number }
 export interface Wallet { balance: number; records: PayRecord[]; cards: WalletCard[]; moves: WalletMove[] }
@@ -22,9 +22,10 @@ const KEY = 'qingtuan_wallet_v1', EVENT = 'qingtuan:wallet-changed';
 export const PAY_EXPIRE_MS = 24 * 60 * 60 * 1000;
 /** 新卡里先放的钱（信用卡就是额度）。 */
 export const NEW_CARD_AMOUNT = 520000;
-/** 信用卡从开始欠钱算起多久要还清；过了没还清就加手续费，再给下一个期限。 */
+/** 信用卡从开始欠钱算起多久要还清；过了期限还没还清，每天加一次手续费，直到还清。 */
 export const CREDIT_DUE_MS = 30 * 24 * 60 * 60 * 1000;
 export const CREDIT_LATE_FEE = 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
 const cents = (value: unknown) => Math.max(0, Math.round(Number(value) || 0));
 const uid = (prefix: string) => prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -47,7 +48,7 @@ function clean(value: unknown): Wallet {
     if (!id) return [];
     const kind: CardKind = card.kind === 'credit' || card.kind === 'family' ? card.kind : 'debit';
     return [{ id, kind, bank: text(card.bank, 20) || '银行卡', last4: text(card.last4, 4).replace(/\D/g, '').padStart(4, '0'), at: Number(card.at) || 0,
-      balance: cents(card.balance), limit: cents(card.limit), used: cents(card.used), ...(Number(card.due) ? { due: Number(card.due) } : {}),
+      balance: cents(card.balance), limit: cents(card.limit), used: cents(card.used), ...(Number(card.due) ? { due: Number(card.due) } : {}), ...(Number(card.feeAt) ? { feeAt: Number(card.feeAt) } : {}),
       ...(kind === 'family' ? { owner: text(card.owner, 40), chatKey: text(card.chatKey, 120), month: text(card.month, 10) } : {}) }];
   });
   const moves = list('moves').flatMap((move): WalletMove[] => {
@@ -121,7 +122,7 @@ function charge(card: WalletCard, amount: number, now = Date.now()): WalletCard 
 function refund(card: WalletCard, amount: number): WalletCard {
   if (card.kind === 'debit') return { ...card, balance: card.balance + amount };
   const used = Math.max(0, card.used - amount);
-  return { ...card, used, ...(card.kind === 'credit' && used === 0 ? { due: undefined } : {}) };
+  return { ...card, used, ...(card.kind === 'credit' && used === 0 ? { due: undefined, feeAt: undefined } : {}) };
 }
 /** 余额和卡之间搬钱。in：从卡转进余额（信用卡就是预借，会开始算还款期限）；out：从余额转到卡（信用卡就是还款，最多还到不欠）。亲属卡不能搬。 */
 export function moveMoney(cardId: string, type: 'in' | 'out', amount: number) {
@@ -194,19 +195,19 @@ export function settlePendingFromMe(chatKey: string, action: 'accept' | 'return'
   return readWallet().records.filter(record => record.from === 'me' && record.chatKey === chatKey && record.state === 'pending')
     .map(record => settlePay(record.id, action)).some(Boolean);
 }
-/** 定时整理：过了一天还没收的自动退回；信用卡过了还款期限没还清就加 ¥10 手续费，再给下一个期限；亲属卡换月份就从头算。 */
+/** 定时整理：过了一天还没收的自动退回；信用卡过了还款期限没还清，期限那天起每天加 ¥10 手续费，直到还清；亲属卡换月份就从头算。 */
 export function expireWalletPays(now = Date.now()) {
   for (const record of readWallet().records) if (record.state === 'pending' && now - record.at >= PAY_EXPIRE_MS) settlePay(record.id, 'return', true);
   const wallet = readWallet(), moves: WalletMove[] = [];
   const cards = wallet.cards.map(card => {
     if (card.kind === 'family' && card.month !== monthKey(now)) return { ...card, used: 0, month: monthKey(now) };
     if (card.kind !== 'credit' || !card.used || !card.due || card.due > now) return card;
-    let next = card;
-    while (next.due && next.due <= now) {
-      moves.push({ id: uid('mv-'), type: 'fee', cardId: card.id, label: cardLabel(card), credit: true, amount: CREDIT_LATE_FEE, at: next.due });
-      next = { ...next, used: next.used + CREDIT_LATE_FEE, due: next.due + CREDIT_DUE_MS };
+    let used = card.used, at = card.feeAt || card.due;
+    for (; at <= now; at += DAY_MS) {
+      moves.push({ id: uid('mv-'), type: 'fee', cardId: card.id, label: cardLabel(card), credit: true, amount: CREDIT_LATE_FEE, at });
+      used += CREDIT_LATE_FEE;
     }
-    return next;
+    return used === card.used ? card : { ...card, used, feeAt: at };
   });
   if (moves.length || cards.some((card, index) => card !== wallet.cards[index])) write({ ...wallet, cards, moves: [...moves, ...wallet.moves] });
 }

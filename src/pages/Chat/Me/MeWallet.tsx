@@ -117,8 +117,8 @@ export function MeWallet() {
         <span className="chat-me-card-bar"><i style={{ width: `${Math.min(100, card.limit ? card.used / card.limit * 100 : 0)}%` }} /></span>
         <span className="chat-me-card-kv"><span>额度</span><span>¥{yuan(card.limit)}</span></span>
         <span className="chat-me-card-kv"><span>欠款</span><span>¥{yuan(card.used)}</span></span>
-        <span className="chat-me-card-kv"><span>还款期限</span><span className={card.due && card.due < Date.now() + 3 * 86400000 ? 'is-warn' : ''}>{card.used && card.due ? day(card.due) + ' 前' : '没有欠款'}</span></span>
-        <small>过了期限没还清，每期多收 ¥{yuan(CREDIT_LATE_FEE)} 手续费。</small>
+        <span className="chat-me-card-kv"><span>还款期限</span><span className={card.due && card.due < Date.now() + 3 * 86400000 ? 'is-warn' : ''}>{card.used && card.due ? day(card.due) + (card.due <= Date.now() ? ` 已逾期 ${Math.floor((Date.now() - card.due) / 86400000) + 1} 天` : ' 前') : '没有欠款'}</span></span>
+        <small>过了期限没还清，每天多收 ¥{yuan(CREDIT_LATE_FEE)} 手续费，直到还清。</small>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => card.used ? openMove('out', card.id) : showToast('这张信用卡没有欠款')}>还款</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('in', card.id)}>↓ 预借到余额</button><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>删除</button></span>
       </> : <>
         <small>{cardLabel(card)} · 本月还能用</small><b>¥{yuan(cardAvailable(card))}</b>
@@ -182,7 +182,7 @@ export function MeWallet() {
           <input id="meCardBank" maxLength={20} placeholder="例如：招商银行" value={adding.bank} autoFocus onChange={event => setAdding({ ...adding, bank: event.currentTarget.value })} />
           <label htmlFor="meCardLast4">卡号后四位<small>不填就随机</small></label>
           <input id="meCardLast4" inputMode="numeric" maxLength={4} placeholder="例如：7735" value={adding.last4} onChange={event => setAdding({ ...adding, last4: event.currentTarget.value.replace(/\D/g, '') })} />
-          <p className="chat-me-note">{adding.kind === 'debit' ? '新卡里先放 ¥5,200。' : '额度 ¥5,200。用了以后 30 天内要还清，过了期限每期多收 ¥10 手续费。'}</p>
+          <p className="chat-me-note">{adding.kind === 'debit' ? '新卡里先放 ¥5,200。' : '额度 ¥5,200。用了以后 30 天内要还清，过了期限每天多收 ¥10 手续费，直到还清。'}</p>
         </div>
         <div className="sp-confirm-actions chat-me-form-actions">
           <PressedButton type="button" className="sp-confirm-btn" onClick={() => setAdding(null)}>取消</PressedButton>
