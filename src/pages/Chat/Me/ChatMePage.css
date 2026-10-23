@@ -124,12 +124,8 @@
 .chat-me-st-cell b { max-width: 100%; font-size: 10px; font-weight: 500; color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chat-me-st-cell.is-add .chat-me-st-pic { border-style: dashed; background: none; color: var(--color-muted); font-size: 18px; }
 .chat-me-st-cell.is-add b { color: var(--color-muted); }
-/* 多选：选上的那张外面一圈深一点的框，右上角一个勾 */
+/* 多选：选上的那张外面一圈深一点的框 */
 .chat-me-st-cell.is-picked .chat-me-st-pic { border-color: var(--win-ink); box-shadow: 0 0 0 1px var(--win-ink); }
-.chat-me-st-cell.is-picked .chat-me-st-pic::after {
-  content: '✓'; position: absolute; top: 3px; right: 3px; width: 14px; height: 14px; border-radius: 50%;
-  background: var(--win-ink); color: #fff; font-size: 9px; line-height: 14px; text-align: center;
-}
 
 /* 表情的小窗：分组名字、改标签、加表情（上传图片 / 贴网址两个分页，跟世界书小窗一样凸起和按下） */
 .chat-me-st-check { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--spc-title); cursor: pointer; }
