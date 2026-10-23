@@ -1,21 +1,22 @@
-/* 转账、红包卡片：没有气泡底色，卡片自己一个框。上面一块主题色（红包深一点），放图示、金额（红包写「红包」）和留言；底下一条写种类和状态；退回、过期的整张变淡。
+/* 转账、红包卡片：没有气泡底色，卡片自己一个框（框的颜色跟其他卡片一样）。上面白底，左边一块实心主题色的图示（白色图），金额（红包写「红包」）和留言；
+   底下一条淡淡的主题色，写种类和状态，最后一个 ›。收了、拆了、退回的图示变灰，退回、过期的上面那块再淡一点。
    聊天室把气泡里的 div 都设成 inline !important，这里用更具体的选择器改回来。 */
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape,
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape-base { display: none !important; }
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-pay { display: block !important; }
 #chatAppPage#chatAppPage .chat-pay { width: 196px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); cursor: pointer; text-align: left; }
-#chatAppPage#chatAppPage .chat-pay-top { display: flex !important; align-items: center; gap: 9px; padding: 10px 11px; background: linear-gradient(180deg, color-mix(in srgb, var(--color-muted) 12%, var(--theme-color)), var(--theme-color)); color: var(--cr-title, var(--spc-title)); }
-#chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-top { background: linear-gradient(180deg, color-mix(in srgb, var(--color-muted) 55%, var(--theme-color)), color-mix(in srgb, var(--color-muted) 35%, var(--theme-color))); color: var(--color-surface); }
-#chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-info :is(b, small) { color: var(--color-surface) !important; -webkit-text-fill-color: var(--color-surface) !important; opacity: 1; }
-#chatAppPage#chatAppPage .chat-pay-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; box-sizing: border-box; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); }
+#chatAppPage#chatAppPage .chat-pay-top { display: flex !important; align-items: center; gap: 10px; padding: 12px 11px; background: var(--color-surface); color: var(--cr-title, var(--color-text)); }
+#chatAppPage#chatAppPage .chat-pay-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; background: color-mix(in srgb, var(--color-muted) 55%, var(--theme-color)); color: var(--color-surface); }
+#chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-icon { background: color-mix(in srgb, var(--color-muted) 75%, var(--theme-color)); }
+#chatAppPage#chatAppPage .chat-pay:not(.is-pending) .chat-pay-icon { background: color-mix(in srgb, var(--color-muted) 35%, var(--color-surface)); }
 #chatAppPage#chatAppPage .chat-pay-icon svg { width: 24px; height: 24px; display: block; }
-#chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-icon { color: var(--cr-title, var(--spc-title)); }
 #chatAppPage#chatAppPage .chat-pay-info { min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
 #chatAppPage#chatAppPage .chat-pay-info b { font-size: 15px; font-family: "Courier New", ui-monospace, monospace; }
 #chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-info b { font-family: inherit; }
-#chatAppPage#chatAppPage .chat-pay-info small { font-size: 10.5px; color: var(--color-text); opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#chatAppPage#chatAppPage .chat-pay-foot { display: flex !important; justify-content: space-between; padding: 4px 11px; border-top: 1px solid var(--cr-line, var(--spc-line)); font-size: 10px; color: var(--color-muted); }
+#chatAppPage#chatAppPage .chat-pay-info small { font-size: 10.5px; color: var(--color-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#chatAppPage#chatAppPage .chat-pay-foot { display: flex !important; justify-content: space-between; padding: 4px 11px; background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); font-size: 10px; color: var(--color-text); }
+#chatAppPage#chatAppPage .chat-pay-foot > span:last-child::after { content: ' ›'; }
 #chatAppPage#chatAppPage .chat-pay.is-returned .chat-pay-top { opacity: .55; }
 
 /* 发转账、红包的窗口：上面一排转账／红包（凸起和按下跟世界书小窗一样），金额大字，底下余额 */
