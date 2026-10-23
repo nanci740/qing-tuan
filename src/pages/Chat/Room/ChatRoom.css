@@ -2131,7 +2131,7 @@
 
 /* @qingtuan-order:004311 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action svg { width: 14px !important; height: 14px !important; color: var(--cr-title) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action svg { flex: 0 0 14px !important; width: 14px !important; height: 14px !important; color: var(--cr-title) !important; }
 
 /* @qingtuan-order:004312 */
 
