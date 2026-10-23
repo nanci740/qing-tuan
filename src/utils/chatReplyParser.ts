@@ -318,10 +318,11 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     recall: fields(item).recall === true || fields(item).recall === 'true',
                     voice: fields(item).voice === true || fields(item).voice === 'true',
                     photo: String(fields(item).photo ?? fields(item).image ?? '').trim(),
+                    scene: String(fields(item).scene ?? fields(item).photo_desc ?? '').trim(),
                     location: readReplyLocation(fields(item).location)
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', location: null };
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', location: null };
         }).map(item => !item.text && (item.photo || item.location) ? { ...item, text: item.photo ? '照片' : '位置' } : item).filter(item => fields(item).text)
         : [];
     if (structuredItems.length) {
@@ -339,6 +340,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             recalls: structuredItems.map(item => item.recall),
             voices: structuredItems.map(item => item.voice),
             photos: structuredItems.map(item => item.photo),
+            scenes: structuredItems.map(item => item.scene),
             locations: structuredItems.map(item => item.location),
             quotes,
             quote: firstQuote?.quote || '',

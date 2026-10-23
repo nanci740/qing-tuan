@@ -24,8 +24,8 @@ export interface ChatPromptInput {
     quoteChoicesText: string;
     /** 'on'：可以发语音；'unavailable'：开了但语音服务没设定好；'off'：没开。 */
     voice: 'on' | 'unavailable' | 'off';
-    /** 'on'：可以发照片；'unavailable'：开了但生图服务没设定好；'off'：没开。 */
-    photo?: 'on' | 'unavailable' | 'off';
+    /** 'on'：可以发照片（没开生图时会变成文字照片卡）；'off'：不提照片。 */
+    photo?: 'on' | 'off';
     /** 照片怎么写：tags 是 NovelAI 用的英文标签，sentence 是一般的英文句子；user 是生图设置里「你」那一格，让他知道你长什么样。 */
     photoLook?: { style: 'tags' | 'sentence'; user: string };
     /** 聊到见面互动时多常发你们两个人的画面。 */
@@ -119,9 +119,8 @@ function voice(input: ChatPromptInput) {
     return '';
 }
 
-/** 照片：开了才送；开了但生图服务还没设定好，就说清楚现在发不了。 */
+/** 照片：他随时都能发；有没有真的画出来是程序的事（没开生图就变成文字照片卡），这里不用跟他说。 */
 function photo(input: ChatPromptInput) {
-    if (input.photo === 'unavailable') return '你现在发不了照片（生图服务还没设定好），只能发文字；对方跟你要照片时，照实说现在发不了，不要假装发了照片，也不要用括号描写照片内容。';
     if (input.photo !== 'on') return '';
     const tags = input.photoLook?.style === 'tags', userLook = input.photoLook?.user.trim() || '';
     const describe = tags
@@ -129,9 +128,10 @@ function photo(input: ChatPromptInput) {
         : 'photo 写给生图模型看的英文画面描述，40 到 80 个英文单词，只写看得见的东西：画面主体、动作和表情、穿着、地点和环境、光线、镜头与构图（自拍、近景、远景等），不要写心理、声音、对话或剧情。';
     const who = '画面里有你自己时要写出外貌特征，不要只写名字；画面里有对方时' + (tags ? '加上 the user 这个标签' : '写 "the user"') + (userLook ? `，对方的样子是：${userLook}，也照着写进画面` : '') + '。';
     const example = tags
-        ? '{"text":"刚拍的晚霞","photo":"no humans, sunset, river, city skyline, silhouette, orange sky, pink clouds, reflection on water, phone photo, tilted angle"}'
-        : '{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot"}';
+        ? '{"text":"刚拍的晚霞","photo":"no humans, sunset, river, city skyline, silhouette, orange sky, pink clouds, reflection on water, phone photo, tilted angle","scene":"河边的晚霞，天空从橘色慢慢变成粉色，远处的楼只剩一排黑影，水面上全是反光。手机拍的，有点歪。"}'
+        : '{"text":"刚拍的晚霞","photo":"A phone photo of a pink and orange sunset over a quiet riverside, city skyline silhouetted in the distance, warm golden light reflecting on the water, slightly tilted handheld angle, casual snapshot","scene":"河边的晚霞，天空从橘色慢慢变成粉色，远处的楼只剩一排黑影，水面上全是反光。手机拍的，有点歪。"}';
     return '每一条 replies 还可以加上 "photo"，表示这条你发了一张照片（对方会收到一张真的图片）。发照片的那一条：text 写一句很短的中文，说明照片拍的是什么（例如「刚拍的晚霞」）；' + describe + who +
+        '再加上 "scene"：用中文两三句写这张照片里看得到什么（人、动作、地方、光线、细节），像把照片拿给对方看时形容的样子。' +
         '照片单独一条，想说的话放在其他条。什么时候发：' +
         '一、对方跟你要照片、自拍时一定发。' +
         '二、聊到你们见面、待在一起或一起做什么（例如抱抱、牵手、靠在一起、一起吃饭、散步、躺着聊天）时，' + ({
