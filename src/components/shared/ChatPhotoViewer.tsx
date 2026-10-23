@@ -4,10 +4,10 @@ import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
 import type { MessagePhoto } from '../../types/chatMessages';
 
-/** canDraw：生图设定好了没；没设定好，文字照片卡就不放「画出来」。 */
+/** canDraw：生图设定好了没；没设定好，文字照片就不放「画出来」。 */
 interface PhotoViewRequest { photo: MessagePhoto; redraw(prompt: string): void; canDraw?: boolean }
 
-/** 点家机的照片：看大图、存图；画面描述可以改，改完重新生成。文字照片卡可以直接画出来。外观跟聊天的确认窗口一样。 */
+/** 点家机的照片：看大图、存图；画面描述可以改，改完重新生成。文字照片（预设图）可以直接画出来。外观跟聊天的确认窗口一样。 */
 export function ChatPhotoViewer() {
   const [request, setRequest] = useState<PhotoViewRequest | null>(null);
   const [prompt, setPrompt] = useState('');

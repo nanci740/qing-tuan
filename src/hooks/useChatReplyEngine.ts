@@ -313,7 +313,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
-        // 照片随时都能发；「家机发照片」开着、生图也设定好了才真的画出来，不然就是一张写着说明的文字照片卡。
+        // 照片随时都能发；「家机照片生图」开着、生图也设定好了才真的画出来，不然就放预设照片，点开看画面描述。
         const aiPhotoDraw = !!requestPreferences.aiPhoto && chatPhotoReady();
         let trailingUserMessages = 0;
         for (let i = recent.length - 1; i >= 0 && recent[i].role === 'user'; i--) trailingUserMessages++;
@@ -411,7 +411,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const looseCaptions = parsedReply.segments.map((text, index) => (parsedReply.photos || [])[index] || (parsedReply.locations || [])[index] ? null : loosePhotoCaption(text));
             if (looseCaptions.some(caption => caption !== null)) parsedReply.segments = parsedReply.segments.map((text, index) => looseCaptions[index] ?? text);
             const replyPhotos = parsedReply.segments.map((_, index) => (parsedReply.photos || [])[index] || (looseCaptions[index] !== null ? LOOSE_PHOTO : ''));
-            if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) notice('生图还没设定好，照片先用文字卡');
+            if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) notice('生图还没设定好，照片先放预设图');
             const replyLocations = parsedReply.locations || [];
             const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index]);
             const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index]);
