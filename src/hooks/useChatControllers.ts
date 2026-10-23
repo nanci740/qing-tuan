@@ -370,12 +370,10 @@ function initChatApplication(){
         const html=messageNodes.photoHtml(history.current.histories[key]||'',photo);if(html===null)return;
         history.current.histories[key]=html;saveChatHistories();
     }
-    // 点照片：正在画就提示一下；画好、失败或文字照片卡都打开照片预览，可以看大图、存图、改描述重画（文字照片卡是「画出来」）。
-    function openChatPhoto(row:HTMLElement,target?:Element){
+    // 点照片：正在画就提示一下；画好、失败或文字照片都打开照片预览，可以看大图、存图、改描述重画（文字照片会显示画面描述，按「画出来」）。
+    function openChatPhoto(row:HTMLElement){
         const box=row.querySelector<HTMLElement>('.chat-photo');const id=row.dataset.photoId||'';if(!box||!id)return;
         const state=(box.dataset.photoState||'pending') as MessagePhoto['state'];
-        // 文字照片卡点相片区：翻过来看画面描述，再点一下翻回去（只是看，不存）
-        if(state==='text'&&target?.closest('.chat-photo-pic')){box.classList.toggle('is-flipped');return;}
         if(row.classList.contains('is-user')){window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo:{id,prompt:'',caption:row.dataset.photoCaption||'',state,src:box.querySelector('img')?.getAttribute('src')||undefined,mine:true},redraw:()=>{}}}));return;}
         if(state==='pending'&&replyEngine.drawing(id)){showChatNotice('照片还在画，稍等一下');return;}
         const chatKey=history.current.activeKey;

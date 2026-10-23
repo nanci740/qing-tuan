@@ -12,7 +12,7 @@ export interface ChatSegmentedReply {
   voices?: boolean[];
   /** 每一条要发的照片：给生图模型的英文画面描述，没有就是空字符串。 */
   photos?: string[];
-  /** 每一张照片的中文画面描述（文字照片卡点开看的那段），没有就是空字符串。 */
+  /** 每一张照片的中文画面描述（文字照片点开看的那段），没有就是空字符串。 */
   scenes?: string[];
   /** 每一条发的定位；没有就是 null。 */
   locations?: (MessageLocation | null)[];

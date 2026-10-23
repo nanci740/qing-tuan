@@ -178,7 +178,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
         if(!(row instanceof HTMLElement)){sources.current?.notice('原消息已不存在');return;}apiRef.current!.toggle(row,'is-quote-target',false);void row.offsetWidth;apiRef.current!.toggle(row,'is-quote-target',true);const timer=setTimeout(()=>{apiRef.current!.toggle(row,'is-quote-target',false);timers.current.delete(timer);},1300);timers.current.add(timer);return;}
       const transcript=el.closest<HTMLElement>('.chat-voice-text-result');if(transcript){event.preventDefault();const row=transcript.closest<HTMLElement>('.chat-message-row');if(row&&!transcript.classList.contains('is-collapsed'))apiRef.current!.toggleTranscript(row);return;}
       const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill){event.preventDefault();sources.current?.play(pill);return;}
-      const photo=el.closest<HTMLElement>('.chat-photo');const photoRow=photo?.closest<HTMLElement>('.chat-message-row');if(photoRow){event.preventDefault();sources.current?.photo(photoRow,el);}
+      const photo=el.closest<HTMLElement>('.chat-photo');const photoRow=photo?.closest<HTMLElement>('.chat-message-row');if(photoRow){event.preventDefault();sources.current?.photo(photoRow);}
     },
     keyDown(event){const el=event.target;if(!(el instanceof Element))return;const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill&&(event.key==='Enter'||event.key===' ')){event.preventDefault();sources.current?.play(pill);}},
     appendHtml(html){publish([...clone(),...model.parseMessageHtml(html,factory)]);},
