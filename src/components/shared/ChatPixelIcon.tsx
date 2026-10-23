@@ -45,7 +45,7 @@ const icons = {
     "offset": "translate(0 -1)"
   },
   "smile": {
-    "path": "M8 2h8v2H8z M4 4h4v2H4z M16 4h4v2h-4z M4 6h2v2H4z M18 6h2v2h-2z M2 8h2v8H2z M20 8h2v8h-2z M8 8h2v2H8z M14 8h2v2h-2z M8 12h2v2H8z M14 12h2v2h-2z M10 14h4v2h-4z M4 16h2v2H4z M18 16h2v2h-2z M4 18h4v2H4z M16 18h4v2h-4z M8 20h8v2H8z",
+    "path": "M8 0h8v2H8z M4 2h4v2H4z M16 2h4v2h-4z M2 4h2v4H2z M20 4h2v4h-2z M0 8h2v8H0z M22 8h2v8h-2z M6 8h2v2H6z M16 8h2v2h-2z M6 14h2v2H6z M16 14h2v2h-2z M8 16h8v2H8z M2 16h2v4H2z M20 16h2v4h-2z M4 20h4v2H4z M16 20h4v2h-4z M8 22h8v2H8z",
     "offset": "translate(0 0)"
   },
   "camera": {
@@ -58,7 +58,7 @@ export type ChatPixelIconName = keyof typeof icons;
 export function ChatPixelIcon({name, uniformSize = false}:{name:ChatPixelIconName; uniformSize?:boolean}) {
   const icon = icons[name];
   // 设置列表按轮廓最长边统一大小；其他位置继续使用原有画布。
-  const extent = {people:22, message:22, document:20, image:20, sound:22, eye:20, trash:20, sparkle:24, location:18, book:18, mic:22, camera:20, smile:20}[name];
+  const extent = {people:22, message:22, document:20, image:20, sound:22, eye:20, trash:20, sparkle:24, location:18, book:18, mic:22, camera:20, smile:24}[name];
   const canvas = uniformSize ? extent * 26 / 20 : 26;
   const edge = (24 - canvas) / 2;
   return <svg className="chat-pixel-icon" viewBox={`${edge} ${edge} ${canvas} ${canvas}`} aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
