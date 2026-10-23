@@ -9,6 +9,8 @@ export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: 
 /** 家机发的照片。state：pending 正在画、done 画好了、failed 没画出来（可以重画）、text 没开生图时的文字照片卡（只有说明，之后可以画）。
     prompt 是给生图模型的英文描述（他用文字打的照片一开始是空的），caption 是一句中文说明。 */
 export interface MessagePhoto { id: string; prompt: string; caption: string; state: 'pending' | 'done' | 'failed' | 'text'; src?: string; error?: string;
+  /** 中文画面描述：文字照片卡点一下相片区看的那段（他写的，比 caption 详细）。 */
+  scene?: string;
   /** 你自己发的照片（预览里不能重画）。只在打开预览时用，不存。 */
   mine?: boolean }
 /** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */
@@ -48,4 +50,4 @@ export interface MessageNodesApi {
   photoHtml(html: string, photo: MessagePhoto): string | null;
   onChange(listener: ()=>void): ()=>void;
 }
-export interface MessagesConnection { canInteract(): boolean; play(pill: HTMLElement): void; photo(row: HTMLElement): void; notice(message: string): void; identity(): MessageIdentity; accept(api: MessageNodesApi): void }
+export interface MessagesConnection { canInteract(): boolean; play(pill: HTMLElement): void; photo(row: HTMLElement, target?: Element): void; notice(message: string): void; identity(): MessageIdentity; accept(api: MessageNodesApi): void }

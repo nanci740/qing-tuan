@@ -421,6 +421,10 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const segmentPhotos = requestPreferences.segmented
                 ? replyPhotos
                 : [...(textOnly.length ? [''] : []), ...cardIndexes.map(index => replyPhotos[index] || '')];
+            const replyScenes = parsedReply.scenes || [];
+            const segmentScenes = requestPreferences.segmented
+                ? replyScenes
+                : [...(textOnly.length ? [''] : []), ...cardIndexes.map(index => replyScenes[index] || '')];
             const segmentLocations:(MessageLocation|null)[] = requestPreferences.segmented
                 ? replyLocations
                 : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPhotos[index] ? null : replyLocations[index] || null)];
@@ -434,7 +438,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 : [(parsedReply.voices || []).length > 0 && (parsedReply.voices || []).every(Boolean)]);
             const recallNoticeText = `${characterName}撤回了一条消息`;
             for (let index = 0; index < segments.length; index++) {
-                const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], state: aiPhotoDraw ? 'pending' : 'text' } : null;
+                const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], ...(segmentScenes[index] ? { scene: segmentScenes[index] } : {}), state: aiPhotoDraw ? 'pending' : 'text' } : null;
                 const location = photo ? null : segmentLocations[index] || null;
                 const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : segments[index];
                 let notifyVoiceLength = '';

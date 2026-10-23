@@ -264,8 +264,11 @@ export function photoNode(photo: MessagePhoto, factory: MessageFactory, note = f
   const label = photo.state === 'done' ? '查看照片' : photo.state === 'failed' ? '重新生成照片' : photo.state === 'text' ? '查看照片说明' : '照片接收中';
   const node = factory.element('div', { class: 'chat-photo is-' + photo.state, role: 'button', tabindex: '0', 'aria-label': label, 'data-photo-id': photo.id, 'data-photo-state': photo.state });
   if (photo.state === 'done' && photo.src) node.children = [factory.element('img', { class: 'chat-photo-img', alt: photo.caption, src: photo.src, draggable: 'false' }), ...(note && photo.caption ? [factory.element('span', { class: 'chat-photo-note' }, [factory.text(photo.caption)])] : [])];
-  // 文字照片卡：没开生图时，上面一个小小的「照片」，下面是照片说明
-  else if (photo.state === 'text') node.children = [factory.element('span', { class: 'chat-photo-status' }, [factory.text('照片')]), factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)])];
+  // 文字照片卡（没开生图）：一张还没显影的拍立得——上面相片区一个小风景图示，点一下翻过来看画面描述；下面白边写照片说明
+  else if (photo.state === 'text') node.children = [
+    factory.element('span', { class: 'chat-photo-pic', role: 'button', 'aria-label': '看画面描述' }, [
+      factory.element('span', { class: 'chat-photo-scene' }, [factory.text(photo.scene || photo.caption)])]),
+    factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)])];
   else if (photo.state === 'failed') node.children = [factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)]), factory.element('span', { class: 'chat-photo-status' }, [factory.text('没画出来，点一下重新生成')])];
   else node.children = [factory.element('span', { class: 'chat-photo-spinner', 'aria-hidden': 'true' }), factory.element('span', { class: 'chat-photo-status' }, [factory.text('照片接收中…')])];
   return node;
@@ -278,6 +281,7 @@ export function setPhoto(row: MessageElement, photo: MessagePhoto, factory: Mess
   if (old) bubble.children = bubble.children.map(n => n.key === old.key ? node : n); else bubble.children.push(node);
   toggleClass(bubble, 'chat-bubble--photo', true);
   setAttr(row, 'data-photo-id', photo.id); setAttr(row, 'data-photo-caption', photo.caption); setAttr(row, 'data-photo-prompt', photo.prompt); setAttr(row, 'data-chat-ai-content', '[照片] ' + photo.caption);
+  if (photo.scene) setAttr(row, 'data-photo-scene', photo.scene); else removeAttr(row, 'data-photo-scene');
   if (photo.error) setAttr(row, 'data-photo-error', photo.error); else removeAttr(row, 'data-photo-error');
 }
 /** 定位卡片在聊天记录、预览、送给模型时的文字：[位置] 地点（地址）· 距你约 3 公里 */

@@ -33,7 +33,10 @@ export function ChatPhotoViewer() {
       <div className="sp-confirm-body">
         {photo.state === 'done' && photo.src
           ? <img className="chat-photo-viewer-img" src={photo.src} alt={photo.caption} />
-          : text ? <div className="sp-confirm-msg">{'这是一张文字照片，还没画出来。' + (canDraw ? '' : '在「语音与生图设置」开好生图，就能把它画出来。')}</div>
+          : text ? <>
+            {photo.scene ? <div className="sp-confirm-msg chat-photo-viewer-scene">{photo.scene}</div> : null}
+            <div className="sp-confirm-msg">{'这张照片还没画出来。' + (canDraw ? '' : '在「语音与生图设置」开好生图，就能把它画出来。')}</div>
+          </>
           : <div className="sp-confirm-msg">{'这张照片没画出来' + (photo.error ? '：' + photo.error : '。')}</div>}
         {photo.mine ? (photo.caption ? <div className="sp-confirm-msg">{photo.caption}</div> : null) : <>
           <label className="chat-photo-viewer-label" htmlFor="chatPhotoPrompt">{prompt.trim() ? '画面描述（给生图模型看的，可以改）' : '画面描述（空着的话，画的时候会照说明补上）'}</label>
