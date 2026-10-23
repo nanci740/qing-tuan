@@ -9,7 +9,7 @@ import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {locationText,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
-import {receivePay,settlePendingFromMe} from '../utils/walletStorage';
+import {familyCardText,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -32,12 +32,12 @@ function looseStickerTag(text:string):string|null {
 /** 他学着上下文打了「[转账] ¥200」「[红包] ¥66，留言「…」」（也有写成英文 [transfer]、[packet] 的）：当成真的转账、红包。
     后面带着状态括号（「（对方还没收）」这种）是在照抄旧卡片，回传 false，那一句不发。 */
 function loosePay(text:string):Omit<MessagePay,'id'>|false|null {
-    const match = /^\s*[\[【]\s*(转账|红包|transfer|packet|red\s*packet|hongbao)\s*[\]】]\s*([\s\S]*)$/i.exec(text);
+    const match = /^\s*[\[【]\s*(转账|红包|亲属卡|transfer|packet|red\s*packet|hongbao|family\s*card)\s*[\]】]\s*([\s\S]*)$/i.exec(text);
     if (!match) return null;
     if (/[（(][^）)]*(收|拆|退)[^）)]*[）)]/.test(match[2])) return false;
     const amount = /[¥￥]?\s*(\d[\d,]*(?:\.\d{1,2})?)\s*元?/.exec(match[2]), note = /留言\s*[「“"]([^」”"]*)[」”"]/.exec(match[2]);
     const cents = amount ? Math.round(Number(amount[1].replace(/,/g, '')) * 100) : 0;
-    return cents > 0 ? { kind: /红包|packet|hongbao/i.test(match[1]) ? 'packet' : 'transfer', amount: cents, note: (note?.[1] || '').trim().slice(0, 40) } : false;
+    return cents > 0 ? { kind: /亲属卡|family/i.test(match[1]) ? 'family' : /红包|packet|hongbao/i.test(match[1]) ? 'packet' : 'transfer', amount: cents, note: (note?.[1] || '').trim().slice(0, 40) } : false;
 }
 /** 文字照片在 photos 里的记号：表示「是照片，但画面描述还没写」。 */
 const LOOSE_PHOTO = '\u0000loose-photo';
@@ -359,6 +359,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             photo: 'on',
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
             stickers: aiStickers().map(item => item.tag),
+            familyCard: familyCardText(requestChatKey),
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];

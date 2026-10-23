@@ -127,15 +127,52 @@
 /* 多选：选上的那张外面一圈深一点的框 */
 .chat-me-st-cell.is-picked .chat-me-st-pic { border-color: var(--win-ink); box-shadow: 0 0 0 1px var(--win-ink); }
 
-/* 钱包：上面余额卡（右上角「改余额」，底下本月收入、支出），下面按月份排的账单。退回的金额画删除线 */
-.chat-me-wallet { display: flex; flex-direction: column; gap: 8px; }
+/* 钱包：上面余额卡（底下本月收入、支出和转入／提现），中间一排卡（点一张看详情），下面按月份排的账单。退回的金额画删除线 */
+.chat-me-wallet { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .chat-me-wallet-card { position: relative; padding: 12px 12px 10px; border: 1px solid var(--win-line); border-radius: 4px; background: linear-gradient(180deg, var(--color-surface), var(--win-bar)); box-shadow: var(--effect-raised); }
 .chat-me-wallet-card > small { display: block; font-size: 10.5px; letter-spacing: .5px; color: var(--color-muted); }
 .chat-me-wallet-card > b { display: flex; align-items: baseline; gap: 3px; margin-top: 4px; color: var(--color-text); font: 700 26px "Courier New", ui-monospace, monospace; letter-spacing: .5px; }
 .chat-me-wallet-card > b i { font-size: 14px; font-style: normal; }
-#chatListView .chat-me-page .chat-me-wallet-card .chat-me-st-btn { position: absolute; top: 8px; right: 8px; height: 22px; padding: 0 8px; font-size: 10.5px; }
-.chat-me-wallet-sum { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--win-line); font-size: 10.5px; color: var(--color-muted); }
+.chat-me-wallet-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--win-line); font-size: 10.5px; color: var(--color-muted); }
 .chat-me-wallet-sum em { margin-left: 3px; font-style: normal; font-weight: 600; color: var(--color-text); }
+/* 转入、提现、还款这些小按钮排一排；余额卡里的靠右 */
+.chat-me-wallet-ops { display: flex; flex-wrap: wrap; gap: 6px; }
+.chat-me-wallet-sum .chat-me-wallet-ops { margin-left: auto; }
+#chatListView .chat-me-page .chat-me-wallet-ops .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
+/* 卡：一排可以左右滑，卡面不写钱，只有银行、卡种、像素芯片、卡号后四位、持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
+.chat-me-cards-row { display: flex; gap: 8px; width: 0; min-width: 100%; overflow-x: auto; padding: 2px 2px 6px; box-sizing: border-box; scrollbar-width: none; }
+.chat-me-cards-row::-webkit-scrollbar { display: none; }
+.chat-me-card {
+  flex: none; position: relative; display: flex; flex-direction: column; width: 168px; height: 102px; box-sizing: border-box; padding: 9px 10px; border: 1px solid var(--win-line); border-radius: 6px;
+  background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--theme-color) 80%, var(--color-surface))); box-shadow: var(--effect-raised), 2px 2px 0 var(--effect-drop-color);
+  color: var(--color-text); font: inherit; text-align: left; cursor: pointer;
+}
+.chat-me-card.is-credit { background: linear-gradient(135deg, color-mix(in srgb, var(--color-muted) 55%, var(--theme-color)), color-mix(in srgb, var(--color-muted) 30%, var(--theme-color))); color: var(--color-surface); }
+.chat-me-card.is-family { border-style: dashed; background: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--theme-color) 60%, transparent) 6px 7px), linear-gradient(135deg, var(--color-surface), var(--win-bar)); }
+.chat-me-card.is-active { outline: 1.5px solid var(--color-muted); outline-offset: 2px; }
+.chat-me-card-top { display: flex; justify-content: space-between; gap: 6px; }
+.chat-me-card-top b { min-width: 0; font-size: 11.5px; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-me-card-top em { flex: none; font-size: 9.5px; font-style: normal; opacity: .75; }
+.chat-me-card-chip { display: block; width: 22px; height: 16px; margin: 8px 0 5px; box-sizing: border-box; border: 1px solid currentColor; border-radius: 2px; opacity: .7;
+  background: linear-gradient(90deg, transparent 45%, currentColor 45% 55%, transparent 55%), linear-gradient(0deg, transparent 45%, currentColor 45% 55%, transparent 55%); }
+.chat-me-card-no { font: 600 11px "Courier New", ui-monospace, monospace; letter-spacing: 1px; }
+.chat-me-card-bottom { margin-top: auto; font-size: 10.5px; }
+.chat-me-card-bottom small { display: block; font-size: 7.5px; letter-spacing: 1px; opacity: .7; }
+/* 卡的详情：钱都写在这里 */
+.chat-me-card-detail { display: flex; flex-direction: column; gap: 3px; padding: 10px; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); }
+.chat-me-card-detail > small { font-size: 10px; color: var(--color-muted); }
+.chat-me-card-detail > b { margin: 1px 0 4px; font: 700 18px "Courier New", ui-monospace, monospace; color: var(--color-text); }
+.chat-me-card-detail .chat-me-wallet-ops { margin-top: 6px; }
+.chat-me-card-bar { display: block; height: 5px; margin-bottom: 4px; border-radius: 3px; background: color-mix(in srgb, var(--color-muted) 20%, var(--color-surface)); overflow: hidden; }
+.chat-me-card-bar i { display: block; height: 100%; background: var(--color-muted); }
+.chat-me-card-kv { display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px dotted var(--win-line); font-size: 10.5px; color: var(--color-muted); }
+.chat-me-card-kv span:last-child { color: var(--color-text); }
+.chat-me-card-kv .is-warn { color: var(--color-danger); }
+/* 转入、提现小窗里选卡：一行一张，选中的凹进去 */
+.chat-me-card-pick { display: flex; flex-direction: column; gap: 5px; }
+.chat-me-card-pick button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 0 9px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.chat-me-card-pick button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-me-card-pick small { flex: none; font-size: 10px; color: var(--color-muted); }
 .chat-me-wallet-head { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; font-size: 13px; color: var(--color-text); }
 /* 全部／收入／支出：一排小分页，按下去的那个凹进去 */
 .chat-me-wallet-filter { display: flex; }
