@@ -43,7 +43,7 @@
 
 /* 点卡片看的窗口：图示、谁给谁、金额（没拆的红包写留言）、状态 */
 .chat-pay-detail { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 12px; color: var(--color-text); }
-.chat-pay-detail-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--spc-line); border-radius: 6px; background: color-mix(in srgb, var(--color-muted) 12%, var(--theme-color)); color: var(--spc-title); }
+.chat-pay-detail-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--spc-line); border-radius: 6px; background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--color-text); }
 .chat-pay-detail-icon svg { width: 34px; height: 34px; }
 .chat-pay-detail b { font: 700 24px "Courier New", ui-monospace, monospace; color: var(--spc-title); }
 .chat-pay-detail b.is-note { font-size: 16px; font-weight: 600; font-family: inherit; }
