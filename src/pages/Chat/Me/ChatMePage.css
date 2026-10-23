@@ -139,7 +139,7 @@
 .chat-me-wallet-ops { display: flex; flex-wrap: wrap; gap: 6px; }
 .chat-me-wallet-sum .chat-me-wallet-ops { margin-left: auto; }
 #chatListView .chat-me-page .chat-me-wallet-ops .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
-/* 卡：一排可以左右滑，卡面不写钱：上面银行、卡种，左边中间像素芯片，左下完整卡号，右下持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
+/* 卡：一排可以左右滑，卡面不写钱：上面银行、卡种，左边中间像素芯片，左下卡号（前三组遮住），右下持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
 .chat-me-cards-row { display: flex; gap: 10px; width: 0; min-width: 100%; overflow-x: auto; padding: 5px 5px 8px; box-sizing: border-box; scrollbar-width: none; }
 .chat-me-cards-row::-webkit-scrollbar { display: none; }
 .chat-me-card {

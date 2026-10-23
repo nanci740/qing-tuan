@@ -89,13 +89,6 @@ export function yuan(amount: number) {
 export function cardLabel(card: WalletCard) {
   return card.kind === 'family' ? `${card.owner || '对方'}的亲属卡` : `${card.bank} ${card.kind === 'credit' ? '信用卡' : '储蓄卡'} ${card.last4}`;
 }
-/** 完整卡号（每四位空一格）：只记了后四位，前面 12 位照卡的编号算出来，同一张卡每次都一样，开头是 62。 */
-export function cardNumber(card: WalletCard) {
-  let hash = 2166136261, digits = '62';
-  for (const char of card.id) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0;
-  while (digits.length < 12) { hash = Math.imul(hash ^ digits.length, 16777619) >>> 0; digits += String(hash % 10); }
-  return (digits + card.last4).replace(/(\d{4})(?=\d)/g, '$1 ');
-}
 /** 这张卡现在还能花多少：储蓄卡是卡里的钱，信用卡、亲属卡是额度减掉用了的（亲属卡换了月份就从头算）。 */
 export function cardAvailable(card: WalletCard) {
   if (card.kind === 'debit') return card.balance;
