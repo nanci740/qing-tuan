@@ -10,7 +10,9 @@ import {useSettingsNavigation} from '../providers/SettingsNavigationProvider';
 import type {ChatNavigationServices,ChatNavigationApi} from '../providers/ChatNavigationProvider';
 import type {ChatIdentityApi} from '../providers/ChatIdentityProvider';
 import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsProvider';
-import type {MessageLocation,MessageNodesApi,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
+import {sendPay} from '../utils/walletStorage';
+import {payFromData,payLabel} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
 import type {ChatComposerApi,ChatComposerServices} from '../types/chatComposer';
@@ -42,6 +44,8 @@ interface ChatPublicApi {
  /** 你发一张定位卡片（地点是写出来的，不是真的定位）。 */
  smallphoneSendChatLocation(location:MessageLocation):void;
  smallphoneSendChatSticker(sticker:MessageSticker):void;
+ /** 你发转账或红包：先从钱包扣钱，扣不了（余额不够）就丢错，卡片不发。 */
+ smallphoneSendChatPay(pay:Omit<MessagePay,'id'>):void;
  /** 你生图的补充描写，交给回复引擎用跟他回话一样的底子来写。 */
  smallphoneWritePhotoPrompt(keywords:string,includeMe:boolean):Promise<string>;
  smallphoneApi?:ApiService;
@@ -338,9 +342,9 @@ function initChatApplication(){
     }
     bridge.smallphoneSendChatPhoto = sendPhoto;
     // 你发定位、表情：跟发文字一样进聊天、等家机回。
-    function sendCard(location:MessageLocation|null, sticker:MessageSticker|null) {
+    function sendCard(location:MessageLocation|null, sticker:MessageSticker|null, pay:MessagePay|null=null) {
         if (!messageList) return;
-        messageNodes.appendUser('', null, messageOperations.quote(), null, location, sticker);
+        messageNodes.appendUser('', null, messageOperations.quote(), null, location, sticker, pay);
         triggerChatFeedback('send');
         refreshChatBubbleGroups(messageList);
         syncChatReadReceipts(messageList);
@@ -351,6 +355,12 @@ function initChatApplication(){
     }
     bridge.smallphoneSendChatLocation = location => { if (location.place.trim()) sendCard(location, null); };
     bridge.smallphoneSendChatSticker = sticker => { if (sticker.tag.trim() && sticker.image) sendCard(null, sticker); };
+    bridge.smallphoneSendChatPay = draft => {
+        if (!messageList) throw Error('先打开一个聊天');
+        const chatKey = getCurrentChatPreferenceKey(), pay:MessagePay = { ...draft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) };
+        sendPay(pay, chatKey, getCharacterLook(chatKey).name || getCurrentChatRoomName());
+        sendCard(null, null, pay);
+    };
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
 
     function showChatNotice(message:string) {
@@ -414,6 +424,7 @@ function initChatApplication(){
         if (row.dataset.photoCaption) return '[照片] ' + row.dataset.photoCaption.trim();
         if (row.dataset.locationPlace) return row.dataset.chatAiContent || '[位置] ' + row.dataset.locationPlace;
         if (row.dataset.stickerTag) return '[表情] ' + row.dataset.stickerTag;
+        if (row.dataset.payId) return payLabel(payFromData(row.dataset));
         const bubble = row.querySelector('.chat-bubble');
         if (!bubble) return '';
         const clone = bubble.cloneNode(true) as HTMLElement;
@@ -440,6 +451,7 @@ function initChatApplication(){
     function getForwardItemText(row:HTMLElement|null) {
         if (row?.dataset?.photoCaption) return '[照片] ' + row.dataset.photoCaption;
         if (row?.dataset?.stickerTag) return '[表情] ' + row.dataset.stickerTag;
+        if (row?.dataset?.payId) return getMessageText(row);
         const length = row?.querySelector('.chat-voice-length')?.textContent?.trim();
         if (length && row?.querySelector('.chat-voice-control, .chat-voice-audio')) return `[语音] ${length}`;
         if (length && row?.dataset?.voiceTranscript) return `[语音] ${length}`;
@@ -631,6 +643,8 @@ initChatApplication();
         if (lastBubble.querySelector('.chat-photo')) return '[照片]';
         if (lastBubble.querySelector('.chat-location')) return '[位置]';
         if (lastBubble.querySelector('.chat-sticker')) return '[表情]';
+        if (lastBubble.querySelector('.chat-pay.is-packet')) return '[红包]';
+        if (lastBubble.querySelector('.chat-pay')) return '[转账]';
         // 语音消息：显示「[语音] 4″」，不要只剩秒数
         if (lastBubble.querySelector('.chat-voice-control')) {
             const seconds = lastBubble.querySelector('.chat-voice-length')?.textContent?.trim() || '';

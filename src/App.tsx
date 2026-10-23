@@ -30,6 +30,7 @@ import { ChatPhotoSend } from './components/shared/ChatPhotoSend';
 import { ChatWorldPanel } from './components/shared/ChatWorldPanel';
 import { ChatLocationSend } from './components/shared/ChatLocationSend';
 import { ChatStickerPicker } from './components/shared/ChatStickerPicker';
+import { ChatPay } from './components/shared/ChatPay';
 import { ChatMePage } from './pages/Chat/Me/ChatMePage';
 import { CharacterArchive } from './pages/Chat/Characters/CharacterArchive';
 import { ChatMyPresenceMenu } from './pages/Chat/Room/ChatMyPresenceMenu';
@@ -154,7 +155,7 @@ export function App() {
       {"\n\n"}
       
       {"\n\n"}
-      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatWorldPanel /><ChatLocationSend /><ChatStickerPicker /><ChatMePage /><ChatMyPresenceMenu /><ChatControllers />
+      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatWorldPanel /><ChatLocationSend /><ChatStickerPicker /><ChatPay /><ChatMePage /><ChatMyPresenceMenu /><ChatControllers />
       {"\n\n\n"}
     </BootProvider></ChatSidebarProvider></WorldProvider></VoiceImageProvider></AppearanceProvider></MusicProvider></HomeTextsProvider></McpProvider></ApiProvider></ChoiceProvider></ChatPinsProvider></ChatIdentityProvider></ChatRoomToolsProvider></ChatReplyEngineProvider></ChatVoiceProvider></ChatMessagesProvider></ChatReplyTriggersProvider></ChatComposerProvider></ChatSelectionProvider></ChatMessageOperationsProvider></ChatPreferencesProvider></ChatNavigationProvider></SettingsNavigationProvider></NativeRefsProvider></ChatMemoryProvider></ProfileAvatarProvider>
   );

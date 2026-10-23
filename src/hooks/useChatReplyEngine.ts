@@ -1,14 +1,15 @@
 import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import type {MessageLocation,MessageNodesApi,MessagePhoto,MessageSticker,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,PeerMessageDetail} from '../types/chatMessages';
 import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
-import {locationText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {locationText,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -27,6 +28,16 @@ function loosePhotoCaption(text:string):string|null {
 function looseStickerTag(text:string):string|null {
     const match = /^\s*[\[【（(]\s*(?:表情包?|贴图)\s*(?:[:：]\s*([^\]】）)]*))?[\]】）)]\s*([\s\S]*)$/.exec(text);
     return match ? (match[1] || match[2] || '').trim() : null;
+}
+/** 他学着上下文打了「[转账] ¥200」「[红包] ¥66，留言「…」」：当成真的转账、红包。
+    后面带着状态括号（「（对方还没收）」这种）是在照抄旧卡片，回传 false，那一句不发。 */
+function loosePay(text:string):Omit<MessagePay,'id'>|false|null {
+    const match = /^\s*[\[【]\s*(转账|红包)\s*[\]】]\s*([\s\S]*)$/.exec(text);
+    if (!match) return null;
+    if (/[（(][^）)]*(收|拆|退)[^）)]*[）)]/.test(match[2])) return false;
+    const amount = /[¥￥]?\s*(\d[\d,]*(?:\.\d{1,2})?)\s*元?/.exec(match[2]), note = /留言\s*[「“"]([^」”"]*)[」”"]/.exec(match[2]);
+    const cents = amount ? Math.round(Number(amount[1].replace(/,/g, '')) * 100) : 0;
+    return cents > 0 ? { kind: match[1] === '红包' ? 'packet' : 'transfer', amount: cents, note: (note?.[1] || '').trim().slice(0, 40) } : false;
 }
 /** 文字照片在 photos 里的记号：表示「是照片，但画面描述还没写」。 */
 const LOOSE_PHOTO = '\u0000loose-photo';
@@ -119,6 +130,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             }
             // 旧消息不一定有专用数据字段，优先提取气泡中的正文元素。
             let content = row.dataset.chatAiContent || '';
+            // 转账、红包：照钱包现在的状态写（收下、退回、过期），不用存在记录里的旧字
+            if (row.dataset.payId) content = payText(payFromData(row.dataset), row.classList.contains('is-user'));
             if (!content) {
                 const bubble = row.querySelector('.chat-bubble');
                 if (!bubble || bubble.classList.contains('chat-bubble--voice')) continue;
@@ -438,9 +451,13 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const found = tag ? findAiSticker(tag) : null;
                 return found ? { tag: found.tag, image: found.image } : null;
             });
-            const dropped = parsedReply.segments.map((text, index) => !replyStickers[index] && (!!(parsedReply.stickers || [])[index] && text === '表情' || looseStickerTag(text) !== null));
-            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index]);
-            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index] && !replyStickers[index] && !dropped[index]);
+            // 转账、红包：transfer、packet 栏位，或他打的「[转账] ¥200」
+            const loosePays = parsedReply.segments.map(text => loosePay(text));
+            const replyPays:(Omit<MessagePay,'id'>|null)[] = parsedReply.segments.map((_, index) => replyPhotos[index] || replyLocations[index] || replyStickers[index] ? null
+                : (parsedReply.pays || [])[index] || loosePays[index] || null);
+            const dropped = parsedReply.segments.map((text, index) => !replyStickers[index] && (!!(parsedReply.stickers || [])[index] && text === '表情' || looseStickerTag(text) !== null) || !replyPays[index] && loosePays[index] === false);
+            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index] || replyPays[index]);
+            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index] && !replyStickers[index] && !replyPays[index] && !dropped[index]);
             const segments = requestPreferences.segmented
                 ? parsedReply.segments.map((text, index) => dropped[index] ? '' : text)
                 : [...(textOnly.length ? [textOnly.join('\n')] : []), ...cardIndexes.map(index => parsedReply.segments[index])];
@@ -457,6 +474,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const segmentStickers:(MessageSticker|null)[] = requestPreferences.segmented
                 ? replyStickers
                 : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyStickers[index] || null)];
+            const segmentPays:(Omit<MessagePay,'id'>|null)[] = requestPreferences.segmented
+                ? replyPays
+                : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPays[index] || null)];
+            // 他对你还没收的转账、红包表态（收下、退回）：先照办，卡片会跟着换状态
+            if (parsedReply.receive) settlePendingFromMe(requestChatKey, parsedReply.receive);
             // 每则自己的引用；没分段时整则用第一个引用
             const segmentQuotes = requestPreferences.segmented
                 ? (parsedReply.quotes || [])
@@ -470,13 +492,18 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], ...(segmentScenes[index] ? { scene: segmentScenes[index] } : {}), state: aiPhotoDraw ? 'pending' : 'text' } : null;
                 const location = photo ? null : segmentLocations[index] || null;
                 const sticker = photo || location ? null : segmentStickers[index] || null;
+                const payDraft = photo || location || sticker ? null : segmentPays[index] || null;
+                const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) } : null;
                 // 找不到表情的那一则（只剩「表情」两个字）不发
-                if (!photo && !location && !sticker && !segments[index]) continue;
-                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : segments[index];
+                if (!photo && !location && !sticker && !pay && !segments[index]) continue;
+                // 他发的转账、红包先记进钱包（还没收），卡片才看得到状态
+                if (pay) receivePay(pay, requestChatKey, characterName);
+                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : segments[index];
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
-                const willRecall = !!segmentRecalls[index];
+                // 转账、红包不撤回
+                const willRecall = !!segmentRecalls[index] && !pay;
                 if (willRecall && !isActiveReplyChat(requestChatKey)) {
                     services.current?.background({ chatKey: requestChatKey, reply, recalled: true, recallNotice: recallNoticeText, sentAt: Date.now() });
                     if (index < segments.length - 1) await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
@@ -485,12 +512,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && !willRecall && !photo && !location && !sticker) {
+                    if (segmentVoices[index] && !willRecall && !photo && !location && !sticker && !pay) {
                         try { voiceAudio = await voice.prepare(reply); } catch (error) { voiceAudio = null; }
                     }
-                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : reply);
+                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker, pay,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -508,7 +535,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index] && !photo && !location && !sticker) {
+                    if (segmentVoices[index] && !photo && !location && !sticker && !pay) {
                         try {
                             const voiceAudio = await voice.prepare(reply);
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
@@ -526,6 +553,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         photo,
                         location,
                         sticker,
+                        pay,
                         quote,
                         quoteTargetId,
                         sentAt: Date.now(),
@@ -542,7 +570,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (!willRecall) services.current?.notify({
                     chatKey: requestChatKey,
                     title: characterName,
-                    body: notifyVoiceLength ? '[语音] ' + notifyVoiceLength : (reply || '收到一条新回复'),
+                    body: notifyVoiceLength ? '[语音] ' + notifyVoiceLength : pay ? payLabel(pay) : (reply || '收到一条新回复'),
                     avatar: characterAvatar,
                     unreadCount: 1,
                     viewed: segmentWasViewed

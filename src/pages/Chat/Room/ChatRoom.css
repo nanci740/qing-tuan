@@ -980,7 +980,7 @@
 
         #chatAppPage#chatAppPage #chatRoomView .chat-composer {
             display: grid !important;
-            grid-template-columns: auto auto auto 1fr auto;
+            grid-template-columns: auto auto auto auto auto 1fr auto;
             align-items: center;
             gap: 6px 4px !important;
             padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
@@ -2098,11 +2098,11 @@
 /* @qingtuan-order:004305 */
 
 
-        /* 输入区上面那排：麦克风 + 「准备发送消息」 */
+        /* 输入区上面那排：麦克风、图片、拍照、表情、转账 */
 
 /* @qingtuan-order:004306 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-composer { grid-template-areas: "mic img cam hint hint" "field field field field field" ". . . . send" !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer { grid-template-areas: "mic img cam stk pay hint hint" "field field field field field field field" ". . . . . . send" !important; }
 
 /* @qingtuan-order:004307 */
 
@@ -2111,10 +2111,12 @@
 /* @qingtuan-order:004308 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action[data-chat-action="camera"] { grid-area: cam; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action[data-chat-action="sticker"] { grid-area: stk; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-composer .chat-quick-action[data-chat-action="pay"] { grid-area: pay; }
 
 /* @qingtuan-order:004309 */
 
-        /* 搬到输入区的图片、拍照：跟语音一样的小白钮，只有图示 */
+        /* 搬到输入区的图片、拍照、表情、转账：跟语音一样的小白钮，只有图示 */
 
 /* @qingtuan-order:004310 */
 

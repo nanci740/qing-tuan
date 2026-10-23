@@ -1,0 +1,40 @@
+/* 转账、红包卡片：没有气泡底色，卡片自己一个框。上面图示、金额（红包写「红包」）和留言，底下一条写种类和状态；退回、过期的整张变淡。
+   聊天室把气泡里的 div 都设成 inline !important，这里用更具体的选择器改回来。 */
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape,
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape-base { display: none !important; }
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-pay { display: block !important; }
+#chatAppPage#chatAppPage .chat-pay { width: 196px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); cursor: pointer; text-align: left; }
+#chatAppPage#chatAppPage .chat-pay-top { display: flex !important; align-items: center; gap: 9px; padding: 10px 11px; background: linear-gradient(180deg, var(--cr-sunken, var(--win-bar)), var(--color-surface)); color: var(--cr-title, var(--spc-title)); }
+#chatAppPage#chatAppPage .chat-pay-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; box-sizing: border-box; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); }
+#chatAppPage#chatAppPage .chat-pay-icon svg { width: 18px; height: 18px; display: block; }
+#chatAppPage#chatAppPage .chat-pay-info { min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+#chatAppPage#chatAppPage .chat-pay-info b { font-size: 15px; font-family: "Courier New", ui-monospace, monospace; }
+#chatAppPage#chatAppPage .chat-pay.is-packet .chat-pay-info b { font-family: inherit; }
+#chatAppPage#chatAppPage .chat-pay-info small { font-size: 10.5px; color: var(--color-text); opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#chatAppPage#chatAppPage .chat-pay-foot { display: flex !important; justify-content: space-between; padding: 4px 11px; border-top: 1px solid var(--cr-line, var(--spc-line)); font-size: 10px; color: var(--color-muted); }
+#chatAppPage#chatAppPage .chat-pay.is-returned .chat-pay-top { opacity: .55; }
+
+/* 发转账、红包的窗口：上面一排转账／红包（凸起和按下跟世界书小窗一样），金额大字，底下余额 */
+.chat-pay-tabs { display: flex; gap: 6px; padding: 10px 18px 0; }
+.chat-pay-tabs button {
+  min-width: 64px; height: 28px; padding: 0 12px; border: 1px solid var(--color-muted); border-radius: 3px; cursor: pointer;
+  background: var(--effect-face-white); box-shadow: var(--effect-raised), var(--effect-drop); color: var(--color-text); font: inherit; font-size: 12px; letter-spacing: .5px;
+}
+.chat-pay-tabs button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-pay-amount {
+  display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 10px; box-sizing: border-box; border: 1px solid var(--spc-line); border-radius: 3px;
+  background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--spc-title); font: 700 20px "Courier New", ui-monospace, monospace;
+}
+.chat-pay-amount input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; }
+.chat-pay-amount.is-short, .chat-pay-balance.is-short { border-color: #d77; color: #c55; }
+.chat-pay-send .chat-photo-viewer-prompt { min-height: 0; height: 30px; resize: none; }
+.chat-pay-balance { display: block; margin-top: 8px; font-size: 10.5px; color: var(--color-muted); }
+
+/* 点卡片看的窗口：图示、谁给谁、金额（没拆的红包写留言）、状态 */
+.chat-pay-detail { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 12px; color: var(--color-text); }
+.chat-pay-detail-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--spc-line); border-radius: 6px; background: var(--win-bar); color: var(--spc-title); }
+.chat-pay-detail-icon svg { width: 26px; height: 26px; }
+.chat-pay-detail b { font: 700 24px "Courier New", ui-monospace, monospace; color: var(--spc-title); }
+.chat-pay-detail b.is-note { font-size: 16px; font-weight: 600; font-family: inherit; }
+.chat-pay-detail small { font-size: 10.5px; color: var(--color-muted); }

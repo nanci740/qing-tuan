@@ -127,6 +127,30 @@
 /* 多选：选上的那张外面一圈深一点的框 */
 .chat-me-st-cell.is-picked .chat-me-st-pic { border-color: var(--win-ink); box-shadow: 0 0 0 1px var(--win-ink); }
 
+/* 钱包：上面余额卡（右上角「改余额」，底下本月收入、支出），下面按月份排的账单。退回的金额画删除线 */
+.chat-me-wallet { display: flex; flex-direction: column; gap: 8px; }
+.chat-me-wallet-card { position: relative; padding: 12px 12px 10px; border: 1px solid var(--win-line); border-radius: 4px; background: linear-gradient(180deg, var(--color-surface), var(--win-bar)); box-shadow: var(--effect-raised); }
+.chat-me-wallet-card > small { display: block; font-size: 10.5px; letter-spacing: .5px; color: var(--color-muted); }
+.chat-me-wallet-card > b { display: flex; align-items: baseline; gap: 3px; margin-top: 4px; color: var(--spc-title); font: 700 26px "Courier New", ui-monospace, monospace; letter-spacing: .5px; }
+.chat-me-wallet-card > b i { font-size: 14px; font-style: normal; }
+#chatListView .chat-me-page .chat-me-wallet-card .chat-me-st-btn { position: absolute; top: 8px; right: 8px; height: 22px; padding: 0 8px; font-size: 10.5px; }
+.chat-me-wallet-sum { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--win-line); font-size: 10.5px; color: var(--color-muted); }
+.chat-me-wallet-sum em { margin-left: 3px; font-style: normal; font-weight: 600; color: var(--color-text); }
+.chat-me-wallet-head { margin-top: 2px; font-size: 13px; color: var(--spc-title); }
+.chat-me-wallet-month { margin: 0 0 4px 2px; font-size: 10.5px; color: var(--color-muted); }
+.chat-me-wallet-list { display: flex; flex-direction: column; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); }
+.chat-me-wallet-row { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-bottom: 1px dotted var(--win-line); }
+.chat-me-wallet-row:last-child { border-bottom: 0; }
+.chat-me-wallet-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: var(--win-bar); color: var(--spc-title); }
+.chat-me-wallet-icon svg { width: 15px; height: 15px; }
+.chat-me-wallet-text { flex: 1; min-width: 0; }
+.chat-me-wallet-text :is(b, small) { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-me-wallet-text b { font-size: 12px; font-weight: 500; color: var(--color-text); }
+.chat-me-wallet-text small { font-size: 10px; color: var(--color-muted); }
+.chat-me-wallet-num { flex: none; text-align: right; color: var(--color-muted); font: 600 12.5px "Courier New", ui-monospace, monospace; }
+.chat-me-wallet-num.is-in { color: var(--spc-title); }
+.chat-me-wallet-num em { display: block; font-size: 9.5px; font-weight: 400; font-style: normal; color: var(--color-muted); }
+
 /* 表情的小窗：分组名字、改标签、加表情（上传图片 / 贴网址两个分页，跟世界书小窗一样凸起和按下） */
 .chat-me-st-check { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--spc-title); cursor: pointer; }
 .chat-me-st-check small { display: block; font-size: 10.5px; opacity: .65; }

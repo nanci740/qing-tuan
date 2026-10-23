@@ -302,6 +302,18 @@ function readReplyLocation(value: unknown): { place: string; address?: string; d
     if (!place) return null;
     return { place: place.slice(0, 60), ...(text('address') ? { address: text('address').slice(0, 80) } : {}), ...(text('distance') ? { distance: text('distance').slice(0, 20) } : {}) };
 }
+/** 回复里的 "transfer"、"packet"：{"amount":520,"note":"…"}，也可以只写金额。金额是元，记成分。 */
+function readReplyPay(value: unknown, kind: 'transfer' | 'packet'): { kind: 'transfer' | 'packet'; amount: number; note: string } | null {
+    if (value === undefined || value === null || value === false || value === '') return null;
+    const item = value && typeof value === 'object' ? value as Record<string, unknown> : { amount: value };
+    const amount = Math.round(Number(String(item.amount ?? item.money ?? '').replace(/[¥￥,，元\s]/g, '')) * 100);
+    if (!Number.isFinite(amount) || amount <= 0) return null;
+    return { kind, amount, note: String(item.note ?? item.message ?? item.text ?? '').trim().slice(0, 40) };
+}
+function readReceive(value: unknown): '' | 'accept' | 'return' {
+    const text = String(value ?? '').trim().toLowerCase();
+    return ['accept', 'receive', 'open', 'yes', 'true', '收下', '收', '拆开'].includes(text) ? 'accept' : ['return', 'refuse', 'reject', 'no', '退回', '退'].includes(text) ? 'return' : '';
+}
 export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = []): ChatSegmentedReply {
     const plain = String(raw || '').trim();
     const availableQuotes = Array.isArray(quoteChoices) ? quoteChoices as ChatQuoteChoice[] : [];
@@ -309,7 +321,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
     const envelope = parseChatAiJsonEnvelope(plain);
     const parsedObject = Array.isArray(envelope?.replies) ? envelope : (extractLooseChatAiReplies(plain) || envelope);
     // replies 每一则可以是字串，也可以是 {"text":"…","quote_id":"u3"}：每则各自引用（引用会挂在那一则上面）
-    const structuredItems = Array.isArray(parsedObject?.replies)
+    const structuredAll = Array.isArray(parsedObject?.replies)
         ? parsedObject.replies.map(item => {
             if (item && typeof item === 'object') {
                 return {
@@ -320,12 +332,17 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     photo: String(fields(item).photo ?? fields(item).image ?? '').trim(),
                     scene: String(fields(item).scene ?? fields(item).photo_desc ?? '').trim(),
                     sticker: String(fields(item).sticker ?? fields(item).emoji ?? '').trim(),
+                    pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet'),
+                    receive: readReceive(fields(item).receive),
                     location: readReplyLocation(fields(item).location)
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', location: null };
-        }).map(item => !item.text && (item.photo || item.location || item.sticker) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : '表情' } : item).filter(item => fields(item).text)
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null };
+        }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : '转账' } : item)
         : [];
+    // receive 可以写在最外层，也可以写在某一条里（那一条只有 receive 也算）
+    const receive = readReceive(parsedObject?.receive) || structuredAll.find(item => item.receive)?.receive || '';
+    const structuredItems = structuredAll.filter(item => fields(item).text);
     if (structuredItems.length) {
         // 旧格式：整包只有一个 quote_id → 挂在第一则
         const topId = typeof parsedObject?.quote_id === 'string' ? parsedObject?.quote_id.trim() : '';
@@ -343,6 +360,8 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             photos: structuredItems.map(item => item.photo),
             scenes: structuredItems.map(item => item.scene),
             stickers: structuredItems.map(item => item.sticker),
+            pays: structuredItems.map(item => item.pay),
+            receive,
             locations: structuredItems.map(item => item.location),
             quotes,
             quote: firstQuote?.quote || '',

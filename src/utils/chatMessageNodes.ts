@@ -1,7 +1,10 @@
 import { DEFAULT_PHOTO } from './defaultPhoto';
 import type { NativeAttribute } from '../types/dom';
-import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageLocation, MessageNode, MessagePhoto, MessageSticker, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
+import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageLocation, MessageNode, MessagePay, MessagePhoto, MessageSticker, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
 import { stickerImageUrl } from './stickerStorage';
+import { payRecord, yuan } from './walletStorage';
+import type { PayState } from './walletStorage';
+import { chatPixelIconPath } from '../components/shared/ChatPixelIcon';
 import { parseChatAiSegmentedReply } from './chatReplyParser';
 import { adoptInlinePhoto, chatPhotoUrl } from './chatPhotoStore';
 const HTML = 'http://www.w3.org/1999/xhtml';
@@ -153,9 +156,10 @@ export function messageText(row: MessageElement) {
   if (attr(row, 'data-photo-caption')) return '[照片] ' + attr(row, 'data-photo-caption').trim();
   if (attr(row, 'data-location-place')) return locationText(readLocation(row));
   if (attr(row, 'data-sticker-tag')) return stickerText(readSticker(row));
+  if (attr(row, 'data-pay-id')) return payLabel(readPay(row));
   if (attr(row, 'data-voice-transcript')) return attr(row, 'data-voice-transcript').trim();
   const bubble = findClass(row, 'chat-bubble'); if (!bubble) return '';
-  const ignored = ['chat-bubble-shape', 'chat-voice-control', 'chat-voice-text-result', 'chat-message-translation', 'chat-message-translation-card', 'chat-quoted-message', 'chat-bubble-sparkle', 'chat-photo', 'chat-location', 'chat-sticker'];
+  const ignored = ['chat-bubble-shape', 'chat-voice-control', 'chat-voice-text-result', 'chat-message-translation', 'chat-message-translation-card', 'chat-quoted-message', 'chat-bubble-sparkle', 'chat-photo', 'chat-location', 'chat-sticker', 'chat-pay'];
   const copy = structuredClone(bubble);
   copy.children = removeKeys(copy.children, new Set(elements(copy.children, n => ignored.some(c => hasClass(n, c))).map(n => n.key)));
   return textOf(copy).replace(/\s+/g, ' ').trim();
@@ -218,7 +222,7 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
   for (const row of elements(nodes, n => hasClass(n, 'chat-message-row'))) {
     const bubble = findClass(row, 'chat-bubble');
     if (hasClass(row, 'is-chat') && bubble) for (const caption of bubble.children) {
-      if (caption.kind !== 'element' || caption.tag !== 'div' || ['chat-quoted-message','chat-voice-control','chat-voice-text-result','chat-bubble-shape','chat-bubble-shape-base','chat-photo','chat-location','chat-sticker'].some(c => hasClass(caption, c)) || attr(caption,'data-md') === '1' || caption.children.some(n => n.kind === 'element')) continue;
+      if (caption.kind !== 'element' || caption.tag !== 'div' || ['chat-quoted-message','chat-voice-control','chat-voice-text-result','chat-bubble-shape','chat-bubble-shape-base','chat-photo','chat-location','chat-sticker','chat-pay'].some(c => hasClass(caption, c)) || attr(caption,'data-md') === '1' || caption.children.some(n => n.kind === 'element')) continue;
       const raw = attr(row, 'data-chat-ai-content') || textOf(caption);
       if (needsMessageMarkdown(raw)) { caption.children = parseMessageHtml(formatMessageMarkdown(raw), factory); setAttr(caption, 'data-md', '1'); }
     }
@@ -231,6 +235,9 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
     // 表情按图片编号换成这次开机的网址（上传的表情是 blob: 短网址，不把整张图写进聊天记录）
     const stickerImage = attr(row, 'data-sticker-image'), stickerImg = stickerImage ? findClass(row, 'chat-sticker-img') : undefined;
     if (stickerImg) { const url = stickerImageUrl(stickerImage); if (url && attr(stickerImg, 'src') !== url) setAttr(stickerImg, 'src', url); }
+    // 转账、红包照钱包里的状态显示（收下、退回、过期）；状态没变就不动
+    const payCard = attr(row, 'data-pay-id') ? findClass(row, 'chat-pay') : undefined;
+    if (payCard && attr(payCard, 'data-pay-state') !== payState(attr(row, 'data-pay-id'))) setPay(row, readPay(row), factory);
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {
       if (!avatar) { avatar = factory.element('img', {class:'chat-message-mini-avatar',alt:''}); if (hasClass(row,'is-chat')) row.children.unshift(avatar); else row.children.push(avatar); }
@@ -307,6 +314,57 @@ export function setSticker(row: MessageElement, sticker: MessageSticker, factory
   setAttr(row, 'data-sticker-tag', sticker.tag); setAttr(row, 'data-sticker-image', sticker.image);
   setAttr(row, 'data-chat-ai-content', stickerText(sticker));
 }
+/** 转账、红包现在的状态；钱包里找不到（例如钱包清掉了）就当已经收了。 */
+export function payState(id: string): PayState { return payRecord(id)?.state || 'done'; }
+export function readPay(row: MessageElement): MessagePay {
+  return { id: attr(row, 'data-pay-id'), kind: attr(row, 'data-pay-kind') === 'packet' ? 'packet' : 'transfer', amount: Number(attr(row, 'data-pay-amount')) || 0, note: attr(row, 'data-pay-note') };
+}
+/** 页面上的那一行（dataset）读出转账、红包。 */
+export function payFromData(data: DOMStringMap): MessagePay {
+  return { id: data.payId || '', kind: data.payKind === 'packet' ? 'packet' : 'transfer', amount: Number(data.payAmount) || 0, note: data.payNote || '' };
+}
+/** 预览、引用、转发用的短文字：[转账] ¥520.00、[红包] 恭喜发财 */
+export function payLabel(pay: MessagePay) { return pay.kind === 'packet' ? '[红包] ' + (pay.note || '恭喜发财') : '[转账] ¥' + yuan(pay.amount); }
+/** 送给模型的文字，站在他的角度写：mine 表示是你（对方）发的。红包没拆之前他看不到金额。 */
+export function payText(pay: MessagePay, mine: boolean) {
+  const record = payRecord(pay.id), state = record?.state || 'done', expired = !!record?.expired;
+  const note = pay.note ? `，留言「${pay.note}」` : '';
+  const who = mine ? '你' : '对方', how = pay.kind === 'packet' ? '拆' : '收';
+  const status = state === 'pending' ? `${who}还没${how}` : state === 'done' ? `${who}${pay.kind === 'packet' ? '拆开了' : '收下了'}` : expired ? `过了一天没${how}，退回了` : `${who}退回了`;
+  if (pay.kind === 'packet') return `[红包] ${mine && state === 'pending' ? '' : '¥' + yuan(pay.amount)}${note}（${status}）`.replace('[红包] ，', '[红包] ');
+  return `[转账] ¥${yuan(pay.amount)}${note}（${status}）`;
+}
+/** 卡片底下的状态字：mine 表示是你发的那张。 */
+function payStatus(kind: MessagePay['kind'], state: PayState, expired: boolean, mine: boolean) {
+  if (state === 'pending') return mine ? (kind === 'packet' ? '等对方拆开' : '等对方收款') : (kind === 'packet' ? '点一下拆开' : '点一下收款');
+  if (state === 'done') return mine ? (kind === 'packet' ? '对方已领取' : '对方已收款') : (kind === 'packet' ? '已拆开' : '已收款');
+  return expired ? (mine ? '已过期退回' : '已过期') : '已退回';
+}
+/** 转账、红包卡片：左边小图示，中间金额（红包写「红包」）和留言，底下一条写种类和状态。退回、过期的整张变淡。 */
+export function payNode(pay: MessagePay, mine: boolean, factory: MessageFactory) {
+  const record = payRecord(pay.id), state = record?.state || 'done';
+  const icon = chatPixelIconPath(pay.kind === 'packet' ? 'packet' : 'yuan');
+  return factory.element('div', { class: `chat-pay is-${pay.kind} is-${state}`, role: 'button', tabindex: '0', 'aria-label': pay.kind === 'packet' ? '红包' : '转账', 'data-pay-state': state }, [
+    factory.element('div', { class: 'chat-pay-top' }, [
+      factory.element('span', { class: 'chat-pay-icon', 'aria-hidden': 'true' }, [factory.element('svg', { viewBox: '-1 -1 26 26', 'shape-rendering': 'crispEdges' }, [factory.element('path', { d: icon.path, transform: icon.offset, fill: 'currentColor', 'fill-rule': 'evenodd' }, [], SVG)], SVG)]),
+      factory.element('span', { class: 'chat-pay-info' }, [
+        factory.element('b', {}, [factory.text(pay.kind === 'packet' ? '红包' : '¥' + yuan(pay.amount))]),
+        factory.element('small', {}, [factory.text(pay.note || (pay.kind === 'packet' ? '恭喜发财，大吉大利' : mine ? '转账给对方' : '转账给你'))])])]),
+    factory.element('div', { class: 'chat-pay-foot' }, [
+      factory.element('span', {}, [factory.text(pay.kind === 'packet' ? '红包' : '转账')]),
+      factory.element('span', {}, [factory.text(payStatus(pay.kind, state, !!record?.expired, mine))])])]);
+}
+/** 把转账、红包卡片放进这一行：取代原本的文字（状态变了也是重放一次）。 */
+export function setPay(row: MessageElement, pay: MessagePay, factory: MessageFactory) {
+  const bubble = findClass(row, 'chat-bubble'); if (!bubble) return;
+  const old = bubble.children.find(n => n.kind === 'element' && (hasClass(n, 'chat-pay') || n.tag === 'div' && !['chat-quoted-message','chat-bubble-shape','chat-bubble-shape-base'].some(c => hasClass(n, c))));
+  const mine = hasClass(row, 'is-user'), node = payNode(pay, mine, factory);
+  if (old) bubble.children = bubble.children.map(n => n.key === old.key ? node : n); else bubble.children.push(node);
+  toggleClass(bubble, 'chat-bubble--pay', true);
+  setAttr(row, 'data-pay-id', pay.id); setAttr(row, 'data-pay-kind', pay.kind); setAttr(row, 'data-pay-amount', String(pay.amount));
+  if (pay.note) setAttr(row, 'data-pay-note', pay.note); else removeAttr(row, 'data-pay-note');
+  setAttr(row, 'data-chat-ai-content', payText(pay, mine));
+}
 /** 定位卡片在聊天记录、预览、送给模型时的文字：[位置] 地点（地址）· 距你约 3 公里 */
 export function locationText(location: MessageLocation) {
   return '[位置] ' + location.place + (location.address ? `（${location.address}）` : '') + (location.distance ? ` · 距你约 ${location.distance}` : '');
@@ -346,7 +404,7 @@ export function peerNode(text: string, avatar: string, factory: MessageFactory) 
     factory.element('img',{class:'chat-message-mini-avatar',alt:'',src:avatar}),
     factory.element('div',{class:'chat-bubble-wrap'},[factory.element('div',{class:'chat-bubble'},[caption]),factory.element('div',{class:'chat-bubble-time'})])]);
 }
-export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory, photo?: MessagePhoto | null, location?: MessageLocation | null, sticker?: MessageSticker | null) {
+export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory, photo?: MessagePhoto | null, location?: MessageLocation | null, sticker?: MessageSticker | null, pay?: MessagePay | null) {
   const row=factory.element('div',{class:'chat-message-row is-user','data-sent-at':String(Date.now()),'data-message-id':newMessageId()});
   if(text)setAttr(row,'data-chat-ai-content',text);
   const bubble=factory.element('div',{class:voice?'chat-bubble chat-bubble--voice':'chat-bubble'});
@@ -356,6 +414,7 @@ export function userNode(text: string, voice: MessageVoice | null, quote: {text:
   if(photo)setPhoto(row,photo,factory);
   if(location)setLocation(row,location,factory);
   if(sticker)setSticker(row,sticker,factory);
+  if(pay)setPay(row,pay,factory);
   return row;
 }
 export function setResult(row: MessageElement, className: string, text: string, factory: MessageFactory) {
@@ -398,11 +457,12 @@ export function backgroundNode(detail: PeerMessageDetail, factory: MessageFactor
   const row=factory.element('div',{class:'chat-message-row is-chat','data-ai-pending':'false','data-chat-ai-content':reply,'data-sent-at':String(stamp),'data-message-id':'msg_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)});
   const bubble=factory.element('div',{class:detail.voice?.dataUrl?'chat-bubble chat-bubble--voice':'chat-bubble'});
   if(detail.quote)bubble.children.push(quoteNode(String(detail.quote),String(detail.quoteTargetId||''),factory));
-  if(detail.photo||detail.location||detail.sticker){/* 照片、定位、表情等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));
+  if(detail.photo||detail.location||detail.sticker||detail.pay){/* 照片、定位、表情、转账等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));
   row.children=[factory.element('img',{class:'chat-message-mini-avatar',alt:''}),factory.element('div',{class:'chat-bubble-wrap'},[bubble,factory.element('div',{class:'chat-bubble-time'},[factory.text(new Date(stamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}))])])];
   if(detail.photo)setPhoto(row,detail.photo,factory);
   if(detail.location)setLocation(row,detail.location,factory);
   if(detail.sticker)setSticker(row,detail.sticker,factory);
+  if(detail.pay)setPay(row,detail.pay,factory);
   if(detail.translation){setTranslation(row,String(detail.translation),factory);setAttr(row,'data-simplified-translation',String(detail.translation));}return row;
 }
 function setResultInBubble(bubble:MessageElement,text:string,factory:MessageFactory){bubble.children.push(factory.element('div',{class:'chat-voice-text-result'},[factory.text(text)]));toggleClass(bubble,'has-message-result',true);}
