@@ -45,8 +45,8 @@ const icons = {
     "offset": "translate(0 -1)"
   },
   "smile": {
-    "path": "M8 0h8v2H8z M4 2h4v2H4z M16 2h4v2h-4z M2 4h2v4H2z M20 4h2v4h-2z M0 8h2v8H0z M22 8h2v8h-2z M6 8h2v2H6z M16 8h2v2h-2z M6 14h2v2H6z M16 14h2v2h-2z M8 16h8v2H8z M2 16h2v4H2z M20 16h2v4h-2z M4 20h4v2H4z M16 20h4v2h-4z M8 22h8v2H8z",
-    "offset": "translate(2 2) scale(0.8333)"
+    "path": "M8 2h8v2H8z M6 4h2v2H6z M16 4h2v2h-2z M4 6h2v2H4z M18 6h2v2h-2z M2 8h2v8H2z M20 8h2v8h-2z M8 8h2v2H8z M14 8h2v2h-2z M6 12h2v2H6z M16 12h2v2h-2z M8 14h8v2H8z M4 16h2v2H4z M18 16h2v2h-2z M6 18h2v2H6z M16 18h2v2h-2z M8 20h8v2H8z",
+    "offset": "translate(0 0)"
   },
   "camera": {
     "path": "M8 3h8v2h4v2h2v14H2V7h2V5h4z M8 5v2H4v12h16V7h-4V5z M10 9h4v2h2v4h-2v2h-4v-2H8v-4h2z M10 11v4h4v-4z M17 8h2v2h-2z",
