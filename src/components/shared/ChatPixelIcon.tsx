@@ -49,12 +49,20 @@ const icons = {
     "offset": "translate(0 0)"
   },
   "yuan": {
-    "path": "M4 2h2v2H4z M18 2h2v2h-2z M6 4h2v2H6z M16 4h2v2h-2z M8 6h2v2H8z M14 6h2v2h-2z M10 8h4v2h-4z M6 10h12v2H6z M10 12h4v2h-4z M6 14h12v2H6z M10 16h4v6h-4z",
-    "offset": "translate(0 0)"
+    "path": "M0 0h2v2H0z M8 0h2v2H8z M2 2h2v2H2z M6 2h2v2H6z M4 4h2v2H4z M0 6h10v2H0z M4 8h2v2H4z M0 10h10v2H0z M4 12h2v4H4z",
+    "offset": "translate(7 4)"
   },
   "packet": {
-    "path": "M4 2h16v2H4z M4 4h2v16H4z M18 4h2v16h-2z M4 20h16v2H4z M6 4h2v2H6z M16 4h2v2h-2z M8 6h2v2H8z M14 6h2v2h-2z M10 8h4v2h-4z M10 12h4v4h-4z",
-    "offset": "translate(0 0)"
+    "path": "M2 0h10v2H2z M0 2h2v14H0z M12 2h2v14h-2z M2 4h2v2H2z M10 4h2v2h-2z M4 6h2v2H4z M8 6h2v2H8z M6 8h2v2H6z M2 16h10v2H2z",
+    "offset": "translate(5 3)"
+  },
+  "arrowIn": {
+    "path": "M8 0h2v2H8z M0 2h2v2H0z M6 2h2v2H6z M0 4h2v2H0z M4 4h2v2H4z M0 6h4v2H0z M0 8h8v2H0z",
+    "offset": "translate(7 7)"
+  },
+  "arrowOut": {
+    "path": "M2 0h8v2H2z M6 2h4v2H6z M4 4h2v2H4z M8 4h2v2H8z M2 6h2v2H2z M8 6h2v2H8z M0 8h2v2H0z",
+    "offset": "translate(7 7)"
   },
   "camera": {
     "path": "M8 3h8v2h4v2h2v14H2V7h2V5h4z M8 5v2H4v12h16V7h-4V5z M10 9h4v2h2v4h-2v2h-4v-2H8v-4h2z M10 11v4h4v-4z M17 8h2v2h-2z",
@@ -68,7 +76,7 @@ export function chatPixelIconPath(name: ChatPixelIconName) { return icons[name];
 export function ChatPixelIcon({name, uniformSize = false}:{name:ChatPixelIconName; uniformSize?:boolean}) {
   const icon = icons[name];
   // 设置列表按轮廓最长边统一大小；其他位置继续使用原有画布。
-  const extent = {people:22, message:22, document:20, image:20, sound:22, eye:20, trash:20, sparkle:24, location:18, book:18, mic:22, camera:20, smile:20, yuan:20, packet:20}[name];
+  const extent = {people:22, message:22, document:20, image:20, sound:22, eye:20, trash:20, sparkle:24, location:18, book:18, mic:22, camera:20, smile:20, yuan:16, packet:18, arrowIn:10, arrowOut:10}[name];
   const canvas = uniformSize ? extent * 26 / 20 : 26;
   const edge = (24 - canvas) / 2;
   return <svg className="chat-pixel-icon" viewBox={`${edge} ${edge} ${canvas} ${canvas}`} aria-hidden="true" focusable="false" shapeRendering="crispEdges" style={{display:'block',flexShrink:0}}>
