@@ -62,6 +62,21 @@ export function stickerImageUrl(image: string) {
   return url;
 }
 export function stickerSrc(sticker: Sticker) { return stickerImageUrl(sticker.image); }
+/** 送给模型看的表情图：画到画布上转成 PNG（动图只取第一帧，各家接口都收 PNG）。网址的图要网站让读才拿得到，拿不到就是空字符串。 */
+export async function stickerDataUrl(image: string) {
+  let url = '', own = '';
+  try {
+    if (/^https?:\/\//i.test(image)) { const response = await fetch(image); if (!response.ok) return ''; url = own = URL.createObjectURL(await response.blob()); }
+    else { await restoreImageReferences([image]); url = stickerImageUrl(image); }
+    if (!url) return '';
+    const picture = new Image(); picture.src = url; await picture.decode();
+    const scale = Math.min(1, 256 / Math.max(picture.naturalWidth, picture.naturalHeight, 1));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(picture.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(picture.naturalHeight * scale));
+    canvas.getContext('2d')!.drawImage(picture, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/png');
+  } catch { return ''; } finally { if (own) URL.revokeObjectURL(own); }
+}
 /** 开机先把表情图读出来，聊天里的表情才显示得了。读不到也不挡开机。 */
 export async function initializeStickerImages() {
   try { await loadStickerImages(readStickers()); } catch { /* 读不到的那几张会显示成空的 */ }
