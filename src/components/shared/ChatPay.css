@@ -1,11 +1,13 @@
-/* 转账、红包卡片：没有气泡底色，卡片自己一个框（框的颜色跟其他卡片一样）。上面白底，左边一块主题色底的图示；红包整张（连底下那条）铺同一个主题色、图示底是白的，转账写金额和留言、红包只写留言；
+/* 转账、红包卡片：没有气泡底色，转账卡片自己一个细框，红包不用框。上面白底，左边一块主题色底的图示；红包整张（连底下那条）铺同一个主题色、图示底是白的，转账写金额和留言、红包只写留言；
    底下一条淡淡的主题色，写种类和状态，最后一个 ›。收了、拆了、退回、过期之后整张卡片变淡，颜色不变。
    聊天室把气泡里的 div 都设成 inline !important，这里用更具体的选择器改回来。 */
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape,
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--pay > .chat-bubble-shape-base { display: none !important; }
 #chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-pay { display: block !important; }
-#chatAppPage#chatAppPage .chat-pay { width: 196px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: 1px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); cursor: pointer; text-align: left; }
+#chatAppPage#chatAppPage .chat-pay { width: 196px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: .5px solid var(--cr-line, var(--spc-line)); border-radius: 4px; background: var(--color-surface); cursor: pointer; text-align: left; }
+/* 红包整张有底色，不用框 */
+#chatAppPage#chatAppPage .chat-pay.is-packet { border: 0; }
 #chatAppPage#chatAppPage .chat-pay-top { display: flex !important; align-items: center; gap: 10px; padding: 12px 11px; background: var(--color-surface); color: var(--cr-title, var(--color-text)); }
 #chatAppPage#chatAppPage .chat-pay-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; background: var(--theme-color); color: var(--color-text); }
 #chatAppPage#chatAppPage .chat-pay.is-packet :is(.chat-pay-top, .chat-pay-foot) { background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); }
