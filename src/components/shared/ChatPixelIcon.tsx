@@ -45,7 +45,7 @@ const icons = {
     "offset": "translate(0 -1)"
   },
   "smile": {
-    "path": "M8 2h8v1h-8z M6 3h12v1h-12z M5 4h3v1h-3z M16 4h3v1h-3z M4 5h3v1h-3z M17 5h3v1h-3z M3 6h3v1h-3z M18 6h3v1h-3z M3 7h2v1h-2z M19 7h2v1h-2z M2 8h2v8h-2z M8 8h2v3h-2z M14 8h2v3h-2z M20 8h2v8h-2z M7 13h2v2h-2z M15 13h2v2h-2z M9 15h6v2h-6z M3 16h2v1h-2z M19 16h2v1h-2z M3 17h3v1h-3z M18 17h3v1h-3z M4 18h3v1h-3z M17 18h3v1h-3z M5 19h3v1h-3z M16 19h3v1h-3z M6 20h12v1h-12z M8 21h8v1h-8z",
+    "path": "M6 2h12v2H6z M4 4h2v2H4z M18 4h2v2h-2z M2 6h2v12H2z M20 6h2v12h-2z M8 8h2v2H8z M14 8h2v2h-2z M8 12h2v2H8z M14 12h2v2h-2z M10 14h4v2h-4z M4 18h2v2H4z M18 18h2v2h-2z M6 20h12v2H6z",
     "offset": "translate(0 0)"
   },
   "camera": {
