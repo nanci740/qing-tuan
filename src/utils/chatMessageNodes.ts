@@ -237,7 +237,7 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
     if (stickerImg) { const url = stickerImageUrl(stickerImage); if (url && attr(stickerImg, 'src') !== url) setAttr(stickerImg, 'src', url); }
     // 转账、红包照钱包里的状态显示（收下、退回、过期）；状态没变就不动
     const payCard = attr(row, 'data-pay-id') ? findClass(row, 'chat-pay') : undefined;
-    if (payCard && attr(payCard, 'data-pay-state') !== payState(attr(row, 'data-pay-id'))) setPay(row, readPay(row), factory);
+    if (payCard && (attr(payCard, 'data-pay-state') !== payState(attr(row, 'data-pay-id')) || attr(payCard, 'data-pay-look') !== PAY_LOOK)) setPay(row, readPay(row), factory);
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {
       if (!avatar) { avatar = factory.element('img', {class:'chat-message-mini-avatar',alt:''}); if (hasClass(row,'is-chat')) row.children.unshift(avatar); else row.children.push(avatar); }
@@ -340,16 +340,18 @@ function payStatus(kind: MessagePay['kind'], state: PayState, expired: boolean, 
   if (state === 'done') return mine ? (kind === 'packet' ? '对方已领取' : '对方已收款') : (kind === 'packet' ? '已拆开' : '已收款');
   return expired ? (mine ? '已过期退回' : '已过期') : '已退回';
 }
-/** 转账、红包卡片：左边小图示，中间金额（红包写「红包」）和留言，底下一条写种类和状态。退回、过期的整张变淡。 */
+/** 卡片长相改过就换这个，旧记录里的卡片开的时候会照新样子重画。 */
+const PAY_LOOK = '2';
+/** 转账、红包卡片：左边小图示；转账中间写金额和留言，红包只写留言（像微信红包，没写就是「恭喜发财，大吉大利」）。底下一条写种类和状态。 */
 export function payNode(pay: MessagePay, mine: boolean, factory: MessageFactory) {
   const record = payRecord(pay.id), state = record?.state || 'done';
   const icon = chatPixelIconPath(pay.kind === 'packet' ? 'packet' : 'yuan');
-  return factory.element('div', { class: `chat-pay is-${pay.kind} is-${state}`, role: 'button', tabindex: '0', 'aria-label': pay.kind === 'packet' ? '红包' : '转账', 'data-pay-state': state }, [
+  return factory.element('div', { class: `chat-pay is-${pay.kind} is-${state}`, role: 'button', tabindex: '0', 'aria-label': pay.kind === 'packet' ? '红包' : '转账', 'data-pay-state': state, 'data-pay-look': PAY_LOOK }, [
     factory.element('div', { class: 'chat-pay-top' }, [
       factory.element('span', { class: 'chat-pay-icon', 'aria-hidden': 'true' }, [factory.element('svg', { viewBox: '-1 -1 26 26', 'shape-rendering': 'crispEdges' }, [factory.element('path', { d: icon.path, transform: icon.offset, fill: 'currentColor', 'fill-rule': 'evenodd' }, [], SVG)], SVG)]),
-      factory.element('span', { class: 'chat-pay-info' }, [
-        factory.element('b', {}, [factory.text(pay.kind === 'packet' ? '红包' : '¥' + yuan(pay.amount))]),
-        factory.element('small', {}, [factory.text(pay.note || (pay.kind === 'packet' ? '恭喜发财，大吉大利' : mine ? '转账给对方' : '转账给你'))])])]),
+      factory.element('span', { class: 'chat-pay-info' }, pay.kind === 'packet'
+        ? [factory.element('b', {}, [factory.text(pay.note || '恭喜发财，大吉大利')])]
+        : [factory.element('b', {}, [factory.text('¥' + yuan(pay.amount))]), factory.element('small', {}, [factory.text(pay.note || (mine ? '转账给对方' : '转账给你'))])])]),
     factory.element('div', { class: 'chat-pay-foot' }, [
       factory.element('span', {}, [factory.text(pay.kind === 'packet' ? '红包' : '转账')]),
       factory.element('span', {}, [factory.text(payStatus(pay.kind, state, !!record?.expired, mine))])])]);
