@@ -24,7 +24,7 @@ export interface ChatPromptInput {
     quoteChoicesText: string;
     /** 'on'：可以发语音；'unavailable'：开了但语音服务没设定好；'off'：没开。 */
     voice: 'on' | 'unavailable' | 'off';
-    /** 'on'：可以发照片（没开生图时会变成文字照片卡）；'off'：不提照片。 */
+    /** 'on'：可以发照片（没开生图时放预设照片，点开看画面描述）；'off'：不提照片。 */
     photo?: 'on' | 'off';
     /** 照片怎么写：tags 是 NovelAI 用的英文标签，sentence 是一般的英文句子；user 是生图设置里「你」那一格，让他知道你长什么样。 */
     photoLook?: { style: 'tags' | 'sentence'; user: string };
@@ -119,7 +119,7 @@ function voice(input: ChatPromptInput) {
     return '';
 }
 
-/** 照片：他随时都能发；有没有真的画出来是程序的事（没开生图就变成文字照片卡），这里不用跟他说。 */
+/** 照片：他随时都能发；有没有真的画出来是程序的事（没开生图就放预设照片），这里不用跟他说。 */
 function photo(input: ChatPromptInput) {
     if (input.photo !== 'on') return '';
     const tags = input.photoLook?.style === 'tags', userLook = input.photoLook?.user.trim() || '';

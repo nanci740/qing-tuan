@@ -413,10 +413,10 @@ export function ChatSettings() {
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>
                   <OriginalElement tag="strong" attributes={[]}>
-                    {"家机发照片"}
+                    {"家机照片生图"}
                   </OriginalElement>
                   <OriginalElement tag="span" attributes={[]}>
-                    {"开启后家机会在想分享、或你跟他要照片时发照片（用「语音与生图设置」的生图服务）；关闭时不发。"}
+                    {"家机随时都会发照片。开启后照片会用「语音与生图设置」的生图服务画出来；关闭时只放一张预设图，点开看他写的画面描述。"}
                   </OriginalElement>
                 </OriginalElement>
                 <ChatSettingCheckbox id="chatSettingAiPhoto" setting="aiPhoto" />
@@ -428,7 +428,7 @@ export function ChatSettings() {
                     {"互动画面"}
                   </OriginalElement>
                   <OriginalElement tag="span" attributes={[]}>
-                    {"聊到见面、一起做什么的时候，家机多常发一张你们两个人的画面（要开「家机发照片」）。"}
+                    {"聊到见面、一起做什么的时候，家机多常发一张你们两个人的画面。"}
                   </OriginalElement>
                 </OriginalElement>
                 <ChatReplySelect id="chatSettingPhotoInteraction" setting="photoInteraction">
