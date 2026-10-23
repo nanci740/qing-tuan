@@ -5,7 +5,7 @@ import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
 import { readMe } from '../../../utils/meStorage';
-import { addCard, cardAvailable, cardLabel, expireWalletPays, moveMoney, parseYuan, readWallet, removeCard, subscribeWallet, yuan, CREDIT_LATE_FEE } from '../../../utils/walletStorage';
+import { addCard, cardAvailable, cardLabel, cardNumber, expireWalletPays, moveMoney, parseYuan, readWallet, removeCard, subscribeWallet, yuan, CREDIT_LATE_FEE } from '../../../utils/walletStorage';
 import type { PayRecord, WalletCard, WalletMove } from '../../../utils/walletStorage';
 
 type Move = { type: 'in' | 'out'; cardId: string; amount: string };
@@ -38,13 +38,13 @@ function moveBill(move: WalletMove): Bill {
   return { ...base, in: false, title: move.credit ? `还款 ${move.label}` : `提现到 ${move.label}`, amount: '-' + yuan(move.amount), note: '' };
 }
 
-/** 卡面：不写钱。上面银行和卡种，左边中间芯片，左下卡号后四位，右下持卡人（亲属卡写谁开的）。 */
+/** 卡面：不写钱。上面银行和卡种，左边中间芯片，左下完整卡号，右下持卡人（亲属卡写谁开的）。 */
 function CardFace({ card, holder, active, onPick }: { card: WalletCard; holder: string; active: boolean; onPick: () => void }) {
   return <button type="button" className={`chat-me-card is-${card.kind}` + (active ? ' is-active' : '')} aria-pressed={active} onClick={onPick}>
     <span className="chat-me-card-top"><b>{card.kind === 'family' ? `${card.owner || '对方'}的亲属卡` : card.bank}</b><em>{kindName(card)}</em></span>
     <span className="chat-me-card-chip" aria-hidden="true" />
     <span className="chat-me-card-bottom">
-      <span className="chat-me-card-no">•••• •••• {card.last4}</span>
+      <span className="chat-me-card-no">{cardNumber(card)}</span>
       <span className="chat-me-card-name"><small>{card.kind === 'family' ? 'FROM' : 'HOLDER'}</small>{card.kind === 'family' ? card.owner || '对方' : holder}</span>
     </span>
   </button>;
@@ -109,7 +109,7 @@ export function MeWallet() {
     {card ? <div className="chat-me-card-detail">
       {card.kind === 'debit' ? <>
         <small>{cardLabel(card)} · 余额</small><b>¥{yuan(card.balance)}</b>
-        <span className="chat-me-card-kv"><span>卡号</span><span>•••• •••• •••• {card.last4}</span></span>
+        <span className="chat-me-card-kv"><span>卡号</span><span>{cardNumber(card)}</span></span>
         <span className="chat-me-card-kv"><span>持卡人</span><span>{holder}</span></span>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => openMove('in', card.id)}>↓ 转进余额</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('out', card.id)}>↑ 从余额转入</button><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>删除</button></span>
       </> : card.kind === 'credit' ? <>
