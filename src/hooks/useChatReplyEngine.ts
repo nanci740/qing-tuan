@@ -16,6 +16,14 @@ import {readProfileText} from './usePersonalProfile';
 import {activePersona,activePersonaPrompt} from '../utils/meStorage';
 /** 他怎么叫你：「我」里正在用的人设名字，没有就用主画面个人资料的名字。 */
 const myName = () => activePersona()?.name.trim() || readProfileText('personal_profile_name').trim();
+/** 他用文字打出来的照片（学上下文的「[照片] …」，或写成「[照片：…]」「【图片】…」）：认出来就回传那句说明，没写说明就叫「一张照片」；不是就回传 null。 */
+function loosePhotoCaption(text:string):string|null {
+    const match = /^\s*[\[【（(]\s*(?:照片|图片|相片|圖片)\s*(?:[:：]\s*([^\]】）)]*))?[\]】）)]\s*([\s\S]*)$/.exec(text);
+    if (!match) return null;
+    return [match[1], match[2]].map(part => (part || '').trim()).filter(Boolean).join(' ') || '一张照片';
+}
+/** 文字照片在 photos 里的记号：表示「是照片，但画面描述还没写」。 */
+const LOOSE_PHOTO = '\u0000loose-photo';
 export interface ChatContextItem {role:string;content:string;messageId:string;quoteCandidate:string;quotedText?:string;voiceRow?:HTMLElement|null;voiceSeconds?:string;voiceSpoken?:string;
  /** 你发的照片的编号：送的时候从照片库拿出图片附给模型看。 */
  photoId?:string;}
@@ -191,6 +199,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         drawing.current.add(photo.id);
         services.current?.photo({ chatKey, photo: { ...photo, state: 'pending', src: undefined, error: undefined } });
         try {
+            // 他用文字打了「[照片] …」的那种只有说明、没有画面描述：先照说明把画面补完整（只补得了正在看的聊天）
+            if (!photo.prompt.trim()) {
+                if (chatKey !== services.current!.currentKey()) throw new Error('这张照片只有说明，打开那个聊天再点一下就能画');
+                photo = { ...photo, prompt: await writeOwnPhotoPrompt(photo.caption) };
+            }
             const src = await saveChatPhoto(photo.id, await generateChatPhoto(photo.prompt, services.current!.character(chatKey)));
             services.current?.photo({ chatKey, photo: { ...photo, state: 'done', src, error: undefined } });
         } catch (error) {
@@ -202,6 +215,16 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
     // 你生图的补充描写：跟他回话同一套底子（预设、世界书、人设、最近的聊天、预设参数），只是最后多一句「这次帮对方写照片的画面」，
     // 回传沿用平常的 JSON，取 photo 栏位；没写出 photo 就当作被拒绝，不拿去画。
     async function writeUserPhotoPrompt(keywords:string, includeMe:boolean) {
+        const userName = myName();
+        return writePhotoPrompt(`[系统提示] 这一次不用回话：对方（${userName || '用户'}）想自己画一张照片发给你，请你照对方给的关键词，把这张照片的画面写完整。关键词：「${keywords.trim()}」。` +
+            `照着关键词的意思补上合理的细节，关键词指定的内容不要改掉；${includeMe ? '画面里有对方本人；' : ''}画面里有你自己时要写出你的外貌特征。`);
+    }
+    // 他自己发的照片只有一句说明（用文字打了「[照片] …」）：照那句说明把画面补完整，才能拿去画。
+    async function writeOwnPhotoPrompt(caption:string) {
+        return writePhotoPrompt(`[系统提示] 这一次不用回话：你刚刚发了一张照片给对方，照片的说明是「${caption.trim()}」，请把这张照片的画面写完整。` +
+            '照着说明补上合理的细节，说明里的内容不要改掉；画面里有你自己时要写出你的外貌特征，有对方时照上面照片的写法写。');
+    }
+    async function writePhotoPrompt(task:string) {
         const requestPreferences = { ...services.current!.preferences() };
         preferences.current = requestPreferences;
         const chatKey = services.current!.currentKey();
@@ -212,17 +235,14 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, chatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(chatKey);
         const preset = resolvePreset(requestPreferences.presetId);
-        const userName = myName();
         const prompt = buildChatSystemPrompt({
-            characterName, userName, persona: services.current!.persona(chatKey), userPersona: activePersonaPrompt(), world,
+            characterName, userName: myName(), persona: services.current!.persona(chatKey), userPersona: activePersonaPrompt(), world,
             recentText: recent.map(item => String(item.content || '')).join('\n'), trailingUserMessages: 0,
             timeText: requestPreferences.timeAware ? new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',dateStyle:'full',timeStyle:'short'}).format(new Date()) : '',
             presence: { mine: services.current!.myPresence() || '在线', online: currentPresence.online, status: currentPresence.status },
             segmented: false, replyLength: requestPreferences.replyLength, quotePolicy: 'never', quoteChoicesText: '', voice: 'off', photo: 'on', photoLook: chatPhotoLook(),
         }, preset);
-        const ask = `[系统提示] 这一次不用回话：对方（${userName || '用户'}）想自己画一张照片发给你，请你照对方给的关键词，把这张照片的画面写完整。关键词：「${keywords.trim()}」。` +
-            `照着关键词的意思补上合理的细节，关键词指定的内容不要改掉；${includeMe ? '画面里有对方本人；' : ''}画面里有你自己时要写出你的外貌特征。` +
-            '只输出一条：{"replies":[{"text":"照片的一句中文说明","photo":"给生图模型看的画面描述（照上面照片的写法）"}]}，不要加其他回复。';
+        const ask = task + '只输出一条：{"replies":[{"text":"照片的一句中文说明","photo":"给生图模型看的画面描述（照上面照片的写法）"}]}，不要加其他回复。';
         const messages:ApiMessage[] = [{ role: 'system', content: prompt.system }, ...recent.map(({ role, content }) => ({ role, content })), { role: 'user', content: ask }];
         const injected = [...world.messages, ...prompt.messages], extra = injected.filter(item => item.role !== 'system').length;
         const data = await api.requestChat(insertInjected(messages, injected), {
@@ -293,7 +313,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
-        const aiPhotoAllowed = !!requestPreferences.aiPhoto && chatPhotoReady();
+        // 照片随时都能发；「家机发照片」开着、生图也设定好了才真的画出来，不然就是一张写着说明的文字照片卡。
+        const aiPhotoDraw = !!requestPreferences.aiPhoto && chatPhotoReady();
         let trailingUserMessages = 0;
         for (let i = recent.length - 1; i >= 0 && recent[i].role === 'user'; i--) trailingUserMessages++;
         // 聊天设置另选的预设，没选就用预设 App 里设成默认的那份。
@@ -313,7 +334,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             quotePolicy: requestPreferences.quotePolicy,
             quoteChoicesText: choicesText,
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
-            photo: aiPhotoAllowed ? 'on' : (requestPreferences.aiPhoto ? 'unavailable' : 'off'),
+            photo: 'on',
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
@@ -386,7 +407,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);
             // 照片、定位一张一条；没分条时文字合成一条，照片和定位接在后面。
-            const replyPhotos = aiPhotoAllowed ? (parsedReply.photos || []) : [];
+            // 他学着上下文打了「[照片] …」「[图片]…」这种字：一样当成照片，那句当说明，画面描述之后再补。
+            const looseCaptions = parsedReply.segments.map((text, index) => (parsedReply.photos || [])[index] || (parsedReply.locations || [])[index] ? null : loosePhotoCaption(text));
+            if (looseCaptions.some(caption => caption !== null)) parsedReply.segments = parsedReply.segments.map((text, index) => looseCaptions[index] ?? text);
+            const replyPhotos = parsedReply.segments.map((_, index) => (parsedReply.photos || [])[index] || (looseCaptions[index] !== null ? LOOSE_PHOTO : ''));
+            if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) notice('生图还没设定好，照片先用文字卡');
             const replyLocations = parsedReply.locations || [];
             const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index]);
             const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index]);
@@ -409,7 +434,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 : [(parsedReply.voices || []).length > 0 && (parsedReply.voices || []).every(Boolean)]);
             const recallNoticeText = `${characterName}撤回了一条消息`;
             for (let index = 0; index < segments.length; index++) {
-                const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index], caption: segments[index], state: 'pending' } : null;
+                const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], state: aiPhotoDraw ? 'pending' : 'text' } : null;
                 const location = photo ? null : segmentLocations[index] || null;
                 const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : segments[index];
                 let notifyVoiceLength = '';
@@ -472,7 +497,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         translation: backgroundTranslation
                     });
                 }
-                if (photo && !willRecall) void drawPhoto(requestChatKey, photo);
+                if (photo && aiPhotoDraw && !willRecall) void drawPhoto(requestChatKey, photo);
                 // 每个气泡就是一条独立消息：出现时立即计算已读、未读与通知。
                 const segmentWasViewed = isActiveReplyChat(requestChatKey) &&
                     services.current!.viewed();

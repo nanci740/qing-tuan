@@ -261,9 +261,11 @@ export function voiceNode(voice: MessageVoice, factory: MessageFactory) {
 }
 /** note：你自己发的照片，把你写的话放在图片下面。 */
 export function photoNode(photo: MessagePhoto, factory: MessageFactory, note = false) {
-  const label = photo.state === 'done' ? '查看照片' : photo.state === 'failed' ? '重新生成照片' : '照片接收中';
+  const label = photo.state === 'done' ? '查看照片' : photo.state === 'failed' ? '重新生成照片' : photo.state === 'text' ? '查看照片说明' : '照片接收中';
   const node = factory.element('div', { class: 'chat-photo is-' + photo.state, role: 'button', tabindex: '0', 'aria-label': label, 'data-photo-id': photo.id, 'data-photo-state': photo.state });
   if (photo.state === 'done' && photo.src) node.children = [factory.element('img', { class: 'chat-photo-img', alt: photo.caption, src: photo.src, draggable: 'false' }), ...(note && photo.caption ? [factory.element('span', { class: 'chat-photo-note' }, [factory.text(photo.caption)])] : [])];
+  // 文字照片卡：没开生图时，上面一个小小的「照片」，下面是照片说明
+  else if (photo.state === 'text') node.children = [factory.element('span', { class: 'chat-photo-status' }, [factory.text('照片')]), factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)])];
   else if (photo.state === 'failed') node.children = [factory.element('span', { class: 'chat-photo-caption' }, [factory.text(photo.caption)]), factory.element('span', { class: 'chat-photo-status' }, [factory.text('没画出来，点一下重新生成')])];
   else node.children = [factory.element('span', { class: 'chat-photo-spinner', 'aria-hidden': 'true' }), factory.element('span', { class: 'chat-photo-status' }, [factory.text('照片接收中…')])];
   return node;

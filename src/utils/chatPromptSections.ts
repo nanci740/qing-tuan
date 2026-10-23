@@ -24,8 +24,8 @@ export interface ChatPromptInput {
     quoteChoicesText: string;
     /** 'on'：可以发语音；'unavailable'：开了但语音服务没设定好；'off'：没开。 */
     voice: 'on' | 'unavailable' | 'off';
-    /** 'on'：可以发照片；'unavailable'：开了但生图服务没设定好；'off'：没开。 */
-    photo?: 'on' | 'unavailable' | 'off';
+    /** 'on'：可以发照片（没开生图时会变成文字照片卡）；'off'：不提照片。 */
+    photo?: 'on' | 'off';
     /** 照片怎么写：tags 是 NovelAI 用的英文标签，sentence 是一般的英文句子；user 是生图设置里「你」那一格，让他知道你长什么样。 */
     photoLook?: { style: 'tags' | 'sentence'; user: string };
     /** 聊到见面互动时多常发你们两个人的画面。 */
@@ -119,9 +119,8 @@ function voice(input: ChatPromptInput) {
     return '';
 }
 
-/** 照片：开了才送；开了但生图服务还没设定好，就说清楚现在发不了。 */
+/** 照片：他随时都能发；有没有真的画出来是程序的事（没开生图就变成文字照片卡），这里不用跟他说。 */
 function photo(input: ChatPromptInput) {
-    if (input.photo === 'unavailable') return '你现在发不了照片（生图服务还没设定好），只能发文字；对方跟你要照片时，照实说现在发不了，不要假装发了照片，也不要用括号描写照片内容。';
     if (input.photo !== 'on') return '';
     const tags = input.photoLook?.style === 'tags', userLook = input.photoLook?.user.trim() || '';
     const describe = tags

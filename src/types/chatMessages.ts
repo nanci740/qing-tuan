@@ -6,8 +6,9 @@ export interface MessageComment { kind: 'comment'; key: number; text: string }
 export interface MessageFactory { element(tag: string, attrs?: Record<string, unknown> | NativeAttribute[], children?: MessageNode[], namespace?: string): MessageElement; text(value: unknown): MessageText; comment(value: string): MessageComment; key(): number }
 export interface MessageIdentity { peer: string; peerAvatar: string; userAvatar: string }
 export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: string }
-/** 家机发的照片。state：pending 正在画、done 画好了、failed 没画出来（可以重画）。prompt 是给生图模型的英文描述，caption 是一句中文说明。 */
-export interface MessagePhoto { id: string; prompt: string; caption: string; state: 'pending' | 'done' | 'failed'; src?: string; error?: string;
+/** 家机发的照片。state：pending 正在画、done 画好了、failed 没画出来（可以重画）、text 没开生图时的文字照片卡（只有说明，之后可以画）。
+    prompt 是给生图模型的英文描述（他用文字打的照片一开始是空的），caption 是一句中文说明。 */
+export interface MessagePhoto { id: string; prompt: string; caption: string; state: 'pending' | 'done' | 'failed' | 'text'; src?: string; error?: string;
   /** 你自己发的照片（预览里不能重画）。只在打开预览时用，不存。 */
   mine?: boolean }
 /** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */

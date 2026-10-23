@@ -34,6 +34,7 @@ import {loadChatPreferences as readPreferences} from '../utils/chatPreferences';
 import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
 import {showToast} from '../utils/toast';
 import {saveChatPhoto} from '../utils/chatPhotoStore';
+import {chatPhotoReady} from '../utils/chatPhoto';
 interface ChatPublicApi {
  smallphoneMessages:MessageNodesApi;
  /** 你发一张照片（相册、拍照或自己生的图），caption 是你写的说明。 */
@@ -369,7 +370,7 @@ function initChatApplication(){
         const html=messageNodes.photoHtml(history.current.histories[key]||'',photo);if(html===null)return;
         history.current.histories[key]=html;saveChatHistories();
     }
-    // 点照片：正在画就提示一下；画好或失败都打开照片预览，可以看大图、存图、改描述重画。
+    // 点照片：正在画就提示一下；画好、失败或文字照片卡都打开照片预览，可以看大图、存图、改描述重画（文字照片卡是「画出来」）。
     function openChatPhoto(row:HTMLElement){
         const box=row.querySelector<HTMLElement>('.chat-photo');const id=row.dataset.photoId||'';if(!box||!id)return;
         const state=(box.dataset.photoState||'pending') as MessagePhoto['state'];
@@ -378,7 +379,7 @@ function initChatApplication(){
         const chatKey=history.current.activeKey;
         // 画到一半页面重新整理过：当成没画出来，可以重画。
         const photo:MessagePhoto={id,prompt:row.dataset.photoPrompt||'',caption:row.dataset.photoCaption||'',state:state==='pending'?'failed':state,src:box.querySelector('img')?.getAttribute('src')||undefined,error:row.dataset.photoError||undefined};
-        window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo,redraw:(prompt:string)=>replyEngine.photo(chatKey,{...photo,prompt:prompt.trim()||photo.prompt})}}));
+        window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo,canDraw:chatPhotoReady(),redraw:(prompt:string)=>replyEngine.photo(chatKey,{...photo,prompt:prompt.trim()||photo.prompt})}}));
     }
     function getCharacterPersona(chatKey:string){return buildCharacterPrompt(characterStore?.read().find(item => item.archiveId === chatKey) || null);}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
