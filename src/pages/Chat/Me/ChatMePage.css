@@ -156,7 +156,7 @@
 .chat-me-card-chip { display: block; width: 22px; height: 16px; margin: auto 0; box-sizing: border-box; border: 1px solid currentColor; border-radius: 2px; opacity: .7;
   background: linear-gradient(90deg, transparent 45%, currentColor 45% 55%, transparent 55%), linear-gradient(0deg, transparent 45%, currentColor 45% 55%, transparent 55%); }
 .chat-me-card-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; }
-.chat-me-card-no { font: 600 10px "Courier New", ui-monospace, monospace; letter-spacing: .3px; white-space: nowrap; }
+.chat-me-card-no { font: 600 13px "Courier New", ui-monospace, monospace; letter-spacing: .3px; white-space: nowrap; }
 .chat-me-card-name { min-width: 0; text-align: right; font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-me-card-name small { display: block; font-size: 7.5px; letter-spacing: 1px; opacity: .7; }
 /* 卡的详情：钱都写在这里 */
