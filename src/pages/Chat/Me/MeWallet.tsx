@@ -38,13 +38,15 @@ function moveBill(move: WalletMove): Bill {
   return { ...base, in: false, title: move.credit ? `还款 ${move.label}` : `提现到 ${move.label}`, amount: '-' + yuan(move.amount), note: '' };
 }
 
-/** 卡面：不写钱，只有银行、卡种、芯片、卡号后四位、持卡人（亲属卡写谁开的）。 */
+/** 卡面：不写钱。上面银行和卡种，左边中间芯片，左下卡号后四位，右下持卡人（亲属卡写谁开的）。 */
 function CardFace({ card, holder, active, onPick }: { card: WalletCard; holder: string; active: boolean; onPick: () => void }) {
   return <button type="button" className={`chat-me-card is-${card.kind}` + (active ? ' is-active' : '')} aria-pressed={active} onClick={onPick}>
     <span className="chat-me-card-top"><b>{card.kind === 'family' ? `${card.owner || '对方'}的亲属卡` : card.bank}</b><em>{kindName(card)}</em></span>
     <span className="chat-me-card-chip" aria-hidden="true" />
-    <span className="chat-me-card-no">•••• •••• •••• {card.last4}</span>
-    <span className="chat-me-card-bottom"><small>{card.kind === 'family' ? 'FROM' : 'CARD HOLDER'}</small>{card.kind === 'family' ? card.owner || '对方' : holder}</span>
+    <span className="chat-me-card-bottom">
+      <span className="chat-me-card-no">•••• {card.last4}</span>
+      <span className="chat-me-card-name"><small>{card.kind === 'family' ? 'FROM' : 'HOLDER'}</small>{card.kind === 'family' ? card.owner || '对方' : holder}</span>
+    </span>
   </button>;
 }
 
@@ -85,8 +87,8 @@ export function MeWallet() {
     setPicked(added.id); setAdding(null);
   }
   async function dropCard(target: WalletCard) {
-    const message = target.kind === 'family' ? `「${cardLabel(target)}」会从钱包拿掉，之后要用得再跟他要。` : target.kind === 'debit' && target.balance ? `卡里还有 ¥${yuan(target.balance)}，删掉就没了。` : `「${cardLabel(target)}」会从钱包拿掉。`;
-    if (!await confirmChat({ title: '删除这张卡？', message, confirmText: '删除', danger: true })) return;
+    const message = target.kind === 'family' ? `「${cardLabel(target)}」会退回去，之后要用得再跟他要。` : target.kind === 'debit' && target.balance ? `卡里还有 ¥${yuan(target.balance)}，删掉就没了。` : `「${cardLabel(target)}」会从钱包拿掉。`;
+    if (!await confirmChat({ title: target.kind === 'family' ? '退回这张卡？' : '删除这张卡？', message, confirmText: target.kind === 'family' ? '退回' : '删除', danger: true })) return;
     try { removeCard(target.id); } catch (error) { showToast(String((error as Error)?.message || error)); }
   }
 
@@ -115,8 +117,8 @@ export function MeWallet() {
         <span className="chat-me-card-bar"><i style={{ width: `${Math.min(100, card.limit ? card.used / card.limit * 100 : 0)}%` }} /></span>
         <span className="chat-me-card-kv"><span>额度</span><span>¥{yuan(card.limit)}</span></span>
         <span className="chat-me-card-kv"><span>欠款</span><span>¥{yuan(card.used)}</span></span>
-        <span className="chat-me-card-kv"><span>还款期限</span><span className={card.due && card.due < Date.now() + 3 * 86400000 ? 'is-warn' : ''}>{card.used && card.due ? day(card.due) + ' 前' : '没有欠款'}</span></span>
-        <small>过了期限没还清，每期多收 ¥{yuan(CREDIT_LATE_FEE)} 手续费。</small>
+        <span className="chat-me-card-kv"><span>还款期限</span><span className={card.due && card.due < Date.now() + 3 * 86400000 ? 'is-warn' : ''}>{card.used && card.due ? day(card.due) + (card.due <= Date.now() ? ` 已逾期 ${Math.floor((Date.now() - card.due) / 86400000) + 1} 天` : ' 前') : '没有欠款'}</span></span>
+        <small>过了期限没还清，每天多收 ¥{yuan(CREDIT_LATE_FEE)} 手续费，直到还清。</small>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => card.used ? openMove('out', card.id) : showToast('这张信用卡没有欠款')}>还款</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('in', card.id)}>↓ 预借到余额</button><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>删除</button></span>
       </> : <>
         <small>{cardLabel(card)} · 本月还能用</small><b>¥{yuan(cardAvailable(card))}</b>
@@ -125,8 +127,8 @@ export function MeWallet() {
         <span className="chat-me-card-kv"><span>本月已用</span><span>¥{yuan(card.limit - cardAvailable(card))}</span></span>
         <span className="chat-me-card-kv"><span>开卡人</span><span>{card.owner || '对方'}</span></span>
         <span className="chat-me-card-kv"><span>额度重置</span><span>每月 1 号</span></span>
-        <small>给别人转账、发红包时可以选这张卡付，不能付给开卡的本人。</small>
-        <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>不要这张卡</button></span>
+        <small>转账、发红包时可以选这张卡付，付给开卡的本人也可以。</small>
+        <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>退回这张卡</button></span>
       </>}
     </div> : null}
 
@@ -180,7 +182,7 @@ export function MeWallet() {
           <input id="meCardBank" maxLength={20} placeholder="例如：招商银行" value={adding.bank} autoFocus onChange={event => setAdding({ ...adding, bank: event.currentTarget.value })} />
           <label htmlFor="meCardLast4">卡号后四位<small>不填就随机</small></label>
           <input id="meCardLast4" inputMode="numeric" maxLength={4} placeholder="例如：7735" value={adding.last4} onChange={event => setAdding({ ...adding, last4: event.currentTarget.value.replace(/\D/g, '') })} />
-          <p className="chat-me-note">{adding.kind === 'debit' ? '新卡里先放 ¥5,200。' : '额度 ¥5,200。用了以后 30 天内要还清，过了期限每期多收 ¥10 手续费。'}</p>
+          <p className="chat-me-note">{adding.kind === 'debit' ? '新卡里先放 ¥5,200。' : '额度 ¥5,200。用了以后 30 天内要还清，过了期限每天多收 ¥10 手续费，直到还清。'}</p>
         </div>
         <div className="sp-confirm-actions chat-me-form-actions">
           <PressedButton type="button" className="sp-confirm-btn" onClick={() => setAdding(null)}>取消</PressedButton>
