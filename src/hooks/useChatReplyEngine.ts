@@ -29,15 +29,15 @@ function looseStickerTag(text:string):string|null {
     const match = /^\s*[\[【（(]\s*(?:表情包?|贴图)\s*(?:[:：]\s*([^\]】）)]*))?[\]】）)]\s*([\s\S]*)$/.exec(text);
     return match ? (match[1] || match[2] || '').trim() : null;
 }
-/** 他学着上下文打了「[转账] ¥200」「[红包] ¥66，留言「…」」：当成真的转账、红包。
+/** 他学着上下文打了「[转账] ¥200」「[红包] ¥66，留言「…」」（也有写成英文 [transfer]、[packet] 的）：当成真的转账、红包。
     后面带着状态括号（「（对方还没收）」这种）是在照抄旧卡片，回传 false，那一句不发。 */
 function loosePay(text:string):Omit<MessagePay,'id'>|false|null {
-    const match = /^\s*[\[【]\s*(转账|红包)\s*[\]】]\s*([\s\S]*)$/.exec(text);
+    const match = /^\s*[\[【]\s*(转账|红包|transfer|packet|red\s*packet|hongbao)\s*[\]】]\s*([\s\S]*)$/i.exec(text);
     if (!match) return null;
     if (/[（(][^）)]*(收|拆|退)[^）)]*[）)]/.test(match[2])) return false;
     const amount = /[¥￥]?\s*(\d[\d,]*(?:\.\d{1,2})?)\s*元?/.exec(match[2]), note = /留言\s*[「“"]([^」”"]*)[」”"]/.exec(match[2]);
     const cents = amount ? Math.round(Number(amount[1].replace(/,/g, '')) * 100) : 0;
-    return cents > 0 ? { kind: match[1] === '红包' ? 'packet' : 'transfer', amount: cents, note: (note?.[1] || '').trim().slice(0, 40) } : false;
+    return cents > 0 ? { kind: /红包|packet|hongbao/i.test(match[1]) ? 'packet' : 'transfer', amount: cents, note: (note?.[1] || '').trim().slice(0, 40) } : false;
 }
 /** 文字照片在 photos 里的记号：表示「是照片，但画面描述还没写」。 */
 const LOOSE_PHOTO = '\u0000loose-photo';
