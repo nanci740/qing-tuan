@@ -38,13 +38,13 @@ function moveBill(move: WalletMove): Bill {
   return { ...base, in: false, title: move.credit ? `还款 ${move.label}` : `提现到 ${move.label}`, amount: '-' + yuan(move.amount), note: '' };
 }
 
-/** 卡面：不写钱。上面银行和卡种，左边中间芯片，左下卡号后四位，右下持卡人（亲属卡写谁开的）。 */
+/** 卡面：不写钱。上面银行和卡种，左边中间芯片，左下卡号（前三组遮住，只露后四位），右下持卡人（亲属卡写谁开的）。 */
 function CardFace({ card, holder, active, onPick }: { card: WalletCard; holder: string; active: boolean; onPick: () => void }) {
   return <button type="button" className={`chat-me-card is-${card.kind}` + (active ? ' is-active' : '')} aria-pressed={active} onClick={onPick}>
     <span className="chat-me-card-top"><b>{card.kind === 'family' ? `${card.owner || '对方'}的亲属卡` : card.bank}</b><em>{kindName(card)}</em></span>
     <span className="chat-me-card-chip" aria-hidden="true" />
     <span className="chat-me-card-bottom">
-      <span className="chat-me-card-no">•••• {card.last4}</span>
+      <span className="chat-me-card-no">•••• •••• •••• {card.last4}</span>
       <span className="chat-me-card-name"><small>{card.kind === 'family' ? 'FROM' : 'HOLDER'}</small>{card.kind === 'family' ? card.owner || '对方' : holder}</span>
     </span>
   </button>;
