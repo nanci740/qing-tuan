@@ -25,7 +25,7 @@
 #chatAppPage#chatAppPage .chat-pay-foot > span:last-child::after { content: ' ›'; }
 #chatAppPage#chatAppPage .chat-pay:not(.is-pending) { opacity: .55; }
 
-/* 发转账、红包的窗口：上面一排转账／红包（凸起和按下跟世界书小窗一样），金额大字，底下余额 */
+/* 发转账、红包的窗口：上面一排转账／红包（凸起和按下跟世界书小窗一样），金额大字，底下选付款方式 */
 .chat-pay-tabs { display: flex; gap: 6px; padding: 10px 18px 0; }
 .chat-pay-tabs button {
   min-width: 64px; height: 28px; padding: 0 12px; border: 1px solid var(--color-muted); border-radius: 3px; cursor: pointer;
@@ -37,13 +37,18 @@
   background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--spc-title); font: 700 20px "Courier New", ui-monospace, monospace;
 }
 .chat-pay-amount input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; }
-.chat-pay-amount.is-short, .chat-pay-balance.is-short { border-color: #d77; color: #c55; }
+.chat-pay-amount.is-short { border-color: #d77; color: #c55; }
 .chat-pay-send .chat-photo-viewer-prompt { min-height: 0; height: 30px; resize: none; }
-.chat-pay-balance { display: block; margin-top: 8px; font-size: 10.5px; color: var(--color-muted); }
+/* 付款方式：一行一个（余额、各张卡），右边写还有多少；选中的凹进去，不够的字变红 */
+.chat-pay-sources { display: flex; flex-direction: column; gap: 5px; }
+.chat-pay-source { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 0 9px; box-sizing: border-box; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.chat-pay-source.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-pay-source small { flex: none; font-size: 10px; color: var(--color-muted); }
+.chat-pay-source.is-short small { color: #c55; }
 
 /* 点卡片看的窗口：图示、谁给谁、金额（没拆的红包写留言）、状态 */
 .chat-pay-detail { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 12px; color: var(--color-text); }
-.chat-pay-detail-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--spc-line); border-radius: 6px; background: color-mix(in srgb, var(--color-muted) 12%, var(--theme-color)); color: var(--spc-title); }
+.chat-pay-detail-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--spc-line); border-radius: 6px; background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--color-text); }
 .chat-pay-detail-icon svg { width: 34px; height: 34px; }
 .chat-pay-detail b { font: 700 24px "Courier New", ui-monospace, monospace; color: var(--spc-title); }
 .chat-pay-detail b.is-note { font-size: 16px; font-weight: 600; font-family: inherit; }

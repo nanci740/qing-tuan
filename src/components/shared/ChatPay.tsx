@@ -5,43 +5,45 @@ import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
 import { ChatPixelIcon } from './ChatPixelIcon';
 import { showToast } from '../../utils/toast';
-import { expireWalletPays, parseYuan, payRecord, readWallet, settlePay, subscribeWallet, yuan } from '../../utils/walletStorage';
+import { expireWalletPays, parseYuan, payRecord, paySources, readWallet, settlePay, subscribeWallet, yuan } from '../../utils/walletStorage';
 import type { MessagePay } from '../../types/chatMessages';
 
-type Bridge = Window & { smallphoneSendChatPay?: (pay: Omit<MessagePay, 'id'>) => void };
-interface Draft { kind: MessagePay['kind']; amount: string; note: string }
+type Bridge = Window & { smallphoneSendChatPay?: (pay: Omit<MessagePay, 'id'>, source?: string) => void; smallphoneActiveChatKey?: () => string };
+interface Draft { kind: 'transfer' | 'packet'; amount: string; note: string; source: string; chatKey: string }
 
-/** 聊天输入框下面的 ¥：给他转账、发红包。钱从「我 → 钱包」的余额扣，余额不够发不出去。
-    点聊天里的转账、红包卡片：他发的还没收就可以收下（拆开）或退回，其他的看一下状态。 */
+/** 聊天输入框下面的 ¥：给他转账、发红包。钱从余额或选的那张卡扣（他给你的亲属卡不能付给他本人），不够发不出去。
+    点聊天里的转账、红包、亲属卡卡片：他发的还没收就可以收下（拆开）或退回，其他的看一下状态。 */
 export function ChatPay() {
   const wallet = useSyncExternalStore(subscribeWallet, readWallet);
   const [draft, setDraft] = useState<Draft | null>(null), [viewing, setViewing] = useState('');
   useLayoutEffect(() => {
-    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'pay') setDraft({ kind: 'transfer', amount: '', note: '' }); };
+    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'pay') { expireWalletPays(); setDraft({ kind: 'transfer', amount: '', note: '', source: '', chatKey: (window as Bridge).smallphoneActiveChatKey?.() || '' }); } };
     const open = (event: Event) => { expireWalletPays(); setViewing(String((event as CustomEvent<{ id: string }>).detail?.id || '')); };
     window.addEventListener('qingtuan:chat-action', start);
     window.addEventListener('qingtuan:chat-pay-open', open);
     return () => { window.removeEventListener('qingtuan:chat-action', start); window.removeEventListener('qingtuan:chat-pay-open', open); };
   }, []);
-  // 过了一天没收的转账、红包自动退回：开着的时候每分钟看一次
+  // 过了一天没收的自动退回、信用卡逾期手续费、亲属卡换月：开着的时候每分钟看一次
   useEffect(() => { const timer = setInterval(() => expireWalletPays(), 60000); return () => clearInterval(timer); }, []);
 
   const update = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch });
-  const amount = draft ? parseYuan(draft.amount) : 0, short = amount > wallet.balance;
+  // wallet 变了（例如转进余额）付款方式要跟着更新，所以每次画都重新算
+  const sources = draft ? paySources(draft.chatKey) : [], picked = sources.find(item => item.id === draft?.source) || sources[0];
+  const amount = draft ? parseYuan(draft.amount) : 0, short = !!picked && amount > picked.available;
   function send() {
     if (!draft) return;
     if (!amount) { showToast('先写金额'); return; }
-    if (short) { showToast('余额不够，到「我 → 钱包」改余额'); return; }
-    try { (window as Bridge).smallphoneSendChatPay?.({ kind: draft.kind, amount, note: draft.note.trim().slice(0, 40) }); setDraft(null); }
+    if (short) { showToast(`${picked?.label || '余额'}不够，换一个付款方式`); return; }
+    try { (window as Bridge).smallphoneSendChatPay?.({ kind: draft.kind, amount, note: draft.note.trim().slice(0, 40) }, picked?.id || ''); setDraft(null); }
     catch (error) { showToast(String((error as Error)?.message || error)); }
   }
 
   const record = viewing ? payRecord(viewing) : undefined;
-  useEffect(() => { if (viewing && !record) { showToast('这笔转账的记录找不到了'); setViewing(''); } }, [viewing, record]);
+  useEffect(() => { if (viewing && !record) { showToast('这笔的记录找不到了'); setViewing(''); } }, [viewing, record]);
   function settle(action: 'accept' | 'return') {
     if (!record) return;
-    if (settlePay(record.id, action)) showToast(action === 'return' ? '已退回' : `¥${yuan(record.amount)} 已存进钱包`);
-    if (action === 'return' || record.kind === 'transfer') setViewing('');
+    if (settlePay(record.id, action)) showToast(action === 'return' ? '已退回' : record.kind === 'family' ? '亲属卡放进钱包了' : `¥${yuan(record.amount)} 已存进钱包`);
+    if (record.kind !== 'packet' || action === 'return') setViewing('');
   }
 
   if (draft) return createPortal(<div className="sp-confirm-overlay chat-photo-viewer chat-pay-send" onClick={event => { if (event.target === event.currentTarget) setDraft(null); }}>
@@ -57,7 +59,13 @@ export function ChatPay() {
           onChange={event => update({ amount: event.currentTarget.value.replace(/[^\d.]/g, '') })} /></span>
         <label className="chat-photo-viewer-label" htmlFor="chatPayNote">留言（可以不写）</label>
         <input id="chatPayNote" className="chat-photo-viewer-prompt" maxLength={40} placeholder={draft.kind === 'packet' ? '恭喜发财，大吉大利' : '转账给对方'} value={draft.note} onChange={event => update({ note: event.currentTarget.value })} />
-        <small className={'chat-pay-balance' + (short ? ' is-short' : '')}>{short ? '余额不够：' : '余额 '}¥{yuan(wallet.balance)}</small>
+        <span className="chat-photo-viewer-label">付款方式</span>
+        <div className="chat-pay-sources" role="radiogroup" aria-label="付款方式">
+          {sources.map(item => { const lacking = amount > item.available; return <button type="button" role="radio" key={item.id || 'balance'} aria-checked={item === picked}
+            className={'chat-pay-source' + (item === picked ? ' is-active' : '') + (lacking ? ' is-short' : '')} onClick={() => update({ source: item.id })}>
+            <span>{item.label}</span><small>{item.id && !item.label.includes('储蓄卡') ? '可用 ' : ''}¥{yuan(item.available)}{lacking ? ' 不够' : ''}</small>
+          </button>; })}
+        </div>
       </div>
       <div className="sp-confirm-actions">
         <PressedButton type="button" className="sp-confirm-btn" onClick={() => setDraft(null)}>取消</PressedButton>
@@ -67,20 +75,23 @@ export function ChatPay() {
   </div>, document.body);
 
   if (!record) return null;
-  const mine = record.from === 'me', packet = record.kind === 'packet', pending = record.state === 'pending';
+  const mine = record.from === 'me', packet = record.kind === 'packet', family = record.kind === 'family', pending = record.state === 'pending', who = record.name || '对方';
+  const title = packet ? '红包' : family ? '亲属卡' : '转账';
   // 他发的红包拆开之前看不到金额
   const hidden = packet && !mine && pending;
-  const status = pending ? (mine ? `等${record.name || '对方'}${packet ? '拆开' : '收款'}` : '一天内没收会自动退回')
-    : record.state === 'done' ? (mine ? `${record.name || '对方'}已${packet ? '领取' : '收款'}` : packet ? '已拆开，钱在钱包里' : '已收款，钱在钱包里')
-    : record.expired ? (mine ? '过了一天没收，钱退回钱包了' : '过了一天没收，已经退回') : mine ? '对方退回了，钱回到钱包' : '你退回了';
+  const status = family ? (pending ? '收下了就会出现在钱包里，一天内没收会自动退回' : record.state === 'done' ? '已收下，卡在钱包里' : record.expired ? '过了一天没收，已经退回' : '你退回了')
+    : pending ? (mine ? `等${who}${packet ? '拆开' : '收款'}` : '一天内没收会自动退回')
+    : record.state === 'done' ? (mine ? `${who}已${packet ? '领取' : '收款'}` : packet ? '已拆开，钱在钱包里' : '已收款，钱在钱包里')
+    : record.expired ? (mine ? '过了一天没收，钱退回去了' : '过了一天没收，已经退回') : mine ? '对方退回了，钱退回去了' : '你退回了';
   return createPortal(<div className="sp-confirm-overlay chat-photo-viewer chat-pay-view" onClick={event => { if (event.target === event.currentTarget) setViewing(''); }}>
-    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label={packet ? '红包' : '转账'}>
-      <div className="sp-confirm-bar"><span className="sp-confirm-title">{packet ? '红包' : '转账'}</span></div>
+    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="sp-confirm-bar"><span className="sp-confirm-title">{title}</span></div>
       <div className="sp-confirm-body chat-pay-detail">
-        <span className="chat-pay-detail-icon"><ChatPixelIcon name={packet ? 'packet' : 'yuan'} /></span>
-        <span>{mine ? `${packet ? '发给' : '转账给'}${record.name || '对方'}` : `${record.name || '对方'}${packet ? '的红包' : '转账给你'}`}</span>
-        {hidden ? <b className="is-note">{record.note || '恭喜发财，大吉大利'}</b> : <b>¥{yuan(record.amount)}</b>}
+        <span className="chat-pay-detail-icon"><ChatPixelIcon name={packet ? 'packet' : family ? 'card' : 'yuan'} /></span>
+        <span>{family ? `${who}给你开的亲属卡` : mine ? `${packet ? '发给' : '转账给'}${who}` : `${who}${packet ? '的红包' : '转账给你'}`}</span>
+        {hidden ? <b className="is-note">{record.note || '恭喜发财，大吉大利'}</b> : <b>{family ? '每月 ' : ''}¥{yuan(record.amount)}</b>}
         {!hidden && record.note ? <small>「{record.note}」</small> : null}
+        {mine && record.sourceLabel ? <small>用 {record.sourceLabel} 付的</small> : null}
         <small>{status}</small>
       </div>
       <div className="sp-confirm-actions">

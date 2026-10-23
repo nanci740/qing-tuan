@@ -302,11 +302,11 @@ function readReplyLocation(value: unknown): { place: string; address?: string; d
     if (!place) return null;
     return { place: place.slice(0, 60), ...(text('address') ? { address: text('address').slice(0, 80) } : {}), ...(text('distance') ? { distance: text('distance').slice(0, 20) } : {}) };
 }
-/** 回复里的 "transfer"、"packet"：{"amount":520,"note":"…"}，也可以只写金额。金额是元，记成分。 */
-function readReplyPay(value: unknown, kind: 'transfer' | 'packet'): { kind: 'transfer' | 'packet'; amount: number; note: string } | null {
+/** 回复里的 "transfer"、"packet"：{"amount":520,"note":"…"}，也可以只写金额；"family_card"：{"limit":5000,"note":"…"}（每月额度）。金额是元，记成分。 */
+function readReplyPay(value: unknown, kind: 'transfer' | 'packet' | 'family'): { kind: 'transfer' | 'packet' | 'family'; amount: number; note: string } | null {
     if (value === undefined || value === null || value === false || value === '') return null;
     const item = value && typeof value === 'object' ? value as Record<string, unknown> : { amount: value };
-    const amount = Math.round(Number(String(item.amount ?? item.money ?? '').replace(/[¥￥,，元\s]/g, '')) * 100);
+    const amount = Math.round(Number(String(item.amount ?? item.limit ?? item.money ?? '').replace(/[¥￥,，元\s]/g, '')) * 100);
     if (!Number.isFinite(amount) || amount <= 0) return null;
     return { kind, amount, note: String(item.note ?? item.message ?? item.text ?? '').trim().slice(0, 40) };
 }
@@ -332,13 +332,13 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     photo: String(fields(item).photo ?? fields(item).image ?? '').trim(),
                     scene: String(fields(item).scene ?? fields(item).photo_desc ?? '').trim(),
                     sticker: String(fields(item).sticker ?? fields(item).emoji ?? '').trim(),
-                    pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet'),
+                    pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet') || readReplyPay(fields(item).family_card ?? fields(item).familyCard, 'family'),
                     receive: readReceive(fields(item).receive),
                     location: readReplyLocation(fields(item).location)
                 };
             }
             return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null };
-        }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : '转账' } : item)
+        }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : item.pay!.kind === 'family' ? '亲属卡' : '转账' } : item)
         : [];
     // receive 可以写在最外层，也可以写在某一条里（那一条只有 receive 也算）
     const receive = readReceive(parsedObject?.receive) || structuredAll.find(item => item.receive)?.receive || '';

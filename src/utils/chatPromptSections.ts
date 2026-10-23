@@ -32,6 +32,8 @@ export interface ChatPromptInput {
     photoInteraction?: 'rare' | 'normal' | 'often';
     /** 家机能用的表情标签（「我 → 表情」里勾了家机能用的那几组）；没有就是空的。 */
     stickers?: string[];
+    /** 他给你开的亲属卡：额度和你这个月用了多少，写给他看；没有就是空字符串。 */
+    familyCard?: string;
 }
 
 const MARKERS = {
@@ -45,6 +47,7 @@ const MARKERS = {
     sticker: '[表情] ',
     transfer: '[转账] ',
     packet: '[红包] ',
+    family: '[亲属卡] ',
 };
 
 /** 基本说明：现在在用手机聊天。 */
@@ -84,6 +87,8 @@ function contextMarkers(input: ChatPromptInput) {
         parts.push('上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。');
     if (text.includes(MARKERS.sticker))
         parts.push('上下文里的「[表情] 标签」是一张表情包：对方发的就是对方用表情表达的情绪或反应，你发的是你之前发过的表情。照着那个情绪自然回应，回复里不要照抄这个标记' + (input.stickers?.length ? '，要发表情请用 sticker 栏位。' : '。'));
+    if (text.includes(MARKERS.family))
+        parts.push('上下文里的「[亲属卡] 每月额度 ¥…（状态）」是你给对方开的亲属卡：对方收下了，卡就在对方的钱包里，对方可以用它付钱给别人，每个月 1 号额度重置；退回或过期就是对方没要。回复里不要照抄这个标记。');
     if (text.includes(MARKERS.transfer) || text.includes(MARKERS.packet))
         parts.push('上下文里的「[转账] ¥金额，留言「…」（状态）」「[红包] …（状态）」是转账、红包卡片，括号里是现在的状态（还没收、收下了、退回了…）。对方发的红包你拆开之前看不到金额。' +
             '对方发给你、还写着「你还没收」「你还没拆」的：收不收按你的人设和你们的关系决定。决定收下（红包就是拆开）就一定要在回复的 JSON 最外层加上 "receive":"accept"，决定退回就加 "receive":"return"（红包不能退）；只在嘴上说收了、退了却不加 receive，钱是不会动的，对方那边会一直显示没收。这个聊天里你还没收的会一起照办。还没决定就不加，过一天会自动退回。回复里不要照抄这个标记，要转账、发红包请用 transfer、packet 栏位，不要在 text 里打「[转账]」这种字。');
@@ -165,11 +170,12 @@ function sticker(input: ChatPromptInput) {
         '表情单独一条，text 可以留空，想说的话放在其他条。像真人聊天那样偶尔用来表达情绪、撒娇、回应对方的表情，不要每次都发，也不要连着发好几张。例如：{"text":"","sticker":"' + tags[0] + '"}';
 }
 
-/** 转账、红包：他也可以给你转账、发红包（他的钱不算）。 */
-function pay() {
+/** 转账、红包、亲属卡：他也可以给你转账、发红包、开亲属卡（他的钱不算）。 */
+function pay(input: ChatPromptInput) {
     return '每一条 replies 还可以加上 "transfer"（转账）或 "packet"（红包），表示这条你给对方转了钱或发了红包：{"amount":520,"note":"留言，可以不写"}，amount 是人民币金额（元）。单独一条，text 可以留空，想说的话放在其他条。' +
         '只在情境合适时发（例如对方说没钱了、过节、生日、想哄对方、请对方吃东西、对方帮了你），不要随便发，金额按你的人设和身份决定。一定要用 transfer、packet 栏位，在 text 里写「[转账] ¥200」这种字不算数。例如：{"text":"","transfer":{"amount":200,"note":"买奶茶"}}。' +
-        '对方转给你、还没收的，你决定收下就在 JSON 最外层加 "receive":"accept"，退回加 "receive":"return"，只在嘴上说收了钱不会动。';
+        '对方转给你、还没收的，你决定收下就在 JSON 最外层加 "receive":"accept"，退回加 "receive":"return"，只在嘴上说收了钱不会动。' +
+        '对方跟你要亲属卡、或你想给对方开时，可以在某一条加上 "family_card":{"limit":5000,"note":"留言，可以不写"}，limit 是每月额度（元），会变成一张亲属卡卡片，对方收下才算开好；已经开过就不要再开。' + (input.familyCard || '');
 }
 
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
