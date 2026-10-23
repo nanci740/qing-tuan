@@ -204,11 +204,12 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       }
       if(detail.photo)model.setPhoto(node,detail.photo,factory);
       if(detail.location)model.setLocation(node,detail.location,factory);
+      if(detail.sticker)model.setSticker(node,detail.sticker,factory);
       if(detail.quote){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));const quote=model.quoteNode(detail.quote,detail.quoteTargetId||'',factory);if(caption)model.insertBeforeKey(bubble.children,caption.key,quote);else bubble.children.push(quote);}
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
       model.setAttr(node,'data-chat-ai-content',detail.reply);model.setAttr(node,'data-sent-at',String(detail.sentAt??Date.now()));if(selectionStyle)model.setAttr(node,'style',selectionStyle);if(time)model.setText(time,new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}),factory);
     });},
-    appendUser(text,voice,quote,photo,location){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},
+    appendUser(text,voice,quote,photo,location,sticker){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location,sticker);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},
     result(row,className,text){updateRow(row,node=>{model.setResult(node,className,text,factory);requestLayout(current.current,node);});},translation(row,text){updateRow(row,node=>model.setTranslation(node,text,factory));},
     toggleTranscript(row){let expanded=false;updateRow(row,node=>{requestLayout(current.current,node);const result=model.findClass(node,'chat-voice-text-result');if(!result)return;expanded=!model.toggleClass(result,'is-collapsed');const bubble=model.findClass(node,'chat-bubble');if(bubble)model.toggleClass(bubble,'has-message-result',expanded);},false);return expanded;},
     markRead(row,all=false){mutate(next=>{const list=all?model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user')):row?[getNode(next,row)].filter((n):n is MessageElement=>!!n):[];for(const node of list){if(!model.hasClass(node,'is-user'))continue;model.setAttr(node,'data-read','true');model.toggleClass(node,'is-read',true);}model.receipts(next,factory);});},

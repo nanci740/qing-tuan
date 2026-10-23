@@ -319,11 +319,12 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     voice: fields(item).voice === true || fields(item).voice === 'true',
                     photo: String(fields(item).photo ?? fields(item).image ?? '').trim(),
                     scene: String(fields(item).scene ?? fields(item).photo_desc ?? '').trim(),
+                    sticker: String(fields(item).sticker ?? fields(item).emoji ?? '').trim(),
                     location: readReplyLocation(fields(item).location)
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', location: null };
-        }).map(item => !item.text && (item.photo || item.location) ? { ...item, text: item.photo ? '照片' : '位置' } : item).filter(item => fields(item).text)
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', location: null };
+        }).map(item => !item.text && (item.photo || item.location || item.sticker) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : '表情' } : item).filter(item => fields(item).text)
         : [];
     if (structuredItems.length) {
         // 旧格式：整包只有一个 quote_id → 挂在第一则
@@ -341,6 +342,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             voices: structuredItems.map(item => item.voice),
             photos: structuredItems.map(item => item.photo),
             scenes: structuredItems.map(item => item.scene),
+            stickers: structuredItems.map(item => item.sticker),
             locations: structuredItems.map(item => item.location),
             quotes,
             quote: firstQuote?.quote || '',

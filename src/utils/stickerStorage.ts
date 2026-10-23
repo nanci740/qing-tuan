@@ -48,9 +48,32 @@ export function newSticker(tag: string, image: string): Sticker { return { id: u
 export function loadStickerImages(groups: StickerGroup[]) {
   return restoreImageReferences(groups.flatMap(group => group.items.map(item => item.image)));
 }
-/** 显示用的图片：网址原样；上传的换成图片库里的图，读不到就是空字符串。 */
-export function stickerSrc(sticker: Sticker) {
-  try { return resolveImage(sticker.image); } catch { return ''; }
+/** 显示用的图片：网址原样；上传的换成一个短的 blob: 网址（聊天记录里只留这个，不把整张图写进去），读不到就是空字符串。 */
+const blobUrls = new Map<string, string>();
+export function stickerImageUrl(image: string) {
+  if (/^https?:\/\//i.test(image)) return image;
+  const cached = blobUrls.get(image); if (cached) return cached;
+  let data = '';
+  try { data = resolveImage(image); } catch { return ''; }
+  const match = /^data:([^;,]+)(;base64)?,(.*)$/s.exec(data); if (!match) return '';
+  const raw = match[2] ? atob(match[3]) : decodeURIComponent(match[3]);
+  const url = URL.createObjectURL(new Blob([Uint8Array.from(raw, char => char.charCodeAt(0))], { type: match[1] }));
+  blobUrls.set(image, url);
+  return url;
+}
+export function stickerSrc(sticker: Sticker) { return stickerImageUrl(sticker.image); }
+/** 开机先把表情图读出来，聊天里的表情才显示得了。读不到也不挡开机。 */
+export async function initializeStickerImages() {
+  try { await loadStickerImages(readStickers()); } catch { /* 读不到的那几张会显示成空的 */ }
+  return '';
+}
+/** 家机能用的表情（有标签的）；照标签找一张，同标签有好几张就随便挑一张，完全对不上再找包含的。 */
+export function aiStickers() { return readStickers().filter(group => group.ai).flatMap(group => group.items).filter(item => item.tag); }
+export function findAiSticker(tag: string): Sticker | null {
+  const want = tag.trim().replace(/^[\[【(（]|[\]】)）]$/g, '').trim(); if (!want) return null;
+  const list = aiStickers(), exact = list.filter(item => item.tag === want);
+  const pool = exact.length ? exact : list.filter(item => item.tag.includes(want) || want.includes(item.tag));
+  return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
 }
 /** 上传的一张图：缩到 200px（动图原样，太大不收），存进图片库，回传编号。 */
 export async function prepareStickerFile(file: File) {

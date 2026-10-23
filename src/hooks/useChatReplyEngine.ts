@@ -1,14 +1,15 @@
 import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import type {MessageLocation,MessageNodesApi,MessagePhoto,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageLocation,MessageNodesApi,MessagePhoto,MessageSticker,PeerMessageDetail} from '../types/chatMessages';
 import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
-import {locationText,voiceLength} from '../utils/chatMessageNodes';
+import {locationText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {aiStickers,findAiSticker} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
@@ -21,6 +22,11 @@ function loosePhotoCaption(text:string):string|null {
     const match = /^\s*[\[【（(]\s*(?:照片|图片|相片|圖片)\s*(?:[:：]\s*([^\]】）)]*))?[\]】）)]\s*([\s\S]*)$/.exec(text);
     if (!match) return null;
     return [match[1], match[2]].map(part => (part || '').trim()).filter(Boolean).join(' ') || '一张照片';
+}
+/** 他用文字打出来的表情（「[表情] 生气」「[表情包：生气]」）：回传那个标签，不是就回传 null。 */
+function looseStickerTag(text:string):string|null {
+    const match = /^\s*[\[【（(]\s*(?:表情包?|贴图)\s*(?:[:：]\s*([^\]】）)]*))?[\]】）)]\s*([\s\S]*)$/.exec(text);
+    return match ? (match[1] || match[2] || '').trim() : null;
 }
 /** 文字照片在 photos 里的记号：表示「是照片，但画面描述还没写」。 */
 const LOOSE_PHOTO = '\u0000loose-photo';
@@ -336,6 +342,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             voice: aiVoiceAllowed ? 'on' : (requestPreferences.aiVoice ? 'unavailable' : 'off'),
             photo: 'on',
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
+            stickers: aiStickers().map(item => item.tag),
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -413,10 +420,18 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const replyPhotos = parsedReply.segments.map((_, index) => (parsedReply.photos || [])[index] || (looseCaptions[index] !== null ? LOOSE_PHOTO : ''));
             if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) notice('生图还没设定好，照片先放预设图');
             const replyLocations = parsedReply.locations || [];
-            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index]);
-            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index]);
+            // 表情：照标签从家机能用的表情里找一张；他学着上下文打「[表情] 生气」也一样。找不到就当没发表情，那句只是「表情」两个字的就不发了。
+            const replyStickers:(MessageSticker|null)[] = parsedReply.segments.map((text, index) => {
+                if (replyPhotos[index] || replyLocations[index]) return null;
+                const tag = (parsedReply.stickers || [])[index] || looseStickerTag(text);
+                const found = tag ? findAiSticker(tag) : null;
+                return found ? { tag: found.tag, image: found.image } : null;
+            });
+            const dropped = parsedReply.segments.map((text, index) => !replyStickers[index] && (!!(parsedReply.stickers || [])[index] && text === '表情' || looseStickerTag(text) !== null));
+            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index]);
+            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index] && !replyStickers[index] && !dropped[index]);
             const segments = requestPreferences.segmented
-                ? parsedReply.segments
+                ? parsedReply.segments.map((text, index) => dropped[index] ? '' : text)
                 : [...(textOnly.length ? [textOnly.join('\n')] : []), ...cardIndexes.map(index => parsedReply.segments[index])];
             const segmentPhotos = requestPreferences.segmented
                 ? replyPhotos
@@ -428,6 +443,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const segmentLocations:(MessageLocation|null)[] = requestPreferences.segmented
                 ? replyLocations
                 : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPhotos[index] ? null : replyLocations[index] || null)];
+            const segmentStickers:(MessageSticker|null)[] = requestPreferences.segmented
+                ? replyStickers
+                : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyStickers[index] || null)];
             // 每则自己的引用；没分段时整则用第一个引用
             const segmentQuotes = requestPreferences.segmented
                 ? (parsedReply.quotes || [])
@@ -440,7 +458,10 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             for (let index = 0; index < segments.length; index++) {
                 const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], ...(segmentScenes[index] ? { scene: segmentScenes[index] } : {}), state: aiPhotoDraw ? 'pending' : 'text' } : null;
                 const location = photo ? null : segmentLocations[index] || null;
-                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : segments[index];
+                const sticker = photo || location ? null : segmentStickers[index] || null;
+                // 找不到表情的那一则（只剩「表情」两个字）不发
+                if (!photo && !location && !sticker && !segments[index]) continue;
+                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : segments[index];
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
@@ -453,12 +474,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && !willRecall && !photo && !location) {
+                    if (segmentVoices[index] && !willRecall && !photo && !location && !sticker) {
                         try { voiceAudio = await voice.prepare(reply); } catch (error) { voiceAudio = null; }
                     }
-                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : reply);
+                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -476,7 +497,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index] && !photo && !location) {
+                    if (segmentVoices[index] && !photo && !location && !sticker) {
                         try {
                             const voiceAudio = await voice.prepare(reply);
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
@@ -493,6 +514,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         reply,
                         photo,
                         location,
+                        sticker,
                         quote,
                         quoteTargetId,
                         sentAt: Date.now(),
