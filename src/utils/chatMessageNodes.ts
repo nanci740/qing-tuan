@@ -328,7 +328,7 @@ export function payLabel(pay: MessagePay) { return pay.kind === 'packet' ? '[红
 /** 送给模型的文字，站在他的角度写：mine 表示是你（对方）发的。红包没拆之前他看不到金额。 */
 export function payText(pay: MessagePay, mine: boolean) {
   const record = payRecord(pay.id), state = record?.state || 'done', expired = !!record?.expired;
-  const note = pay.note ? `，留言「${pay.note}」` : '';
+  const note = (pay.note ? `，留言「${pay.note}」` : '') + (record?.ownCard ? '，用的是你给对方开的亲属卡' : '');
   const who = mine ? '你' : '对方', how = pay.kind === 'packet' ? '拆' : '收';
   const status = state === 'pending' ? `${who}还没${how}` : state === 'done' ? `${who}${pay.kind === 'packet' ? '拆开了' : '收下了'}` : expired ? `过了一天没${how}，退回了` : `${who}退回了`;
   if (pay.kind === 'family') return `[亲属卡] 每月额度 ¥${yuan(pay.amount)}${note}（${state === 'pending' ? `${who}还没收` : state === 'done' ? `${who}收下了，卡在${who}的钱包里` : expired ? '过了一天没收，退回了' : `${who}退回了`}）`;

@@ -46,8 +46,6 @@ interface ChatPublicApi {
  smallphoneSendChatSticker(sticker:MessageSticker):void;
  /** 你发转账或红包：先从余额或 source 那张卡扣钱，扣不了（不够）就丢错，卡片不发。 */
  smallphoneSendChatPay(pay:Omit<MessagePay,'id'>,source?:string):void;
- /** 现在开着的是哪个聊天（付钱时挑得到哪些卡要看这个）。 */
- smallphoneActiveChatKey():string;
  /** 你生图的补充描写，交给回复引擎用跟他回话一样的底子来写。 */
  smallphoneWritePhotoPrompt(keywords:string,includeMe:boolean):Promise<string>;
  smallphoneApi?:ApiService;
@@ -357,7 +355,6 @@ function initChatApplication(){
     }
     bridge.smallphoneSendChatLocation = location => { if (location.place.trim()) sendCard(location, null); };
     bridge.smallphoneSendChatSticker = sticker => { if (sticker.tag.trim() && sticker.image) sendCard(null, sticker); };
-    bridge.smallphoneActiveChatKey = () => getCurrentChatPreferenceKey();
     bridge.smallphoneSendChatPay = (draft, source = '') => {
         if (!messageList) throw Error('先打开一个聊天');
         const chatKey = getCurrentChatPreferenceKey(), pay:MessagePay = { ...draft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) };

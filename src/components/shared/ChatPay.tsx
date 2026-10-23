@@ -8,16 +8,16 @@ import { showToast } from '../../utils/toast';
 import { expireWalletPays, parseYuan, payRecord, paySources, readWallet, settlePay, subscribeWallet, yuan } from '../../utils/walletStorage';
 import type { MessagePay } from '../../types/chatMessages';
 
-type Bridge = Window & { smallphoneSendChatPay?: (pay: Omit<MessagePay, 'id'>, source?: string) => void; smallphoneActiveChatKey?: () => string };
-interface Draft { kind: 'transfer' | 'packet'; amount: string; note: string; source: string; chatKey: string }
+type Bridge = Window & { smallphoneSendChatPay?: (pay: Omit<MessagePay, 'id'>, source?: string) => void };
+interface Draft { kind: 'transfer' | 'packet'; amount: string; note: string; source: string }
 
-/** 聊天输入框下面的 ¥：给他转账、发红包。钱从余额或选的那张卡扣（他给你的亲属卡不能付给他本人），不够发不出去。
+/** 聊天输入框下面的 ¥：给他转账、发红包。钱从余额或选的那张卡扣（他给你的亲属卡也能付给他本人），不够发不出去。
     点聊天里的转账、红包、亲属卡卡片：他发的还没收就可以收下（拆开）或退回，其他的看一下状态。 */
 export function ChatPay() {
   const wallet = useSyncExternalStore(subscribeWallet, readWallet);
   const [draft, setDraft] = useState<Draft | null>(null), [viewing, setViewing] = useState('');
   useLayoutEffect(() => {
-    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'pay') { expireWalletPays(); setDraft({ kind: 'transfer', amount: '', note: '', source: '', chatKey: (window as Bridge).smallphoneActiveChatKey?.() || '' }); } };
+    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'pay') { expireWalletPays(); setDraft({ kind: 'transfer', amount: '', note: '', source: '' }); } };
     const open = (event: Event) => { expireWalletPays(); setViewing(String((event as CustomEvent<{ id: string }>).detail?.id || '')); };
     window.addEventListener('qingtuan:chat-action', start);
     window.addEventListener('qingtuan:chat-pay-open', open);
@@ -28,7 +28,7 @@ export function ChatPay() {
 
   const update = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch });
   // wallet 变了（例如转进余额）付款方式要跟着更新，所以每次画都重新算
-  const sources = draft ? paySources(draft.chatKey) : [], picked = sources.find(item => item.id === draft?.source) || sources[0];
+  const sources = draft ? paySources() : [], picked = sources.find(item => item.id === draft?.source) || sources[0];
   const amount = draft ? parseYuan(draft.amount) : 0, short = !!picked && amount > picked.available;
   function send() {
     if (!draft) return;

@@ -96,7 +96,7 @@
   flex: none; height: 24px; padding: 0 10px; border: 1px solid var(--color-muted); border-radius: 3px; cursor: pointer;
   background: var(--effect-face-white); box-shadow: var(--effect-raised), var(--effect-drop); color: var(--color-text); font-size: 11px;
 }
-#chatListView .chat-me-page .chat-me-st-btn.is-danger { color: var(--color-danger); }
+#chatListView .chat-me-page .chat-me-st-btn.is-danger { color: var(--color-danger-ink); }
 .chat-me-st-head { display: flex; align-items: center; gap: 8px; }
 .chat-me-st-head .chat-me-group-head { flex: 1; min-width: 0; }
 .chat-me-st-ai { flex: none; display: flex; align-items: center; gap: 5px; padding-bottom: 4px; font-size: 10.5px; color: var(--me-ink); cursor: pointer; }
@@ -139,7 +139,7 @@
 .chat-me-wallet-ops { display: flex; flex-wrap: wrap; gap: 6px; }
 .chat-me-wallet-sum .chat-me-wallet-ops { margin-left: auto; }
 #chatListView .chat-me-page .chat-me-wallet-ops .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
-/* 卡：一排可以左右滑，卡面不写钱，只有银行、卡种、像素芯片、卡号后四位、持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
+/* 卡：一排可以左右滑，卡面不写钱：上面银行、卡种，左边中间像素芯片，左下卡号后四位，右下持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
 .chat-me-cards-row { display: flex; gap: 8px; width: 0; min-width: 100%; overflow-x: auto; padding: 2px 2px 6px; box-sizing: border-box; scrollbar-width: none; }
 .chat-me-cards-row::-webkit-scrollbar { display: none; }
 .chat-me-card {
@@ -153,11 +153,12 @@
 .chat-me-card-top { display: flex; justify-content: space-between; gap: 6px; }
 .chat-me-card-top b { min-width: 0; font-size: 11.5px; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-me-card-top em { flex: none; font-size: 9.5px; font-style: normal; opacity: .75; }
-.chat-me-card-chip { display: block; width: 22px; height: 16px; margin: 8px 0 5px; box-sizing: border-box; border: 1px solid currentColor; border-radius: 2px; opacity: .7;
+.chat-me-card-chip { display: block; width: 22px; height: 16px; margin: auto 0; box-sizing: border-box; border: 1px solid currentColor; border-radius: 2px; opacity: .7;
   background: linear-gradient(90deg, transparent 45%, currentColor 45% 55%, transparent 55%), linear-gradient(0deg, transparent 45%, currentColor 45% 55%, transparent 55%); }
-.chat-me-card-no { font: 600 11px "Courier New", ui-monospace, monospace; letter-spacing: 1px; }
-.chat-me-card-bottom { margin-top: auto; font-size: 10.5px; }
-.chat-me-card-bottom small { display: block; font-size: 7.5px; letter-spacing: 1px; opacity: .7; }
+.chat-me-card-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; }
+.chat-me-card-no { font: 600 11px "Courier New", ui-monospace, monospace; letter-spacing: 1px; white-space: nowrap; }
+.chat-me-card-name { min-width: 0; text-align: right; font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-me-card-name small { display: block; font-size: 7.5px; letter-spacing: 1px; opacity: .7; }
 /* 卡的详情：钱都写在这里 */
 .chat-me-card-detail { display: flex; flex-direction: column; gap: 3px; padding: 10px; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); }
 .chat-me-card-detail > small { font-size: 10px; color: var(--color-muted); }

@@ -6,9 +6,10 @@ import type { MessagePay } from '../types/chatMessages';
 export type PayKind = MessagePay['kind'];
 /** pending 还没收（没拆）；done 收下了（拆开了）；returned 退回了（expired 表示是过了一天自动退的）。 */
 export type PayState = 'pending' | 'done' | 'returned';
-/** from：me 是你发给他的，peer 是他发给你的。source：你付钱用的是哪张卡，空的是余额；sourceLabel 是当时卡的名字（卡删了账单照样看得懂）。
+/** from：me 是你发给他的，peer 是他发给你的。source：你付钱用的是哪张卡，空的是余额；sourceLabel 是当时卡的名字（卡删了账单照样看得懂）；
+    ownCard：用的是他自己给你开的亲属卡（拿他的卡付给他）。
     亲属卡（kind family）的 amount 是每月额度。 */
-export interface PayRecord { id: string; kind: PayKind; from: 'me' | 'peer'; chatKey: string; name: string; amount: number; note: string; at: number; state: PayState; settledAt?: number; expired?: boolean; source?: string; sourceLabel?: string }
+export interface PayRecord { id: string; kind: PayKind; from: 'me' | 'peer'; chatKey: string; name: string; amount: number; note: string; at: number; state: PayState; settledAt?: number; expired?: boolean; source?: string; sourceLabel?: string; ownCard?: boolean }
 /** 卡：debit 储蓄卡（balance 是卡里的钱）、credit 信用卡（limit 额度，used 已用，due 还款期限）、family 他给你的亲属卡（limit 每月额度，used 这个月用了多少，month 是哪个月）。 */
 export type CardKind = 'debit' | 'credit' | 'family';
 export interface WalletCard { id: string; kind: CardKind; bank: string; last4: string; at: number; balance: number; limit: number; used: number; due?: number; owner?: string; chatKey?: string; month?: string }
@@ -39,7 +40,7 @@ function clean(value: unknown): Wallet {
     return [{ id, kind: record.kind === 'packet' || record.kind === 'family' ? record.kind : 'transfer', from: record.from === 'peer' ? 'peer' : 'me', chatKey: text(record.chatKey, 120), name: text(record.name, 40),
       amount: cents(record.amount), note: text(record.note, 40), at: Number(record.at) || 0, state,
       ...(Number(record.settledAt) ? { settledAt: Number(record.settledAt) } : {}), ...(record.expired === true ? { expired: true } : {}),
-      ...(text(record.source, 60) ? { source: text(record.source, 60), sourceLabel: text(record.sourceLabel, 60) } : {}) }];
+      ...(text(record.source, 60) ? { source: text(record.source, 60), sourceLabel: text(record.sourceLabel, 60) } : {}), ...(record.ownCard === true ? { ownCard: true } : {}) }];
   });
   const cards = list('cards').flatMap((card): WalletCard[] => {
     const id = text(card.id, 60);
@@ -93,11 +94,10 @@ export function cardAvailable(card: WalletCard) {
   const used = card.kind === 'family' && card.month !== monthKey() ? 0 : card.used;
   return Math.max(0, card.limit - used);
 }
-/** 付钱时能选的：余额和各张卡（id 空的是余额）。他给你的亲属卡不能拿来付给他本人。 */
-export function paySources(chatKey: string) {
+/** 付钱时能选的：余额和各张卡（id 空的是余额）。 */
+export function paySources() {
   const wallet = readWallet();
-  return [{ id: '', label: '余额', available: wallet.balance },
-    ...wallet.cards.filter(card => !(card.kind === 'family' && card.chatKey === chatKey)).map(card => ({ id: card.id, label: cardLabel(card), available: cardAvailable(card) }))];
+  return [{ id: '', label: '余额', available: wallet.balance }, ...wallet.cards.map(card => ({ id: card.id, label: cardLabel(card), available: cardAvailable(card) }))];
 }
 
 /** 新增一张卡：储蓄卡先放 ¥5,200，信用卡额度 ¥5,200；后四位不填就随机。 */
@@ -148,7 +148,7 @@ export function sendPay(pay: MessagePay, chatKey: string, name: string, source =
   const wallet = readWallet();
   if (pay.amount <= 0) throw Error('金额要大于 0');
   const card = source ? wallet.cards.find(item => item.id === source) : undefined;
-  if (source && (!card || card.kind === 'family' && card.chatKey === chatKey)) throw Error('这张卡不能用');
+  if (source && !card) throw Error('这张卡不见了');
   const available = card ? cardAvailable(card) : wallet.balance;
   if (pay.amount > available) throw Error(card ? (card.kind === 'debit' ? '卡里的钱不够' : '额度不够') : '余额不够');
   let cards = wallet.cards;
@@ -158,7 +158,7 @@ export function sendPay(pay: MessagePay, chatKey: string, name: string, source =
     cards = cards.map(item => item.id === card.id ? next : item);
   }
   write({ ...wallet, balance: wallet.balance - (card ? 0 : pay.amount), cards,
-    records: [{ ...pay, from: 'me', chatKey, name, at: Date.now(), state: 'pending', ...(card ? { source: card.id, sourceLabel: cardLabel(card) } : {}) }, ...wallet.records] });
+    records: [{ ...pay, from: 'me', chatKey, name, at: Date.now(), state: 'pending', ...(card ? { source: card.id, sourceLabel: cardLabel(card) } : {}), ...(card?.kind === 'family' && card.chatKey === chatKey ? { ownCard: true } : {}) }, ...wallet.records] });
 }
 /** 他发来的转账、红包、亲属卡：先记下来，你收了才进余额（亲属卡收了才出现在钱包）。 */
 export function receivePay(pay: MessagePay, chatKey: string, name: string) {
@@ -215,7 +215,7 @@ export function familyCardText(chatKey: string) {
   const card = readWallet().cards.find(item => item.kind === 'family' && item.chatKey === chatKey);
   if (!card) return '';
   const used = card.month === monthKey() ? card.used : 0;
-  return `你之前给对方开了一张亲属卡，每月额度 ¥${yuan(card.limit)}，这个月对方已经用了 ¥${yuan(used)}（用你的亲属卡付给别人的钱）。`;
+  return `你之前给对方开了一张亲属卡，每月额度 ¥${yuan(card.limit)}，这个月对方已经用了 ¥${yuan(used)}（对方用你的亲属卡付的钱）。`;
 }
 export function initializeWallet() {
   try { expireWalletPays(); } catch { /* 钱包读不到也不挡开机 */ }
