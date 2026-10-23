@@ -24,13 +24,14 @@ function describe(record: PayRecord) {
 /** 「我」→ 钱包：上面余额（可以自己改），本月收入、支出；下面按月份排的账单（转账、红包）。所有角色共用一个钱包。 */
 export function MeWallet() {
   const wallet = useSyncExternalStore(subscribeWallet, readWallet);
-  const [editing, setEditing] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null), [filter, setFilter] = useState<'all' | 'in' | 'out'>('all');
   useEffect(() => { expireWalletPays(); }, []);
   const now = monthOf(Date.now()), thisMonth = wallet.records.filter(record => monthOf(record.at) === now);
   const income = thisMonth.filter(record => record.from === 'peer' && record.state === 'done').reduce((sum, record) => sum + record.amount, 0);
   const spent = thisMonth.filter(record => record.from === 'me' && record.state !== 'returned').reduce((sum, record) => sum + record.amount, 0);
   const months: { label: string; records: PayRecord[] }[] = [];
-  for (const record of [...wallet.records].sort((a, b) => b.at - a.at)) {
+  // 收入是他给你的，支出是你给他的（退回的也照原本的方向分）
+  for (const record of [...wallet.records].filter(record => filter === 'all' || (filter === 'in') === (record.from === 'peer')).sort((a, b) => b.at - a.at)) {
     const date = new Date(record.at), label = date.getFullYear() === new Date().getFullYear() ? `${date.getMonth() + 1} 月` : `${date.getFullYear()} 年 ${date.getMonth() + 1} 月`;
     if (months.at(-1)?.label !== label) months.push({ label, records: [] });
     months.at(-1)!.records.push(record);
@@ -49,17 +50,23 @@ export function MeWallet() {
       <button type="button" className="chat-me-st-btn" onClick={() => setEditing((wallet.balance / 100).toFixed(2))}>改余额</button>
       <div className="chat-me-wallet-sum"><span>本月收入<em>+{yuan(income)}</em></span><span>本月支出<em>-{yuan(spent)}</em></span></div>
     </div>
-    <div className="chat-me-wallet-head">账单</div>
+    <div className="chat-me-wallet-head">账单
+      <span className="chat-me-wallet-filter" role="tablist">
+        {([['all', '全部'], ['in', '收入'], ['out', '支出']] as const).map(([value, label]) => <button type="button" role="tab" key={value} aria-selected={filter === value} className={filter === value ? 'is-active' : ''} onClick={() => setFilter(value)}>{label}</button>)}
+      </span>
+    </div>
     {months.length ? months.map(month => <div key={month.label}>
       <div className="chat-me-wallet-month">{month.label}</div>
       <div className="chat-me-wallet-list">
         {month.records.map(record => { const info = describe(record); return <div className="chat-me-wallet-row" key={record.id}>
-          <span className="chat-me-wallet-icon"><ChatPixelIcon name={record.kind === 'packet' ? 'packet' : 'yuan'} /></span>
+          <span className={'chat-me-wallet-icon ' + (record.from === 'peer' ? 'is-in' : 'is-out')} title={record.from === 'peer' ? '收到的' : '给出去的'}>
+            <ChatPixelIcon name={record.kind === 'packet' ? 'packet' : 'yuan'} /><i><ChatPixelIcon name={record.from === 'peer' ? 'arrowIn' : 'arrowOut'} /></i>
+          </span>
           <span className="chat-me-wallet-text"><b>{info.title}</b><small>{when(record.at)}{record.note ? ' · ' + record.note : ''}</small></span>
           <span className={'chat-me-wallet-num' + (info.sign === '+' ? ' is-in' : '')}>{info.crossed ? <s>{yuan(record.amount)}</s> : record.from === 'peer' && record.kind === 'packet' && record.state === 'pending' ? '¥?' : info.sign + yuan(record.amount)}{info.note ? <em>{info.note}</em> : null}</span>
         </div>; })}
       </div>
-    </div>) : <p className="chat-me-note">还没有账单。在聊天里点输入框下面的 ¥ 给他转账、发红包，他给你的也会记在这里。</p>}
+    </div>) : <p className="chat-me-note">{filter === 'all' ? '还没有账单。在聊天里点输入框下面的 ¥ 给他转账、发红包，他给你的也会记在这里。' : filter === 'in' ? '还没有收入。' : '还没有支出。'}</p>}
 
     {editing !== null ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setEditing(null); }}>
       <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="改余额">
