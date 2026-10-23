@@ -14,11 +14,12 @@ import { DEFAULT_BIRD_AVATAR } from '../../../utils/defaultAvatar';
 import { readMyPresence } from '../../../utils/chatPresence';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import { MePixelIcon, MOODS } from './MePixelIcon';
+import { MeStickers } from './MeStickers';
 
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
-type Tab = 'me' | 'favorites';
+type Tab = 'me' | 'favorites' | 'stickers';
 const LATER = '之后开放';
-const APPS = [['表情', 'sticker'], ['钱包', 'wallet']] as const;
+const APPS = [['钱包', 'wallet']] as const;
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
 function companionStats() {
@@ -158,6 +159,7 @@ export function ChatMePage() {
         <div className="chat-me-side" role="tablist" aria-label="分页">
           <button type="button" role="tab" aria-selected={tab === 'me'} onClick={() => setTab('me')}><MePixelIcon name="person" />我</button>
           <button type="button" role="tab" aria-selected={tab === 'favorites'} onClick={() => setTab('favorites')}><MePixelIcon name="gift" />收藏</button>
+          <button type="button" role="tab" aria-selected={tab === 'stickers'} onClick={() => setTab('stickers')}><MePixelIcon name="sticker" />表情</button>
           {APPS.map(([name, icon]) => <button type="button" key={name} onClick={() => later(name)}><MePixelIcon name={icon} />{name}</button>)}
           <span className="chat-me-side-fill" />
           <button type="button" className="chat-me-side-last" onClick={() => later('设置')}><MePixelIcon name="gear" />设置</button>
@@ -180,7 +182,7 @@ export function ChatMePage() {
                 <button type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</button>
               </div>
             </Group>
-          </> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
+          </> : tab === 'stickers' ? <MeStickers /> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
             <div className="chat-me-rows">
               {group.items.map((item, index) => <button type="button" className="chat-me-fav" key={index} onClick={() => (window as Bridge).smallphoneOpenCharacterChat?.(group.key)}>
                 <span>{item.mine ? '我：' : ''}{item.text || '[消息]'}</span><small>{when(item.at)}</small>
