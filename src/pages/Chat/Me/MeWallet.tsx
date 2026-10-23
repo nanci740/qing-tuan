@@ -44,7 +44,7 @@ function CardFace({ card, holder, active, onPick }: { card: WalletCard; holder: 
     <span className="chat-me-card-top"><b>{card.kind === 'family' ? `${card.owner || '对方'}的亲属卡` : card.bank}</b><em>{kindName(card)}</em></span>
     <span className="chat-me-card-chip" aria-hidden="true" />
     <span className="chat-me-card-bottom">
-      <span className="chat-me-card-no">•••• {card.last4}</span>
+      <span className="chat-me-card-no">•••• •••• {card.last4}</span>
       <span className="chat-me-card-name"><small>{card.kind === 'family' ? 'FROM' : 'HOLDER'}</small>{card.kind === 'family' ? card.owner || '对方' : holder}</span>
     </span>
   </button>;
