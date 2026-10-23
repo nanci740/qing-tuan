@@ -20,6 +20,7 @@ export const PRESET_BUILTINS: readonly { id: PresetBuiltinId; name: string; note
   { id: 'photo', name: '照片', note: '聊天设置开了发照片才送。' },
   { id: 'location', name: '位置', note: '角色可以发定位卡片，什么时候发、怎么写。' },
   { id: 'sticker', name: '表情', note: '「我 → 表情」里家机能用的表情标签，他只能从里面挑。没有表情就不送。' },
+  { id: 'pay', name: '转账红包', note: '角色可以给你转账、发红包，也可以收下或退回你给他的。' },
   { id: 'output', name: '输出规则', note: '不要输出内部标签和 Markdown 代码块。' },
   { id: 'quote', name: '引用', note: '引用规则和可以引用的消息编号。设成不引用时只留一句。' },
 ];

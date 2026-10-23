@@ -7,6 +7,7 @@ import type { NativeAttribute } from '../types/dom';
 import * as model from '../utils/chatMessageNodes';
 import { measureChatBubbleShape } from '../utils/chatBubbleGeometry';
 import { DEFAULT_AVATAR, DEFAULT_BIRD_AVATAR } from '../utils/defaultAvatar';
+import { subscribeWallet } from '../utils/walletStorage';
 import { CHAT_INITIAL_MESSAGES, CHAT_MORE_MESSAGES, isHistoryRow, messageWindow, shareMessageNodes } from '../utils/chatMessageWindow';
 interface MessagesView { nodes: MessageNode[]; hidden: number; loadMore(): void; register(node: MessageElement, element: Element | null): void; list(element: HTMLDivElement | null): void; audio(element: HTMLAudioElement, playing: boolean, ended?: boolean): void; api: MessageNodesApi; }
 const Context = createContext<MessagesView | null>(null);
@@ -178,6 +179,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
         if(!(row instanceof HTMLElement)){sources.current?.notice('原消息已不存在');return;}apiRef.current!.toggle(row,'is-quote-target',false);void row.offsetWidth;apiRef.current!.toggle(row,'is-quote-target',true);const timer=setTimeout(()=>{apiRef.current!.toggle(row,'is-quote-target',false);timers.current.delete(timer);},1300);timers.current.add(timer);return;}
       const transcript=el.closest<HTMLElement>('.chat-voice-text-result');if(transcript){event.preventDefault();const row=transcript.closest<HTMLElement>('.chat-message-row');if(row&&!transcript.classList.contains('is-collapsed'))apiRef.current!.toggleTranscript(row);return;}
       const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill){event.preventDefault();sources.current?.play(pill);return;}
+      const pay=el.closest<HTMLElement>('.chat-pay');const payRow=pay?.closest<HTMLElement>('.chat-message-row');if(payRow?.dataset.payId){event.preventDefault();window.dispatchEvent(new CustomEvent('qingtuan:chat-pay-open',{detail:{id:payRow.dataset.payId}}));return;}
       const photo=el.closest<HTMLElement>('.chat-photo');const photoRow=photo?.closest<HTMLElement>('.chat-message-row');if(photoRow){event.preventDefault();sources.current?.photo(photoRow);}
     },
     keyDown(event){const el=event.target;if(!(el instanceof Element))return;const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill&&(event.key==='Enter'||event.key===' ')){event.preventDefault();sources.current?.play(pill);}},
@@ -205,11 +207,12 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       if(detail.photo)model.setPhoto(node,detail.photo,factory);
       if(detail.location)model.setLocation(node,detail.location,factory);
       if(detail.sticker)model.setSticker(node,detail.sticker,factory);
+      if(detail.pay)model.setPay(node,detail.pay,factory);
       if(detail.quote){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));const quote=model.quoteNode(detail.quote,detail.quoteTargetId||'',factory);if(caption)model.insertBeforeKey(bubble.children,caption.key,quote);else bubble.children.push(quote);}
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
       model.setAttr(node,'data-chat-ai-content',detail.reply);model.setAttr(node,'data-sent-at',String(detail.sentAt??Date.now()));if(selectionStyle)model.setAttr(node,'style',selectionStyle);if(time)model.setText(time,new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}),factory);
     });},
-    appendUser(text,voice,quote,photo,location,sticker){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location,sticker);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},
+    appendUser(text,voice,quote,photo,location,sticker,pay){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location,sticker,pay);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},
     result(row,className,text){updateRow(row,node=>{model.setResult(node,className,text,factory);requestLayout(current.current,node);});},translation(row,text){updateRow(row,node=>model.setTranslation(node,text,factory));},
     toggleTranscript(row){let expanded=false;updateRow(row,node=>{requestLayout(current.current,node);const result=model.findClass(node,'chat-voice-text-result');if(!result)return;expanded=!model.toggleClass(result,'is-collapsed');const bubble=model.findClass(node,'chat-bubble');if(bubble)model.toggleClass(bubble,'has-message-result',expanded);},false);return expanded;},
     markRead(row,all=false){mutate(next=>{const list=all?model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user')):row?[getNode(next,row)].filter((n):n is MessageElement=>!!n):[];for(const node of list){if(!model.hasClass(node,'is-user'))continue;model.setAttr(node,'data-read','true');model.toggleClass(node,'is-read',true);}model.receipts(next,factory);});},
@@ -232,6 +235,8 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   useEffect(()=>{const list=listRef.current;if(!list)return;const scroll=()=>{if(!scrollAnchor.current)followBottom.current=list.scrollHeight-list.scrollTop-list.clientHeight<64;};list.addEventListener('scroll',scroll,{passive:true});return()=>list.removeEventListener('scroll',scroll);},[]);
   const onAudio=useCallback((audio:HTMLAudioElement,playing:boolean,ended=false)=>{if(ended)audio.currentTime=0;const pill=audio.closest<HTMLElement>('.chat-voice-control');if(!pill)return;updateRow(pill,node=>{model.toggleClass(node,'is-playing',playing);model.setAttr(node,'aria-label',playing?'暂停语音消息':'播放语音消息');},false);},[]);
   useEffect(()=>{ready.current=true;return()=>{ready.current=false;cancelAnimationFrame(scrollFrame.current);cancelAnimationFrame(resizeFrame.current);observed.current.forEach(v=>v.observer.disconnect());listeners.current.clear();for(const timer of timers.current)clearTimeout(timer);};},[]);
+  // 钱包变了（收下、退回、过期）：卡片跟着换状态，送给他的文字也一起更新。
+  useEffect(()=>subscribeWallet(()=>mutate(next=>normalized(next))),[]);
   useLayoutEffect(()=>{const connect=(event:Event)=>{const detail=(event as CustomEvent<MessagesConnection>).detail;sources.current=detail;detail.accept(api);};window.addEventListener('qingtuan:chat-messages-connect',connect);return()=>window.removeEventListener('qingtuan:chat-messages-connect',connect);},[api]);
   useLayoutEffect(()=>{
     // React 不插入额外包裹；旧 HTML 中的注释通过组件效果保留原位置。

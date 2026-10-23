@@ -1,5 +1,5 @@
 /** 程序自带的聊天规矩，每段一个编号；内容由程序产生，预设里只能排顺序、开关（回复格式不能关）。 */
-export type PresetBuiltinId = 'basics' | 'persona' | 'userPersona' | 'time' | 'presence' | 'markers' | 'sameTurn' | 'format' | 'recall' | 'voice' | 'photo' | 'location' | 'sticker' | 'output' | 'quote';
+export type PresetBuiltinId = 'basics' | 'persona' | 'userPersona' | 'time' | 'presence' | 'markers' | 'sameTurn' | 'format' | 'recall' | 'voice' | 'photo' | 'location' | 'sticker' | 'pay' | 'output' | 'quote';
 /** system：放进系统提示词，按条目顺序排；front / tail：聊天记录前面、最后，单独成一条消息；depth：插在倒数第几条消息之前。 */
 export type PresetPlacement = 'system' | 'front' | 'tail' | 'depth';
 export type PresetRole = 'system' | 'user' | 'assistant';

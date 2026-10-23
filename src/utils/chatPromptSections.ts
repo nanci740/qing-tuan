@@ -43,6 +43,8 @@ const MARKERS = {
     userPhoto: '[对方发来一张照片',
     location: '[位置] ',
     sticker: '[表情] ',
+    transfer: '[转账] ',
+    packet: '[红包] ',
 };
 
 /** 基本说明：现在在用手机聊天。 */
@@ -82,6 +84,9 @@ function contextMarkers(input: ChatPromptInput) {
         parts.push('上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。');
     if (text.includes(MARKERS.sticker))
         parts.push('上下文里的「[表情] 标签」是一张表情包：对方发的就是对方用表情表达的情绪或反应，你发的是你之前发过的表情。照着那个情绪自然回应，回复里不要照抄这个标记' + (input.stickers?.length ? '，要发表情请用 sticker 栏位。' : '。'));
+    if (text.includes(MARKERS.transfer) || text.includes(MARKERS.packet))
+        parts.push('上下文里的「[转账] ¥金额，留言「…」（状态）」「[红包] …（状态）」是转账、红包卡片，括号里是现在的状态（还没收、收下了、退回了…）。对方发的红包你拆开之前看不到金额。' +
+            '对方发给你、你还没收的：你可以在回复的 JSON 最外层加上 "receive":"accept" 收下（红包就是拆开），或 "receive":"return" 退回（红包不能退）；这个聊天里你还没收的会一起照办。要不要收按你的人设和你们的关系决定，收了或退了都顺着说一句。不加 receive 就是先放着，过一天会自动退回。回复里不要照抄这个标记，要转账、发红包请用 transfer、packet 栏位。');
     if (text.includes(MARKERS.location))
         parts.push('上下文里的「[位置] 地点（地址）· 距你约…」是一张定位卡片：用户发的就是对方现在在哪或想让你知道的地方，你发的就是你那时在的地方。定位是聊天里写出来的，不是真的卫星定位；回应时照着地点自然地反应（例如问对方去那里做什么、说你过去找对方），回复里不要照抄这个标记，要发定位请用 location 栏位。');
     if (text.includes(MARKERS.userPhoto))
@@ -160,6 +165,12 @@ function sticker(input: ChatPromptInput) {
         '表情单独一条，text 可以留空，想说的话放在其他条。像真人聊天那样偶尔用来表达情绪、撒娇、回应对方的表情，不要每次都发，也不要连着发好几张。例如：{"text":"","sticker":"' + tags[0] + '"}';
 }
 
+/** 转账、红包：他也可以给你转账、发红包（他的钱不算）。 */
+function pay() {
+    return '每一条 replies 还可以加上 "transfer"（转账）或 "packet"（红包），表示这条你给对方转了钱或发了红包：{"amount":520,"note":"留言，可以不写"}，amount 是人民币金额（元）。单独一条，text 可以留空，想说的话放在其他条。' +
+        '只在情境合适时发（例如对方说没钱了、过节、生日、想哄对方、请对方吃东西、对方帮了你），不要随便发，金额按你的人设和身份决定。例如：{"text":"","transfer":{"amount":200,"note":"买奶茶"}}';
+}
+
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
 function quote(input: ChatPromptInput) {
     if (input.quotePolicy === 'never') return '不要引用任何消息，quote_id 必须始终留空。';
@@ -176,7 +187,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, output: outputCleanliness, quote,
+    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, pay, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {
