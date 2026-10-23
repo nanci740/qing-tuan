@@ -30,6 +30,8 @@ export interface ChatPromptInput {
     photoLook?: { style: 'tags' | 'sentence'; user: string };
     /** 聊到见面互动时多常发你们两个人的画面。 */
     photoInteraction?: 'rare' | 'normal' | 'often';
+    /** 家机能用的表情标签（「我 → 表情」里勾了家机能用的那几组）；没有就是空的。 */
+    stickers?: string[];
 }
 
 const MARKERS = {
@@ -40,6 +42,7 @@ const MARKERS = {
     photo: '[照片] ',
     userPhoto: '[对方发来一张照片',
     location: '[位置] ',
+    sticker: '[表情] ',
 };
 
 /** 基本说明：现在在用手机聊天。 */
@@ -77,6 +80,8 @@ function contextMarkers(input: ChatPromptInput) {
         parts.push('上下文里「[对方撤回了一条消息，你在撤回前看到了，原本写的是：「…」]」表示对方撤回了一条消息、但你在撤回前已经看到内容：要装作没看见还是点破，按人设和情境决定；「[对方撤回了一条消息，你没看到内容]」表示你只知道对方撤回了，不知道写了什么，不要编造内容，可以按人设好奇地问。');
     if (text.includes(MARKERS.myRecall))
         parts.push('上下文里如果出现「[你撤回了一条消息，原本写的是：「…」]」，那是你自己之前撤回的消息：你记得撤回了什么，对方看不到内容，要不要提起按人设决定，回复里不要照抄这个标记。');
+    if (text.includes(MARKERS.sticker))
+        parts.push('上下文里的「[表情] 标签」是一张表情包：对方发的就是对方用表情表达的情绪或反应，你发的是你之前发过的表情。照着那个情绪自然回应，回复里不要照抄这个标记' + (input.stickers?.length ? '，要发表情请用 sticker 栏位。' : '。'));
     if (text.includes(MARKERS.location))
         parts.push('上下文里的「[位置] 地点（地址）· 距你约…」是一张定位卡片：用户发的就是对方现在在哪或想让你知道的地方，你发的就是你那时在的地方。定位是聊天里写出来的，不是真的卫星定位；回应时照着地点自然地反应（例如问对方去那里做什么、说你过去找对方），回复里不要照抄这个标记，要发定位请用 location 栏位。');
     if (text.includes(MARKERS.userPhoto))
@@ -147,6 +152,14 @@ function location() {
     return '每一条 replies 还可以加上 "location"，表示这条你发了一张定位卡片给对方：{"place":"地点名称","address":"详细地址，可以不写","distance":"离对方多远，例如 500 米、3 公里，不知道就不写"}。定位单独一条，text 可以留空，想说的话放在其他条。什么时候发：到了约好的地方、出门或到了某个地方想让对方知道、对方问你在哪、要约对方来找你的时候；其他时候不要发，不要每次回复都发。地点要符合你的人设和当下情境，可以是真实的地名，也可以是你们故事里的地方。例如：{"text":"","location":{"place":"星巴克（滨江店）","address":"滨江路 88 号一楼","distance":"1.2 公里"}}';
 }
 
+/** 表情：「我 → 表情」里家机能用的标签；一个都没有就不送。 */
+function sticker(input: ChatPromptInput) {
+    const tags = [...new Set((input.stickers || []).map(tag => tag.trim()).filter(Boolean))];
+    if (!tags.length) return '';
+    return '每一条 replies 还可以加上 "sticker"，表示这条你发了一张表情包，值是表情的标签。只能从这些标签里挑，照原样写，不要自己编：' + tags.join('、') + '。' +
+        '表情单独一条，text 可以留空，想说的话放在其他条。像真人聊天那样偶尔用来表达情绪、撒娇、回应对方的表情，不要每次都发，也不要连着发好几张。例如：{"text":"","sticker":"' + tags[0] + '"}';
+}
+
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
 function quote(input: ChatPromptInput) {
     if (input.quotePolicy === 'never') return '不要引用任何消息，quote_id 必须始终留空。';
@@ -163,7 +176,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, output: outputCleanliness, quote,
+    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {

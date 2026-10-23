@@ -1,6 +1,7 @@
 import { DEFAULT_PHOTO } from './defaultPhoto';
 import type { NativeAttribute } from '../types/dom';
-import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageLocation, MessageNode, MessagePhoto, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
+import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageLocation, MessageNode, MessagePhoto, MessageSticker, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
+import { stickerImageUrl } from './stickerStorage';
 import { parseChatAiSegmentedReply } from './chatReplyParser';
 import { adoptInlinePhoto, chatPhotoUrl } from './chatPhotoStore';
 const HTML = 'http://www.w3.org/1999/xhtml';
@@ -151,9 +152,10 @@ export function formatMessageMarkdown(text: unknown) {
 export function messageText(row: MessageElement) {
   if (attr(row, 'data-photo-caption')) return '[照片] ' + attr(row, 'data-photo-caption').trim();
   if (attr(row, 'data-location-place')) return locationText(readLocation(row));
+  if (attr(row, 'data-sticker-tag')) return stickerText(readSticker(row));
   if (attr(row, 'data-voice-transcript')) return attr(row, 'data-voice-transcript').trim();
   const bubble = findClass(row, 'chat-bubble'); if (!bubble) return '';
-  const ignored = ['chat-bubble-shape', 'chat-voice-control', 'chat-voice-text-result', 'chat-message-translation', 'chat-message-translation-card', 'chat-quoted-message', 'chat-bubble-sparkle', 'chat-photo', 'chat-location'];
+  const ignored = ['chat-bubble-shape', 'chat-voice-control', 'chat-voice-text-result', 'chat-message-translation', 'chat-message-translation-card', 'chat-quoted-message', 'chat-bubble-sparkle', 'chat-photo', 'chat-location', 'chat-sticker'];
   const copy = structuredClone(bubble);
   copy.children = removeKeys(copy.children, new Set(elements(copy.children, n => ignored.some(c => hasClass(n, c))).map(n => n.key)));
   return textOf(copy).replace(/\s+/g, ' ').trim();
@@ -216,7 +218,7 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
   for (const row of elements(nodes, n => hasClass(n, 'chat-message-row'))) {
     const bubble = findClass(row, 'chat-bubble');
     if (hasClass(row, 'is-chat') && bubble) for (const caption of bubble.children) {
-      if (caption.kind !== 'element' || caption.tag !== 'div' || ['chat-quoted-message','chat-voice-control','chat-voice-text-result','chat-bubble-shape','chat-bubble-shape-base','chat-photo','chat-location'].some(c => hasClass(caption, c)) || attr(caption,'data-md') === '1' || caption.children.some(n => n.kind === 'element')) continue;
+      if (caption.kind !== 'element' || caption.tag !== 'div' || ['chat-quoted-message','chat-voice-control','chat-voice-text-result','chat-bubble-shape','chat-bubble-shape-base','chat-photo','chat-location','chat-sticker'].some(c => hasClass(caption, c)) || attr(caption,'data-md') === '1' || caption.children.some(n => n.kind === 'element')) continue;
       const raw = attr(row, 'data-chat-ai-content') || textOf(caption);
       if (needsMessageMarkdown(raw)) { caption.children = parseMessageHtml(formatMessageMarkdown(raw), factory); setAttr(caption, 'data-md', '1'); }
     }
@@ -226,6 +228,9 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
       const url = chatPhotoUrl(photoId), src = attr(photoImg, 'src');
       if (url && src !== url) setAttr(photoImg, 'src', url); else if (!url) adoptInlinePhoto(photoId, src);
     }
+    // 表情按图片编号换成这次开机的网址（上传的表情是 blob: 短网址，不把整张图写进聊天记录）
+    const stickerImage = attr(row, 'data-sticker-image'), stickerImg = stickerImage ? findClass(row, 'chat-sticker-img') : undefined;
+    if (stickerImg) { const url = stickerImageUrl(stickerImage); if (url && attr(stickerImg, 'src') !== url) setAttr(stickerImg, 'src', url); }
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {
       if (!avatar) { avatar = factory.element('img', {class:'chat-message-mini-avatar',alt:''}); if (hasClass(row,'is-chat')) row.children.unshift(avatar); else row.children.push(avatar); }
@@ -282,6 +287,26 @@ export function setPhoto(row: MessageElement, photo: MessagePhoto, factory: Mess
   if (photo.scene) setAttr(row, 'data-photo-scene', photo.scene); else removeAttr(row, 'data-photo-scene');
   if (photo.error) setAttr(row, 'data-photo-error', photo.error); else removeAttr(row, 'data-photo-error');
 }
+/** 表情包在聊天记录、预览、送给模型时的文字：[表情] 生气 */
+export function stickerText(sticker: MessageSticker) { return '[表情] ' + sticker.tag; }
+export function readSticker(row: MessageElement): MessageSticker { return { tag: attr(row, 'data-sticker-tag'), image: attr(row, 'data-sticker-image') }; }
+/** 表情包：气泡里只放一张图（不要气泡底色），图看不到就写标签。 */
+export function stickerNode(sticker: MessageSticker, factory: MessageFactory) {
+  const url = stickerImageUrl(sticker.image);
+  return factory.element('div', { class: 'chat-sticker' }, [url
+    ? factory.element('img', { class: 'chat-sticker-img', alt: sticker.tag, src: url, draggable: 'false' })
+    : factory.element('span', { class: 'chat-sticker-missing' }, [factory.text('[表情] ' + sticker.tag)])]);
+}
+/** 把表情放进这一行：取代原本的文字。 */
+export function setSticker(row: MessageElement, sticker: MessageSticker, factory: MessageFactory) {
+  const bubble = findClass(row, 'chat-bubble'); if (!bubble) return;
+  const old = bubble.children.find(n => n.kind === 'element' && (hasClass(n, 'chat-sticker') || n.tag === 'div' && !['chat-quoted-message','chat-bubble-shape','chat-bubble-shape-base'].some(c => hasClass(n, c))));
+  const node = stickerNode(sticker, factory);
+  if (old) bubble.children = bubble.children.map(n => n.key === old.key ? node : n); else bubble.children.push(node);
+  toggleClass(bubble, 'chat-bubble--sticker', true);
+  setAttr(row, 'data-sticker-tag', sticker.tag); setAttr(row, 'data-sticker-image', sticker.image);
+  setAttr(row, 'data-chat-ai-content', stickerText(sticker));
+}
 /** 定位卡片在聊天记录、预览、送给模型时的文字：[位置] 地点（地址）· 距你约 3 公里 */
 export function locationText(location: MessageLocation) {
   return '[位置] ' + location.place + (location.address ? `（${location.address}）` : '') + (location.distance ? ` · 距你约 ${location.distance}` : '');
@@ -321,7 +346,7 @@ export function peerNode(text: string, avatar: string, factory: MessageFactory) 
     factory.element('img',{class:'chat-message-mini-avatar',alt:'',src:avatar}),
     factory.element('div',{class:'chat-bubble-wrap'},[factory.element('div',{class:'chat-bubble'},[caption]),factory.element('div',{class:'chat-bubble-time'})])]);
 }
-export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory, photo?: MessagePhoto | null, location?: MessageLocation | null) {
+export function userNode(text: string, voice: MessageVoice | null, quote: {text:string;targetId:string}, avatar: string, factory: MessageFactory, photo?: MessagePhoto | null, location?: MessageLocation | null, sticker?: MessageSticker | null) {
   const row=factory.element('div',{class:'chat-message-row is-user','data-sent-at':String(Date.now()),'data-message-id':newMessageId()});
   if(text)setAttr(row,'data-chat-ai-content',text);
   const bubble=factory.element('div',{class:voice?'chat-bubble chat-bubble--voice':'chat-bubble'});
@@ -330,6 +355,7 @@ export function userNode(text: string, voice: MessageVoice | null, quote: {text:
   row.children=[factory.element('div',{class:'chat-bubble-wrap'},[bubble,factory.element('div',{class:'chat-bubble-time'},[factory.text(new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}))])]),factory.element('img',{class:'chat-message-mini-avatar',alt:'',src:avatar})];
   if(photo)setPhoto(row,photo,factory);
   if(location)setLocation(row,location,factory);
+  if(sticker)setSticker(row,sticker,factory);
   return row;
 }
 export function setResult(row: MessageElement, className: string, text: string, factory: MessageFactory) {
@@ -372,10 +398,11 @@ export function backgroundNode(detail: PeerMessageDetail, factory: MessageFactor
   const row=factory.element('div',{class:'chat-message-row is-chat','data-ai-pending':'false','data-chat-ai-content':reply,'data-sent-at':String(stamp),'data-message-id':'msg_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)});
   const bubble=factory.element('div',{class:detail.voice?.dataUrl?'chat-bubble chat-bubble--voice':'chat-bubble'});
   if(detail.quote)bubble.children.push(quoteNode(String(detail.quote),String(detail.quoteTargetId||''),factory));
-  if(detail.photo||detail.location){/* 照片、定位等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));
+  if(detail.photo||detail.location||detail.sticker){/* 照片、定位、表情等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));
   row.children=[factory.element('img',{class:'chat-message-mini-avatar',alt:''}),factory.element('div',{class:'chat-bubble-wrap'},[bubble,factory.element('div',{class:'chat-bubble-time'},[factory.text(new Date(stamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}))])])];
   if(detail.photo)setPhoto(row,detail.photo,factory);
   if(detail.location)setLocation(row,detail.location,factory);
+  if(detail.sticker)setSticker(row,detail.sticker,factory);
   if(detail.translation){setTranslation(row,String(detail.translation),factory);setAttr(row,'data-simplified-translation',String(detail.translation));}return row;
 }
 function setResultInBubble(bubble:MessageElement,text:string,factory:MessageFactory){bubble.children.push(factory.element('div',{class:'chat-voice-text-result'},[factory.text(text)]));toggleClass(bubble,'has-message-result',true);}

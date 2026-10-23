@@ -1,0 +1,28 @@
+/* 挑表情的小窗：用聊天确认窗口的外框；上面一排分组（凸起和按下跟世界书小窗一样，太多就左右滑），下面一排四张、底下写标签。 */
+.chat-sticker-picker .sp-confirm { width: min(340px, 92vw); max-height: 78vh; display: flex; flex-direction: column; }
+.chat-sticker-tabs { display: flex; gap: 6px; padding: 10px 18px 0; overflow-x: auto; scrollbar-width: none; }
+.chat-sticker-tabs::-webkit-scrollbar { display: none; }
+.chat-sticker-tabs button {
+  flex: none; min-width: 64px; height: 28px; padding: 0 12px; border: 1px solid var(--color-muted); border-radius: 3px; cursor: pointer;
+  background: var(--effect-face-white); box-shadow: var(--effect-raised), var(--effect-drop); color: var(--color-text); font: inherit; font-size: 12px; letter-spacing: .5px;
+}
+.chat-sticker-tabs button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-sticker-picker .sp-confirm-body { overflow-y: auto; }
+.chat-sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 6px; }
+.chat-sticker-cell { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; }
+.chat-sticker-cell-pic {
+  display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; box-sizing: border-box; overflow: hidden;
+  border: 1px solid var(--spc-line); border-radius: 4px; background: var(--color-surface);
+}
+.chat-sticker-cell-pic img { width: 86%; height: 86%; object-fit: contain; pointer-events: none; }
+.chat-sticker-cell-pic i { font-size: 9.5px; font-style: normal; color: var(--color-muted); }
+.chat-sticker-cell b { max-width: 100%; font-size: 10px; font-weight: 500; color: var(--spc-title); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-sticker-picker .sp-confirm-actions.chat-sticker-actions { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; }
+
+/* 聊天里的表情：没有气泡底色和外框，只放一张图（最大 120px）；图看不到就写「[表情] 标签」 */
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--sticker { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--sticker > .chat-bubble-shape,
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble.chat-bubble--sticker > .chat-bubble-shape-base { display: none !important; }
+#chatAppPage#chatAppPage #chatRoomView .chat-bubble > .chat-sticker { display: block !important; }
+#chatAppPage#chatAppPage .chat-sticker-img { display: block; max-width: 120px; max-height: 120px; object-fit: contain; -webkit-touch-callout: none; }
+#chatAppPage#chatAppPage .chat-sticker-missing { font-size: 12px; opacity: .7; }

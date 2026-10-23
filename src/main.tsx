@@ -2,6 +2,7 @@ import { PressedButton } from './components/shared/PressedButton';
 import { initializeUiFont } from './utils/appearanceStorage';
 import { initializeKvStorage } from './utils/kvStorage';
 import { initializeChatPhotos } from './utils/chatPhotoStore';
+import { initializeStickerImages } from './utils/stickerStorage';
 import { CHAT_RECORDS_BLOCKED_MESSAGE, initializeChatRecords } from './utils/chatRecords';
 import { initializeImageAssets } from './utils/imageAssets';
 import { initializeCatalogStorage } from './utils/catalogStorage';
@@ -17,7 +18,7 @@ installOriginalStyles(tokensCss, orderedStyleSources, preFontStyleFragmentCount)
 window.qtSettingsPageEntries = {};
 // 原页面直接挂在 body，避免增加包装节点改变既有选择器。
 const root = createRoot(document.body);
-void initializeKvStorage().then(() => Promise.all([initializeImageAssets().then(async warning => [warning, await initializeCatalogStorage()].filter(Boolean).join('；')), initializeChatRecords(), initializeUiFont(), initializeChatPhotos()])).then(warnings => {
+void initializeKvStorage().then(() => Promise.all([initializeImageAssets().then(async warning => [warning, await initializeCatalogStorage(), await initializeStickerImages()].filter(Boolean).join('；')), initializeChatRecords(), initializeUiFont(), initializeChatPhotos()])).then(warnings => {
   const warning = warnings.filter(Boolean).join('；');
   flushSync(() => root.render(<App />));
   if (warning) showToast(warning);

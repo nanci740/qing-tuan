@@ -14,6 +14,8 @@ export interface ChatSegmentedReply {
   photos?: string[];
   /** 每一张照片的中文画面描述（文字照片点开看的那段），没有就是空字符串。 */
   scenes?: string[];
+  /** 每一条发的表情包标签（从家机能用的表情里挑），没有就是空字符串。 */
+  stickers?: string[];
   /** 每一条发的定位；没有就是 null。 */
   locations?: (MessageLocation | null)[];
 }

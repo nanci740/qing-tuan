@@ -156,6 +156,15 @@ export function ChatRoom() {
           </OriginalElement>
           {"\n            "}
         </OriginalElement>
+        <OriginalElement tag="button" attributes={[{"name":"class","value":"chat-quick-action"},{"name":"type","value":"button"},{"name":"data-chat-action","value":"sticker"}]}>
+          {"\n                "}
+          <ChatPixelIcon name="smile" />
+          {"\n                "}
+          <OriginalElement tag="span" attributes={[]}>
+            {"Sticker"}
+          </OriginalElement>
+          {"\n            "}
+        </OriginalElement>
       </OriginalElement>
       {"\n    "}
     <ChatSelectionToolbar /><ChatRoomTools /><ChatRecordDetail /><ChatSidebar /></ChatNavigationSurface>
