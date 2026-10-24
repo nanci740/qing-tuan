@@ -4,6 +4,7 @@ import { flushSync } from 'react-dom';
 import type { ReplyDetail, ReplyNotificationBridge, ReplyNotificationServices } from '../types/replyNotification';
 import { DEFAULT_AVATAR } from '../utils/defaultAvatar';
 import { chatReplyPreview } from '../utils/chatReplyParser';
+import { inQuietHours, readMeSettings } from '../utils/meSettingsStorage';
 const UNREAD_KEY = 'smallphone_chat_unread_counts_v1';
 function loadUnread() {
   try {
@@ -24,7 +25,8 @@ export function useReplyNotification() {
   const timer = useRef(0),
     frame = useRef(0),
     chatKey = useRef<unknown>(''),
-    pending = useRef<ReplyDetail | null>(null);
+    pending = useRef<ReplyDetail | null>(null),
+    systemOpen = useRef<(() => void) | null>(null);
   const [shown, setShown] = useState(false),
     [reset, setReset] = useState(false),
     [content, setContent] = useState<{
@@ -47,9 +49,12 @@ export function useReplyNotification() {
     } catch {/* 原未读存储失败不弹提示。 */}
     api.current!.updateThread(key);
   }
+  // 「我 → 设置」：通知不写内容就只说发来一条新消息
+  const previewText = (body: unknown) => readMeSettings().notify.preview ? String(body || '收到一条新回复') : '发来一条新消息';
+  /** system：不是角色发的（例如钱包的还款提醒），标题、头像照 detail 给的，点了交给 detail.open。 */
   function show(detail: ReplyDetail = {}) {
-    const character = api.current!.find(detail.chatKey);
-    if (!character) return;
+    const character = detail.system ? undefined : api.current!.find(detail.chatKey);
+    if (!character && !detail.system) return;
     if (!element.current) {
       pending.current = detail;
       return;
@@ -62,12 +67,13 @@ export function useReplyNotification() {
       setShown(false);
     });
     void element.current.offsetWidth;
-    chatKey.current = detail.chatKey;
+    chatKey.current = detail.system ? '' : detail.chatKey;
+    systemOpen.current = detail.system && typeof detail.open === 'function' ? detail.open as () => void : null;
     flushSync(() => {
       setContent({
-        avatar: String(detail.avatar || character.photoUrl || DEFAULT_AVATAR),
-        name: String(detail.title || String(character.name == null ? '' : character.name).trim() || '新消息'),
-        body: chatReplyPreview(detail.body || '收到一条新回复').replace(/\s+/g, ' ')
+        avatar: String(detail.avatar || character?.photoUrl || DEFAULT_AVATAR),
+        name: String(detail.title || String(character?.name == null ? '' : character.name).trim() || '新消息'),
+        body: detail.system ? String(detail.body || '') : chatReplyPreview(previewText(detail.body)).replace(/\s+/g, ' ')
       });
       setReset(false);
     });
@@ -87,20 +93,23 @@ export function useReplyNotification() {
     if (!key || detail?.viewed) return;
     const addedCount = Math.max(1, Number(detail?.unreadCount) || 1);
     setUnread(key, Number(unread.current[key] || 0) + addedCount);
+    // 勿扰时间：未读照记，不弹横幅、不发系统通知
+    if (inQuietHours()) return;
     show(detail);
     window.dispatchEvent(new CustomEvent('qingtuan:notify-reply', {
       detail: {
         title: detail?.title || '小手机',
-        body: detail?.body || '收到一条新回复',
+        body: previewText(detail?.body),
         tag: `smallphone-reply-${key}`
       }
     }));
   }
   function click() {
-    const character = api.current?.find(chatKey.current);
+    const character = api.current?.find(chatKey.current), open = systemOpen.current;
     window.cancelAnimationFrame(frame.current);
     flushSync(() => setShown(false));
-    if (character) api.current!.open(chatKey.current);
+    if (open) open();
+    else if (character) api.current!.open(chatKey.current);
   }
   useLayoutEffect(() => {
     const connect = (event: Event) => {
@@ -125,9 +134,13 @@ export function useReplyNotification() {
         complete
       });
     };
+    // 不是角色发的横幅（还款提醒这类）：勿扰时间不弹
+    const system = (event: Event) => { if (!inQuietHours()) show({ ...(event as CustomEvent<ReplyDetail>).detail, system: true }); };
     window.addEventListener('qingtuan:reply-notification-connect', connect);
+    window.addEventListener('qingtuan:system-banner', system);
     return () => {
       window.removeEventListener('qingtuan:reply-notification-connect', connect);
+      window.removeEventListener('qingtuan:system-banner', system);
       window.clearTimeout(timer.current);
       window.cancelAnimationFrame(frame.current);
     };

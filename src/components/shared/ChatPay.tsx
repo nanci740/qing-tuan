@@ -7,6 +7,7 @@ import { ChatPixelIcon } from './ChatPixelIcon';
 import { showToast } from '../../utils/toast';
 import { expireWalletPays, parseYuan, payRecord, paySources, readWallet, settlePay, subscribeWallet, yuan } from '../../utils/walletStorage';
 import type { MessagePay } from '../../types/chatMessages';
+import { remindWallet } from '../../utils/walletRemind';
 
 type Bridge = Window & { smallphoneSendChatPay?: (pay: Omit<MessagePay, 'id'>, source?: string) => void };
 interface Draft { kind: 'transfer' | 'packet'; amount: string; note: string; source: string }
@@ -23,8 +24,12 @@ export function ChatPay() {
     window.addEventListener('qingtuan:chat-pay-open', open);
     return () => { window.removeEventListener('qingtuan:chat-action', start); window.removeEventListener('qingtuan:chat-pay-open', open); };
   }, []);
-  // 过了一天没收的自动退回、信用卡逾期手续费、亲属卡换月：开着的时候每分钟看一次
-  useEffect(() => { const timer = setInterval(() => expireWalletPays(), 60000); return () => clearInterval(timer); }, []);
+  // 过了一天没收的自动退回、信用卡逾期手续费、亲属卡换月、还款提醒：开机过一下先看一次，之后开着的时候每分钟看一次
+  useEffect(() => {
+    const check = () => { expireWalletPays(); remindWallet(); };
+    const first = setTimeout(check, 3000), timer = setInterval(check, 60000);
+    return () => { clearTimeout(first); clearInterval(timer); };
+  }, []);
 
   const update = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch });
   // wallet 变了（例如转进余额）付款方式要跟着更新，所以每次画都重新算

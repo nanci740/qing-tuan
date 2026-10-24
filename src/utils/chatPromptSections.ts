@@ -17,6 +17,7 @@ export interface ChatPromptInput {
     /** 末尾连续几条是用户的消息。 */
     trailingUserMessages: number;
     timeText: string;
+    /** mine 空的：你在「我 → 设置」关掉了让他看到你的在线状态。 */
     presence: { mine: string; online: string; status: string };
     segmented: boolean;
     replyLength: string;
@@ -71,7 +72,7 @@ function time(input: ChatPromptInput) {
 /** 在线状态：对方的状态、自己的状态，以及怎么更新。 */
 function presence(input: ChatPromptInput) {
     const { mine, online, status } = input.presence;
-    return `对方（用户）现在的在线状态是「${mine}」，你看得到，可以按人设自然地反应，但不用每次都提。你目前在聊天软件上的在线状态是「${online}」，个人状态是「${status || '（没有设置）'}」，对方在你的资料旁边看得到这两样。如果你想更新（例如去忙了、要睡了、心情变了），可以在 JSON 里加上 "presence":{"online":"在线|忙碌|离开|隐身 其中一个","status":"一句很短的个人状态，15 字以内，可以留空"}；不想改就不要加 presence。要不要改、改成什么按人设和当下情境决定，偶尔才改，不要每次回复都改。`;
+    return (mine ? `对方（用户）现在的在线状态是「${mine}」，你看得到，可以按人设自然地反应，但不用每次都提。` : '对方（用户）没有公开在线状态，你不知道对方现在在不在线，不要编造。') + `你目前在聊天软件上的在线状态是「${online}」，个人状态是「${status || '（没有设置）'}」，对方在你的资料旁边看得到这两样。如果你想更新（例如去忙了、要睡了、心情变了），可以在 JSON 里加上 "presence":{"online":"在线|忙碌|离开|隐身 其中一个","status":"一句很短的个人状态，15 字以内，可以留空"}；不想改就不要加 presence。要不要改、改成什么按人设和当下情境决定，偶尔才改，不要每次回复都改。`;
 }
 
 /** 聊天记录里的标记说明：这一轮的上下文里真的出现了才送。 */

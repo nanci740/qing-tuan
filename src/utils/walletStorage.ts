@@ -218,6 +218,13 @@ export function familyCardText(chatKey: string) {
   const used = card.month === monthKey() ? card.used : 0;
   return `你之前给对方开了一张亲属卡，每月额度 ¥${yuan(card.limit)}，这个月对方已经用了 ¥${yuan(used)}（对方用你的亲属卡付的钱）。`;
 }
+/** 清空账单：转入提现、手续费的纪录全部拿掉；转账红包只留还没收的（聊天里那张卡片还要看状态）。余额和卡不动。 */
+export function clearBills() {
+  const wallet = readWallet();
+  write({ ...wallet, records: wallet.records.filter(record => record.state === 'pending'), moves: [] });
+}
+/** 还原备份：整个钱包换掉（照样整理过才存）。 */
+export function replaceWallet(value: unknown) { write(clean(value)); }
 export function initializeWallet() {
   try { expireWalletPays(); } catch { /* 钱包读不到也不挡开机 */ }
   return '';
