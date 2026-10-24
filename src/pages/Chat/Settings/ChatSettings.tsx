@@ -766,7 +766,7 @@ export function ChatSettings() {
                 <ChatSettingCheckbox id="chatSettingAvatars" setting="avatars" initiallyChecked={true} />
               </label>
               <label className="chat-setting-row">
-                <span className="chat-setting-copy"><strong>{"拍一拍"}</strong><span>{"双击头像拍一拍（不显示头像时双击右边栏的头像）；他也会照人设拍你，后缀他自己决定。关掉就都不拍。"}</span></span>
+                <span className="chat-setting-copy"><strong>{"拍一拍"}</strong><span>{"双击头像或名字拍一拍，双击「我」是拍自己；他也会照人设拍你，后缀他自己决定。关掉就都不拍。"}</span></span>
                 <ChatSettingCheckbox id="chatSettingPat" setting="pat" initiallyChecked={true} />
               </label>
               <div className="chat-setting-field-row">
