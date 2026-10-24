@@ -16,7 +16,7 @@ function Choices<T extends string | number>({ value, options, onChange }: { valu
     {options.map(([option, label]) => <button type="button" role="radio" key={String(option)} aria-checked={option === value} className={option === value ? 'is-active' : ''} onClick={() => onChange(option)}>{label}</button>)}
   </span>;
 }
-/** 勾角色：一排小圆角标签，勾了的变主题色。 */
+/** 勾角色：一排小方块标签，勾了的变主题色。 */
 function Who({ picked, onChange }: { picked: string[]; onChange: (next: string[]) => void }) {
   const characters = readChatCharacters();
   if (!characters.length) return <div className="chat-me-set-who"><small>还没有角色。</small></div>;
@@ -54,7 +54,7 @@ export function MeSettings() {
     <div className="chat-me-set-box">
       <div className="chat-me-set-row"><span>主动找你<small>你一阵子没说话，他会自己先发消息</small></span><Toggle on={proactive.enabled} label="主动找你" onChange={enabled => updateMeSettings('proactive', { enabled })} /></div>
       {proactive.enabled ? <>
-        <div className="chat-me-set-row is-sub is-stack"><span>多久没聊就找你</span><Choices value={proactive.after} options={PROACTIVE_AFTER.map(value => [value, value < 60 ? `${value}分` : value === 720 ? '半天' : `${value / 60}小时`] as const)} onChange={after => updateMeSettings('proactive', { after })} /></div>
+        <div className="chat-me-set-row is-sub is-nowrap"><span>多久没聊</span><Choices value={proactive.after} options={PROACTIVE_AFTER.map(value => [value, value < 60 ? `${value}分` : value === 720 ? '半天' : `${value / 60}小时`] as const)} onChange={after => updateMeSettings('proactive', { after })} /></div>
         <div className="chat-me-set-row is-sub"><span>谁会找你<small>没勾的角色不会主动发</small></span></div>
         <Who picked={proactive.who} onChange={who => updateMeSettings('proactive', { who })} />
         <div className="chat-me-set-row is-sub"><span>一天最多几次</span><Choices value={proactive.perDay} options={PROACTIVE_PER_DAY.map(value => [value, value ? String(value) : '不限'] as const)} onChange={perDay => updateMeSettings('proactive', { perDay })} /></div>

@@ -204,7 +204,7 @@
 .chat-me-wallet-num.is-in { color: var(--color-text); }
 .chat-me-wallet-num em { display: block; font-size: 9.5px; font-weight: 400; font-style: normal; color: var(--color-muted); }
 
-/* 设置：一组一个框，一行一项（左边名字和小字说明，右边开关或选项）；跟着上一项的子设定底色淡一点，左边跟上一项对齐。选项比较多的那几行（is-stack）选项放到文字下面 */
+/* 设置：一组一个框，一行一项（左边名字和小字说明，右边开关或选项）；跟着上一项的子设定底色淡一点，左边跟上一项对齐。说明比较长的那几行（is-stack）选项放到文字下面、靠右 */
 .chat-me-set { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .chat-me-set .chat-me-group-head { padding-top: 4px; }
 .chat-me-set-box { border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); }
@@ -213,7 +213,9 @@
 .chat-me-set-row > span:first-child { min-width: 0; }
 .chat-me-set-row small { display: block; margin-top: 2px; font-size: 10px; line-height: 1.4; color: var(--color-muted); }
 .chat-me-set-row.is-sub, .chat-me-set-who { background: color-mix(in srgb, var(--win-bar) 40%, var(--color-surface)); }
-.chat-me-set-row.is-stack { flex-direction: column; align-items: flex-start; gap: 6px; }
+.chat-me-set-row.is-stack { flex-direction: column; align-items: stretch; gap: 6px; }
+.chat-me-set-row.is-stack > .chat-me-set-choices { align-self: flex-end; }
+.chat-me-set-row.is-nowrap > span:first-child { white-space: nowrap; }
 #chatListView .chat-me-page .chat-me-set-row .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
 .chat-me-set-note { margin: 0 2px 4px; font-size: 10px; line-height: 1.5; color: var(--color-muted); }
 .chat-me-set-toggle { flex: none; position: relative; width: 34px; height: 18px; padding: 0; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-sunken); cursor: pointer; }
@@ -227,7 +229,7 @@
 .chat-me-set-choices button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
 .chat-me-set-who { display: flex; flex-wrap: wrap; gap: 5px; padding: 7px 10px 9px; border-bottom: 1px dotted var(--win-line); }
 .chat-me-set-who:last-child { border-bottom: 0; }
-#chatListView .chat-me-page .chat-me-set-who button { height: 22px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 11px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 10.5px; cursor: pointer; }
+#chatListView .chat-me-page .chat-me-set-who button { height: 22px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 10.5px; cursor: pointer; }
 #chatListView .chat-me-page .chat-me-set-who button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
 .chat-me-set-who small { font-size: 10.5px; color: var(--color-muted); }
 .chat-me-set-time { flex: none; display: flex; align-items: center; gap: 4px; font-size: 11px; }
