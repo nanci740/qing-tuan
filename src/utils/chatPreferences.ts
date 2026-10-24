@@ -36,7 +36,7 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             vibrationFeedback: false,
             pat: true,
             patSuffix: '',
-            myPatSuffix: ''
+            avatars: true
         };
     }
 export function loadChatPreferences(key: string): ChatPreferences {
@@ -78,7 +78,7 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 vibrationFeedback: saved.vibrationFeedback === true,
                 pat: saved.pat !== false,
                 patSuffix: String(saved.patSuffix || '').trim().slice(0, 20),
-                myPatSuffix: String(saved.myPatSuffix || '').trim().slice(0, 20)
+                avatars: saved.avatars !== false
             };
         } catch (error) {
             return defaults;

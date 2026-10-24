@@ -49,7 +49,7 @@ export interface ChatContextItem {role:string;content:string;messageId:string;qu
  stickerImage?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};
  /** 没开着的聊天用：那个聊天的设定、名字和头像、存着的聊天记录（一行一个元素）。 */
- preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string):string;photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
+ preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string,suffix:string):string;photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;
  /** 家机主动找你：照那个聊天的记录，最后加一条系统提示请他开口。 */
  proactive(chatKey:string,prompt:string):Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
@@ -379,7 +379,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
             stickers: aiStickers().map(item => item.tag),
             familyCard: familyCardText(requestChatKey),
-            pat: requestPreferences.pat ? { me: requestPreferences.myPatSuffix } : null,
+            pat: !!requestPreferences.pat,
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -455,8 +455,10 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 data = await api.requestChat(withWorld(textOnlyMessages), requestOptions);
             }
             const rawReply = extractChatAiReply(data);
-            // 他拍了拍你（最外层 "pat":true）：先拍，再说话
-            const patText = requestPreferences.pat && /"pat"\s*:\s*(?:true|"true")/.test(rawReply) ? services.current!.pat(requestChatKey) : '';
+            // 他拍了拍你（最外层 "pat":true，或 "pat":"的脑袋" 自己带后缀）：先拍，再说话
+            const patField = requestPreferences.pat ? /"pat"\s*:\s*(true|"([^"\n]{0,20})")/.exec(rawReply) : null;
+            const patSuffix = patField?.[2] && patField[2] !== 'true' ? patField[2].trim() : '';
+            const patText = patField ? services.current!.pat(requestChatKey, patSuffix && !/^[的地]/.test(patSuffix) ? '的' + patSuffix : patSuffix) : '';
             // replies 是空的：主动找你时是他照人设决定这次不发；只拍不说话也是空的
             if ((proactive || patText) && /"replies"\s*:\s*\[\s*\]/.test(rawReply)) {
                 if (patText) {

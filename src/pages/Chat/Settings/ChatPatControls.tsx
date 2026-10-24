@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 /** 拍一拍后缀：打完（离开输入框或按 Enter）才存。 */
-export function ChatPatSuffix({ id, setting, placeholder }: { id: string; setting: 'patSuffix' | 'myPatSuffix'; placeholder: string }) {
+export function ChatPatSuffix({ id, setting, placeholder }: { id: string; setting: 'patSuffix'; placeholder: string }) {
   const { values, syncVersion, change } = useChatPreferences();
   const input = useRef<HTMLInputElement | null>(null);
   useLayoutEffect(() => { if (input.current) input.current.value = values[setting]; }, [values[setting], syncVersion]);

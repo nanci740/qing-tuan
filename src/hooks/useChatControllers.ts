@@ -111,7 +111,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:chatKey=>patChat(chatKey,'assistant'),photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -368,10 +368,10 @@ function initChatApplication(){
     const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())void replyEngine.proactive(due.chatKey,due.prompt);const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0}));
         const pick=pickProactive(chats);if(!pick)return;noteProactive(pick.chatKey,chatHtml(pick.chatKey));void replyEngine.proactive(pick.chatKey,pick.prompt);},60000);
     dispose.push(()=>window.clearInterval(proactiveTimer));
-    /** 拍一拍：聊天设置关着就不拍。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
-    function patChat(chatKey:string,by:'user'|'self'|'assistant'){
+    /** 拍一拍：聊天设置关着就不拍。他拍你的后缀是他回复里自己写的；拍自己不加后缀。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
+    function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix=''){
         const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat)return '';
-        const name=getCharacterLook(chatKey).name||getCurrentChatRoomName(),suffix=by==='user'?preferences.patSuffix:preferences.myPatSuffix;
+        const name=getCharacterLook(chatKey).name||getCurrentChatRoomName(),suffix=by==='user'?preferences.patSuffix:by==='assistant'?aiSuffix:'';
         const text=by==='user'?`我 拍了拍 ${name}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${name} 拍了拍 我${suffix}`;
         if(chatKey===history.current.activeKey){messageNodes.pat(by,text,suffix);messageNodes.scrollLatest();}
         else{history.current.histories[chatKey]=messageNodes.patHtml(history.current.histories[chatKey]||emptyChatHistory,by,text,suffix);history.current.times[chatKey]=Date.now();saveChatHistories();updateThreadPreview(chatKey);}
@@ -433,6 +433,7 @@ function initChatApplication(){
         navigation.appearanceClass('chat-hide-read-receipts', !state.current.preferences.readReceipt);
         navigation.appearanceClass('chat-time-group', state.current.preferences.timeDisplay === 'group');
         navigation.appearanceClass('chat-time-hidden', state.current.preferences.timeDisplay === 'hidden');
+        navigation.appearanceClass('chat-hide-avatars', !state.current.preferences.avatars);
         // 在线状态由角色自身状态控制，聊天设置不再覆盖它。
         navigation.appearanceClass('chat-is-offline',false);
         chatIdentity.summaries(state.current.preferences);
