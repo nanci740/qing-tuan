@@ -762,16 +762,16 @@ export function ChatSettings() {
                 <ChatSettingCheckbox id="chatSettingTypingIndicator" setting="typingIndicator" initiallyChecked={true} />
               </OriginalElement>
               <label className="chat-setting-row">
-                <span className="chat-setting-copy"><strong>{"拍一拍"}</strong><span>{"双击头像拍一拍；他也会照人设拍你。关掉就都不拍。"}</span></span>
+                <span className="chat-setting-copy"><strong>{"显示头像"}</strong><span>{"消息左边放头像，名字、时间和内容对齐在头像右边。"}</span></span>
+                <ChatSettingCheckbox id="chatSettingAvatars" setting="avatars" initiallyChecked={true} />
+              </label>
+              <label className="chat-setting-row">
+                <span className="chat-setting-copy"><strong>{"拍一拍"}</strong><span>{"双击头像拍一拍（不显示头像时双击右边栏的头像）；他也会照人设拍你，后缀他自己决定。关掉就都不拍。"}</span></span>
                 <ChatSettingCheckbox id="chatSettingPat" setting="pat" initiallyChecked={true} />
               </label>
               <div className="chat-setting-field-row">
-                <span className="chat-setting-field-label"><strong>{"拍他的后缀"}</strong><span>{"你拍他时接在他名字后面，例如「的脑袋」。"}</span></span>
+                <span className="chat-setting-field-label"><strong>{"拍他的后缀"}</strong><span>{"你拍他时接在他名字后面，例如「的脑袋」。拍自己不加。"}</span></span>
                 <ChatPatSuffix id="chatSettingPatSuffix" setting="patSuffix" placeholder="不加" />
-              </div>
-              <div className="chat-setting-field-row">
-                <span className="chat-setting-field-label"><strong>{"我的后缀"}</strong><span>{"他拍你、你拍自己时接在「我」后面。"}</span></span>
-                <ChatPatSuffix id="chatSettingMyPatSuffix" setting="myPatSuffix" placeholder="不加" />
               </div>
               {"\n                    "}
             </OriginalElement>

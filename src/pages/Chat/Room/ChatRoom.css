@@ -702,6 +702,11 @@
             -webkit-user-select: none;
             user-select: none;
         }
+        /* 聊天设置关掉「显示头像」：回到一行名字、下面缩进一个字接内容 */
+        #chatAppPage#chatAppPage.chat-hide-avatars #chatRoomView .chat-message-row { min-height: 0; padding-left: 12px !important; }
+        #chatAppPage#chatAppPage.chat-hide-avatars #chatRoomView .chat-message-row > .chat-message-mini-avatar { display: none; }
+        #chatAppPage#chatAppPage.chat-hide-avatars #chatRoomView .chat-bubble-wrap > :not(.chat-bubble-time) { margin-left: 10.5px !important; max-width: calc(100% - 10.5px) !important; }
+        #chatAppPage#chatAppPage.chat-hide-avatars #chatRoomView.chat-selection-mode .chat-message-row { padding-left: 28px !important; }
 
 /* @qingtuan-order:004042 */
 
