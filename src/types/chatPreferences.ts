@@ -16,8 +16,10 @@ export interface ChatPreferences {
   openingText: string; wallpaperFade: number; wallpaperBlur: number;
   fontSize: number; fontType: 'inherit' | 'file' | 'url'; fontName: string; fontUrl: string;
   bubbleCss: string; soundFeedback: boolean; vibrationFeedback: boolean;
+  /** 拍一拍：开着才拍得了、他也才会拍你；patSuffix 是你拍他时接在他名字后面的字（例如「的脑袋」），myPatSuffix 是他拍你时接在「我」后面的。 */
+  pat: boolean; patSuffix: string; myPatSuffix: string;
 }
-export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback';
+export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback' | 'pat' | 'patSuffix' | 'myPatSuffix';
 export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware' | 'photoInteraction';
 export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'aiPhoto' | 'voiceAutoText' | 'voiceAutoTranslate';
 export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks' | 'worldBookLimit';

@@ -8,7 +8,7 @@ import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
-import {locationText,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
 import {familyCardText,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
@@ -49,7 +49,7 @@ export interface ChatContextItem {role:string;content:string;messageId:string;qu
  stickerImage?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};
  /** 没开着的聊天用：那个聊天的设定、名字和头像、存着的聊天记录（一行一个元素）。 */
- preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
+ preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string):string;photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;
  /** 家机主动找你：照那个聊天的记录，最后加一条系统提示请他开口。 */
  proactive(chatKey:string,prompt:string):Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
@@ -114,6 +114,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (row.classList.contains('chat-recall-notice')) {
                 const recalled = String(row.dataset.recalledContent || '').trim();
                 if (recalled) context.push({ role: 'assistant', content: '[你撤回了一条消息，原本写的是：「' + recalled + '」]', messageId: '', quoteCandidate: '' });
+                continue;
+            }
+            // 拍一拍：你拍他（或拍自己）算你那边的，他拍你算他自己的
+            if (row.classList.contains('chat-pat-notice')) {
+                const by = String(row.dataset.patBy || 'user');
+                context.push({ role: by === 'assistant' ? 'assistant' : 'user', content: patContext(by, String(row.dataset.patSuffix || '')), messageId: '', quoteCandidate: '' });
                 continue;
             }
             if (row.dataset.aiPending === 'true' || row.dataset.recalled === 'true') continue;
@@ -373,6 +379,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
             stickers: aiStickers().map(item => item.tag),
             familyCard: familyCardText(requestChatKey),
+            pat: requestPreferences.pat ? { me: requestPreferences.myPatSuffix } : null,
         }, preset);
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -448,8 +455,17 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 data = await api.requestChat(withWorld(textOnlyMessages), requestOptions);
             }
             const rawReply = extractChatAiReply(data);
-            // 主动找你时他照人设决定这次不发（回了空的 replies）：什么都不做
-            if (proactive && /"replies"\s*:\s*\[\s*\]/.test(rawReply)) return;
+            // 他拍了拍你（最外层 "pat":true）：先拍，再说话
+            const patText = requestPreferences.pat && /"pat"\s*:\s*(?:true|"true")/.test(rawReply) ? services.current!.pat(requestChatKey) : '';
+            // replies 是空的：主动找你时是他照人设决定这次不发；只拍不说话也是空的
+            if ((proactive || patText) && /"replies"\s*:\s*\[\s*\]/.test(rawReply)) {
+                if (patText) {
+                    const viewed = isActiveReplyChat(requestChatKey) && services.current!.viewed();
+                    services.current!.notify({ chatKey: requestChatKey, title: characterName, body: patText, avatar: characterAvatar, unreadCount: 1, viewed });
+                    if (!inQuietHours()) services.current!.feedback('receive');
+                }
+                return;
+            }
             if (!rawReply) throw new Error(emptyChatReplyReason(data));
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);

@@ -113,7 +113,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       // 原先历史保存观察器先于标签观察器执行，保留其保存顺序；标签更新不会再触发一次保存。
       listeners.current.forEach(listener=>listener());
       const shouldLabel=labelPending.current;labelPending.current=false;
-      if(shouldLabel){const next=model.cloneNodes(current.current);model.labelMessages(next,identity().peer);if(!model.sameNodes(next,current.current))render(next);}
+      if(shouldLabel){const next=model.cloneNodes(current.current);model.labelMessages(next,identity().peer,factory);if(!model.sameNodes(next,current.current))render(next);}
     });
   }
   // 比较整棵树一律用结构比较（一找到不同就停），不再整棵 JSON.stringify：消息一多，每个动作都要等它。
@@ -155,7 +155,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   const apiRef=useRef<MessageNodesApi|null>(null);
   if(!apiRef.current)apiRef.current={
     container:()=>listRef.current,
-    rows:(limit)=>{ const rows=current.current.filter(n=>n.kind==='element'&&(model.hasClass(n,'chat-message-row')||model.hasClass(n,'chat-recall-notice')&&model.attr(n,'data-recalled-by'))) as MessageElement[]; return (limit ? rows.slice(-limit) : rows).map(snapshot); },
+    rows:(limit)=>{ const rows=current.current.filter(n=>n.kind==='element'&&(model.hasClass(n,'chat-message-row')||model.hasClass(n,'chat-recall-notice')&&model.attr(n,'data-recalled-by')||model.hasClass(n,'chat-pat-notice'))) as MessageElement[]; return (limit ? rows.slice(-limit) : rows).map(snapshot); },
     html:()=>model.serializeMessageNodes(current.current),
     count:()=>model.elements(current.current,node=>model.hasClass(node,'chat-bubble')).length,
     pinned(){const node=current.current.filter((node):node is MessageElement=>node.kind==='element'&&model.hasClass(node,'chat-message-row')&&model.attr(node,'data-pinned')==='true').at(-1);return node?snapshot(node):null;},
@@ -216,7 +216,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     result(row,className,text){updateRow(row,node=>{model.setResult(node,className,text,factory);requestLayout(current.current,node);});},translation(row,text){updateRow(row,node=>model.setTranslation(node,text,factory));},
     toggleTranscript(row){let expanded=false;updateRow(row,node=>{requestLayout(current.current,node);const result=model.findClass(node,'chat-voice-text-result');if(!result)return;expanded=!model.toggleClass(result,'is-collapsed');const bubble=model.findClass(node,'chat-bubble');if(bubble)model.toggleClass(bubble,'has-message-result',expanded);},false);return expanded;},
     markRead(row,all=false){mutate(next=>{const list=all?model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user')):row?[getNode(next,row)].filter((n):n is MessageElement=>!!n):[];for(const node of list){if(!model.hasClass(node,'is-user'))continue;model.setAttr(node,'data-read','true');model.toggleClass(node,'is-read',true);}model.receipts(next,factory);});},
-    identity(){const next=clone();model.labelMessages(next,identity().peer);render(next);},
+    identity(){const next=clone();model.labelMessages(next,identity().peer,factory);render(next);},
     unread(count){let marker:MessageElement|undefined,first:MessageElement|undefined;const n=Math.max(0,Number(count)||0);if(!n)return null;
       mutate(next=>{next=model.removeKeys(next,new Set(model.elements(next,node=>model.hasClass(node,'chat-unread-divider')).map(node=>node.key)));const rows=model.elements(next,row=>model.hasClass(row,'chat-message-row')&&model.hasClass(row,'is-chat')&&model.attr(row,'data-recalled')!=='true'&&model.attr(row,'data-ai-pending')!=='true');first=rows[Math.max(0,rows.length-n)];if(first){marker=factory.element('div',{class:'chat-unread-divider',role:'separator'},[factory.text('以下为新消息')]);model.insertBeforeKey(next,first.key,marker);}return next;});return marker&&first?(showRow(snapshot(first),{behavior:'auto',block:'start'}),{divider:target(marker),firstUnread:target(first)}):null;
     },
@@ -224,6 +224,8 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
     bindVoice(pill){const key=keys.current.get(pill);if(key===undefined)return;if(boundVoices.current.has(key))return;boundVoices.current.add(key);updateRow(pill,node=>{const wave=model.findClass(node,'chat-voice-wave');if(wave&&wave.children.filter(n=>n.kind==='element').length!==6)wave.children=Array.from({length:6},()=>factory.element('span'));model.toggleClass(node,'is-playing',false);model.setAttr(node,'aria-label','播放语音消息');},false);},
     forwardHtml(html,text,items,source,mode,record){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);next.push(model.forwardNode(text,items,source,mode,record,isolated));return model.serializeMessageNodes(next);},
     backgroundHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);if(!detail.recalled)for(const row of model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user'))){model.toggleClass(row,'is-read',true);model.setAttr(row,'data-read','true');}next.push(model.backgroundNode(detail,isolated));return model.serializeMessageNodes(next);},
+    pat(by,text,suffix){mutate(next=>[...next,model.patNode(by,text,suffix,factory)]);},
+    patHtml(html,by,text,suffix){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);next.push(model.patNode(by,text,suffix,isolated));return model.serializeMessageNodes(next);},
     recallHtml(html,detail){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);const row=model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.attr(n,'data-message-id')===detail.messageId)[0];if(!row)return null;model.replaceKey(next,row.key,model.recallNode(detail,isolated));return model.serializeMessageNodes(next);},
     photo(photo){let found=false;mutate(next=>{const row=model.photoRow(next,photo.id);if(row){model.setPhoto(row,photo,factory);requestLayout(next,row);found=true;}});return found;},
     photoHtml(html,photo){const isolated=model.messageFactory(),next=model.parseMessageHtml(html,isolated);const row=model.photoRow(next,photo.id);if(!row)return null;model.setPhoto(row,photo,isolated);return model.serializeMessageNodes(next);},

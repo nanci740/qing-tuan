@@ -6,6 +6,7 @@ import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAp
 import { ChatOpeningInput, ChatRestartButton } from './ChatOpeningControls';
 import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect } from './ChatReplyControls';
 import { ChatSettingCheckbox } from './ChatSettingCheckbox';
+import { ChatPatSuffix } from './ChatPatControls';
 import { ChatSettingTimeDisplay } from './ChatSettingTimeDisplay';
 import { ChatSettingsAccordion, ChatSettingsEntry, ChatSettingsEntryButton } from './ChatSettingsAccordion';
 import { ChatNavigationSurface } from '../../../components/shared/ChatNavigationSurface';
@@ -703,7 +704,7 @@ export function ChatSettings() {
                   {"消息与显示"}
                 </OriginalElement>
                 <OriginalElement tag="span" attributes={[]}>
-                  {"已读状态与聊天画面显示"}
+                  {"已读状态、拍一拍与聊天画面显示"}
                 </OriginalElement>
               </OriginalElement>
               {"\n                        "}
@@ -760,6 +761,18 @@ export function ChatSettings() {
                 </OriginalElement>
                 <ChatSettingCheckbox id="chatSettingTypingIndicator" setting="typingIndicator" initiallyChecked={true} />
               </OriginalElement>
+              <label className="chat-setting-row">
+                <span className="chat-setting-copy"><strong>{"拍一拍"}</strong><span>{"双击头像拍一拍；他也会照人设拍你。关掉就都不拍。"}</span></span>
+                <ChatSettingCheckbox id="chatSettingPat" setting="pat" initiallyChecked={true} />
+              </label>
+              <div className="chat-setting-field-row">
+                <span className="chat-setting-field-label"><strong>{"拍他的后缀"}</strong><span>{"你拍他时接在他名字后面，例如「的脑袋」。"}</span></span>
+                <ChatPatSuffix id="chatSettingPatSuffix" setting="patSuffix" placeholder="不加" />
+              </div>
+              <div className="chat-setting-field-row">
+                <span className="chat-setting-field-label"><strong>{"我的后缀"}</strong><span>{"他拍你、你拍自己时接在「我」后面。"}</span></span>
+                <ChatPatSuffix id="chatSettingMyPatSuffix" setting="myPatSuffix" placeholder="不加" />
+              </div>
               {"\n                    "}
             </OriginalElement>
             {"\n                "}
