@@ -2029,7 +2029,16 @@
         }
 
         #chatAppPage#chatAppPage #chatRoomView .chat-pat-notice { display: flex; justify-content: center; max-width: 90%; text-align: center; }
-        #chatAppPage#chatAppPage #chatRoomView .chat-pat-text { padding: 1px 8px; border: 1px dotted var(--cr-line); border-radius: 3px; }
+        /* 拍一拍的框跟中间的时间同一个大小、同一个颜色：9.5px 字、12px 行高、左右 4px，只是框线是点线 */
+        #chatAppPage#chatAppPage #chatRoomView .chat-pat-text {
+            padding: 0 4px;
+            border: 1px dotted color-mix(in srgb, var(--cr-peer) 65%, var(--color-surface));
+            border-radius: 2px;
+            color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
+            -webkit-text-fill-color: color-mix(in srgb, var(--cr-peer) 80%, var(--color-surface)) !important;
+            font-size: 9.5px !important;
+            line-height: 12px !important;
+        }
 
 /* @qingtuan-order:004294 */
 
