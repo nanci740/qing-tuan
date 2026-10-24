@@ -54,7 +54,7 @@ export function MeSettings() {
     <div className="chat-me-set-box">
       <div className="chat-me-set-row"><span>主动找你<small>你一阵子没说话，他会自己先发消息</small></span><Toggle on={proactive.enabled} label="主动找你" onChange={enabled => updateMeSettings('proactive', { enabled })} /></div>
       {proactive.enabled ? <>
-        <div className="chat-me-set-row is-sub"><span>多久没聊</span><Choices value={proactive.after} options={PROACTIVE_AFTER.map(value => [value, value < 60 ? `${value}分` : value === 720 ? '半天' : `${value / 60}小时`] as const)} onChange={after => updateMeSettings('proactive', { after })} /></div>
+        <div className="chat-me-set-row is-sub is-stack"><span>多久没聊就找你</span><Choices value={proactive.after} options={PROACTIVE_AFTER.map(value => [value, value < 60 ? `${value}分` : value === 720 ? '半天' : `${value / 60}小时`] as const)} onChange={after => updateMeSettings('proactive', { after })} /></div>
         <div className="chat-me-set-row is-sub"><span>谁会找你<small>没勾的角色不会主动发</small></span></div>
         <Who picked={proactive.who} onChange={who => updateMeSettings('proactive', { who })} />
         <div className="chat-me-set-row is-sub"><span>一天最多几次</span><Choices value={proactive.perDay} options={PROACTIVE_PER_DAY.map(value => [value, value ? String(value) : '不限'] as const)} onChange={perDay => updateMeSettings('proactive', { perDay })} /></div>
@@ -76,7 +76,7 @@ export function MeSettings() {
     <div className="chat-me-group-head">钱包</div>
     <div className="chat-me-set-box">
       <div className="chat-me-set-row"><span>隐藏余额<small>钱包里的钱显示成 ****，点小眼睛才看得到</small></span><Toggle on={wallet.hide} label="隐藏余额" onChange={hide => updateMeSettings('wallet', { hide })} /></div>
-      <div className="chat-me-set-row"><span>信用卡还款提醒<small>快到期和逾期时每天弹一次，钱包亮小红点</small></span><Choices value={wallet.remind} options={WALLET_REMIND.map(value => [value, value ? `提前${value}天` : '关'] as const)} onChange={remind => updateMeSettings('wallet', { remind })} /></div>
+      <div className="chat-me-set-row is-stack"><span>信用卡还款提醒<small>快到期和逾期时每天弹一次，钱包亮小红点</small></span><Choices value={wallet.remind} options={WALLET_REMIND.map(value => [value, value ? `提前${value}天` : '关'] as const)} onChange={remind => updateMeSettings('wallet', { remind })} /></div>
     </div>
 
     <div className="chat-me-group-head">隐私</div>
