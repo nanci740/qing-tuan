@@ -21,6 +21,21 @@ export function emptyChatReplyReason(data: unknown): string {
     if (thought) return `接口没有返回文字回复：模型只回了思考内容${tag}，没写正文，再试一次或换个模型`;
     return `接口没有返回文字回复${tag}`;
 }
+/** 有些模型会把 pat 这类栏位当成工具，吐出自己的工具调用格式（<|open|>tools<|sep|><|open|>call tool="pat"…）。
+    拿掉这些记号不让它跑进气泡；里面是拍一拍的话照样算（suffix 参数就是后缀），pat 是 null 表示没拍。 */
+export function stripLeakedToolCalls(raw: string): { text: string; pat: string | null } {
+    if (!raw.includes('<|')) return { text: raw, pat: null };
+    let pat: string | null = null;
+    const calls = /<\|open\|>call\s+tool\s*=\s*"([^"]*)"[^<]*<\|sep\|>([\s\S]*?)(?:<\|close\|>call<\|sep\|>|$)/g;
+    for (const [, tool, body] of raw.matchAll(calls)) {
+        if (!/^(?:pat|拍一拍|拍)$/i.test(tool.trim())) continue;
+        const suffix = /<\|open\|>argument\s+key\s*=\s*"suffix"[^<]*<\|sep\|>([\s\S]*?)<\|close\|>/.exec(body)?.[1] || '';
+        pat = suffix.trim().slice(0, 20);
+    }
+    const text = raw.replace(/<\|open\|>tools<\|sep\|>[\s\S]*?(?:<\|close\|>tools<\|sep\|>|$)/g, '')
+        .replace(/<\|(?:open|close)\|>[^<]*<\|sep\|>/g, '').replace(/<\|[a-z_]+\|>/gi, '').trim();
+    return { text, pat };
+}
 export function extractChatAiReply(data: unknown): string {
     const source = fields(data);
     const content = fields(fields(fields(source.choices)[0]).message).content ?? source.content ?? source.text;

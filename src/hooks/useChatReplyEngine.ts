@@ -7,7 +7,7 @@ import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
-import {extractChatAiReply,emptyChatReplyReason,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
+import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
 import {familyCardText,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
@@ -454,13 +454,13 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 say(imageAttached && !audioAttached ? '这个模型看不了图片，已改用文字' : audioAttached && !imageAttached ? '这个模型听不了语音，已改用文字' : '这个模型收不了语音和图片，已改用文字');
                 data = await api.requestChat(withWorld(textOnlyMessages), requestOptions);
             }
-            const rawReply = extractChatAiReply(data);
+            const leaked = stripLeakedToolCalls(extractChatAiReply(data)), rawReply = leaked.text;
             // 他拍了拍你（最外层 "pat":true，或 "pat":"的脑袋" 自己带后缀）：先拍，再说话
-            const patField = requestPreferences.pat ? /"pat"\s*:\s*(true|"([^"\n]{0,20})")/.exec(rawReply) : null;
-            const patSuffix = patField?.[2] && patField[2] !== 'true' ? patField[2].trim() : '';
-            const patText = patField ? services.current!.pat(requestChatKey, patSuffix && !/^[的地]/.test(patSuffix) ? '的' + patSuffix : patSuffix) : '';
+            const jsonPat = /"pat"\s*:\s*(true|"([^"\n]{0,20})")/.exec(rawReply);
+            const patSuffix = (leaked.pat ?? (jsonPat?.[2] && jsonPat[2] !== 'true' ? jsonPat[2] : '')).trim();
+            const patText = requestPreferences.pat && (leaked.pat !== null || jsonPat) ? services.current!.pat(requestChatKey, patSuffix && !/^[的地]/.test(patSuffix) ? '的' + patSuffix : patSuffix) : '';
             // replies 是空的：主动找你时是他照人设决定这次不发；只拍不说话也是空的
-            if ((proactive || patText) && /"replies"\s*:\s*\[\s*\]/.test(rawReply)) {
+            if ((proactive || patText) && (/"replies"\s*:\s*\[\s*\]/.test(rawReply) || patText && !rawReply)) {
                 if (patText) {
                     const viewed = isActiveReplyChat(requestChatKey) && services.current!.viewed();
                     services.current!.notify({ chatKey: requestChatKey, title: characterName, body: patText, avatar: characterAvatar, unreadCount: 1, viewed });
