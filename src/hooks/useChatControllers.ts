@@ -377,10 +377,11 @@ function initChatApplication(){
         else{history.current.histories[chatKey]=messageNodes.patHtml(history.current.histories[chatKey]||emptyChatHistory,by,text,suffix);history.current.times[chatKey]=Date.now();saveChatHistories();updateThreadPreview(chatKey);}
         return text;
     }
-    // 双击（手机上连点两下）头像拍一拍：消息旁边的小头像、右边栏的大头像都算；拍他会等他回，拍自己不用
+    // 双击（手机上连点两下）头像或名字拍一拍：消息旁边的小头像和名字、右边栏的大头像都算；多选的时候不拍；拍他会等他回，拍自己不用
     let lastTap={who:'',at:0};
     listen(roomView,'click',event=>{
-        const target=(event.target as Element|null)?.closest?.('.chat-message-mini-avatar,[data-cr-peer-photo],[data-cr-self-photo]');if(!target)return;
+        if(roomView.classList.contains('chat-selection-mode'))return;
+        const target=(event.target as Element|null)?.closest?.('.chat-message-mini-avatar,.chat-message-name,[data-cr-peer-photo],[data-cr-self-photo]');if(!target)return;
         const who=target.matches('[data-cr-self-photo]')||target.closest('.chat-message-row.is-user')?'self':'user',now=Date.now();
         if(lastTap.who!==who||now-lastTap.at>400){lastTap={who,at:now};return;}
         lastTap={who:'',at:0};

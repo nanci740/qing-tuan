@@ -677,6 +677,8 @@
             color: var(--cr-peer);
             -webkit-text-fill-color: var(--cr-peer);
         }
+        /* 名字也能双击拍一拍：连点不要选到字 */
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-name { cursor: pointer; -webkit-user-select: none; user-select: none; }
 
 /* @qingtuan-order:004040 */
 
