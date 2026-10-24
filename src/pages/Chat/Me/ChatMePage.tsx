@@ -16,10 +16,13 @@ import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import { MePixelIcon, MOODS } from './MePixelIcon';
 import { MeStickers } from './MeStickers';
 import { MeWallet } from './MeWallet';
+import { MeSettings } from './MeSettings';
+import { clearWalletDot, subscribeWalletDot, walletDot } from '../../../utils/walletRemind';
+import { readMeSettings, subscribeMeSettings } from '../../../utils/meSettingsStorage';
 import { readWallet, subscribeWallet, yuan } from '../../../utils/walletStorage';
 
-type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown };
-type Tab = 'me' | 'favorites' | 'stickers' | 'wallet';
+type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown; smallphoneOpenChatApp?: () => unknown };
+type Tab = 'me' | 'favorites' | 'stickers' | 'wallet' | 'settings';
 const LATER = '之后开放';
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
@@ -71,7 +74,8 @@ function Group({ title, count, open, onToggle, children }: { title: string; coun
 export function ChatMePage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null);
   const me = useSyncExternalStore(subscribeMe, readMe), avatar = useSyncExternalStore(subscribeMe, readMeAvatar);
-  const wallet = useSyncExternalStore(subscribeWallet, readWallet);
+  const wallet = useSyncExternalStore(subscribeWallet, readWallet), dot = useSyncExternalStore(subscribeWalletDot, walletDot), settings = useSyncExternalStore(subscribeMeSettings, readMeSettings);
+  const wantTab = useRef<Tab>('me');
   const [tab, setTab] = useState<Tab>('me'), [folded, setFolded] = useState<Record<string, boolean>>({});
   const [editing, setEditing] = useState<MePersona | null>(null), [profile, setProfile] = useState<Pick<MeStore, 'name' | 'handle' | 'signature'> | null>(null);
   const file = useRef<HTMLInputElement>(null), refs = useNativeRefs();
@@ -84,8 +88,15 @@ export function ChatMePage() {
       else if (name === 'Chats') setOpen(false);
       else showToast(`${name === 'Contacts' ? '通讯录' : '发现'}${LATER}`);
     };
+    // 从别的地方（例如还款提醒横幅）直接打开「我」的某一页
+    const onOpenTab = (event: Event) => {
+      wantTab.current = (event as CustomEvent<Tab>).detail || 'me';
+      (window as Bridge).smallphoneOpenChatApp?.();
+      setOpen(true); setTab(wantTab.current);
+    };
     window.addEventListener('qingtuan:chat-tab', onTab);
-    return () => window.removeEventListener('qingtuan:chat-tab', onTab);
+    window.addEventListener('qingtuan:open-me-tab', onOpenTab);
+    return () => { window.removeEventListener('qingtuan:chat-tab', onTab); window.removeEventListener('qingtuan:open-me-tab', onOpenTab); };
   }, []);
   // 打开「我」：列表中间那几块先藏起来，「我」放在底下分页的上面；分页亮起哪一格交给 CSS 看 data-chat-tab。
   // （列表和分页钮的 class 由 React 管，直接改 class 会被盖掉，所以用另外的属性。）
@@ -100,12 +111,13 @@ export function ChatMePage() {
     setHost(box);
     return () => { box.remove(); view.removeAttribute('data-chat-tab'); };
   }, [open]);
-  useEffect(() => { if (open) setTab('me'); }, [open]);
+  useEffect(() => { if (open) { setTab(wantTab.current); wantTab.current = 'me'; } }, [open]);
+  // 看过钱包，还款提醒的小红点就熄掉
+  useEffect(() => { if (open && tab === 'wallet') clearWalletDot(); }, [open, tab, dot]);
   if (!open || !host) return null;
 
   const save = (patch: Partial<MeStore>) => writeMe({ ...readMe(), ...patch });
   const fold = (key: string) => setFolded(current => ({ ...current, [key]: !current[key] }));
-  const later = (name: string) => showToast(name + LATER);
   async function pickAvatar(input: HTMLInputElement) {
     const picked = input.files?.[0]; input.value = '';
     if (!picked) return;
@@ -162,9 +174,9 @@ export function ChatMePage() {
           <button type="button" role="tab" aria-selected={tab === 'me'} onClick={() => setTab('me')}><MePixelIcon name="person" />我</button>
           <button type="button" role="tab" aria-selected={tab === 'favorites'} onClick={() => setTab('favorites')}><MePixelIcon name="gift" />收藏</button>
           <button type="button" role="tab" aria-selected={tab === 'stickers'} onClick={() => setTab('stickers')}><MePixelIcon name="sticker" />表情</button>
-          <button type="button" role="tab" aria-selected={tab === 'wallet'} onClick={() => setTab('wallet')}><MePixelIcon name="wallet" />钱包</button>
+          <button type="button" role="tab" aria-selected={tab === 'wallet'} onClick={() => setTab('wallet')}><MePixelIcon name="wallet" />钱包{dot ? <i className="chat-me-side-dot" aria-label="有还款提醒" /> : null}</button>
           <span className="chat-me-side-fill" />
-          <button type="button" className="chat-me-side-last" onClick={() => later('设置')}><MePixelIcon name="gear" />设置</button>
+          <button type="button" role="tab" aria-selected={tab === 'settings'} className="chat-me-side-last" onClick={() => setTab('settings')}><MePixelIcon name="gear" />设置</button>
         </div>
 
         <div className="chat-me-content" role="tabpanel">
@@ -184,7 +196,7 @@ export function ChatMePage() {
                 <button type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</button>
               </div>
             </Group>
-          </> : tab === 'stickers' ? <MeStickers /> : tab === 'wallet' ? <MeWallet /> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
+          </> : tab === 'stickers' ? <MeStickers /> : tab === 'wallet' ? <MeWallet /> : tab === 'settings' ? <MeSettings /> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
             <div className="chat-me-rows">
               {group.items.map((item, index) => <button type="button" className="chat-me-fav" key={index} onClick={() => (window as Bridge).smallphoneOpenCharacterChat?.(group.key)}>
                 <span>{item.mine ? '我：' : ''}{item.text || '[消息]'}</span><small>{when(item.at)}</small>
@@ -196,7 +208,7 @@ export function ChatMePage() {
 
       <div className="chat-me-statusbar" aria-label="状态">
         <span data-state={presence.custom ? '自定义' : presence.online}><i className="chat-me-dot" aria-hidden="true" />{presence.online}</span>
-        <span>{tab === 'wallet' ? `余额 ¥${yuan(wallet.balance)}` : active ? `使用中：${active.name || '未命名人设'}` : '还没选人设'}</span>
+        <span>{tab === 'wallet' ? `余额 ${settings.wallet.hide ? '****' : '¥' + yuan(wallet.balance)}` : active ? `使用中：${active.name || '未命名人设'}` : '还没选人设'}</span>
         {stats?.last ? <span>上次聊天 {when(stats.last)}</span> : null}
       </div>
     </section>

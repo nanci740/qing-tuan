@@ -4,6 +4,7 @@ import { PressedButton } from '../../../components/shared/PressedButton';
 import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
+import { readMeSettings, subscribeMeSettings } from '../../../utils/meSettingsStorage';
 import { readMe } from '../../../utils/meStorage';
 import { addCard, cardAvailable, cardLabel, expireWalletPays, moveMoney, parseYuan, readWallet, removeCard, subscribeWallet, yuan, CREDIT_LATE_FEE } from '../../../utils/walletStorage';
 import type { PayRecord, WalletCard, WalletMove } from '../../../utils/walletStorage';
@@ -55,6 +56,9 @@ export function MeWallet() {
   const wallet = useSyncExternalStore(subscribeWallet, readWallet);
   const [filter, setFilter] = useState<'all' | 'in' | 'out'>('all'), [picked, setPicked] = useState('');
   const [move, setMove] = useState<Move | null>(null), [adding, setAdding] = useState<AddDraft | null>(null);
+  // 「我 → 设置」开了隐藏余额：钱都写成 ****，点小眼睛暂时看一下
+  const settings = useSyncExternalStore(subscribeMeSettings, readMeSettings), [peek, setPeek] = useState(false);
+  const money = (amount: number) => settings.wallet.hide && !peek ? '****' : yuan(amount);
   useEffect(() => { expireWalletPays(); }, []);
   const holder = readMe().name || '我';
   const card = wallet.cards.find(item => item.id === picked) || wallet.cards[0];
@@ -95,10 +99,10 @@ export function MeWallet() {
   const moveCard = move ? wallet.cards.find(item => item.id === move.cardId) : undefined;
   return <div className="chat-me-wallet">
     <div className="chat-me-wallet-card">
-      <small>余额（元）</small>
-      <b><i>¥</i>{yuan(wallet.balance)}</b>
+      <small>余额（元）{settings.wallet.hide ? <button type="button" className={'chat-me-wallet-eye' + (peek ? ' is-open' : '')} aria-label={peek ? '藏起来' : '看余额'} aria-pressed={peek} onClick={() => setPeek(!peek)}><ChatPixelIcon name="eye" /></button> : null}</small>
+      <b><i>¥</i>{money(wallet.balance)}</b>
       <div className="chat-me-wallet-sum">
-        <span>本月收入<em>+{yuan(income)}</em></span><span>本月支出<em>-{yuan(spent)}</em></span>
+        <span>本月收入<em>+{money(income)}</em></span><span>本月支出<em>-{money(spent)}</em></span>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => openMove('in')}>↓ 转入</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('out')}>↑ 提现</button></span>
       </div>
     </div>
@@ -108,23 +112,23 @@ export function MeWallet() {
       : <p className="chat-me-note">还没有卡。按「新增卡」加一张，新卡里先放 ¥5,200（信用卡就是额度 5,200）。亲属卡要在聊天里跟他要。</p>}
     {card ? <div className="chat-me-card-detail">
       {card.kind === 'debit' ? <>
-        <small>{cardLabel(card)} · 余额</small><b>¥{yuan(card.balance)}</b>
+        <small>{cardLabel(card)} · 余额</small><b>¥{money(card.balance)}</b>
         <span className="chat-me-card-kv"><span>卡号</span><span>•••• •••• •••• {card.last4}</span></span>
         <span className="chat-me-card-kv"><span>持卡人</span><span>{holder}</span></span>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => openMove('in', card.id)}>↓ 转进余额</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('out', card.id)}>↑ 从余额转入</button><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>删除</button></span>
       </> : card.kind === 'credit' ? <>
-        <small>{cardLabel(card)} · 可用额度</small><b>¥{yuan(cardAvailable(card))}</b>
+        <small>{cardLabel(card)} · 可用额度</small><b>¥{money(cardAvailable(card))}</b>
         <span className="chat-me-card-bar"><i style={{ width: `${Math.min(100, card.limit ? card.used / card.limit * 100 : 0)}%` }} /></span>
-        <span className="chat-me-card-kv"><span>额度</span><span>¥{yuan(card.limit)}</span></span>
-        <span className="chat-me-card-kv"><span>欠款</span><span>¥{yuan(card.used)}</span></span>
+        <span className="chat-me-card-kv"><span>额度</span><span>¥{money(card.limit)}</span></span>
+        <span className="chat-me-card-kv"><span>欠款</span><span>¥{money(card.used)}</span></span>
         <span className="chat-me-card-kv"><span>还款期限</span><span className={card.due && card.due < Date.now() + 3 * 86400000 ? 'is-warn' : ''}>{card.used && card.due ? day(card.due) + (card.due <= Date.now() ? ` 已逾期 ${Math.floor((Date.now() - card.due) / 86400000) + 1} 天` : ' 前') : '没有欠款'}</span></span>
         <small>过了期限没还清，每天多收 ¥{yuan(CREDIT_LATE_FEE)} 手续费，直到还清。</small>
         <span className="chat-me-wallet-ops"><button type="button" className="chat-me-st-btn" onClick={() => card.used ? openMove('out', card.id) : showToast('这张信用卡没有欠款')}>还款</button><button type="button" className="chat-me-st-btn" onClick={() => openMove('in', card.id)}>↓ 预借到余额</button><button type="button" className="chat-me-st-btn is-danger" onClick={() => dropCard(card)}>删除</button></span>
       </> : <>
-        <small>{cardLabel(card)} · 本月还能用</small><b>¥{yuan(cardAvailable(card))}</b>
+        <small>{cardLabel(card)} · 本月还能用</small><b>¥{money(cardAvailable(card))}</b>
         <span className="chat-me-card-bar"><i style={{ width: `${Math.min(100, card.limit ? (card.limit - cardAvailable(card)) / card.limit * 100 : 0)}%` }} /></span>
-        <span className="chat-me-card-kv"><span>每月额度</span><span>¥{yuan(card.limit)}</span></span>
-        <span className="chat-me-card-kv"><span>本月已用</span><span>¥{yuan(card.limit - cardAvailable(card))}</span></span>
+        <span className="chat-me-card-kv"><span>每月额度</span><span>¥{money(card.limit)}</span></span>
+        <span className="chat-me-card-kv"><span>本月已用</span><span>¥{money(card.limit - cardAvailable(card))}</span></span>
         <span className="chat-me-card-kv"><span>开卡人</span><span>{card.owner || '对方'}</span></span>
         <span className="chat-me-card-kv"><span>额度重置</span><span>每月 1 号</span></span>
         <small>转账、发红包时可以选这张卡付，付给开卡的本人也可以。</small>

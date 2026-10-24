@@ -47,11 +47,13 @@
 /* 左边直排分页（我、收藏，下面是之后开放的功能，最底下设置）+ 右边清单 */
 .chat-me-main { flex: 1; min-height: 0; display: flex; margin: 10px 0 0; border: 1px solid var(--me-line); border-bottom: 0; border-radius: 4px 4px 0 0; background: var(--color-surface); overflow: hidden; }
 .chat-me-side { flex: none; width: 56px; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: none; border-right: 1px solid var(--me-line); background: var(--me-soft); }
-.chat-me-side button { flex: 0 1 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0; border: 0; border-bottom: 1px solid var(--me-line); background: none; color: var(--me-ink) !important; font-size: 10px !important; font-weight: 700; }
+.chat-me-side button { position: relative; flex: 0 1 56px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0; border: 0; border-bottom: 1px solid var(--me-line); background: none; color: var(--me-ink) !important; font-size: 10px !important; font-weight: 700; }
 .chat-me-side button[aria-selected="true"] { margin-right: -1px; border-right: 1px solid var(--color-surface); background: var(--color-surface); }
 /* 高度不够时，先吃掉中间的空白，再把每一格从 56px 慢慢压到 48px，设置那格才不会被挤出去 */
 .chat-me-side-fill { flex: 1 1 0; }
 .chat-me-side button.chat-me-side-last { border-bottom: 0; border-top: 1px solid var(--me-line); }
+/* 钱包有还款提醒：图示右上角一个小红点，进钱包看过就熄 */
+.chat-me-side-dot { position: absolute; top: 7px; right: 14px; width: 7px; height: 7px; border: 1px solid var(--color-surface); border-radius: 50%; background: var(--color-danger); }
 .chat-me-content { flex: 1; min-width: 0; overflow-y: auto; padding: 8px 10px 10px; }
 
 /* 分组：小三角 + 标题，点一下收起来 */
@@ -130,7 +132,11 @@
 /* 钱包：上面余额卡（底下本月收入、支出和转入／提现），中间一排卡（点一张看详情），下面按月份排的账单。退回的金额画删除线 */
 .chat-me-wallet { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .chat-me-wallet-card { position: relative; padding: 12px 12px 10px; border: 1px solid var(--win-line); border-radius: 4px; background: linear-gradient(180deg, var(--color-surface), var(--win-bar)); box-shadow: var(--effect-raised); }
-.chat-me-wallet-card > small { display: block; font-size: 10.5px; letter-spacing: .5px; color: var(--color-muted); }
+.chat-me-wallet-card > small { display: flex; align-items: center; gap: 4px; font-size: 10.5px; letter-spacing: .5px; color: var(--color-muted); }
+/* 隐藏余额时的小眼睛：点了暂时看一下，凹进去表示正在看 */
+.chat-me-wallet-eye { display: flex; align-items: center; justify-content: center; width: 20px; height: 16px; padding: 0; border: 1px solid transparent; border-radius: 3px; background: none; color: var(--color-muted); cursor: pointer; }
+.chat-me-wallet-eye svg { width: 14px; height: 14px; }
+.chat-me-wallet-eye.is-open { border-color: var(--win-line); background: var(--win-bar); box-shadow: var(--effect-sunken); }
 .chat-me-wallet-card > b { display: flex; align-items: baseline; gap: 3px; margin-top: 4px; color: var(--color-text); font: 700 26px "Courier New", ui-monospace, monospace; letter-spacing: .5px; }
 .chat-me-wallet-card > b i { font-size: 14px; font-style: normal; }
 .chat-me-wallet-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--win-line); font-size: 10.5px; color: var(--color-muted); }
@@ -197,6 +203,34 @@
 .chat-me-wallet-num { flex: none; text-align: right; color: var(--color-muted); font: 600 12.5px "Courier New", ui-monospace, monospace; }
 .chat-me-wallet-num.is-in { color: var(--color-text); }
 .chat-me-wallet-num em { display: block; font-size: 9.5px; font-weight: 400; font-style: normal; color: var(--color-muted); }
+
+/* 设置：一组一个框，一行一项（左边名字和小字说明，右边开关或选项）；跟着上一项的子设定往里缩、底色淡一点 */
+.chat-me-set { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.chat-me-set .chat-me-group-head { padding-top: 4px; }
+.chat-me-set-box { border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); }
+.chat-me-set-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-bottom: 1px dotted var(--win-line); font-size: 12px; color: var(--color-text); }
+.chat-me-set-row:last-child { border-bottom: 0; }
+.chat-me-set-row > span:first-child { min-width: 0; }
+.chat-me-set-row small { display: block; margin-top: 2px; font-size: 10px; line-height: 1.4; color: var(--color-muted); }
+.chat-me-set-row.is-sub, .chat-me-set-who { padding-left: 22px; background: color-mix(in srgb, var(--win-bar) 40%, var(--color-surface)); }
+#chatListView .chat-me-page .chat-me-set-row .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
+.chat-me-set-note { margin: 0 2px 4px; font-size: 10px; line-height: 1.5; color: var(--color-muted); }
+.chat-me-set-toggle { flex: none; position: relative; width: 34px; height: 18px; padding: 0; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-sunken); cursor: pointer; }
+.chat-me-set-toggle::after { content: ''; position: absolute; top: 1px; left: 1px; width: 14px; height: 14px; box-sizing: border-box; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-raised); transition: left .15s; }
+.chat-me-set-toggle.is-on { background: var(--theme-color); }
+.chat-me-set-toggle.is-on::after { left: 17px; }
+.chat-me-set-choices { flex: none; display: flex; }
+.chat-me-set-choices button { height: 22px; padding: 0 7px; border: 1px solid var(--color-muted); border-left-width: 0; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 10.5px; white-space: nowrap; cursor: pointer; }
+.chat-me-set-choices button:first-child { border-left-width: 1px; border-radius: 3px 0 0 3px; }
+.chat-me-set-choices button:last-child { border-radius: 0 3px 3px 0; }
+.chat-me-set-choices button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-me-set-who { display: flex; flex-wrap: wrap; gap: 5px; padding-top: 7px; padding-bottom: 9px; border-bottom: 1px dotted var(--win-line); }
+.chat-me-set-who:last-child { border-bottom: 0; }
+#chatListView .chat-me-page .chat-me-set-who button { height: 22px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 11px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 10.5px; cursor: pointer; }
+#chatListView .chat-me-page .chat-me-set-who button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
+.chat-me-set-who small { font-size: 10.5px; color: var(--color-muted); }
+.chat-me-set-time { flex: none; display: flex; align-items: center; gap: 4px; font-size: 11px; }
+.chat-me-set-time input { width: 68px; height: 22px; padding: 0 4px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: 600 11px "Courier New", ui-monospace, monospace; }
 
 /* 表情的小窗：分组名字、改标签、加表情（上传图片 / 贴网址两个分页，跟世界书小窗一样凸起和按下） */
 .chat-me-st-check { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--spc-title); cursor: pointer; }
