@@ -234,6 +234,20 @@
 .chat-me-set-who small { font-size: 10.5px; color: var(--color-muted); }
 .chat-me-set-time { flex: none; display: flex; align-items: center; gap: 4px; font-size: 11px; }
 .chat-me-set-time input { width: 68px; height: 22px; padding: 0 4px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: 600 11px "Courier New", ui-monospace, monospace; }
+.chat-me-set-row.is-center { justify-content: center; }
+.chat-me-sched b { margin-right: 6px; font: 600 13px "Courier New", ui-monospace, monospace; }
+.chat-me-sched.is-off > span:first-child { opacity: .5; }
+.chat-me-sched-tools { flex: none; display: flex; align-items: center; gap: 6px; }
+.chat-me-sched-more { width: 24px; height: 22px; padding: 0; border: 1px solid var(--win-line); border-radius: 3px; background: var(--effect-face-white); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; }
+/* 定时的编辑窗口：选谁（单选小方块）、哪几天（一到日凹凸按钮） */
+.chat-me-sched-who { display: flex; flex-wrap: wrap; gap: 5px; }
+.chat-me-sched-who button { height: 24px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+.chat-me-sched-who button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
+.chat-me-sched-who small { font-size: 11px; color: var(--color-muted); }
+.chat-me-sched-days { display: flex; gap: 4px; }
+.chat-me-sched-days button { width: 26px; height: 24px; padding: 0; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+.chat-me-sched-days button.is-active { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+.chat-me-dialog .sp-confirm-btn.is-danger:not(.is-primary) { color: var(--color-danger-ink); }
 
 /* 表情的小窗：分组名字、改标签、加表情（上传图片 / 贴网址两个分页，跟世界书小窗一样凸起和按下） */
 .chat-me-st-check { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--spc-title); cursor: pointer; }

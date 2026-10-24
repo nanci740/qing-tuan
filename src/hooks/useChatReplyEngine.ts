@@ -448,6 +448,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 data = await api.requestChat(withWorld(textOnlyMessages), requestOptions);
             }
             const rawReply = extractChatAiReply(data);
+            // 主动找你时他照人设决定这次不发（回了空的 replies）：什么都不做
+            if (proactive && /"replies"\s*:\s*\[\s*\]/.test(rawReply)) return;
             if (!rawReply) throw new Error(emptyChatReplyReason(data));
             const parsedReply = parseChatAiSegmentedReply(rawReply, quoteChoices);
             if (parsedReply.presence) setChatPresence(requestChatKey, parsedReply.presence);

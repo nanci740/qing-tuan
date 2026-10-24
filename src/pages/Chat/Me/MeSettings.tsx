@@ -1,8 +1,10 @@
-import { useRef, useSyncExternalStore } from 'react';
+import { useRef, useState, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
+import { PressedButton } from '../../../components/shared/PressedButton';
 import { readChatCharacters } from '../../../utils/chatCharacterStorage';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
-import { PROACTIVE_AFTER, PROACTIVE_PER_DAY, WALLET_REMIND, readMeSettings, subscribeMeSettings, updateMeSettings } from '../../../utils/meSettingsStorage';
+import { PROACTIVE_AFTER, PROACTIVE_CHASE, PROACTIVE_PER_DAY, WALLET_REMIND, readMeSettings, subscribeMeSettings, updateMeSettings, writeSchedules, type MeSchedule } from '../../../utils/meSettingsStorage';
 import { exportMeData, importMeData } from '../../../utils/meBackup';
 import { clearBills } from '../../../utils/walletStorage';
 
@@ -25,11 +27,31 @@ function Who({ picked, onChange }: { picked: string[]; onChange: (next: string[]
       onClick={() => onChange(on ? picked.filter(key => key !== item.archiveId) : [...picked, item.archiveId])}>{on ? '✓ ' : ''}{item.name || '未命名'}</button>; })}
   </div>;
 }
+const DAYS = '一二三四五六日';
+/** 哪几天写成一句话：每天、一到五、六日、一、三、五。 */
+function daysText(days: number[]) {
+  const joined = days.join();
+  return joined === '1,2,3,4,5,6,7' ? '每天' : joined === '1,2,3,4,5' ? '一到五' : joined === '6,7' ? '周末' : days.map(day => DAYS[day - 1]).join('、');
+}
 
 /** 「我」→ 设置：跟你本人有关、所有角色共用的设定（每个聊天自己的设定在聊天设置里）。 */
 export function MeSettings() {
   const settings = useSyncExternalStore(subscribeMeSettings, readMeSettings), file = useRef<HTMLInputElement>(null);
-  const { proactive, notify, wallet, privacy } = settings;
+  const { proactive, schedules, notify, wallet, privacy } = settings;
+  const [editing, setEditing] = useState<MeSchedule | null>(null), isNew = !!editing && !schedules.some(item => item.id === editing.id);
+  const characters = readChatCharacters(), nameOf = (key: string) => characters.find(item => item.archiveId === key)?.name || '已删除的角色';
+  const patchSchedule = (id: string, patch: Partial<MeSchedule>) => writeSchedules(schedules.map(item => item.id === id ? { ...item, ...patch } : item));
+  function saveSchedule() {
+    if (!editing) return;
+    if (!editing.chatKey) { showToast('先选谁来找你'); return; }
+    if (!editing.days.length) { showToast('至少选一天'); return; }
+    const next = { ...editing, note: editing.note.trim() };
+    writeSchedules(isNew ? [...schedules, next] : schedules.map(item => item.id === next.id ? next : item)); setEditing(null);
+  }
+  async function deleteSchedule() {
+    if (!editing || !await confirmChat({ title: '删掉这个定时？', message: `${editing.time} ${nameOf(editing.chatKey)}`, confirmText: '删除', danger: true })) return;
+    writeSchedules(schedules.filter(item => item.id !== editing.id)); setEditing(null);
+  }
   async function download() {
     try {
       const url = URL.createObjectURL(await exportMeData()), link = document.createElement('a');
@@ -58,9 +80,23 @@ export function MeSettings() {
         <div className="chat-me-set-row is-sub"><span>谁会找你<small>没勾的角色不会主动发</small></span></div>
         <Who picked={proactive.who} onChange={who => updateMeSettings('proactive', { who })} />
         <div className="chat-me-set-row is-sub"><span>一天最多几次</span><Choices value={proactive.perDay} options={PROACTIVE_PER_DAY.map(value => [value, value ? String(value) : '不限'] as const)} onChange={perDay => updateMeSettings('proactive', { perDay })} /></div>
+        <div className="chat-me-set-row is-sub is-stack"><span>你没回的时候<small>追的时候一次比一次隔得久；看人设就是他自己决定要不要追，不设上限</small></span>
+          <Choices value={proactive.chase} options={PROACTIVE_CHASE.map(value => [value, value < 0 ? '看人设' : value ? `追${value}次` : '不追'] as const)} onChange={chase => updateMeSettings('proactive', { chase })} /></div>
       </> : null}
     </div>
-    <p className="chat-me-set-note">小手机开着（或开了后台活动）的时候才发得出去。你一直没回的话，他连着找两次就先停，等你回了再算。勿扰时间里他不会找你。</p>
+    <p className="chat-me-set-note">小手机开着（或开了后台活动）的时候才发得出去。你回了话，追的次数就重新算。勿扰时间里他不会找你。</p>
+
+    <div className="chat-me-group-head">定时找你</div>
+    <div className="chat-me-set-box">
+      {schedules.map(item => <div className={'chat-me-set-row chat-me-sched' + (item.enabled ? '' : ' is-off')} key={item.id}>
+        <span><b>{item.time}</b>{nameOf(item.chatKey)}<small>{daysText(item.days)}{item.note ? ` · ${item.note}` : ''}</small></span>
+        <span className="chat-me-sched-tools"><Toggle on={item.enabled} label={`${item.time} ${nameOf(item.chatKey)}`} onChange={enabled => patchSchedule(item.id, { enabled })} />
+          <button type="button" className="chat-me-sched-more" aria-label="编辑" onClick={() => setEditing({ ...item })}>⋯</button></span>
+      </div>)}
+      <div className="chat-me-set-row is-center"><button type="button" className="chat-me-st-btn"
+        onClick={() => setEditing({ id: `s${Date.now().toString(36)}`, chatKey: characters.length === 1 ? characters[0].archiveId : '', time: '08:00', days: [1, 2, 3, 4, 5, 6, 7], note: '', enabled: true })}>＋ 新增定时</button></div>
+    </div>
+    <p className="chat-me-set-note">到了时间他就来找你，不管有没有在聊。勿扰时间里也照样会来，毕竟是你自己定的。那时候小手机没开着的话，半小时内打开还会补上。</p>
 
     <div className="chat-me-group-head">通知</div>
     <div className="chat-me-set-box">
@@ -93,5 +129,32 @@ export function MeSettings() {
       <div className="chat-me-set-row"><span>清空账单<small>余额和卡不动，只清掉账单纪录</small></span><button type="button" className="chat-me-st-btn is-danger" onClick={wipeBills}>清空</button></div>
     </div>
     <input ref={file} type="file" accept="application/json,.json" hidden onChange={event => void restore(event.currentTarget)} />
+
+    {editing ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setEditing(null); }}>
+      <div className="sp-confirm" role="dialog" aria-modal="true" aria-label={isNew ? '新增定时' : '编辑定时'}>
+        <div className="sp-confirm-bar"><span className="sp-confirm-title">{isNew ? '新增定时' : '编辑定时'}</span></div>
+        <div className="sp-confirm-body chat-me-form">
+          <label>谁来找你</label>
+          <div className="chat-me-sched-who" role="radiogroup">
+            {characters.length ? characters.map(item => { const on = item.archiveId === editing.chatKey; return <button type="button" role="radio" key={item.archiveId} aria-checked={on} className={on ? 'is-active' : ''}
+              onClick={() => setEditing({ ...editing, chatKey: item.archiveId })}>{on ? '✓ ' : ''}{item.name || '未命名'}</button>; }) : <small>还没有角色。</small>}
+          </div>
+          <label htmlFor="meSchedTime">几点</label>
+          <input id="meSchedTime" type="time" value={editing.time} onChange={event => event.currentTarget.value && setEditing({ ...editing, time: event.currentTarget.value })} />
+          <label>哪几天</label>
+          <div className="chat-me-sched-days">
+            {[...DAYS].map((label, index) => { const day = index + 1, on = editing.days.includes(day); return <button type="button" key={day} aria-pressed={on} className={on ? 'is-active' : ''}
+              onClick={() => setEditing({ ...editing, days: on ? editing.days.filter(item => item !== day) : [...editing.days, day].sort() })}>{label}</button>; })}
+          </div>
+          <label htmlFor="meSchedNote">想让他做什么<small>可以不写</small></label>
+          <input id="meSchedNote" maxLength={40} placeholder="例如：叫我起床、提醒我喝水" value={editing.note} onChange={event => setEditing({ ...editing, note: event.currentTarget.value })} />
+        </div>
+        <div className="sp-confirm-actions chat-me-form-actions">
+          {isNew ? null : <PressedButton type="button" className="sp-confirm-btn is-danger" onClick={deleteSchedule}>删除</PressedButton>}
+          <PressedButton type="button" className="sp-confirm-btn" onClick={() => setEditing(null)}>取消</PressedButton>
+          <PressedButton type="button" className="sp-confirm-btn is-primary" onClick={saveSchedule}>{isNew ? '新增' : '存好'}</PressedButton>
+        </div>
+      </div>
+    </div>, document.body) : null}
   </div>;
 }

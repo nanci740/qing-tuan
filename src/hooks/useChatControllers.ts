@@ -12,7 +12,7 @@ import type {ChatIdentityApi} from '../providers/ChatIdentityProvider';
 import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsProvider';
 import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import {sendPay} from '../utils/walletStorage';
-import {noteProactive,pickProactive} from '../utils/chatProactive';
+import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
 import {payFromData,payLabel} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
@@ -363,9 +363,9 @@ function initChatApplication(){
         sendCard(null, null, pay);
     };
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
-    // 家机主动找你（「我 → 设置」）：每分钟看一次有没有人该来找你；开着的那个聊天用画面上的记录
+    // 家机主动找你（「我 → 设置」）：每分钟看一次有没有定时到点的、有没有人该来找你；开着的那个聊天用画面上的记录
     const chatHtml=(key:string)=>key===history.current.activeKey?messageNodes.storedHtml():history.current.histories[key]||'';
-    const proactiveTimer=window.setInterval(()=>{const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0}));
+    const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())void replyEngine.proactive(due.chatKey,due.prompt);const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0}));
         const pick=pickProactive(chats);if(!pick)return;noteProactive(pick.chatKey,chatHtml(pick.chatKey));void replyEngine.proactive(pick.chatKey,pick.prompt);},60000);
     dispose.push(()=>window.clearInterval(proactiveTimer));
 
