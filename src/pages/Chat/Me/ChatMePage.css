@@ -139,7 +139,7 @@
 .chat-me-wallet-ops { display: flex; flex-wrap: wrap; gap: 6px; }
 .chat-me-wallet-sum .chat-me-wallet-ops { margin-left: auto; }
 #chatListView .chat-me-page .chat-me-wallet-ops .chat-me-st-btn { height: 22px; padding: 0 8px; font-size: 10.5px; }
-/* 卡：一排可以左右滑，卡面不写钱：上面银行、卡种，左边中间像素芯片，左下卡号（前三组遮住），右下持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡虚线框加斜纹。选中的外面一圈框 */
+/* 卡：一排可以左右滑，卡面不写钱：上面银行、卡种，左边中间像素芯片，左下卡号（前三组遮住），右下持卡人。储蓄卡淡主题色，信用卡深一点白字，亲属卡加斜纹。选中的外面一圈框 */
 .chat-me-cards-row { display: flex; gap: 10px; width: 0; min-width: 100%; overflow-x: auto; padding: 5px 5px 8px; box-sizing: border-box; scrollbar-width: none; }
 .chat-me-cards-row::-webkit-scrollbar { display: none; }
 .chat-me-card {
@@ -148,7 +148,7 @@
   color: var(--color-text); font: inherit; text-align: left; cursor: pointer;
 }
 .chat-me-card.is-credit { background: linear-gradient(135deg, color-mix(in srgb, var(--color-muted) 55%, var(--theme-color)), color-mix(in srgb, var(--color-muted) 30%, var(--theme-color))); color: var(--color-surface); }
-.chat-me-card.is-family { border-style: dashed; background: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--theme-color) 60%, transparent) 6px 7px), linear-gradient(135deg, var(--color-surface), var(--win-bar)); }
+.chat-me-card.is-family { background: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--theme-color) 60%, transparent) 6px 7px), linear-gradient(135deg, var(--color-surface), var(--win-bar)); }
 .chat-me-card.is-active { outline: 1.5px solid var(--color-muted); outline-offset: 2px; }
 .chat-me-card-top { display: flex; justify-content: space-between; gap: 6px; }
 .chat-me-card-top b { min-width: 0; font-size: 11.5px; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
