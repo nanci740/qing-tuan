@@ -49,6 +49,9 @@ export interface MessageNodesApi {
   forwardHtml(html: string, text: string, items: unknown, source: unknown, mode: unknown, record: unknown): string;
   backgroundHtml(html: string, detail: PeerMessageDetail): string;
   recallHtml(html: string, detail: PeerMessageDetail & {messageId?: string}): string | null;
+  /** 拍一拍：开着的聊天直接加一行；没开着的聊天改存着的记录。 */
+  pat(by: 'user' | 'self' | 'assistant', text: string, suffix: string): void;
+  patHtml(html: string, by: 'user' | 'self' | 'assistant', text: string, suffix: string): string;
   /** 照片画好、画失败或要重画：用照片编号找到那一行换掉；找不到就回传 false / null。 */
   photo(photo: MessagePhoto): boolean;
   photoHtml(html: string, photo: MessagePhoto): string | null;

@@ -4,7 +4,7 @@ import { hasClass, sameNode } from './chatMessageNodes';
 export const CHAT_INITIAL_MESSAGES = 50;
 export const CHAT_MORE_MESSAGES = 30;
 export function isHistoryRow(node: MessageNode): node is MessageElement {
-  return node.kind === 'element' && (hasClass(node, 'chat-message-row') || hasClass(node, 'chat-recall-notice'));
+  return node.kind === 'element' && (hasClass(node, 'chat-message-row') || hasClass(node, 'chat-recall-notice') || hasClass(node, 'chat-pat-notice'));
 }
 /** 只裁剪显示范围，完整树仍供保存、搜索和 AI 使用。 */
 export function messageWindow(nodes: MessageNode[], count: number) {

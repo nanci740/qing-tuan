@@ -33,7 +33,10 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             fontUrl: '',
             bubbleCss: '',
             soundFeedback: false,
-            vibrationFeedback: false
+            vibrationFeedback: false,
+            pat: true,
+            patSuffix: '',
+            myPatSuffix: ''
         };
     }
 export function loadChatPreferences(key: string): ChatPreferences {
@@ -72,7 +75,10 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 fontUrl: String(saved.fontUrl || '').slice(0, 1800),
                 bubbleCss: String(saved.bubbleCss || '').slice(0, 5000),
                 soundFeedback: saved.soundFeedback === true,
-                vibrationFeedback: saved.vibrationFeedback === true
+                vibrationFeedback: saved.vibrationFeedback === true,
+                pat: saved.pat !== false,
+                patSuffix: String(saved.patSuffix || '').trim().slice(0, 20),
+                myPatSuffix: String(saved.myPatSuffix || '').trim().slice(0, 20)
             };
         } catch (error) {
             return defaults;

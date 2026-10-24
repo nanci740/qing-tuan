@@ -165,12 +165,17 @@ export function messageText(row: MessageElement) {
   return textOf(copy).replace(/\s+/g, ' ').trim();
 }
 export function quoteText(row: MessageElement) { const text = messageText(row); if (text) return text.slice(0, 120); const length = findClass(row, 'chat-voice-length'); return length && textOf(length).trim() ? `[语音 ${textOf(length).trim()}]` : '[消息]'; }
-export function labelMessages(nodes: MessageNode[], peer: string) {
+export function labelMessages(nodes: MessageNode[], peer: string, factory: MessageFactory) {
   for (const row of elements(nodes, n => hasClass(n, 'chat-message-row'))) {
     const ms = Number(attr(row, 'data-sent-at')), date = Number.isFinite(ms) && ms > 0 ? new Date(ms) : null;
     const pad = (n: number) => String(n).padStart(2, '0');
-    setAttr(row, 'data-sender', hasClass(row, 'is-user') ? '我' : peer.trim() || '对方');
-    setAttr(row, 'data-time', date ? `\u00a0\u00a0\u00a0${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` : '');
+    const name = hasClass(row, 'is-user') ? '我' : peer.trim() || '对方', time = date ? `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` : '';
+    setAttr(row, 'data-sender', name);
+    removeAttr(row, 'data-time');
+    // 名字、时间各自一个元素（自己写 CSS 美化时好抓）：.chat-message-head > .chat-message-name + .chat-message-time
+    let head = directClass(row, 'chat-message-head');
+    if (!head) { head = factory.element('div', { class: 'chat-message-head' }); const at = row.children.findIndex(n => n.kind === 'element' && hasClass(n, 'chat-bubble-wrap')); row.children.splice(at < 0 ? 0 : at, 0, head); }
+    if (textOf(head) !== name + time) head.children = [factory.element('span', { class: 'chat-message-name' }, [factory.text(name)]), factory.element('span', { class: 'chat-message-time' }, [factory.text(time)])];
   }
 }
 function sameDay(a: Date, b: Date) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
@@ -430,6 +435,14 @@ export function setTranslation(row: MessageElement, text: string, factory: Messa
   const wrap=findClass(row,'chat-bubble-wrap'),bubble=wrap&&findClass(wrap,'chat-bubble'); if(!wrap||!bubble)return;
   let card=directClass(wrap,'chat-message-translation-card');if(!card){card=factory.element('div',{class:'chat-message-translation-card'});insertBeforeKey(wrap.children,wrap.children[wrap.children.findIndex(n=>n.key===bubble.key)+1]?.key ?? -1,card) || wrap.children.push(card);}
   setText(card,text,factory);
+}
+/** 拍一拍：中间一行灰字。by 是 user（你拍他）、self（你拍自己）、assistant（他拍你）；suffix 是当时的拍一拍后缀，给他看的时候用。 */
+export function patNode(by: 'user' | 'self' | 'assistant', text: string, suffix: string, factory: MessageFactory, sentAt = Date.now()) {
+  return factory.element('div', { class: 'chat-pat-notice', role: 'note', 'data-pat-by': by, 'data-pat-suffix': suffix, 'data-sent-at': String(sentAt) }, [factory.element('span', { class: 'chat-pat-text' }, [factory.text(text)])]);
+}
+/** 拍一拍给他看的字。 */
+export function patContext(by: string, suffix: string) {
+  return by === 'assistant' ? `[你拍了拍对方${suffix}]` : by === 'self' ? `[对方拍了拍自己${suffix}]` : `[对方拍了拍你${suffix}]`;
 }
 export function recallNode(detail: PeerMessageDetail, factory: MessageFactory, by='assistant', seen?: boolean) {
   const node=factory.element('div',{class:'chat-recall-notice'});

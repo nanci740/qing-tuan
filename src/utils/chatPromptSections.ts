@@ -35,6 +35,8 @@ export interface ChatPromptInput {
     stickers?: string[];
     /** 他给你开的亲属卡：额度和你这个月用了多少，写给他看；没有就是空字符串。 */
     familyCard?: string;
+    /** 聊天设置开了拍一拍才有：me 是他拍你时接在「我」后面的字（拍一拍后缀）。 */
+    pat?: { me: string } | null;
 }
 
 const MARKERS = {
@@ -179,6 +181,13 @@ function pay(input: ChatPromptInput) {
         '对方跟你要亲属卡、或你想给对方开时，可以在某一条加上 "family_card":{"limit":5000,"note":"留言，可以不写"}，limit 是每月额度（元），会变成一张亲属卡卡片，对方收下才算开好；已经开过就不要再开。' + (input.familyCard || '');
 }
 
+/** 拍一拍：聊天设置开着才送。 */
+function pat(input: ChatPromptInput) {
+    if (!input.pat) return '';
+    return '聊天记录里的「[对方拍了拍你…]」是对方在聊天里拍了拍你（像微信的拍一拍，是个小动作，不是说话），「[你拍了拍对方…]」是你之前拍了对方。照你的人设和你们的关系自然回应，可以回一句、也可以拍回去，不用每次都提。' +
+        '你想拍对方的时候（撒娇、逗对方、提醒对方、对方好久没回、被拍了想拍回去），在 JSON 最外层加 "pat":true，聊天里会显示「' + input.characterName + ' 拍了拍 我' + input.pat.me + '」；只想拍不想说话，replies 可以是空的 []。不要每次都拍，也不要连着拍。';
+}
+
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
 function quote(input: ChatPromptInput) {
     if (input.quotePolicy === 'never') return '不要引用任何消息，quote_id 必须始终留空。';
@@ -195,7 +204,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, pay, output: outputCleanliness, quote,
+    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, pay, pat, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {

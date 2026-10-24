@@ -652,20 +652,24 @@
 /* @qingtuan-order:004037 */
 
 
-        /* 每则讯息：一行「名字 (时间)」，下面缩进接文字；不分左右、没有气泡 */
+        /* 每则讯息：左边头像，右边一行「名字 时间」，下面接文字（跟名字对齐）；不分左右、没有气泡 */
 
 /* @qingtuan-order:004038 */
 
         #chatAppPage#chatAppPage #chatRoomView .chat-message-row {
+            position: relative;
+            min-height: 36px;
             margin: 0 !important;
-            padding: 3px 12px 5px !important;
+            padding: 3px 12px 5px 48px !important;
         }
 
 /* @qingtuan-order:004039 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-message-row::before {
-            content: attr(data-sender) attr(data-time);
-            display: block;
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row > .chat-message-head {
+            order: 0;
+            flex: 0 1 auto;
+            display: flex;
+            gap: 8px;
             margin-bottom: 1px;
             font-size: 10.5px;
             font-weight: 600;
@@ -676,12 +680,28 @@
 
 /* @qingtuan-order:004040 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-message-row.is-user::before { color: var(--cr-self); -webkit-text-fill-color: var(--cr-self); }
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row.is-user > .chat-message-head { color: var(--cr-self); -webkit-text-fill-color: var(--cr-self); }
 
 /* @qingtuan-order:004041 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-message-mini-avatar,
         #chatAppPage#chatAppPage #chatRoomView .chat-bubble-shape { display: none !important; }
+        /* 头像：钉在讯息左上；双击是拍一拍 */
+        #chatAppPage#chatAppPage #chatRoomView .chat-message-row > .chat-message-mini-avatar {
+            position: absolute;
+            top: 5px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            margin: 0 !important;
+            box-sizing: border-box;
+            border: 1px solid var(--cr-line);
+            border-radius: 3px;
+            background: var(--color-surface);
+            object-fit: cover;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
 
 /* @qingtuan-order:004042 */
 
@@ -857,7 +877,7 @@
 
 /* @qingtuan-order:004067 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > :not(.chat-bubble-time) { margin-left: 10.5px !important; max-width: calc(100% - 10.5px) !important; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-bubble-wrap > :not(.chat-bubble-time) { margin-left: 0 !important; max-width: 100% !important; }
 
 /* @qingtuan-order:004068 */
 
@@ -1363,7 +1383,7 @@
 
 
         /* 多选（Win98 清单风）：每则讯息左边一个方形凹陷勾选框，选中打勾 + 整行淡青底；
-           名字行用的是 ::before，所以勾选框改用 ::after，不再画原本的圆形勾选 */
+           勾选框画在讯息列背景、勾用 ::after，不画原本 ::before 的圆形勾选；头像往右让出勾选框 */
 
 /* @qingtuan-order:004141 */
 
@@ -1374,18 +1394,8 @@
 
 /* @qingtuan-order:004142 */
 
-        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row::before {
-            position: static !important;
-            top: auto !important;
-            left: auto !important;
-            transform: none !important;
-            width: auto !important;
-            height: auto !important;
-            border: 0 !important;
-            border-radius: 0 !important;
-            background: none !important;
-            box-shadow: none !important;
-        }
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row::before { content: none !important; }
+        #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row > .chat-message-mini-avatar { left: 28px; }
 
 /* @qingtuan-order:004143 */
 
@@ -1397,7 +1407,7 @@
         #chatAppPage#chatAppPage #chatRoomView.chat-selection-mode .chat-message-row {
             background: var(--cr-check-box) !important;
         
-            padding-left: 28px !important;
+            padding-left: 64px !important;
         }
 
 /* @qingtuan-order:004145 */
@@ -2000,11 +2010,11 @@
 /* @qingtuan-order:004292 */
 
 
-        /* 「你撤回了一条消息」：比讯息字小一号、淡一点，跟日期时间那种系统提示同一级 */
+        /* 「你撤回了一条消息」「我 拍了拍 小鸟」：比讯息字小一号、淡一点，跟日期时间那种系统提示同一级；拍一拍再框一圈细点线 */
 
 /* @qingtuan-order:004293 */
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-recall-notice {
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-recall-notice, .chat-pat-notice) {
             margin: 4px auto 8px !important;
             padding: 0 !important;
             color: var(--color-muted) !important;
@@ -2012,6 +2022,9 @@
             font-size: 9.5px !important;
             line-height: 1.5 !important;
         }
+
+        #chatAppPage#chatAppPage #chatRoomView .chat-pat-notice { display: flex; justify-content: center; max-width: 90%; text-align: center; }
+        #chatAppPage#chatAppPage #chatRoomView .chat-pat-text { padding: 1px 8px; border: 1px dotted var(--cr-line); border-radius: 3px; }
 
 /* @qingtuan-order:004294 */
 
