@@ -38,10 +38,10 @@ export interface ChatPromptInput {
     /** 聊天设置开了拍一拍。 */
     pat?: boolean;
     /** 群聊：characterName 是群名，persona 是各成员的设定；members 成员本名，mentions 你这一轮 @ 到的人，nick 你在群里的昵称。 */
-    group?: { members: string[]; mentions: string[]; nick: string } | null;
+    group?: { members: string[]; mentions: string[]; nick: string; presence: string } | null;
 }
-/** 群聊第一批先不送的段落：在线状态、撤回、语音、位置、转账红包、拍一拍。 */
-const GROUP_SKIP = new Set<PresetBuiltinId>(['presence', 'recall', 'voice', 'location', 'pay', 'pat']);
+/** 群聊不送的段落：语音（还只有一种声音，之后在聊天设置给每个成员选声音再开）。 */
+const GROUP_SKIP = new Set<PresetBuiltinId>(['voice']);
 
 const MARKERS = {
     quote: '[这条消息引用的原文：',
@@ -81,6 +81,8 @@ function time(input: ChatPromptInput) {
 /** 在线状态：对方的状态、自己的状态，以及怎么更新。 */
 function presence(input: ChatPromptInput) {
     const { mine, online, status } = input.presence;
+    if (input.group) return (mine ? `用户现在的在线状态是「${mine}」。` : '用户没有公开在线状态。') + `成员现在的在线状态：${input.group.presence}。` +
+        '哪个成员想改自己的状态（去忙了、要睡了、心情变了），就在他自己那条加 "presence":{"online":"在线|忙碌|离开|隐身 其中一个","status":"15 字以内，可以留空"}，偶尔才改。';
     return (mine ? `对方（用户）现在的在线状态是「${mine}」，你看得到，可以按人设自然地反应，但不用每次都提。` : '对方（用户）没有公开在线状态，你不知道对方现在在不在线，不要编造。') + `你目前在聊天软件上的在线状态是「${online}」，个人状态是「${status || '（没有设置）'}」，对方在你的资料旁边看得到这两样。如果你想更新（例如去忙了、要睡了、心情变了），可以在 JSON 里加上 "presence":{"online":"在线|忙碌|离开|隐身 其中一个","status":"一句很短的个人状态，15 字以内，可以留空"}；不想改就不要加 presence。要不要改、改成什么按人设和当下情境决定，偶尔才改，不要每次回复都改。`;
 }
 
@@ -189,6 +191,9 @@ function sticker(input: ChatPromptInput) {
 
 /** 转账、红包、亲属卡：他也可以给你转账、发红包、开亲属卡（他的钱不算）。 */
 function pay(input: ChatPromptInput) {
+    if (input.group) return '群里每个成员可以在自己那条加 "packet":{"amount":66,"count":3,"note":"留言，可以不写","split":"lucky"} 发群红包（amount 是总金额（元），count 是几个，split 是 lucky 拼手气或 even 平分），或加 "transfer":{"amount":20,"note":"…"} 转账给用户；只在情境合适时发，金额照各自的身份。' +
+        '上下文里还没领完的群红包（「[红包] …（还没人领）」「（已领 1/3：…）」），想抢的成员就在自己那条加 "grab":true，会领到下一份，抢不抢照各自的人设（爱凑热闹的会抢，高冷的可能装没看见），已经领过的不能再领；抢到之后可以照领到的金额评论一句，只抢不说话那条 text 可以空着。' +
+        '用户转给某个成员、他还没收的转账，由那个成员在自己那条加 "receive":"accept" 收下或 "return" 退回。一定要用这些栏位，在 text 里写「[红包]」「抢到了」这种字不算数。';
     return '每一条 replies 还可以加上 "transfer"（转账）或 "packet"（红包），表示这条你给对方转了钱或发了红包：{"amount":520,"note":"留言，可以不写"}，amount 是人民币金额（元）。单独一条，text 可以留空，想说的话放在其他条。' +
         '只在情境合适时发（例如对方说没钱了、过节、生日、想哄对方、请对方吃东西、对方帮了你），不要随便发，金额按你的人设和身份决定。一定要用 transfer、packet 栏位，在 text 里写「[转账] ¥200」这种字不算数。例如：{"text":"","transfer":{"amount":200,"note":"买奶茶"}}。' +
         '对方转给你、还没收的，你决定收下就在 JSON 最外层加 "receive":"accept"，退回加 "receive":"return"，只在嘴上说收了钱不会动。' +
@@ -197,6 +202,7 @@ function pay(input: ChatPromptInput) {
 
 /** 拍一拍：聊天设置开着才送。 */
 function pat(input: ChatPromptInput) {
+    if (input.group) return input.pat ? '上下文里「[A拍了拍B…]」是聊天软件的拍一拍（小动作，不是说话）。成员想拍谁，就在自己那条加 "pat":"被拍的人"（拍用户写「用户」，或写其他成员的名字），想带后缀写成 {"target":"小鸟","suffix":"的脑袋"}，聊天里会显示「某某 拍了拍 小鸟的脑袋」；只拍不说话那条 text 可以空着。偶尔才拍，不要每次都拍。' : '';
     if (!input.pat) return '';
     return '聊天记录里的「[对方拍了拍你…]」是对方在聊天里拍了拍你（像微信的拍一拍，是个小动作，不是说话），「[你拍了拍对方…]」是你之前拍了对方。照你的人设和你们的关系自然回应，可以回一句、也可以拍回去，不用每次都提。' +
         '你想拍对方的时候（撒娇、逗对方、提醒对方、对方好久没回、被拍了想拍回去），在 JSON 最外层加 "pat":true，聊天里会显示「' + input.characterName + ' 拍了拍 我」；想拍对方哪里可以自己写后缀，例如 "pat":"的脑袋" 会显示「' + input.characterName + ' 拍了拍 我的脑袋」，照你的人设和当下的情境写，不用每次一样。只想拍不想说话，replies 可以是空的 []。pat 不是工具，不要用工具调用或函数调用的格式，跟 replies 写在同一个 JSON 里，例如 {"replies":[{"text":"…"}],"pat":"的脑袋"}。不要每次都拍，也不要连着拍。';

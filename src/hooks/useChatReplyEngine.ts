@@ -9,7 +9,7 @@ import type {ChatPreferences} from '../types/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
-import {familyCardText,receivePay,settlePendingFromMe} from '../utils/walletStorage';
+import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
@@ -49,9 +49,11 @@ export interface ChatContextItem {role:string;content:string;messageId:string;qu
  stickerImage?:string;}
 export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};
  /** 没开着的聊天用：那个聊天的设定、名字和头像、存着的聊天记录（一行一个元素）。 */
- preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string,suffix:string):string;
+ preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string,suffix:string,who?:{from:string;target:string}):string;notice(chatKey:string,text:string):void;
  /** 群聊：成员（key、本名、给你看的名字）和你在群里的昵称；不是群就是 null。 */
- group(chatKey:string):{members:{key:string;name:string;shown:string}[];nick:string}|null;photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
+ group(chatKey:string):{members:{key:string;name:string;shown:string}[];nick:string}|null;
+ /** 私聊时他也在的群聊最近的对话（给他记得群里发生的事）；没有就是空字符串。 */
+ groupMemory(chatKey:string):string;photo(detail:{chatKey:string;photo:MessagePhoto}):void;}
 export interface ChatReplyEngineApi {request():Promise<void>;
  /** 家机主动找你：照那个聊天的记录，最后加一条系统提示请他开口。 */
  proactive(chatKey:string,prompt:string):Promise<void>;syncTyping():void;reloadPresence():void;presence(key:unknown):{online:string;status:string};status(text:string):void;
@@ -116,13 +118,15 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             // 对方（AI）自己撤回的讯息：让它知道撤回了什么（对方看不到内容）
             if (row.classList.contains('chat-recall-notice')) {
                 const recalled = String(row.dataset.recalledContent || '').trim();
-                if (recalled) context.push({ role: 'assistant', content: '[你撤回了一条消息，原本写的是：「' + recalled + '」]', messageId: '', quoteCandidate: '' });
+                const who = speakerName && row.dataset.speaker ? speakerName(row.dataset.speaker) : '';
+                if (recalled) context.push({ role: 'assistant', content: (who ? '[' + who : '[你') + '撤回了一条消息，原本写的是：「' + recalled + '」]', messageId: '', quoteCandidate: '' });
                 continue;
             }
             // 拍一拍：你拍他（或拍自己）算你那边的，他拍你算他自己的
             if (row.classList.contains('chat-pat-notice')) {
-                const by = String(row.dataset.patBy || 'user');
-                context.push({ role: by === 'assistant' ? 'assistant' : 'user', content: patContext(by, String(row.dataset.patSuffix || '')), messageId: '', quoteCandidate: '' });
+                const by = String(row.dataset.patBy || 'user'), name = (key:string) => key === 'me' ? '用户' : speakerName?.(key) || '';
+                const group = speakerName ? { from: name(String(row.dataset.patFrom || '')), target: name(String(row.dataset.patTarget || 'me')) } : undefined;
+                context.push({ role: by === 'assistant' ? 'assistant' : 'user', content: patContext(by, String(row.dataset.patSuffix || ''), group), messageId: '', quoteCandidate: '' });
                 continue;
             }
             if (row.dataset.aiPending === 'true' || row.dataset.recalled === 'true') continue;
@@ -301,6 +305,25 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         return photo;
     }
     // 家机的语音：用语音服务念出来，回传 { dataUrl, seconds }；wav 会先压成 16kHz 单声道，聊天记录比较不占空间
+    /** 群聊里一个成员的动作：抢最新一个还没领完、他还没领过（也不是他自己发）的红包；拍人（"用户" 或成员名字，可以带后缀）；改自己的在线状态；收下或退回你转给他的钱。 */
+    function groupActions(chatKey:string, group:{members:{key:string;name:string;shown:string}[];nick:string}, speaker:{key:string;name:string;shown:string},
+        act:{grab:boolean;pat:unknown;presence:object|null;receive:''|'accept'|'return';patOn:boolean}) {
+        if (act.presence) setChatPresence(speaker.key, act.presence);
+        if (act.receive) settlePendingFromMe(chatKey, act.receive, speaker.key);
+        if (act.grab) {
+            const packet = readWallet().records.filter(record => record.chatKey === chatKey && record.count && record.state === 'pending' && !(record.claims || []).some(claim => claim.key === speaker.key) && !(record.from === 'peer' && record.by === speaker.key))
+                .sort((a, b) => b.at - a.at)[0];
+            const got = packet ? claimPacket(packet.id, speaker.key, speaker.name) : null;
+            if (got) services.current!.notice(chatKey, `${speaker.shown} 领取了${got.record.from === 'me' ? '你' : group.members.find(member => member.key === got.record.by)?.shown || got.record.name}的红包${got.full ? '，红包已被领完' : ''}`);
+        }
+        if (act.pat && act.patOn) {
+            const raw = act.pat, target = String(raw && typeof raw === 'object' ? (raw as {target?:unknown}).target ?? '' : raw === true ? '用户' : raw).trim();
+            const suffix = String(raw && typeof raw === 'object' ? (raw as {suffix?:unknown}).suffix ?? '' : '').trim().slice(0, 20);
+            const member = group.members.find(item => item.key !== speaker.key && (item.name === target || item.shown === target));
+            const key = member ? member.key : ['用户', '我', '你', 'true', group.nick].filter(Boolean).includes(target) ? 'me' : '';
+            if (key) services.current!.pat(chatKey, suffix && !/^[的地]/.test(suffix) ? '的' + suffix : suffix, { from: speaker.key, target: key });
+        }
+    }
     /** proactive：家机主动找你（「我 → 设置」）。可以是没开着的聊天，照存着的聊天记录回；最后多一条系统提示请他主动开口；出错都不跳提示。 */
     async function requestCurrentChatAiReply(proactive?:{chatKey:string;prompt:string}) {
         const say = proactive ? () => {} : notice;
@@ -390,9 +413,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             photoLook: chatPhotoLook(), photoInteraction: requestPreferences.photoInteraction,
             stickers: aiStickers().map(item => item.tag),
             familyCard: familyCardText(requestChatKey),
-            pat: !groupInfo && !!requestPreferences.pat,
-            group: groupInfo ? { members: groupInfo.members.map(member => member.name), mentions, nick: groupInfo.nick } : null,
+            pat: !!requestPreferences.pat,
+            group: groupInfo ? { members: groupInfo.members.map(member => member.name), mentions, nick: groupInfo.nick,
+                presence: groupInfo.members.map(member => { const state = getChatPresence(member.key); return `${member.name}「${state.online}」${state.status ? '（' + state.status + '）' : ''}`; }).join('、') } : null,
         }, preset);
+        // 私聊：他也在的群最近聊了什么，接在系统提示词后面
+        if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
         const messages:ApiMessage[] = [
@@ -498,7 +524,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (looseCaptions.some(caption => caption !== null)) parsedReply.segments = parsedReply.segments.map((text, index) => looseCaptions[index] ?? text);
             const replyPhotos = parsedReply.segments.map((_, index) => (parsedReply.photos || [])[index] || (looseCaptions[index] !== null ? LOOSE_PHOTO : ''));
             if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) say('生图还没设定好，照片先放预设图');
-            const replyLocations = groupInfo ? [] : parsedReply.locations || [];
+            const replyLocations = parsedReply.locations || [];
             // 表情：照标签从家机能用的表情里找一张；他学着上下文打「[表情] 生气」也一样。找不到就当没发表情，那句只是「表情」两个字的就不发了。
             const replyStickers:(MessageSticker|null)[] = parsedReply.segments.map((text, index) => {
                 if (replyPhotos[index] || replyLocations[index]) return null;
@@ -508,7 +534,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             });
             // 转账、红包：transfer、packet 栏位，或他打的「[转账] ¥200」
             const loosePays = parsedReply.segments.map(text => loosePay(text));
-            const replyPays:(Omit<MessagePay,'id'>|null)[] = parsedReply.segments.map((_, index) => groupInfo || replyPhotos[index] || replyLocations[index] || replyStickers[index] ? null
+            const replyPays:(Omit<MessagePay,'id'>|null)[] = parsedReply.segments.map((_, index) => replyPhotos[index] || replyLocations[index] || replyStickers[index] ? null
                 : (parsedReply.pays || [])[index] || loosePays[index] || null);
             const dropped = parsedReply.segments.map((text, index) => !replyStickers[index] && (!!(parsedReply.stickers || [])[index] && text === '表情' || looseStickerTag(text) !== null) || !replyPays[index] && loosePays[index] === false);
             const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index] || replyPays[index]);
@@ -533,35 +559,39 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 ? replyPays
                 : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPays[index] || null)];
             // 他对你还没收的转账、红包表态（收下、退回）：先照办，卡片会跟着换状态
-            if (parsedReply.receive) settlePendingFromMe(requestChatKey, parsedReply.receive);
+            if (parsedReply.receive && !groupInfo) settlePendingFromMe(requestChatKey, parsedReply.receive);
             // 每则自己的引用；没分段时整则用第一个引用
             const segmentQuotes = requestPreferences.segmented
                 ? (parsedReply.quotes || [])
                 : [(parsedReply.quotes || []).find(Boolean) || null];
-            const segmentRecalls = requestPreferences.segmented && !groupInfo ? (parsedReply.recalls || []) : [];
+            const segmentRecalls = requestPreferences.segmented ? (parsedReply.recalls || []) : [];
             const segmentVoices = !aiVoiceAllowed ? [] : (requestPreferences.segmented
                 ? (parsedReply.voices || [])
                 : [(parsedReply.voices || []).length > 0 && (parsedReply.voices || []).every(Boolean)]);
-            const recallNoticeText = `${characterName}撤回了一条消息`;
             for (let index = 0; index < segments.length; index++) {
+                const speaker = segmentSpeakers[index] || null;
+                const recallNoticeText = `${speaker ? speaker.shown : characterName}撤回了一条消息`;
+                // 群聊：这个成员抢红包、拍人、改在线状态、对你转给他的钱表态（只做这些、没写字的那一条也照办）
+                if (groupInfo && speaker) groupActions(requestChatKey, groupInfo, speaker, {
+                    grab: !!(parsedReply.grabs || [])[index], pat: (parsedReply.pats || [])[index], presence: (parsedReply.presences || [])[index] || null,
+                    receive: (parsedReply.receives || [])[index] || '', patOn: !!requestPreferences.pat });
                 const photo:MessagePhoto|null = segmentPhotos[index] ? { id: 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), prompt: segmentPhotos[index] === LOOSE_PHOTO ? '' : segmentPhotos[index], caption: segments[index], ...(segmentScenes[index] ? { scene: segmentScenes[index] } : {}), state: aiPhotoDraw ? 'pending' : 'text' } : null;
                 const location = photo ? null : segmentLocations[index] || null;
                 const sticker = photo || location ? null : segmentStickers[index] || null;
                 const payDraft = photo || location || sticker ? null : segmentPays[index] || null;
-                const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) } : null;
+                const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), ...(speaker ? { by: speaker.key } : {}) } : null;
                 // 找不到表情的那一则（只剩「表情」两个字）不发
                 if (!photo && !location && !sticker && !pay && !segments[index]) continue;
                 // 他发的转账、红包先记进钱包（还没收），卡片才看得到状态
-                if (pay) receivePay(pay, requestChatKey, characterName);
+                if (pay) receivePay(pay, requestChatKey, speaker ? speaker.name : characterName);
                 const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : segments[index];
-                const speaker = segmentSpeakers[index] || null;
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
                 // 转账、红包不撤回
                 const willRecall = !!segmentRecalls[index] && !pay;
                 if (willRecall && !isActiveReplyChat(requestChatKey)) {
-                    services.current?.background({ chatKey: requestChatKey, reply, recalled: true, recallNotice: recallNoticeText, sentAt: Date.now() });
+                    services.current?.background({ chatKey: requestChatKey, reply, recalled: true, recallNotice: recallNoticeText, sentAt: Date.now(), speaker: speaker?.key });
                     if (index < segments.length - 1) await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
                     continue;
                 }

@@ -18,9 +18,9 @@ function Choices<T extends string | number>({ value, options, onChange }: { valu
     {options.map(([option, label]) => <button type="button" role="radio" key={String(option)} aria-checked={option === value} className={option === value ? 'is-active' : ''} onClick={() => onChange(option)}>{label}</button>)}
   </span>;
 }
-/** 勾角色：一排小方块标签，勾了的变主题色。 */
-function Who({ picked, onChange }: { picked: string[]; onChange: (next: string[]) => void }) {
-  const characters = readChatCharacters().filter(item => !item.group);
+/** 勾角色：一排小方块标签，勾了的变主题色。groups：群聊也列出来（主动找你用：群里冷场了成员自己聊起来）。 */
+function Who({ picked, onChange, groups = false }: { picked: string[]; onChange: (next: string[]) => void; groups?: boolean }) {
+  const characters = readChatCharacters().filter(item => groups || !item.group);
   if (!characters.length) return <div className="chat-me-set-who"><small>还没有角色。</small></div>;
   return <div className="chat-me-set-who">
     {characters.map(item => { const on = picked.includes(item.archiveId); return <button type="button" key={item.archiveId} aria-pressed={on} className={on ? 'is-active' : ''}
@@ -78,7 +78,7 @@ export function MeSettings() {
       {proactive.enabled ? <>
         <div className="chat-me-set-row is-sub is-nowrap"><span>多久没聊</span><Choices value={proactive.after} options={PROACTIVE_AFTER.map(value => [value, value < 60 ? `${value}分` : value === 720 ? '半天' : `${value / 60}小时`] as const)} onChange={after => updateMeSettings('proactive', { after })} /></div>
         <div className="chat-me-set-row is-sub"><span>谁会找你<small>没勾的角色不会主动发</small></span></div>
-        <Who picked={proactive.who} onChange={who => updateMeSettings('proactive', { who })} />
+        <Who groups picked={proactive.who} onChange={who => updateMeSettings('proactive', { who })} />
         <div className="chat-me-set-row is-sub"><span>一天最多几次</span><Choices value={proactive.perDay} options={PROACTIVE_PER_DAY.map(value => [value, value ? String(value) : '不限'] as const)} onChange={perDay => updateMeSettings('proactive', { perDay })} /></div>
         <div className="chat-me-set-row is-sub is-stack"><span>你没回的时候<small>追的时候一次比一次隔得久；看人设就是他自己决定要不要追，不设上限</small></span>
           <Choices value={proactive.chase} options={PROACTIVE_CHASE.map(value => [value, value < 0 ? '看人设' : value ? `追${value}次` : '不追'] as const)} onChange={chase => updateMeSettings('proactive', { chase })} /></div>

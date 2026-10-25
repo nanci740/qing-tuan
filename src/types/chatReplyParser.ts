@@ -24,6 +24,11 @@ export interface ChatSegmentedReply {
   locations?: (MessageLocation | null)[];
   /** 群聊：每一条是哪个成员说的（名字），没写是空字符串。 */
   speakers?: string[];
+  /** 群聊：每一条的成员要不要抢群红包、拍了谁（原样，可以是名字、true 或 {target,suffix}）、改自己的在线状态、对你转给他的钱表态。 */
+  grabs?: boolean[];
+  pats?: unknown[];
+  presences?: (object | null)[];
+  receives?: ('' | 'accept' | 'return')[];
 }
 export interface ChatReplyParserApi {
   extract(data: unknown): string;

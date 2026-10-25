@@ -2021,7 +2021,7 @@
 
 /* @qingtuan-order:004293 */
 
-        #chatAppPage#chatAppPage #chatRoomView :is(.chat-recall-notice, .chat-pat-notice) {
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-recall-notice, .chat-pat-notice, .chat-system-notice) {
             margin: 4px auto 8px !important;
             padding: 0 !important;
             color: var(--color-muted) !important;
@@ -2030,7 +2030,7 @@
             line-height: 1.5 !important;
         }
 
-        #chatAppPage#chatAppPage #chatRoomView .chat-pat-notice { display: flex; justify-content: center; max-width: 90%; text-align: center; }
+        #chatAppPage#chatAppPage #chatRoomView :is(.chat-pat-notice, .chat-system-notice) { display: flex; justify-content: center; max-width: 90%; text-align: center; }
         /* 拍一拍的框跟中间的时间同一个大小、同一个颜色：9.5px 字、12px 行高、左右 4px，只是框线是点线 */
         #chatAppPage#chatAppPage #chatRoomView .chat-pat-text {
             padding: 0 4px;
