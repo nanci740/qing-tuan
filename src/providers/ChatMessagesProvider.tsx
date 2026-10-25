@@ -212,6 +212,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
       // 群聊：这一则是哪个成员说的，名字和头像马上换成他的
       if(detail.speaker){model.setAttr(node,'data-speaker',detail.speaker);const avatar=model.findClass(node,'chat-message-mini-avatar'),who=identity().members?.[detail.speaker];if(avatar&&who?.avatar)model.setAttr(avatar,'src',who.avatar);model.labelMessages([node],identity(),factory);}
+      if(detail.rejected)model.setAttr(node,'data-rejected','true');
       model.setAttr(node,'data-chat-ai-content',detail.reply);model.setAttr(node,'data-sent-at',String(detail.sentAt??Date.now()));if(selectionStyle)model.setAttr(node,'style',selectionStyle);if(time)model.setText(time,new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}),factory);
     });},
     appendUser(text,voice,quote,photo,location,sticker,pay){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location,sticker,pay);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},

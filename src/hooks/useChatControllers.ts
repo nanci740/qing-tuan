@@ -13,7 +13,7 @@ import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsPro
 import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
-import {contactName,dueUnblockChecks,isBlocked,isBlockedBy,setBlocked,subscribeContacts} from '../utils/contactsStorage';
+import {contactName,dueUnblockChecks,isBlocked,isBlockedBy,isDeleted,setBlocked,setDeleted,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
 import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
 import {payFromData,payLabel,payText} from '../utils/chatMessageNodes';
@@ -86,6 +86,8 @@ interface ChatPublicApi {
  smallphoneSaveGroup(group:ChatCharacter):Promise<boolean>;
  smallphoneChatNotice(chatKey:string,text:string):void;
  smallphoneBlockContact(key:string,on:boolean):void;
+ smallphoneDeleteContact(key:string):void;
+ smallphoneChatProactive(key:string,prompt:string):void;
  smallphonePeerSay(key:string,text:string):void;
  smallphoneRemoveGroup(id:string):Promise<boolean>;
  smallphonePatchCharacter(id:string,fields:{pinned?:boolean;favorite?:boolean}):void;
@@ -377,8 +379,8 @@ function initChatApplication(){
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
     // 家机主动找你（「我 → 设置」）：每分钟看一次有没有定时到点的、有没有人该来找你；开着的那个聊天用画面上的记录
     const chatHtml=(key:string)=>key===history.current.activeKey?messageNodes.storedHtml():history.current.histories[key]||'';
-    // 拉黑了的（你拉黑他、他拉黑你）不主动找、不定时；他拉黑你的，隔几个小时让他想想要不要放你出来
-    const blockedEither=(key:string)=>isBlocked(key)||isBlockedBy(key);
+    // 他把你拉黑了、你把他删了：不主动找、不定时（他拉黑你的，隔几个小时让他想想要不要放你出来）。你拉黑他的照样会来找你，只是被你拒收
+    const blockedEither=(key:string)=>isBlockedBy(key)||isDeleted(key);
     const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())if(!blockedEither(due.chatKey))void replyEngine.proactive(due.chatKey,due.prompt);
         for(const key of dueUnblockChecks())void replyEngine.proactive(key,`[系统提示：这条不是对方说的话，不要回应这条本身] 你把对方拉黑一阵子了，现在是 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})}。想想要不要把对方放出来。`);
         const chats=(characterStore?.read()||[]).filter(item=>!blockedEither(item.archiveId)).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0,group:!!item.group}));
@@ -405,10 +407,14 @@ function initChatApplication(){
         else{history.current.histories[chatKey]=messageNodes.noticeHtml(history.current.histories[chatKey]||emptyChatHistory,text);saveChatHistories();}
     }
     bridge.smallphoneChatNotice=chatNotice;
-    /** 通讯录：你拉黑他、解除，聊天里各留一行灰字。 */
-    bridge.smallphoneBlockContact=(key,on)=>{if(isBlocked(key)===on)return;setBlocked(key,on);const name=contactName(key,getCharacterLook(key).name);chatNotice(key,on?`你把${name}拉黑了`:`你解除了对${name}的拉黑`);};
-    /** 他说一句（申请加回来他同意时）：开着的聊天直接出现，没开着的存进记录。 */
-    bridge.smallphonePeerSay=(key,text)=>{if(!key||!text)return;if(key===history.current.activeKey){const pending=messageNodes.appendPeer(text);messageNodes.finishPeer(pending.row,{reply:text,sentAt:Date.now()});messageNodes.scrollLatest();saveCurrentHistory();}else appendBackgroundReply({chatKey:key,reply:text,sentAt:Date.now()});};
+    /** 通讯录：你拉黑他、解除，聊天里各留一行灰字，他马上知道、照人设反应。 */
+    bridge.smallphoneBlockContact=(key,on)=>{if(isBlocked(key)===on)return;setBlocked(key,on);const name=contactName(key,getCharacterLook(key).name);chatNotice(key,on?`你把${name}拉黑了`:`你解除了对${name}的拉黑`);
+        void replyEngine.proactive(key,on?'[系统提示：这条不是对方说的话，不要回应这条本身] 对方刚刚在私聊里把你拉黑了：你之后发的每一条消息对方都会拒收。照你的人设对这件事做出反应。':'[系统提示：这条不是对方说的话，不要回应这条本身] 对方解除了对你的拉黑，你发的消息对方又收得到了。照你的人设反应。');};
+    /** 删好友：聊天先藏起来（加回来就恢复），他过一阵子会想想要不要来加你。 */
+    bridge.smallphoneDeleteContact=key=>{if(isDeleted(key))return;const name=contactName(key,getCharacterLook(key).name);chatNotice(key,`你把${name}删除了`);setDeleted(key,true);};
+    bridge.smallphoneChatProactive=(key,prompt)=>{void replyEngine.proactive(key,prompt);};
+    /** 他说一句（申请加回来他同意时）：开着的聊天直接出现，没开着的存进记录；你还拉黑着他就标上被拒收。 */
+    bridge.smallphonePeerSay=(key,text)=>{if(!key||!text)return;const rejected=isBlocked(key);if(key===history.current.activeKey){const pending=messageNodes.appendPeer(text);messageNodes.finishPeer(pending.row,{reply:text,sentAt:Date.now(),rejected});messageNodes.scrollLatest();saveCurrentHistory();}else appendBackgroundReply({chatKey:key,reply:text,sentAt:Date.now(),rejected});};
     // 双击（手机上连点两下）头像或名字拍一拍：消息旁边的小头像和名字、右边栏的大头像都算；多选的时候不拍；拍他会等他回，拍自己不用
     let lastTap={who:'',at:0};
     listen(roomView,'click',event=>{
@@ -794,7 +800,7 @@ initChatApplication();
     function updateThreadPreview(key:string) {
         if (!key) return;
         const character = characterStore.read().find(item => item.archiveId === key);
-        if (character) window.dispatchEvent(new CustomEvent('qingtuan:chat-thread-snapshot', { detail: { kind: 'update', threads: [threadSnapshot(character)] } }));
+        if (character && !isDeleted(character.archiveId)) window.dispatchEvent(new CustomEvent('qingtuan:chat-thread-snapshot', { detail: { kind: 'update', threads: [threadSnapshot(character)] } }));
     }
 
     function refreshThreadTimes() {
@@ -976,7 +982,7 @@ initChatApplication();
 
     function renderCharacters() {
         const ordered = characterStore.ordered();
-        window.dispatchEvent(new CustomEvent('qingtuan:chat-thread-snapshot', { detail: { kind: 'rebuild', threads: ordered.map(threadSnapshot) } }));
+        window.dispatchEvent(new CustomEvent('qingtuan:chat-thread-snapshot', { detail: { kind: 'rebuild', threads: ordered.filter(character => !isDeleted(character.archiveId)).map(threadSnapshot) } }));
     }
 
     function syncCharacterAvatarEverywhere(character:ChatCharacter) {

@@ -507,6 +507,7 @@ export function backgroundNode(detail: PeerMessageDetail, factory: MessageFactor
   const reply=String(detail.reply||'').trim(); const stamp=Number(detail.sentAt)||Date.now();
   const row=factory.element('div',{class:'chat-message-row is-chat','data-ai-pending':'false','data-chat-ai-content':reply,'data-sent-at':String(stamp),'data-message-id':'msg_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)});
   if(detail.speaker)setAttr(row,'data-speaker',detail.speaker);
+  if(detail.rejected)setAttr(row,'data-rejected','true');
   const bubble=factory.element('div',{class:detail.voice?.dataUrl?'chat-bubble chat-bubble--voice':'chat-bubble'});
   if(detail.quote)bubble.children.push(quoteNode(String(detail.quote),String(detail.quoteTargetId||''),factory));
   if(detail.photo||detail.location||detail.sticker||detail.pay){/* 照片、定位、表情、转账等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));

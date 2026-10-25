@@ -8,8 +8,9 @@ import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
 import { addContactTag, compareContactNames, contactInitial, patchFriendRequest, readContacts, removeContactTag, renameContactTag, setContactRemark, setContactTags, subscribeContacts, updateContacts } from '../../../utils/contactsStorage';
 import type { FriendRequest, StrangerRate } from '../../../utils/contactsStorage';
-import { acceptFriend, applyToUnblock, generateStranger, strangerTick } from '../../../utils/friendRequests';
+import { acceptFriend, answerReadd, friendTick, generateStranger, sendFriendRequest, strangerTick } from '../../../utils/friendRequests';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
+import { readMe } from '../../../utils/meStorage';
 import type { ChatCharacter } from '../../../types/chatCharacters';
 
 type Bridge = Window & {
@@ -18,6 +19,7 @@ type Bridge = Window & {
   smallphoneOpenCharacterCard?: (id?: unknown) => void;
   smallphonePatchCharacter?: (id: string, fields: { favorite?: boolean }) => void;
   smallphoneBlockContact?: (key: string, on: boolean) => void;
+  smallphoneDeleteContact?: (key: string) => void;
 };
 type View = 'all' | 'new' | 'tags' | 'blocked';
 interface Contact { key: string; name: string; remark: string; shown: string; photo: string; star: boolean; sub: string; character: ChatCharacter }
@@ -34,7 +36,7 @@ export function ChatContactsPage() {
   const [viewing, setViewing] = useState(''), [remarkDraft, setRemarkDraft] = useState<string | null>(null);
   const [tagPick, setTagPick] = useState<{ ids: string[]; name: string } | null>(null), [tagEdit, setTagEdit] = useState<{ id: string; name: string } | null>(null);
   const [stranger, setStranger] = useState(''), [busy, setBusy] = useState('');
-  const [heldOf, setHeldOf] = useState(''), [applying, setApplying] = useState<{ key: string; name: string; greeting: string } | null>(null);
+  const [applying, setApplying] = useState<{ key: string; name: string; greeting: string; remark: string } | null>(null);
   const ticking = useRef(false);
   useLayoutEffect(() => {
     const onTab = (event: Event) => { const name = (event as CustomEvent<string>).detail; setOpen(name === 'Contacts'); if (name === 'Contacts') { setView('all'); setPage(ALL); } };
@@ -51,12 +53,12 @@ export function ChatContactsPage() {
     window.addEventListener('qingtuan:open-contacts', onOpen);
     return () => { window.removeEventListener('qingtuan:chat-tab', onTab); window.removeEventListener('qingtuan:chat-thread-snapshot', onThreads); window.removeEventListener('qingtuan:open-contacts', onOpen); };
   }, []);
-  // 陌生人来加你：开机过一下先看一次，之后每分钟看一次（设定是关就什么都不做）
+  // 陌生人来加你、你发的申请该他回了、你删掉的人想不想来加你：开机过一下先看一次，之后每分钟看一次
   useEffect(() => {
     const check = () => {
       if (ticking.current) return;
       ticking.current = true;
-      strangerTick().catch(() => {}).finally(() => { ticking.current = false; });
+      Promise.all([strangerTick().catch(() => {}), friendTick().catch(() => {})]).finally(() => { ticking.current = false; });
     };
     const first = setTimeout(check, 8000), timer = setInterval(check, 60000);
     return () => { clearTimeout(first); clearInterval(timer); };
@@ -77,7 +79,7 @@ export function ChatContactsPage() {
     };
   }, [open]);
 
-  const people = useMemo(() => characters.map((character): Contact => {
+  const people = useMemo(() => characters.filter(character => !contacts.deleted[character.archiveId]).map((character): Contact => {
     const name = String(character.name || character.nickname || '未命名角色').trim(), remark = contacts.remarks[character.archiveId] || '';
     return { key: character.archiveId, name, remark, shown: remark || name, photo: character.photoUrl || DEFAULT_AVATAR, star: !!character.favorite, sub: String(character.quote || '').trim(), character };
   }).sort((a, b) => compareContactNames(a.shown, b.shown)), [characters, contacts]);
@@ -131,19 +133,26 @@ export function ChatContactsPage() {
   }
 
   async function block(item: Contact) {
-    if (!await confirmChat({ title: `把${item.shown}拉黑？`, message: '他不能再主动找你、拍你，私聊发来的消息会被拦下，你在黑名单里想看再看。群里照常。', confirmText: '拉黑', danger: true })) return;
+    if (!await confirmChat({ title: `把${item.shown}拉黑？`, message: '他会知道被你拉黑了。他发的私聊照样出现，但都会被你拒收；他拍不到你。群里照常。', confirmText: '拉黑', danger: true })) return;
     (window as Bridge).smallphoneBlockContact?.(item.key, true); showToast(`${item.shown} 拉黑了`);
   }
-  async function apply() {
-    if (!applying) return;
-    setBusy('apply');
-    try {
-      const result = await applyToUnblock(applying.key, applying.greeting);
-      setApplying(null);
-      showToast(result.accept ? `${applying.name} 通过了` : `${applying.name} 没有通过${result.reply ? '：「' + result.reply + '」' : ''}`);
-    } catch (error) { showToast(errorText(error)); } finally { setBusy(''); }
+  async function remove(item: Contact) {
+    if (!await confirmChat({ title: `删除${item.shown}？`, message: '他会从通讯录和聊天列表消失，聊天记录先留着，加回来就恢复。他可能会来加你。群里照常。', confirmText: '删除', danger: true })) return;
+    setViewing(''); (window as Bridge).smallphoneDeleteContact?.(item.key); showToast(`${item.shown} 删掉了`);
   }
+  function apply() {
+    if (!applying) return;
+    try { sendFriendRequest(applying.key, applying.greeting); setContactRemark(applying.key, applying.remark === applying.name ? '' : applying.remark); setApplying(null); showToast('申请发出去了'); }
+    catch (error) { showToast(errorText(error)); }
+  }
+  const startApply = (key: string, name: string) => setApplying({ key, name, greeting: (readMe().name ? `我是${readMe().name}` : ''), remark: contacts.remarks[key] || name });
   const stamp = (at: number) => { const date = new Date(at); return `${date.getMonth() + 1}/${date.getDate()}`; };
+  const dayLabel = (at: number) => {
+    const days = Math.round((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 86400000);
+    return days <= 0 ? '今天' : days === 1 ? '昨天' : days < 7 ? `${'二三四五六'[days - 2]}天前` : stamp(at);
+  };
+  const lookup = (key?: string) => characters.find(item => item.archiveId === key);
+  const outPending = (key: string) => contacts.requests.some(item => item.kind === 'out' && item.chatKey === key && item.state === 'pending');
   const row = (item: Contact) => <button type="button" className="chat-contacts-row" key={item.key} onClick={() => setViewing(item.key)}>
     <img className="chat-contacts-avatar" alt="" src={item.photo} />
     <span className="chat-contacts-text"><b>{item.shown}{item.remark ? <i>{item.name}</i> : null}</b>{item.sub ? <small>{item.sub}</small> : null}</span>
@@ -155,24 +164,33 @@ export function ChatContactsPage() {
     </button>{tools}
   </div>;
   const back = (title: string) => <button type="button" className="chat-contacts-back" onClick={() => setView('all')}>‹ {title}</button>;
+  // 新的朋友一行：别人来加你写「他：留言」，你去加别人写「我：留言」，右边是查看或状态（你发的前面一个小箭头）
   const requestRow = (item: FriendRequest) => {
-    const status = item.state === 'accepted' ? '已添加' : item.state === 'rejected' ? '已拒绝' : '';
+    const who = lookup(item.chatKey), name = item.chatKey ? contacts.remarks[item.chatKey] || item.name : item.name, out = item.kind === 'out';
+    const status = out ? (item.state === 'accepted' ? '已添加' : item.state === 'rejected' ? '被拒绝' : '等待验证') : item.state === 'accepted' ? '已添加' : '已拒绝';
     return <div className="chat-contacts-row is-static" key={item.id}>
-      <img className="chat-contacts-avatar" alt="" src={DEFAULT_AVATAR} />
-      <span className="chat-contacts-text"><b>{item.name}<i>陌生人</i></b>
-        <small>{item.greeting ? `「${item.greeting}」` : ''}</small></span>
-      {item.state === 'pending' ? <button type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</button> : <span className="chat-contacts-state">{status}</span>}
+      <img className="chat-contacts-avatar" alt="" src={who?.photoUrl || DEFAULT_AVATAR} />
+      <span className="chat-contacts-text"><b>{name}</b><small>{out ? '我' : item.name}：{item.greeting || '请求添加你为朋友'}</small></span>
+      {!out && item.state === 'pending' ? <button type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</button>
+        : <span className="chat-contacts-state">{out ? <span aria-hidden="true">↗ </span> : null}{status}</span>}
     </div>;
   };
 
   let body: React.ReactNode;
   if (view === 'new') {
-    const incoming = contacts.requests.filter(item => item.kind === 'in').slice().reverse();
+    const all = contacts.requests.slice().sort((a, b) => b.at - a.at).slice(0, 30), days = [...new Set(all.map(item => dayLabel(item.at)))];
+    const gone = characters.filter(item => contacts.deleted[item.archiveId]);
     body = <>
       <div className="chat-contacts-top">{back('新的朋友')}</div>
       <div className="chat-contacts-list">
-        <div className="chat-contacts-sec">来加你的人</div>
-        {incoming.length ? incoming.slice(0, 15).map(requestRow) : <p className="chat-contacts-empty">还没有人来加你。</p>}
+        {days.map(day => <div key={day}><div className="chat-contacts-sec">{day}</div>{all.filter(item => dayLabel(item.at) === day).map(requestRow)}</div>)}
+        {!all.length ? <p className="chat-contacts-empty">还没有好友申请。</p> : null}
+        {gone.length ? <><div className="chat-contacts-sec">删掉的好友</div>
+          {gone.map(item => { const name = contacts.remarks[item.archiveId] || String(item.name || item.nickname || ''); return <div className="chat-contacts-row is-static" key={item.archiveId}>
+            <img className="chat-contacts-avatar" alt="" src={item.photoUrl || DEFAULT_AVATAR} />
+            <span className="chat-contacts-text"><b>{name}</b><small>{stamp(contacts.deleted[item.archiveId].at)} 删除</small></span>
+            {outPending(item.archiveId) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn" onClick={() => startApply(item.archiveId, name)}>申请添加</button>}
+          </div>; })}</> : null}
         <div className="chat-contacts-sec">陌生人来加你</div>
         <div className="chat-contacts-set">
           <span>多久来一个<small>模型随机生成的人，收下就会变成新角色；小手机开着的时候才会来</small></span>
@@ -195,8 +213,7 @@ export function ChatContactsPage() {
         <div className="chat-contacts-sec">你拉黑的</div>
         {mine.map(item => <div className="chat-contacts-row is-static" key={item.key}>
           <img className="chat-contacts-avatar" alt="" src={item.photo} />
-          <span className="chat-contacts-text"><b>{item.shown}</b><small>{stamp(contacts.blocked[item.key].at)} 拉黑{contacts.held[item.key]?.length ? ` · 拦下 ${contacts.held[item.key].length} 条消息` : ''}</small></span>
-          {contacts.held[item.key]?.length ? <button type="button" className="chat-contacts-btn" onClick={() => setHeldOf(item.key)}>看消息</button> : null}
+          <span className="chat-contacts-text"><b>{item.shown}</b><small>{stamp(contacts.blocked[item.key].at)} 拉黑</small></span>
           <button type="button" className="chat-contacts-btn is-primary" onClick={() => { (window as Bridge).smallphoneBlockContact?.(item.key, false); showToast(`${item.shown} 放出来了`); }}>解除</button>
         </div>)}
         {!mine.length ? <p className="chat-contacts-empty">没有拉黑谁。</p> : null}
@@ -204,10 +221,10 @@ export function ChatContactsPage() {
         {theirs.map(item => <div className="chat-contacts-row is-static" key={item.key}>
           <img className="chat-contacts-avatar" alt="" src={item.photo} />
           <span className="chat-contacts-text"><b>{item.shown}</b><small>{stamp(contacts.blockedBy[item.key].at)} 把你拉黑了</small></span>
-          <button type="button" className="chat-contacts-btn is-primary" onClick={() => setApplying({ key: item.key, name: item.shown, greeting: '' })}>申请添加</button>
+          {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn is-primary" onClick={() => startApply(item.key, item.shown)}>申请添加</button>}
         </div>)}
         {!theirs.length ? <p className="chat-contacts-empty">没有人拉黑你。</p> : null}
-        <p className="chat-contacts-note">你拉黑的人：他不能主动找你、拍你，私聊发来的消息会被拦下，想看再看。<br />把你拉黑的人：你发的私聊他收不到，可以重新申请加他，接不接受由他决定；他也可能自己消气放你出来。<br />拉黑只管私聊，群里照常。</p>
+        <p className="chat-contacts-note">你拉黑的人：他知道被你拉黑了，发的私聊照样出现，但都被你拒收；拍不到你。<br />把你拉黑的人：你发的私聊他收不到，可以申请加他，申请会出现在新的朋友，过一会儿他才回；他也可能自己消气放你出来。<br />拉黑只管私聊，群里照常。</p>
       </div>
     </>;
   } else if (view === 'tags') {
@@ -268,6 +285,7 @@ export function ChatContactsPage() {
         </div>
         {contacts.blocked[person.key] ? <button type="button" className="chat-contacts-block" onClick={() => { (window as Bridge).smallphoneBlockContact?.(person.key, false); showToast(`${person.shown} 放出来了`); }}>移出黑名单</button>
           : <button type="button" className="chat-contacts-block is-danger" onClick={() => void block(person)}>加入黑名单</button>}
+        <button type="button" className="chat-contacts-block is-danger" onClick={() => void remove(person)}>删除好友</button>
       </div>
       <div className="sp-confirm-actions chat-me-form-actions">
         <PressedButton type="button" className="sp-confirm-btn" onClick={() => setRemarkDraft(person.remark)}>设备注</PressedButton>
@@ -324,28 +342,18 @@ export function ChatContactsPage() {
     </div>
   </div>, document.body) : null}
 
-  {heldOf ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setHeldOf(''); }}>
-    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="被拦下的消息">
-      <div className="sp-confirm-bar"><span className="sp-confirm-title">被拦下的消息</span></div>
-      <div className="sp-confirm-body"><div className="chat-contacts-fields chat-contacts-held">
-        {(contacts.held[heldOf] || []).map((item, index) => <div key={index}><span>{stamp(item.at)} {new Date(item.at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}</span>{item.text}</div>)}
-      </div></div>
-      <div className="sp-confirm-actions chat-me-form-actions">
-        <PressedButton type="button" className="sp-confirm-btn" onClick={() => setHeldOf('')}>关闭</PressedButton>
-      </div>
-    </div>
-  </div>, document.body) : null}
-
-  {applying ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget && !busy) setApplying(null); }}>
+  {applying ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setApplying(null); }}>
     <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="申请添加朋友">
       <div className="sp-confirm-bar"><span className="sp-confirm-title">申请添加朋友</span></div>
       <div className="sp-confirm-body chat-me-form">
-        <label htmlFor="contactApply">跟「{applying.name}」说点什么<small>他照人设决定要不要放你出来</small></label>
-        <input id="contactApply" maxLength={120} placeholder="例如：我错了，别生气了" value={applying.greeting} autoFocus onChange={event => setApplying({ ...applying, greeting: event.currentTarget.value })} />
+        <label htmlFor="contactApply">发送添加朋友申请<small>他会看到这句话</small></label>
+        <textarea id="contactApply" rows={3} maxLength={120} value={applying.greeting} autoFocus onChange={event => setApplying({ ...applying, greeting: event.currentTarget.value })} />
+        <label htmlFor="contactApplyRemark">备注</label>
+        <input id="contactApplyRemark" maxLength={20} value={applying.remark} onChange={event => setApplying({ ...applying, remark: event.currentTarget.value })} />
       </div>
       <div className="sp-confirm-actions chat-me-form-actions">
-        <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => setApplying(null)}>取消</PressedButton>
-        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!!busy} onClick={() => void apply()}>{busy === 'apply' ? '等他回应…' : '发送'}</PressedButton>
+        <PressedButton type="button" className="sp-confirm-btn" onClick={() => setApplying(null)}>取消</PressedButton>
+        <PressedButton type="button" className="sp-confirm-btn is-primary" onClick={apply}>发送</PressedButton>
       </div>
     </div>
   </div>, document.body) : null}
@@ -355,18 +363,23 @@ export function ChatContactsPage() {
       <div className="sp-confirm-bar"><span className="sp-confirm-title">好友申请</span></div>
       <div className="sp-confirm-body">
         <div className="chat-contacts-card-top">
-          <img className="chat-contacts-avatar" alt="" src={DEFAULT_AVATAR} />
-          <span><b>{request.name}</b>{request.meta ? <small>{request.meta}</small> : null}{request.meet ? <small>来自：{request.meet}</small> : null}</span>
+          <img className="chat-contacts-avatar" alt="" src={lookup(request.chatKey)?.photoUrl || DEFAULT_AVATAR} />
+          <span><b>{request.chatKey ? contacts.remarks[request.chatKey] || request.name : request.name}</b>{request.meta ? <small>{request.meta}</small> : null}{request.meet ? <small>来自：{request.meet}</small> : null}</span>
         </div>
         <div className="chat-contacts-fields">
-          {request.greeting ? <div><span>招呼</span>{request.greeting}</div> : null}
+          {request.greeting ? <div><span>{request.chatKey ? '留言' : '招呼'}</span>{request.greeting}</div> : null}
           {request.intro ? <div><span>简介</span>{request.intro}</div> : null}
         </div>
       </div>
       <div className="sp-confirm-actions chat-me-form-actions">
-        <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => { patchFriendRequest(request.id, { state: 'rejected' }); setStranger(''); }}>拒绝</PressedButton>
-        <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => void newStranger(request)}>{busy === 'stranger' ? '想人中…' : '换一个'}</PressedButton>
-        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!!busy} onClick={() => void takeStranger(request)}>{busy === 'accept' ? '加入中…' : '接受'}</PressedButton>
+        {request.chatKey ? <>
+          <PressedButton type="button" className="sp-confirm-btn" onClick={() => { answerReadd(request, false); setStranger(''); }}>拒绝</PressedButton>
+          <PressedButton type="button" className="sp-confirm-btn is-primary" onClick={() => { answerReadd(request, true); setStranger(''); showToast(`${request.name} 加回来了`); }}>通过</PressedButton>
+        </> : <>
+          <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => { patchFriendRequest(request.id, { state: 'rejected' }); setStranger(''); }}>拒绝</PressedButton>
+          <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => void newStranger(request)}>{busy === 'stranger' ? '想人中…' : '换一个'}</PressedButton>
+          <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!!busy} onClick={() => void takeStranger(request)}>{busy === 'accept' ? '加入中…' : '接受'}</PressedButton>
+        </>}
       </div>
     </div>
   </div>, document.body) : null}

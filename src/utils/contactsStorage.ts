@@ -4,19 +4,19 @@ import type { CharacterDossier } from '../types/characterDossier';
 /** 通讯录（key 是聊天的 archiveId）：
     remarks 你给角色取的备注——聊天列表、聊天室、消息上的名字换成备注，他那边照旧用本名；
     tags 你建的标签，tagged 谁贴了哪些标签；
-    requests 陌生人来加你的好友申请（模型随机生成的人，profile 是收下后建档案用的资料）；
+    requests 新的朋友：in 别人来加你（陌生人有 profile，收下后建档案；被你删掉的好友有 chatKey），out 你去加别人（chatKey 是谁，due 他什么时候回）；
     stranger 陌生人多久来一个（off 关、some 偶尔、often 常常），nextStrangerAt 下一个最早什么时候来；
-    blocked 你拉黑的（他发的私聊收进 held，你想看再看）、blockedBy 把你拉黑的（next 是下一次让他想想要不要放你出来的时间）。都只管私聊，群里照常。 */
-export interface HeldMessage { text: string; at: number }
+    blocked 你拉黑的（他发的私聊照样出现，只是被你拒收）、blockedBy 把你拉黑的（next 是下一次让他想想要不要放你出来的时间）；
+    deleted 你删掉的好友（tries 他来加过几次，next 下一次想想要不要来加你，0 就是不来了）。都只管私聊，群里照常。 */
 export interface ContactTag { id: string; name: string }
 export interface FriendRequest {
-  id: string; kind: 'in'; at: number; state: 'pending' | 'accepted' | 'rejected';
+  id: string; kind: 'in' | 'out'; at: number; state: 'pending' | 'accepted' | 'rejected';
   name: string; greeting: string; intro: string; meta: string; meet: string;
-  profile?: Partial<CharacterDossier>; dossierId?: string;
+  profile?: Partial<CharacterDossier>; dossierId?: string; chatKey?: string; due?: number;
 }
 export type StrangerRate = 'off' | 'some' | 'often';
 interface Contacts { remarks: Record<string, string>; tags: ContactTag[]; tagged: Record<string, string[]>; requests: FriendRequest[]; stranger: StrangerRate; nextStrangerAt: number;
-  blocked: Record<string, { at: number }>; blockedBy: Record<string, { at: number; next: number }>; held: Record<string, HeldMessage[]> }
+  blocked: Record<string, { at: number }>; blockedBy: Record<string, { at: number; next: number }>; deleted: Record<string, { at: number; tries: number; next: number }> }
 const KEY = 'qingtuan_contacts_v1', EVENT = 'qingtuan:contacts-changed';
 let cache: Contacts | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -27,18 +27,17 @@ function clean(value: unknown): Contacts {
   if (row.tagged && typeof row.tagged === 'object') for (const [key, ids] of Object.entries(row.tagged)) { const kept = (Array.isArray(ids) ? ids : []).map(String).filter(id => tags.some(tag => tag.id === id)); if (key && kept.length) tagged[key] = [...new Set(kept)]; }
   const requests = (Array.isArray(row.requests) ? row.requests : []).flatMap((item): FriendRequest[] => {
     const entry = item as Record<string, unknown>;
-    if (!entry?.id || !text(entry.name, 20) || entry.kind === 'out') return [];
-    return [{ id: String(entry.id), kind: 'in', at: Number(entry.at) || 0, state: entry.state === 'accepted' || entry.state === 'rejected' ? entry.state : 'pending',
+    if (!entry?.id || !text(entry.name, 20) || entry.kind === 'out' && !entry.chatKey) return [];
+    return [{ id: String(entry.id), kind: entry.kind === 'out' ? 'out' : 'in', at: Number(entry.at) || 0, state: entry.state === 'accepted' || entry.state === 'rejected' ? entry.state : 'pending',
       name: text(entry.name, 20), greeting: text(entry.greeting, 120), intro: text(entry.intro, 300), meta: text(entry.meta, 40), meet: text(entry.meet, 40),
       ...(entry.profile && typeof entry.profile === 'object' ? { profile: entry.profile as Partial<CharacterDossier> } : {}),
-      ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}) }];
-  }).slice(-40);
+      ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}), ...(entry.chatKey ? { chatKey: String(entry.chatKey) } : {}), ...(Number(entry.due) ? { due: Number(entry.due) } : {}) }];
+  }).slice(-60);
   const record = (value: unknown) => value && typeof value === 'object' ? Object.entries(value as Record<string, Record<string, unknown>>).filter(([key, item]) => key && item && typeof item === 'object') : [];
   const blocked = Object.fromEntries(record(row.blocked).map(([key, item]) => [key, { at: Number(item.at) || 0 }]));
   const blockedBy = Object.fromEntries(record(row.blockedBy).map(([key, item]) => [key, { at: Number(item.at) || 0, next: Number(item.next) || 0 }]));
-  const held = Object.fromEntries((row.held && typeof row.held === 'object' ? Object.entries(row.held as Record<string, unknown>) : []).map(([key, list]): [string, HeldMessage[]] =>
-    [key, (Array.isArray(list) ? list : []).flatMap((item): HeldMessage[] => { const entry = item as Record<string, unknown>, said = text(entry?.text, 500); return said ? [{ text: said, at: Number(entry.at) || 0 }] : []; }).slice(-50)]).filter(([, list]) => list.length));
-  return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0, blocked, blockedBy, held };
+  const deleted = Object.fromEntries(record(row.deleted).map(([key, item]) => [key, { at: Number(item.at) || 0, tries: Number(item.tries) || 0, next: Number(item.next) || 0 }]));
+  return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0, blocked, blockedBy, deleted };
 }
 export function readContacts(): Contacts {
   if (!cache) { try { cache = clean(JSON.parse(kv.getItem(KEY) || '{}')); } catch { cache = clean({}); } }
@@ -89,7 +88,7 @@ export function addFriendRequest(request: Omit<FriendRequest, 'id' | 'at' | 'sta
 export function patchFriendRequest(id: string, patch: Partial<FriendRequest>) {
   updateContacts({ requests: readContacts().requests.map(item => item.id === id ? { ...item, ...patch } : item) });
 }
-/** 拉黑：你拉黑他、他拉黑你（next 是下一次让他想想要不要放你出来）、他被你拦下的私聊。 */
+/** 拉黑：你拉黑他、他拉黑你（next 是下一次让他想想要不要放你出来）。 */
 export const isBlocked = (key: string) => !!readContacts().blocked[key];
 export const isBlockedBy = (key: string) => !!readContacts().blockedBy[key];
 export function setBlocked(key: string, on: boolean) {
@@ -109,11 +108,31 @@ export function dueUnblockChecks(now = Date.now()) {
   if (due.length) updateContacts({ blockedBy: Object.fromEntries(Object.entries(blockedBy).map(([key, item]) => [key, due.includes(key) ? { ...item, next: now + (3 + Math.random() * 5) * HOUR } : item])) });
   return due;
 }
-export function holdMessage(key: string, said: string, at = Date.now()) {
-  const { held } = readContacts();
-  updateContacts({ held: { ...held, [key]: [...(held[key] || []), { text: said, at }].slice(-50) } });
+/** 删好友：删了以后十分钟到半小时，他想想要不要来加你。 */
+export const isDeleted = (key: string) => !!readContacts().deleted[key];
+const MINUTE = 60000;
+export function setDeleted(key: string, on: boolean, now = Date.now()) {
+  const deleted = { ...readContacts().deleted };
+  if (on) deleted[key] = { at: now, tries: 0, next: now + (10 + Math.random() * 20) * MINUTE }; else delete deleted[key];
+  updateContacts({ deleted });
 }
-/** 新的朋友那行的红点：还没处理的陌生人申请。 */
+export function patchDeleted(key: string, patch: Partial<{ tries: number; next: number }>) {
+  const { deleted } = readContacts();
+  if (deleted[key]) updateContacts({ deleted: { ...deleted, [key]: { ...deleted[key], ...patch } } });
+}
+/** 该想想要不要来加你的那几个（拿了就先排开，他想完再排下一次）。 */
+export function dueReadds(now = Date.now()) {
+  const { deleted } = readContacts(), due = Object.entries(deleted).filter(([, item]) => item.next && item.next <= now).map(([key]) => key);
+  due.forEach(key => patchDeleted(key, { next: 0 }));
+  return due;
+}
+/** 你发出去、该他回的申请（拿了就清掉 due，免得回两次）。 */
+export function dueOutRequests(now = Date.now()) {
+  const due = readContacts().requests.filter(item => item.kind === 'out' && item.state === 'pending' && item.due && item.due <= now);
+  if (due.length) updateContacts({ requests: readContacts().requests.map(item => due.some(one => one.id === item.id) ? { ...item, due: 0 } : item) });
+  return due;
+}
+/** 新的朋友那行的红点：还没处理的别人来加你。 */
 export function pendingFriendCount() { return readContacts().requests.filter(item => item.kind === 'in' && item.state === 'pending').length; }
 
 /** 名字第一个字的拼音首字母：照拼音排序，跟每个字母的第一个字比（I、U、V 没有汉字开头）；英文照字母，其他放 #。 */
