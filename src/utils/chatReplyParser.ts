@@ -318,12 +318,15 @@ function readReplyLocation(value: unknown): { place: string; address?: string; d
     return { place: place.slice(0, 60), ...(text('address') ? { address: text('address').slice(0, 80) } : {}), ...(text('distance') ? { distance: text('distance').slice(0, 20) } : {}) };
 }
 /** 回复里的 "transfer"、"packet"：{"amount":520,"note":"…"}，也可以只写金额；"family_card"：{"limit":5000,"note":"…"}（每月额度）。金额是元，记成分。 */
-function readReplyPay(value: unknown, kind: 'transfer' | 'packet' | 'family'): { kind: 'transfer' | 'packet' | 'family'; amount: number; note: string } | null {
+function readReplyPay(value: unknown, kind: 'transfer' | 'packet' | 'family'): { kind: 'transfer' | 'packet' | 'family'; amount: number; note: string; count?: number; split?: 'lucky' | 'even' } | null {
     if (value === undefined || value === null || value === false || value === '') return null;
     const item = value && typeof value === 'object' ? value as Record<string, unknown> : { amount: value };
     const amount = Math.round(Number(String(item.amount ?? item.limit ?? item.money ?? '').replace(/[¥￥,，元\s]/g, '')) * 100);
     if (!Number.isFinite(amount) || amount <= 0) return null;
-    return { kind, amount, note: String(item.note ?? item.message ?? item.text ?? '').trim().slice(0, 40) };
+    // 群红包：count 几个、split 拼手气（lucky，默认）或平分（even）
+    const count = Math.min(100, Math.floor(Number(item.count ?? item.num) || 0));
+    return { kind, amount, note: String(item.note ?? item.message ?? item.text ?? '').trim().slice(0, 40),
+        ...(kind === 'packet' && count > 1 ? { count, split: ['even', '普通', '平分'].includes(String(item.split ?? item.type ?? '')) ? 'even' as const : 'lucky' as const } : {}) };
 }
 function readReceive(value: unknown): '' | 'accept' | 'return' {
     const text = String(value ?? '').trim().toLowerCase();
@@ -350,15 +353,19 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet') || readReplyPay(fields(item).family_card ?? fields(item).familyCard, 'family'),
                     receive: readReceive(fields(item).receive),
                     location: readReplyLocation(fields(item).location),
-                    speaker: String(fields(item).speaker ?? fields(item).name ?? fields(item).from ?? '').trim()
+                    speaker: String(fields(item).speaker ?? fields(item).name ?? fields(item).from ?? '').trim(),
+                    grab: fields(item).grab === true || fields(item).grab === 'true',
+                    pat: fields(item).pat ?? fields(item).poke ?? null,
+                    presence: fields(item).presence && typeof fields(item).presence === 'object' ? fields(item).presence as object : null
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null, speaker: '' };
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null, speaker: '', grab: false, pat: null, presence: null };
         }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : item.pay!.kind === 'family' ? '亲属卡' : '转账' } : item)
         : [];
     // receive 可以写在最外层，也可以写在某一条里（那一条只有 receive 也算）
     const receive = readReceive(parsedObject?.receive) || structuredAll.find(item => item.receive)?.receive || '';
-    const structuredItems = structuredAll.filter(item => fields(item).text);
+    // 群聊里只抢红包、拍人的那一条（没写字）也要留着
+    const structuredItems = structuredAll.filter(item => fields(item).text || item.speaker && (item.grab || item.pat || item.receive));
     if (structuredItems.length) {
         // 旧格式：整包只有一个 quote_id → 挂在第一则
         const topId = typeof parsedObject?.quote_id === 'string' ? parsedObject?.quote_id.trim() : '';
@@ -380,6 +387,10 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             receive,
             locations: structuredItems.map(item => item.location),
             speakers: structuredItems.map(item => item.speaker),
+            grabs: structuredItems.map(item => item.grab),
+            pats: structuredItems.map(item => item.pat),
+            presences: structuredItems.map(item => item.presence),
+            receives: structuredItems.map(item => item.receive),
             quotes,
             quote: firstQuote?.quote || '',
             quoteTargetId: firstQuote?.quoteTargetId || ''

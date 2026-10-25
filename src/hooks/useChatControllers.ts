@@ -16,7 +16,7 @@ import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
 import {contactName,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
 import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
-import {payFromData,payLabel} from '../utils/chatMessageNodes';
+import {payFromData,payLabel,payText} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
 import type {ChatComposerApi,ChatComposerServices} from '../types/chatComposer';
@@ -84,6 +84,7 @@ interface ChatPublicApi {
  smallphoneChatTargets():{key:string;name:string}[];
  smallphoneOpenCharacterCard(id?:unknown):void;
  smallphoneSaveGroup(group:ChatCharacter):Promise<boolean>;
+ smallphoneChatNotice(chatKey:string,text:string):void;
  smallphoneRemoveGroup(id:string):Promise<boolean>;
  smallphonePatchCharacter(id:string,fields:{pinned?:boolean;favorite?:boolean}):void;
 }
@@ -117,7 +118,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:getCharacterLook(getCurrentChatPreferenceKey()).name||refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),group:groupService,photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.({...detail,title:contactName(detail.chatKey,detail.title)}),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:getCharacterLook(getCurrentChatPreferenceKey()).name||refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix,who)=>patChat(chatKey,'assistant',suffix,who),notice:chatNotice,group:groupService,groupMemory,photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.({...detail,title:contactName(detail.chatKey,detail.title)}),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -366,34 +367,49 @@ function initChatApplication(){
     bridge.smallphoneSendChatPay = (draft, source = '') => {
         if (!messageList) throw Error('先打开一个聊天');
         const chatKey = getCurrentChatPreferenceKey(), pay:MessagePay = { ...draft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) };
-        sendPay(pay, chatKey, getCharacterLook(chatKey).name || getCurrentChatRoomName(), source);
+        // 群里转账记成转给那个成员（名字照本名，给模型看的）
+        sendPay(pay, chatKey, pay.to ? getCharacterLook(pay.to).name : getCharacterLook(chatKey).name || getCurrentChatRoomName(), source);
         sendCard(null, null, pay);
     };
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
     // 家机主动找你（「我 → 设置」）：每分钟看一次有没有定时到点的、有没有人该来找你；开着的那个聊天用画面上的记录
     const chatHtml=(key:string)=>key===history.current.activeKey?messageNodes.storedHtml():history.current.histories[key]||'';
-    const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())void replyEngine.proactive(due.chatKey,due.prompt);const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0}));
+    const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())void replyEngine.proactive(due.chatKey,due.prompt);const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0,group:!!item.group}));
         const pick=pickProactive(chats);if(!pick)return;noteProactive(pick.chatKey,chatHtml(pick.chatKey));void replyEngine.proactive(pick.chatKey,pick.prompt);},60000);
     dispose.push(()=>window.clearInterval(proactiveTimer));
     /** 拍一拍：聊天设置关着就不拍。他拍你的后缀是他回复里自己写的；拍自己不加后缀。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
-    function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix=''){
-        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat||groupService(chatKey))return '';
-        const name=contactName(chatKey,getCharacterLook(chatKey).name||getCurrentChatRoomName()),suffix=by==='user'?preferences.patSuffix:by==='assistant'?aiSuffix:'';
-        const text=by==='user'?`我 拍了拍 ${name}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${name} 拍了拍 我${suffix}`;
-        if(chatKey===history.current.activeKey){messageNodes.pat(by,text,suffix);messageNodes.scrollLatest();}
-        else{history.current.histories[chatKey]=messageNodes.patHtml(history.current.histories[chatKey]||emptyChatHistory,by,text,suffix);history.current.times[chatKey]=Date.now();saveChatHistories();updateThreadPreview(chatKey);}
+    function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix='',who:{from?:string;target?:string}={}){
+        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat)return '';
+        // 群聊：拍谁、谁拍的照成员算；你拍成员用的是那个成员私聊设定里「拍他的后缀」
+        const group=!!groupService(chatKey),shown=(key:string)=>contactName(key,getCharacterLook(key).name);
+        if(group&&by!=='self'&&!(by==='user'?who.target:who.from&&who.target))return '';
+        const name=group?'':contactName(chatKey,getCharacterLook(chatKey).name||getCurrentChatRoomName());
+        const suffix=by==='user'?(group?readPreferences(who.target!).patSuffix:preferences.patSuffix):by==='assistant'?aiSuffix:'';
+        const text=group?(by==='user'?`我 拍了拍 ${shown(who.target!)}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${shown(who.from!)} 拍了拍 ${who.target==='me'?'我':shown(who.target!)}${suffix}`)
+            :by==='user'?`我 拍了拍 ${name}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${name} 拍了拍 我${suffix}`;
+        if(chatKey===history.current.activeKey){messageNodes.pat(by,text,suffix,who);messageNodes.scrollLatest();}
+        else{history.current.histories[chatKey]=messageNodes.patHtml(history.current.histories[chatKey]||emptyChatHistory,by,text,suffix,who);history.current.times[chatKey]=Date.now();saveChatHistories();updateThreadPreview(chatKey);}
         return text;
     }
+    /** 中间一行灰字（红包被领了之类）：开着的聊天直接加，没开着的改存着的记录。 */
+    function chatNotice(chatKey:string,text:string){
+        if(!chatKey||!text)return;
+        if(chatKey===history.current.activeKey){messageNodes.notice(text);messageNodes.scrollLatest();}
+        else{history.current.histories[chatKey]=messageNodes.noticeHtml(history.current.histories[chatKey]||emptyChatHistory,text);saveChatHistories();}
+    }
+    bridge.smallphoneChatNotice=chatNotice;
     // 双击（手机上连点两下）头像或名字拍一拍：消息旁边的小头像和名字、右边栏的大头像都算；多选的时候不拍；拍他会等他回，拍自己不用
     let lastTap={who:'',at:0};
     listen(roomView,'click',event=>{
         if(roomView.classList.contains('chat-selection-mode'))return;
-        const target=(event.target as Element|null)?.closest?.('.chat-message-mini-avatar,.chat-message-name,[data-cr-peer-photo],[data-cr-self-photo]');if(!target)return;
-        const who=target.matches('[data-cr-self-photo]')||target.closest('.chat-message-row.is-user')?'self':'user',now=Date.now();
-        if(lastTap.who!==who||now-lastTap.at>400){lastTap={who,at:now};return;}
+        const target=(event.target as Element|null)?.closest?.('.chat-message-mini-avatar,.chat-message-name,[data-cr-peer-photo],[data-cr-self-photo],[data-cr-member]');if(!target)return;
+        // 群聊：拍的是那一则的发言人，或右边成员名单那一行
+        const member=(target.closest<HTMLElement>('[data-cr-member]')?.dataset.crMember)||(target.closest<HTMLElement>('.chat-message-row.is-chat')?.dataset.speaker)||'';
+        const who=target.matches('[data-cr-self-photo]')||target.closest('.chat-message-row.is-user')?'self':'user',key=who+member,now=Date.now();
+        if(lastTap.who!==key||now-lastTap.at>400){lastTap={who:key,at:now};return;}
         lastTap={who:'',at:0};
         if(!state.current.preferences.pat){showChatNotice('拍一拍关着，可以在聊天设置打开');return;}
-        if(!patChat(getCurrentChatPreferenceKey(),who))return;
+        if(!patChat(getCurrentChatPreferenceKey(),who,'',member?{target:member}:{}))return;
         triggerChatFeedback('send');
         if(who==='user')scheduleAutoReply();
     });
@@ -436,6 +452,22 @@ function initChatApplication(){
     /** 群聊：成员给你看的名字、头像（消息照 data-speaker 换）；不是群就没有。 */
     function memberLooks(chatKey:string){let characters:ChatCharacter[]=[];try{characters=characterStore?.read()||[];}catch{/* 开机时角色清单还没接上，先当不是群 */}const group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return undefined;
         return Object.fromEntries(groupMembers(group,characters).map(member=>[member.archiveId,{name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR}]));}
+    /** 私聊时，他也在的群最近两天的对话（每个群最后 12 句）：让他记得群里发生的事。 */
+    function groupMemory(chatKey:string){
+        const characters=characterStore?.read()||[],me=characters.find(item=>item.archiveId===chatKey);if(!me||isGroup(me))return '';
+        const pad=(n:number)=>String(n).padStart(2,'0'),since=Date.now()-2*24*3600000,blocks:string[]=[];
+        for(const group of characters.filter(item=>isGroup(item)&&item.group.members.includes(chatKey))){
+            const template=document.createElement('template');template.innerHTML=group.archiveId===history.current.activeKey?messageNodes.storedHtml():history.current.histories[group.archiveId]||'';
+            const lines=Array.from(template.content.querySelectorAll<HTMLElement>('.chat-message-row')).filter(row=>Number(row.dataset.sentAt)>=since&&row.dataset.recalled!=='true').slice(-12).map(row=>{
+                const user=row.classList.contains('is-user'),speaker=characters.find(item=>item.archiveId===row.dataset.speaker),date=new Date(Number(row.dataset.sentAt));
+                const who=user?'用户':speaker?(speaker.archiveId===chatKey?`你（${memberName(speaker)}）`:memberName(speaker)):'群成员';
+                const content=row.dataset.payId?payText(payFromData(row.dataset),user):String(row.dataset.chatAiContent||row.querySelector('.chat-bubble')?.textContent||'').trim();
+                return content?`${date.getMonth()+1}/${date.getDate()} ${pad(date.getHours())}:${pad(date.getMinutes())} ${who}：${content.slice(0,120)}`:'';
+            }).filter(Boolean);
+            if(lines.length)blocks.push(`【${group.name}】\n${lines.join('\n')}`);
+        }
+        return blocks.length?`你也在下面这些群聊里，以下是最近群里的对话。这些是在群里发生的，不是这个私聊；你记得这些事，可以自然地提起，但不用刻意提，也不要照抄这个格式：\n${blocks.join('\n\n')}`:'';
+    }
     function groupService(chatKey:string){const characters=characterStore?.read()||[],group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return null;
         return {members:groupMembers(group,characters).map(member=>({key:member.archiveId,name:memberName(member),shown:contactName(member.archiveId,memberName(member))})),nick:group.group.nick};}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }

@@ -243,7 +243,7 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
     if (stickerImg) { const url = stickerImageUrl(stickerImage); if (url && attr(stickerImg, 'src') !== url) setAttr(stickerImg, 'src', url); }
     // 转账、红包照钱包里的状态显示（收下、退回、过期）；状态没变就不动
     const payCard = attr(row, 'data-pay-id') ? findClass(row, 'chat-pay') : undefined;
-    if (payCard && (attr(payCard, 'data-pay-state') !== payState(attr(row, 'data-pay-id')) || attr(payCard, 'data-pay-look') !== PAY_LOOK)) setPay(row, readPay(row), factory);
+    if (payCard && (attr(payCard, 'data-pay-state') !== payStamp(attr(row, 'data-pay-id')) || attr(payCard, 'data-pay-look') !== PAY_LOOK)) setPay(row, readPay(row), factory);
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {
       if (!avatar) { avatar = factory.element('img', {class:'chat-message-mini-avatar',alt:''}); if (hasClass(row,'is-chat')) row.children.unshift(avatar); else row.children.push(avatar); }
@@ -323,6 +323,8 @@ export function setSticker(row: MessageElement, sticker: MessageSticker, factory
 }
 /** 转账、红包现在的状态；钱包里找不到（例如钱包清掉了）就当已经收了。 */
 export function payState(id: string): PayState { return payRecord(id)?.state || 'done'; }
+/** 卡片要不要重画：状态，群红包再加上领了几个。 */
+function payStamp(id: string) { const record = payRecord(id); return (record?.state || 'done') + (record?.count ? ':' + (record.claims?.length || 0) : ''); }
 export function readPay(row: MessageElement): MessagePay {
   return { id: attr(row, 'data-pay-id'), kind: (['packet', 'family'].includes(attr(row, 'data-pay-kind')) ? attr(row, 'data-pay-kind') : 'transfer') as MessagePay['kind'], amount: Number(attr(row, 'data-pay-amount')) || 0, note: attr(row, 'data-pay-note') };
 }
@@ -336,6 +338,16 @@ export function payLabel(pay: MessagePay) { return pay.kind === 'packet' ? '[红
 export function payText(pay: MessagePay, mine: boolean) {
   const record = payRecord(pay.id), state = record?.state || 'done', expired = !!record?.expired;
   const note = (pay.note ? `，留言「${pay.note}」` : '') + (record?.ownCard ? '，用的是你给对方开的亲属卡' : '');
+  // 群聊：红包写清楚谁发的、几个、谁领了多少；转账写清楚谁转给谁（用户就是「用户」）
+  if (record?.count) {
+    const claims = record.claims || [], got = claims.map(claim => `${claim.key === 'me' ? '用户' : claim.name} ¥${yuan(claim.amount)}`).join('、');
+    const status = state === 'pending' ? (claims.length ? `已领 ${claims.length}/${record.count}：${got}` : '还没人领') : state === 'done' ? `领完了：${got}` : `过了一天没领完${got ? '，领到的有：' + got : ''}`;
+    return `[红包] ${record.from === 'me' ? '用户' : record.name}发的${record.split === 'even' ? '普通' : '拼手气'}红包 ${record.count} 个，共 ¥${yuan(record.amount)}${note}（${status}）`;
+  }
+  if (record?.to || record?.by) {
+    const payee = record.to ? record.name : '用户', payer = record.to ? '用户' : record.name;
+    return `[转账] ${payer}转给${payee} ¥${yuan(pay.amount)}${note}（${state === 'pending' ? `${payee}还没收` : state === 'done' ? `${payee}收下了` : expired ? '过了一天没收，退回了' : `${payee}退回了`}）`;
+  }
   const who = mine ? '你' : '对方', how = pay.kind === 'packet' ? '拆' : '收';
   const status = state === 'pending' ? `${who}还没${how}` : state === 'done' ? `${who}${pay.kind === 'packet' ? '拆开了' : '收下了'}` : expired ? `过了一天没${how}，退回了` : `${who}退回了`;
   if (pay.kind === 'family') return `[亲属卡] 每月额度 ¥${yuan(pay.amount)}${note}（${state === 'pending' ? `${who}还没收` : state === 'done' ? `${who}收下了，卡在${who}的钱包里` : expired ? '过了一天没收，退回了' : `${who}退回了`}）`;
@@ -354,17 +366,25 @@ const PAY_LOOK = '3';
 /** 转账、红包、亲属卡卡片：左边小图示；转账中间写金额和留言，亲属卡写「亲属卡」和每月额度，红包只写留言（像微信红包，没写就是「恭喜发财，大吉大利」）。底下一条写种类和状态。 */
 export function payNode(pay: MessagePay, mine: boolean, factory: MessageFactory) {
   const record = payRecord(pay.id), state = record?.state || 'done';
+  // 群红包：底下写种类和个数、领了几个；群里的转账写转给谁
+  const group = record?.count ? record : null, claimed = !!group?.claims?.some(claim => claim.key === 'me');
+  const foot = group ? `${group.split === 'even' ? '红包' : '拼手气红包'} · ${group.count} 个` : pay.kind === 'family' ? '亲属卡 · 每月 ¥' + yuan(pay.amount) : pay.kind === 'packet' ? '红包' : '转账';
+  const status = record?.to ? (state === 'pending' ? `等${record.name}收款` : state === 'done' ? `${record.name}已收款` : record.expired ? '已过期退回' : `${record.name}已退回`)
+    : !group ? payStatus(pay.kind, state, !!record?.expired, mine) : mine
+    ? (state === 'pending' ? `已领 ${group.claims?.length || 0}/${group.count}` : state === 'done' ? '已领完' : '已过期退回')
+    : claimed ? '已领取' : state === 'pending' ? '点一下抢' : state === 'done' ? '已领完' : '已过期';
+  const toWho = record?.to ? `转账给${record.name}` : record?.by ? `${record.name}转账给你` : mine ? '转账给对方' : '转账给你';
   const icon = chatPixelIconPath(pay.kind === 'packet' ? 'packet' : pay.kind === 'family' ? 'card' : 'yuan'), name = pay.kind === 'packet' ? '红包' : pay.kind === 'family' ? '亲属卡' : '转账';
-  return factory.element('div', { class: `chat-pay is-${pay.kind} is-${state}`, role: 'button', tabindex: '0', 'aria-label': name, 'data-pay-state': state, 'data-pay-look': PAY_LOOK }, [
+  return factory.element('div', { class: `chat-pay is-${pay.kind} is-${group && !mine && claimed ? 'done' : state}`, role: 'button', tabindex: '0', 'aria-label': name, 'data-pay-state': payStamp(pay.id), 'data-pay-look': PAY_LOOK }, [
     factory.element('div', { class: 'chat-pay-top' }, [
       factory.element('span', { class: 'chat-pay-icon', 'aria-hidden': 'true' }, [factory.element('svg', { viewBox: '-1 -1 26 26', 'shape-rendering': 'crispEdges' }, [factory.element('path', { d: icon.path, transform: icon.offset, fill: 'currentColor', 'fill-rule': 'evenodd' }, [], SVG)], SVG)]),
       factory.element('span', { class: 'chat-pay-info' }, pay.kind === 'packet'
         ? [factory.element('b', {}, [factory.text(pay.note || '恭喜发财，大吉大利')])]
         : pay.kind === 'family' ? [factory.element('b', {}, [factory.text('亲属卡')]), factory.element('small', {}, [factory.text(pay.note || '每月额度 ¥' + yuan(pay.amount))])]
-        : [factory.element('b', {}, [factory.text('¥' + yuan(pay.amount))]), factory.element('small', {}, [factory.text(pay.note || (mine ? '转账给对方' : '转账给你'))])])]),
+        : [factory.element('b', {}, [factory.text('¥' + yuan(pay.amount))]), factory.element('small', {}, [factory.text(pay.note || toWho)])])]),
     factory.element('div', { class: 'chat-pay-foot' }, [
-      factory.element('span', {}, [factory.text(pay.kind === 'family' ? '亲属卡 · 每月 ¥' + yuan(pay.amount) : name)]),
-      factory.element('span', {}, [factory.text(payStatus(pay.kind, state, !!record?.expired, mine))])])]);
+      factory.element('span', {}, [factory.text(foot)]),
+      factory.element('span', {}, [factory.text(status)])])]);
 }
 /** 把转账、红包卡片放进这一行：取代原本的文字（状态变了也是重放一次）。 */
 export function setPay(row: MessageElement, pay: MessagePay, factory: MessageFactory) {
@@ -439,11 +459,21 @@ export function setTranslation(row: MessageElement, text: string, factory: Messa
   setText(card,text,factory);
 }
 /** 拍一拍：中间一行灰字。by 是 user（你拍他）、self（你拍自己）、assistant（他拍你）；suffix 是当时的拍一拍后缀，给他看的时候用。 */
-export function patNode(by: 'user' | 'self' | 'assistant', text: string, suffix: string, factory: MessageFactory, sentAt = Date.now()) {
-  return factory.element('div', { class: 'chat-pat-notice', role: 'note', 'data-pat-by': by, 'data-pat-suffix': suffix, 'data-sent-at': String(sentAt) }, [factory.element('span', { class: 'chat-pat-text' }, [factory.text(text)])]);
+export function patNode(by: 'user' | 'self' | 'assistant', text: string, suffix: string, factory: MessageFactory, sentAt = Date.now(), who: PatWho = {}) {
+  const node = factory.element('div', { class: 'chat-pat-notice', role: 'note', 'data-pat-by': by, 'data-pat-suffix': suffix, 'data-sent-at': String(sentAt) }, [factory.element('span', { class: 'chat-pat-text' }, [factory.text(text)])]);
+  if (who.from) setAttr(node, 'data-pat-from', who.from);
+  if (who.target) setAttr(node, 'data-pat-target', who.target);
+  return node;
+}
+/** 群聊的拍一拍：from 是拍人的成员，target 是被拍的成员（被拍的是你就是 me）。 */
+export interface PatWho { from?: string; target?: string }
+/** 中间一行灰字的系统提示（例如「阿青 领取了你的红包」）：只给你看，不送给模型（红包卡片自己会写谁领了）。 */
+export function noticeNode(text: string, factory: MessageFactory, sentAt = Date.now()) {
+  return factory.element('div', { class: 'chat-system-notice', role: 'note', 'data-sent-at': String(sentAt) }, [factory.element('span', { class: 'chat-pat-text' }, [factory.text(text)])]);
 }
 /** 拍一拍给他看的字。 */
-export function patContext(by: string, suffix: string) {
+export function patContext(by: string, suffix: string, group?: { from: string; target: string }) {
+  if (group) return by === 'self' ? `[用户拍了拍自己${suffix}]` : `[${by === 'assistant' ? group.from : '用户'}拍了拍${group.target}${suffix}]`;
   return by === 'assistant' ? `[你拍了拍对方${suffix}]` : by === 'self' ? `[对方拍了拍自己${suffix}]` : `[对方拍了拍你${suffix}]`;
 }
 export function recallNode(detail: PeerMessageDetail, factory: MessageFactory, by='assistant', seen?: boolean) {
@@ -451,6 +481,7 @@ export function recallNode(detail: PeerMessageDetail, factory: MessageFactory, b
   if(by==='user'){node.children=[factory.text(detail.recallNotice||'你撤回了一条消息')];}
   setAttr(node,'data-recalled-by',by);setAttr(node,'data-recalled-content',String(detail.reply||''));
   if(seen!==undefined)setAttr(node,'data-seen-by-ai',String(seen));setAttr(node,'data-sent-at',String(Number(detail.sentAt)||Date.now()));
+  if(detail.speaker)setAttr(node,'data-speaker',detail.speaker);
   if(by!=='user')node.children=[factory.text(String(detail.recallNotice||'对方撤回了一条消息'))];return node;
 }
 export function repairStructuredMessages(nodes: MessageNode[], factory: MessageFactory) {

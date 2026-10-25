@@ -17,7 +17,8 @@ export interface MessagePhoto { id: string; prompt: string; caption: string; sta
 /** 表情包：标签（他照这个挑的）和图片（上传的是图片库编号 qt-image:…，或网址）。 */
 export interface MessageSticker { tag: string; image: string }
 /** 转账、红包、亲属卡（他给你开的，amount 是每月额度）：金额记「分」（整数）。收没收、退没退记在钱包里（walletStorage），卡片照钱包显示。 */
-export interface MessagePay { id: string; kind: 'transfer' | 'packet' | 'family'; amount: number; note: string }
+/** 群聊才有：count 群红包个数、split lucky 拼手气 / even 平分；to 你转账给哪个成员（archiveId）；by 是哪个成员发的。 */
+export interface MessagePay { id: string; kind: 'transfer' | 'packet' | 'family'; amount: number; note: string; count?: number; split?: 'lucky' | 'even'; to?: string; by?: string }
 /** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */
 export interface MessageLocation { place: string; address?: string; distance?: string }
 export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sticker?: MessageSticker | null; pay?: MessagePay | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string; speaker?: string }
@@ -51,8 +52,11 @@ export interface MessageNodesApi {
   backgroundHtml(html: string, detail: PeerMessageDetail): string;
   recallHtml(html: string, detail: PeerMessageDetail & {messageId?: string}): string | null;
   /** 拍一拍：开着的聊天直接加一行；没开着的聊天改存着的记录。 */
-  pat(by: 'user' | 'self' | 'assistant', text: string, suffix: string): void;
-  patHtml(html: string, by: 'user' | 'self' | 'assistant', text: string, suffix: string): string;
+  pat(by: 'user' | 'self' | 'assistant', text: string, suffix: string, who?: { from?: string; target?: string }): void;
+  patHtml(html: string, by: 'user' | 'self' | 'assistant', text: string, suffix: string, who?: { from?: string; target?: string }): string;
+  /** 中间一行灰字的系统提示（红包被领了之类）：开着的聊天直接加；没开着的改存着的记录。 */
+  notice(text: string): void;
+  noticeHtml(html: string, text: string): string;
   /** 照片画好、画失败或要重画：用照片编号找到那一行换掉；找不到就回传 false / null。 */
   photo(photo: MessagePhoto): boolean;
   photoHtml(html: string, photo: MessagePhoto): string | null;

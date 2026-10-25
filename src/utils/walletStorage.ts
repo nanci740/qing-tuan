@@ -9,7 +9,11 @@ export type PayState = 'pending' | 'done' | 'returned';
 /** from：me 是你发给他的，peer 是他发给你的。source：你付钱用的是哪张卡，空的是余额；sourceLabel 是当时卡的名字（卡删了账单照样看得懂）；
     ownCard：用的是他自己给你开的亲属卡（拿他的卡付给他）。
     亲属卡（kind family）的 amount 是每月额度。 */
-export interface PayRecord { id: string; kind: PayKind; from: 'me' | 'peer'; chatKey: string; name: string; amount: number; note: string; at: number; state: PayState; settledAt?: number; expired?: boolean; source?: string; sourceLabel?: string; ownCard?: boolean }
+export interface PayRecord { id: string; kind: PayKind; from: 'me' | 'peer'; chatKey: string; name: string; amount: number; note: string; at: number; state: PayState; settledAt?: number; expired?: boolean; source?: string; sourceLabel?: string; ownCard?: boolean;
+  count?: number; split?: 'lucky' | 'even'; shares?: number[]; claims?: PacketClaim[]; to?: string; by?: string }
+/** 群红包：发的时候就分好 shares，谁领一个就照顺序拿下一份；key 是成员的 archiveId，你自己是 me。
+    群里的转账：to 是你转给的成员，by 是转给你（或发红包）的成员；name 是那个成员的名字。 */
+export interface PacketClaim { key: string; name: string; amount: number; at: number }
 /** 卡：debit 储蓄卡（balance 是卡里的钱）、credit 信用卡（limit 额度，used 已用，due 还款期限，feeAt 下一次加手续费的时间）、family 他给你的亲属卡（limit 每月额度，used 这个月用了多少，month 是哪个月）。 */
 export type CardKind = 'debit' | 'credit' | 'family';
 export interface WalletCard { id: string; kind: CardKind; bank: string; last4: string; at: number; balance: number; limit: number; used: number; due?: number; feeAt?: number; owner?: string; chatKey?: string; month?: string }
@@ -41,7 +45,11 @@ function clean(value: unknown): Wallet {
     return [{ id, kind: record.kind === 'packet' || record.kind === 'family' ? record.kind : 'transfer', from: record.from === 'peer' ? 'peer' : 'me', chatKey: text(record.chatKey, 120), name: text(record.name, 40),
       amount: cents(record.amount), note: text(record.note, 40), at: Number(record.at) || 0, state,
       ...(Number(record.settledAt) ? { settledAt: Number(record.settledAt) } : {}), ...(record.expired === true ? { expired: true } : {}),
-      ...(text(record.source, 60) ? { source: text(record.source, 60), sourceLabel: text(record.sourceLabel, 60) } : {}), ...(record.ownCard === true ? { ownCard: true } : {}) }];
+      ...(text(record.source, 60) ? { source: text(record.source, 60), sourceLabel: text(record.sourceLabel, 60) } : {}), ...(record.ownCard === true ? { ownCard: true } : {}),
+      ...(Number(record.count) > 1 ? { count: Math.min(100, Math.floor(Number(record.count))), split: record.split === 'even' ? 'even' as const : 'lucky' as const,
+        shares: (Array.isArray(record.shares) ? record.shares : []).map(cents), claims: (Array.isArray(record.claims) ? record.claims : []).flatMap((claim): PacketClaim[] => {
+          const item = claim as Record<string, unknown>; return item && text(item.key, 120) ? [{ key: text(item.key, 120), name: text(item.name, 40), amount: cents(item.amount), at: Number(item.at) || 0 }] : []; }) } : {}),
+      ...(text(record.to, 120) ? { to: text(record.to, 120) } : {}), ...(text(record.by, 120) ? { by: text(record.by, 120) } : {}) }];
   });
   const cards = list('cards').flatMap((card): WalletCard[] => {
     const id = text(card.id, 60);
@@ -144,10 +152,24 @@ export function moveMoney(cardId: string, type: 'in' | 'out', amount: number) {
     moves: [{ id: uid('mv-'), type, cardId, label: cardLabel(card), credit: card.kind === 'credit', amount, at: Date.now() }, ...wallet.moves] });
 }
 
+/** 群红包分份：拼手气每份至少 1 分、随机；平分就平均，零头给前几个。 */
+export function splitPacket(total: number, count: number, split: 'lucky' | 'even') {
+  if (split === 'even') { const base = Math.floor(total / count), extra = total - base * count; return Array.from({ length: count }, (_, index) => base + (index < extra ? 1 : 0)); }
+  const shares: number[] = [];
+  let left = total;
+  for (let rest = count; rest > 1; rest--) {
+    // 微信的作法：每份在 1 分到「剩下平均的两倍」之间随机
+    const most = Math.max(1, Math.floor(left / rest * 2) - 1), share = Math.min(left - (rest - 1), 1 + Math.floor(Math.random() * most));
+    shares.push(share); left -= share;
+  }
+  return [...shares, left].sort(() => Math.random() - .5);
+}
+const groupPacket = (pay: MessagePay) => pay.kind === 'packet' && Number(pay.count) > 1;
 /** 你发转账或红包：从余额或选的那张卡扣钱，等他收；不够就丢错。 */
 export function sendPay(pay: MessagePay, chatKey: string, name: string, source = '') {
   const wallet = readWallet();
   if (pay.amount <= 0) throw Error('金额要大于 0');
+  if (groupPacket(pay) && pay.amount < pay.count!) throw Error('每个红包至少 ¥0.01');
   const card = source ? wallet.cards.find(item => item.id === source) : undefined;
   if (source && !card) throw Error('这张卡不见了');
   const available = card ? cardAvailable(card) : wallet.balance;
@@ -159,13 +181,30 @@ export function sendPay(pay: MessagePay, chatKey: string, name: string, source =
     cards = cards.map(item => item.id === card.id ? next : item);
   }
   write({ ...wallet, balance: wallet.balance - (card ? 0 : pay.amount), cards,
-    records: [{ ...pay, from: 'me', chatKey, name, at: Date.now(), state: 'pending', ...(card ? { source: card.id, sourceLabel: cardLabel(card) } : {}), ...(card?.kind === 'family' && card.chatKey === chatKey ? { ownCard: true } : {}) }, ...wallet.records] });
+    records: [{ ...pay, from: 'me', chatKey, name, at: Date.now(), state: 'pending', ...(card ? { source: card.id, sourceLabel: cardLabel(card) } : {}), ...(card?.kind === 'family' && card.chatKey === chatKey ? { ownCard: true } : {}),
+      ...(groupPacket(pay) ? { split: pay.split || 'lucky', shares: splitPacket(pay.amount, pay.count!, pay.split || 'lucky'), claims: [] } : {}) }, ...wallet.records] });
 }
 /** 他发来的转账、红包、亲属卡：先记下来，你收了才进余额（亲属卡收了才出现在钱包）。 */
 export function receivePay(pay: MessagePay, chatKey: string, name: string) {
   const wallet = readWallet();
   if (wallet.records.some(record => record.id === pay.id)) return;
-  write({ ...wallet, records: [{ ...pay, from: 'peer', chatKey, name, at: Date.now(), state: 'pending' }, ...wallet.records] });
+  write({ ...wallet, records: [{ ...pay, from: 'peer', chatKey, name, at: Date.now(), state: 'pending',
+    ...(groupPacket(pay) ? { split: pay.split || 'lucky', shares: splitPacket(pay.amount, pay.count!, pay.split || 'lucky'), claims: [] } : {}) }, ...wallet.records] });
+}
+/** 群红包领一个（key 是成员 archiveId，你是 me）：领过、领完、过期都回传 null。你领的钱进余额；领完了整包算 done。 */
+export function claimPacket(id: string, key: string, name: string) {
+  const wallet = readWallet(), record = wallet.records.find(item => item.id === id);
+  if (!record?.count || record.state !== 'pending' || record.claims?.some(claim => claim.key === key) || (record.from === 'peer' && record.by === key)) return null;
+  const claims = record.claims || [], amount = record.shares?.[claims.length] ?? 0;
+  if (claims.length >= record.count || !amount) return null;
+  const claim = { key, name, amount, at: Date.now() }, full = claims.length + 1 >= record.count;
+  write({ ...wallet, balance: wallet.balance + (key === 'me' ? amount : 0),
+    records: wallet.records.map(item => item.id === id ? { ...item, claims: [...claims, claim], ...(full ? { state: 'done' as const, settledAt: Date.now() } : {}) } : item) });
+  return { claim, full, record };
+}
+/** 群红包里谁的手气最好（领完才算）。 */
+export function luckiest(record: PayRecord) {
+  return record.count && record.claims?.length === record.count ? record.claims.reduce((best, claim) => claim.amount > best.amount ? claim : best).key : '';
 }
 /** 收下（拆开）或退回一笔还没收的。他收你的、你收他的都走这里；钱跟着进出余额或原本那张卡。 */
 export function settlePay(id: string, action: 'accept' | 'return', expired = false) {
@@ -182,17 +221,19 @@ export function settlePay(id: string, action: 'accept' | 'return', expired = fal
     else balance += record.amount;
   }
   if (record.from === 'me' && state === 'returned') {
+    // 群红包只退还没被领走的那些
+    const back = record.amount - (record.claims || []).reduce((sum, claim) => sum + claim.amount, 0);
     const card = record.source ? cards.find(item => item.id === record.source) : undefined;
-    if (card) cards = cards.map(item => item.id === card.id ? refund(card, record.amount) : item);
-    else balance += record.amount;
+    if (card) cards = cards.map(item => item.id === card.id ? refund(card, back) : item);
+    else balance += back;
   }
   write({ ...wallet, balance, cards,
     records: wallet.records.map(item => item.id === id ? { ...item, state, settledAt: Date.now(), ...(expired ? { expired: true } : {}) } : item) });
   return true;
 }
-/** 他对你还没收的转账、红包表态：这个聊天里你发的、还没收的全部照办。 */
-export function settlePendingFromMe(chatKey: string, action: 'accept' | 'return') {
-  return readWallet().records.filter(record => record.from === 'me' && record.chatKey === chatKey && record.state === 'pending')
+/** 他对你还没收的转账、红包表态：这个聊天里你发的、还没收的全部照办。群聊传 to：只照办你转给那个成员的转账（群红包是用抢的）。 */
+export function settlePendingFromMe(chatKey: string, action: 'accept' | 'return', to?: string) {
+  return readWallet().records.filter(record => record.from === 'me' && record.chatKey === chatKey && record.state === 'pending' && !record.count && (to === undefined || record.to === to))
     .map(record => settlePay(record.id, action)).some(Boolean);
 }
 /** 定时整理：过了一天还没收的自动退回；信用卡过了还款期限没还清，期限那天起每天加 ¥10 手续费，直到还清；亲属卡换月份就从头算。 */

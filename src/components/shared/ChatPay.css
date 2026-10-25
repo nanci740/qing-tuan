@@ -53,3 +53,16 @@
 .chat-pay-detail b { font: 700 24px "Courier New", ui-monospace, monospace; color: var(--spc-title); }
 .chat-pay-detail b.is-note { font-size: 16px; font-weight: 600; font-family: inherit; }
 .chat-pay-detail small { font-size: 10.5px; color: var(--color-muted); }
+
+/* 群聊：转给谁（一排成员）、红包个数和拼手气 / 平分；红包详情列出谁领了多少 */
+.chat-pay-to { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+.chat-pay-to button { height: 26px; padding: 0 10px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; }
+.chat-pay-to button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
+.chat-pay-count { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; font-size: 12px; }
+.chat-pay-count input { flex: none; width: 64px; }
+.chat-pay-tabs.chat-pay-split { margin-left: auto; padding: 0; }
+.chat-photo-viewer-label small { margin-left: 6px; opacity: .6; }
+.chat-pay-claims { align-self: stretch; margin-top: 8px; border: 1px solid var(--win-line); border-radius: 2px; text-align: left; }
+.chat-pay-claims div { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; border-bottom: 1px dotted var(--win-line); color: var(--color-text); font-size: 12px; }
+.chat-pay-claims div:last-child { border-bottom: 0; }
+.chat-pay-claims i { margin-left: 6px; color: var(--win-ink); font-size: 10.5px; font-style: normal; }
