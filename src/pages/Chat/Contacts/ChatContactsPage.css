@@ -3,14 +3,14 @@
 #chatListView .chat-contacts-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
 .chat-contacts { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-/* 索引标签：只有有人的字母；人多一排放不下就左右滑 */
-.chat-contacts-tabs { flex: none; display: flex; padding: 0 6px; overflow-x: auto; scrollbar-width: none; }
+/* 索引标签：只有有人的字母；人多一排放不下就左右滑。底边对齐，选中的那张高一截、接到卡片上 */
+.chat-contacts-tabs { flex: none; display: flex; align-items: flex-end; padding: 3px 6px 0; overflow-x: auto; scrollbar-width: none; }
 .chat-contacts-tabs::-webkit-scrollbar { display: none; }
 #chatListView .chat-contacts-tabs button {
   flex: none; min-width: 22px; margin-right: -1px; padding: 4px 4px 3px; border: 1px solid var(--win-line); border-bottom: 0; border-radius: 2px 2px 0 0;
   background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--win-ink); font-size: 10px; font-weight: 700; line-height: 1.2;
 }
-#chatListView .chat-contacts-tabs button[aria-selected="true"] { position: relative; z-index: 1; padding-bottom: 4px; margin-bottom: -1px; background: var(--color-surface); }
+#chatListView .chat-contacts-tabs button[aria-selected="true"] { position: relative; z-index: 1; padding-top: 7px; padding-bottom: 4px; margin-bottom: -1px; background: var(--color-surface); }
 
 .chat-contacts-card { flex: 1; min-height: 0; display: flex; flex-direction: column; border: 1px solid var(--win-line); border-radius: 0 4px 4px 4px; background: var(--color-surface); box-shadow: var(--chat-raised); overflow: hidden; }
 .chat-contacts-top { flex: none; display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 2px solid var(--theme-color); }
