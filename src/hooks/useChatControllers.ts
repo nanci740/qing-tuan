@@ -503,7 +503,7 @@ function initChatApplication(){
         return preferenceBridge.appearance();
     }
     bridge.applyChatRoomPreferences = applyChatRoomPreferences;
-    function syncChatSettingsIdentity(){let profile=null;try{profile=bridge.smallphoneGetActiveCharacterProfile?.()||null;}catch{}const avatar=refs.get<HTMLImageElement>('chatRoomAvatar');chatIdentity.settings(profile,avatar?.getAttribute('src')||avatar?.currentSrc||avatar?.src||'',refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'当前角色');}
+    function syncChatSettingsIdentity(){let profile=null;try{profile=bridge.smallphoneGetActiveCharacterProfile?.()||null;}catch{}refs.get('chatSettingsPage')?.toggleAttribute('data-group',isGroup(profile));const avatar=refs.get<HTMLImageElement>('chatRoomAvatar');chatIdentity.settings(profile,avatar?.getAttribute('src')||avatar?.currentSrc||avatar?.src||'',refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'当前角色');}
     bridge.smallphoneSyncChatSettingsIdentity=syncChatSettingsIdentity;
     let roomTools!:RoomToolsApi;
     window.dispatchEvent(new CustomEvent<{services:RoomToolsServices;accept(api:RoomToolsApi):void}>('qingtuan:chat-room-tools-connect',{detail:{services:{closeMessage:closeMessageMenu,text:getMessageText},accept:api=>{roomTools=api;}}}));

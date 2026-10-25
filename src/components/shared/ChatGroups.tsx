@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
 import { readChatCharacters } from '../../utils/chatCharacterStorage';
 import { DEFAULT_AVATAR } from '../../utils/defaultAvatar';
+import { compressCharacterAvatar } from '../../utils/characterAvatar';
 import { showToast } from '../../utils/toast';
 import { confirmChat } from '../../utils/chatConfirm';
 import { contactName } from '../../utils/contactsStorage';
@@ -17,7 +18,7 @@ type Bridge = Window & {
   smallphoneSaveGroup?: (group: ChatCharacter) => Promise<boolean>;
   smallphoneRemoveGroup?: (id: string) => Promise<boolean>;
 };
-interface Draft { id: string; name: string; members: string[]; notice: string; nick: string; know: boolean }
+interface Draft { id: string; name: string; photo: string; members: string[]; notice: string; nick: string; know: boolean }
 const people = () => readChatCharacters().filter(item => !item.group);
 const shownName = (item: ChatCharacter) => contactName(item.archiveId, memberName(item));
 const activeGroup = () => { const active = (window as Bridge).smallphoneGetActiveCharacterProfile?.() || null; return isGroup(active) ? active : null; };
@@ -33,7 +34,7 @@ export function ChatGroups() {
     };
     const openInfo = () => {
       const group = activeGroup();
-      if (group) setDraft({ id: group.archiveId, name: group.name, members: group.group.members, notice: group.group.notice, nick: group.group.nick, know: group.group.know });
+      if (group) setDraft({ id: group.archiveId, name: group.name, photo: group.photoUrl || '', members: group.group.members, notice: group.group.notice, nick: group.group.nick, know: group.group.know });
     };
     // 群里打 @：游标前面是「@字」就跳出成员名单，照打的字筛
     const typed = (event: Event) => {
@@ -63,7 +64,7 @@ export function ChatGroups() {
     const existing = readChatCharacters().find(item => item.archiveId === draft.id);
     const fallback = draft.members.map(key => characters.find(item => item.archiveId === key)).filter((item): item is ChatCharacter => !!item).map(shownName).slice(0, 3).join('、');
     const base = existing || newGroup(draft.name || fallback, draft.members);
-    const group: ChatCharacter = { ...base, name: draft.name.trim().slice(0, 20) || fallback || '群聊', group: { members: draft.members, notice: draft.notice.trim().slice(0, 300), nick: draft.nick.trim().slice(0, 12), know: draft.know } };
+    const group: ChatCharacter = { ...base, name: draft.name.trim().slice(0, 20) || fallback || '群聊', photoUrl: draft.photo, group: { members: draft.members, notice: draft.notice.trim().slice(0, 300), nick: draft.nick.trim().slice(0, 12), know: draft.know } };
     setBusy(true);
     const ok = await (window as Bridge).smallphoneSaveGroup?.(group);
     setBusy(false);
@@ -74,6 +75,11 @@ export function ChatGroups() {
   async function dissolve() {
     if (!draft || !await confirmChat({ title: '解散群聊？', message: `「${draft.name || '群聊'}」和群里的聊天记录会一起删掉，成员的私聊不受影响。`, confirmText: '解散', danger: true })) return;
     if (await (window as Bridge).smallphoneRemoveGroup?.(draft.id)) { setDraft(null); showToast('群聊解散了'); }
+  }
+  // 群头像：自己选一张图；不选就是成员头像拼起来
+  async function choosePhoto(file?: File) {
+    if (!draft || !file) return;
+    try { setDraft({ ...draft, photo: await compressCharacterAvatar(file) }); } catch (error) { showToast(String((error as Error)?.message || error).slice(0, 60)); }
   }
   function pick(name: string) {
     if (!mention) return;
@@ -90,7 +96,7 @@ export function ChatGroups() {
   return <>
     {menu ? createPortal(<div className="chat-add-menu" role="menu" style={{ top: menu.top, right: menu.right }} onPointerDown={event => event.stopPropagation()}>
       <button type="button" role="menuitem" onClick={() => { setMenu(null); (window as Bridge).smallphoneOpenCharacterCard?.(); }}><span aria-hidden="true">＋</span>新增角色</button>
-      <button type="button" role="menuitem" onClick={() => { setMenu(null); setDraft({ id: 'new', name: '', members: [], notice: '', nick: '', know: true }); }}><span aria-hidden="true">⁂</span>发起群聊</button>
+      <button type="button" role="menuitem" onClick={() => { setMenu(null); setDraft({ id: 'new', name: '', photo: '', members: [], notice: '', nick: '', know: true }); }}><span aria-hidden="true">⁂</span>发起群聊</button>
     </div>, document.body) : null}
 
     {mention && group && (options.length || !mention.query) ? createPortal(<div className="chat-mention" role="listbox" aria-label="提醒谁看" style={{ left: mention.left, bottom: mention.bottom }} onPointerDown={event => event.preventDefault()}>
@@ -105,6 +111,12 @@ export function ChatGroups() {
         <div className="sp-confirm-body chat-me-form">
           <label htmlFor="groupName">群名字{isNew ? <small>不填就用成员名字</small> : null}</label>
           <input id="groupName" maxLength={20} placeholder="例如：周末火锅群" value={draft.name} onChange={event => setDraft({ ...draft, name: event.currentTarget.value })} />
+          <label>群头像<small>不换就用成员头像拼起来</small></label>
+          <div className="chat-group-photo">
+            {draft.photo ? <img alt="" src={draft.photo} /> : <span className="chat-group-grid" data-count={Math.min(4, draft.members.length)}>{draft.members.slice(0, 4).map(key => <img key={key} alt="" src={characters.find(item => item.archiveId === key)?.photoUrl || DEFAULT_AVATAR} />)}</span>}
+            <label className="chat-group-photo-btn">换图片<input type="file" accept="image/*" hidden onChange={event => { void choosePhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} /></label>
+            {draft.photo ? <button type="button" className="chat-group-photo-btn" onClick={() => setDraft({ ...draft, photo: '' })}>用成员头像</button> : null}
+          </div>
           <label>成员<small>{draft.members.length} 人，至少两个</small></label>
           {draft.members.length ? <div className="chat-group-chips">{draft.members.map(key => { const item = characters.find(one => one.archiveId === key); return item ? <button type="button" key={key} aria-label={`拿掉${shownName(item)}`}
             onClick={() => setDraft({ ...draft, members: draft.members.filter(one => one !== key) })}>{shownName(item)} ×</button> : null; })}</div> : null}
