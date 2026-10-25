@@ -6,7 +6,7 @@ import type { CharacterDossier } from '../types/characterDossier';
     tags 你建的标签，tagged 谁贴了哪些标签；
     requests 新的朋友：in 别人来加你（陌生人有 profile，收下后建档案；被你删掉的好友有 chatKey），out 你去加别人（chatKey 是谁，due 他什么时候回）；
     stranger 陌生人多久来一个（off 关、some 偶尔、often 常常），nextStrangerAt 下一个最早什么时候来；
-    blocked 你拉黑的（他发的私聊照样出现，只是被你拒收）、blockedBy 把你拉黑的（next 是下一次让他想想要不要放你出来的时间）；
+    blocked 你拉黑的（他发的私聊照样出现，只是被你拒收；tries、next 跟 deleted 一样，是他来申请加你的次数和下一次）、blockedBy 把你拉黑的（next 是下一次让他想想要不要放你出来的时间）；
     deleted 你删掉的好友（tries 他来加过几次，next 下一次想想要不要来加你，0 就是不来了）。都只管私聊，群里照常。 */
 export interface ContactTag { id: string; name: string }
 export interface FriendRequest {
@@ -16,7 +16,7 @@ export interface FriendRequest {
 }
 export type StrangerRate = 'off' | 'some' | 'often';
 interface Contacts { remarks: Record<string, string>; tags: ContactTag[]; tagged: Record<string, string[]>; requests: FriendRequest[]; stranger: StrangerRate; nextStrangerAt: number;
-  blocked: Record<string, { at: number }>; blockedBy: Record<string, { at: number; next: number }>; deleted: Record<string, { at: number; tries: number; next: number }> }
+  blocked: Record<string, { at: number; tries: number; next: number }>; blockedBy: Record<string, { at: number; next: number }>; deleted: Record<string, { at: number; tries: number; next: number }> }
 const KEY = 'qingtuan_contacts_v1', EVENT = 'qingtuan:contacts-changed';
 let cache: Contacts | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -34,7 +34,7 @@ function clean(value: unknown): Contacts {
       ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}), ...(entry.chatKey ? { chatKey: String(entry.chatKey) } : {}), ...(Number(entry.due) ? { due: Number(entry.due) } : {}) }];
   }).slice(-60);
   const record = (value: unknown) => value && typeof value === 'object' ? Object.entries(value as Record<string, Record<string, unknown>>).filter(([key, item]) => key && item && typeof item === 'object') : [];
-  const blocked = Object.fromEntries(record(row.blocked).map(([key, item]) => [key, { at: Number(item.at) || 0 }]));
+  const blocked = Object.fromEntries(record(row.blocked).map(([key, item]) => [key, { at: Number(item.at) || 0, tries: Number(item.tries) || 0, next: Number(item.next) || 0 }]));
   const blockedBy = Object.fromEntries(record(row.blockedBy).map(([key, item]) => [key, { at: Number(item.at) || 0, next: Number(item.next) || 0 }]));
   const deleted = Object.fromEntries(record(row.deleted).map(([key, item]) => [key, { at: Number(item.at) || 0, tries: Number(item.tries) || 0, next: Number(item.next) || 0 }]));
   return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0, blocked, blockedBy, deleted };
@@ -93,10 +93,10 @@ export const isBlocked = (key: string) => !!readContacts().blocked[key];
 export const isBlockedBy = (key: string) => !!readContacts().blockedBy[key];
 export function setBlocked(key: string, on: boolean) {
   const blocked = { ...readContacts().blocked };
-  if (on) blocked[key] = { at: Date.now() }; else delete blocked[key];
+  if (on) blocked[key] = { at: Date.now(), tries: 0, next: Date.now() + (10 + Math.random() * 20) * MINUTE }; else delete blocked[key];
   updateContacts({ blocked });
 }
-const HOUR = 3600000;
+const HOUR = 3600000, MINUTE = 60000;
 export function setBlockedBy(key: string, on: boolean, now = Date.now()) {
   const blockedBy = { ...readContacts().blockedBy };
   if (on) blockedBy[key] = { at: now, next: now + (2 + Math.random() * 4) * HOUR }; else delete blockedBy[key];
@@ -108,22 +108,22 @@ export function dueUnblockChecks(now = Date.now()) {
   if (due.length) updateContacts({ blockedBy: Object.fromEntries(Object.entries(blockedBy).map(([key, item]) => [key, due.includes(key) ? { ...item, next: now + (3 + Math.random() * 5) * HOUR } : item])) });
   return due;
 }
-/** 删好友：删了以后十分钟到半小时，他想想要不要来加你。 */
+/** 删好友：删了以后十分钟到半小时，他想想要不要来加你（你拉黑他也一样，他会来申请让你放他出来）。 */
 export const isDeleted = (key: string) => !!readContacts().deleted[key];
-const MINUTE = 60000;
 export function setDeleted(key: string, on: boolean, now = Date.now()) {
   const deleted = { ...readContacts().deleted };
   if (on) deleted[key] = { at: now, tries: 0, next: now + (10 + Math.random() * 20) * MINUTE }; else delete deleted[key];
   updateContacts({ deleted });
 }
-export function patchDeleted(key: string, patch: Partial<{ tries: number; next: number }>) {
-  const { deleted } = readContacts();
-  if (deleted[key]) updateContacts({ deleted: { ...deleted, [key]: { ...deleted[key], ...patch } } });
+export type Cut = 'blocked' | 'deleted';
+export function patchCut(kind: Cut, key: string, patch: Partial<{ tries: number; next: number }>) {
+  const map = readContacts()[kind];
+  if (map[key]) updateContacts({ [kind]: { ...map, [key]: { ...map[key], ...patch } } });
 }
-/** 该想想要不要来加你的那几个（拿了就先排开，他想完再排下一次）。 */
+/** 你拉黑或删掉的人里，该想想要不要来加你的那几个（拿了就先排开，他想完再排下一次）。 */
 export function dueReadds(now = Date.now()) {
-  const { deleted } = readContacts(), due = Object.entries(deleted).filter(([, item]) => item.next && item.next <= now).map(([key]) => key);
-  due.forEach(key => patchDeleted(key, { next: 0 }));
+  const contacts = readContacts(), due = (['blocked', 'deleted'] as Cut[]).flatMap(kind => Object.entries(contacts[kind]).filter(([, item]) => item.next && item.next <= now).map(([key]) => ({ key, kind })));
+  due.forEach(item => patchCut(item.kind, item.key, { next: 0 }));
   return due;
 }
 /** 你发出去、该他回的申请（拿了就清掉 due，免得回两次）。 */

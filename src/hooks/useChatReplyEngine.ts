@@ -12,6 +12,7 @@ import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLe
 import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
 import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsStorage';
+import {peerApply} from '../utils/friendRequests';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -510,6 +511,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const unblock = blockingUser && /"unblock"\s*:\s*(?:true|"true")/.test(rawReply), blockNow = !groupInfo && !blockingUser && /"block"\s*:\s*(?:true|"true")/.test(rawReply);
             if (unblock) { setBlockedBy(requestChatKey, false); services.current!.notice(requestChatKey, `${characterName} 解除了对你的拉黑`); }
             else if (blockingUser) return;
+            // 你把他拉黑了：他可以发好友申请（"apply":"留言"）请你放他出来，出现在新的朋友
+            const applyText = blockedByUser ? /"apply"\s*:\s*"([^"\n]{1,120})"/.exec(rawReply)?.[1] || '' : '';
+            if (applyText) peerApply(requestChatKey, applyText);
             const emptyReplies = /"replies"\s*:\s*\[\s*\]/.test(rawReply);
             if (blockNow && emptyReplies) { setBlockedBy(requestChatKey, true); services.current!.notice(requestChatKey, `${characterName} 把你拉黑了`); return; }
             // replies 是空的：主动找你时是他照人设决定这次不发；只拍不说话也是空的
@@ -684,6 +688,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
                 }
             }
+            // 被你拒收的那几句后面一行灰字，跟你被他拒收时一样
+            if (blockedByUser && segments.some(Boolean)) services.current!.notice(requestChatKey, '消息已发出，但被对方拒收了');
             if (blockNow) { setBlockedBy(requestChatKey, true); services.current!.notice(requestChatKey, `${characterName} 把你拉黑了`); }
             if (!inQuietHours() && !blockedByUser) services.current!.feedback('receive');
         } catch (error) {
