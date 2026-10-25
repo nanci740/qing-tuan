@@ -1,16 +1,16 @@
-/* 聊天 App「我」：列表中间那几块藏起来，换成「我」。照旧聊天软件主视窗（参考 LuckyBuddy）里面那几块排，不套外框：
+/* 聊天 App「我」（和 Contacts）：列表中间那几块藏起来，换成「我」。照旧聊天软件主视窗（参考 LuckyBuddy）里面那几块排，不套外框：
    资料小窗（跟 snapshot.jpg 同一条标题栏）、陪伴纪录三张小卡、左边直排分页 + 右边清单、底下状态列。颜色全部跟主题色走，图标是主画面那套像素图。 */
-#chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] > :is(.chat-memory-block, .chat-search, .chat-filter-tabs, .chat-conversation-panel) { display: none !important; }
+#chatAppPage#chatAppPage #chatListView[data-chat-tab] > :is(.chat-memory-block, .chat-search, .chat-filter-tabs, .chat-conversation-panel) { display: none !important; }
 #chatListView .chat-me-page {
   --me-line: var(--win-line); --me-ink: var(--win-ink); --me-soft: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface));
   flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; padding: 14px 0 0; box-sizing: border-box;
 }
 
-/* 底下分页：在「我」的时候，Me 那格亮起来、Chats 那格回到没选的样子（跟原本 .active 同一套）。 */
-#chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Chats"] { background: transparent !important; font-weight: normal; box-shadow: none; margin-top: 0; border-top: 0; opacity: .7; color: var(--win-ink); }
-#chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Chats"] svg { color: var(--chat-teal); }
-#chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"] { background: var(--effect-face-white) !important; font-weight: 600; box-shadow: -1px 0 0 var(--effect-drop-color), 1px 0 0 var(--effect-drop-color); margin-top: -1px; border-top: 2px solid var(--chat-teal); opacity: 1; }
-#chatAppPage#chatAppPage #chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"] svg { color: var(--wk-accent); }
+/* 底下分页：在「我」或 Contacts 的时候，那一格亮起来、Chats 那格回到没选的样子（跟原本 .active 同一套）。 */
+#chatAppPage#chatAppPage #chatListView[data-chat-tab] .chat-subnav-item[aria-label="Chats"] { background: transparent !important; font-weight: normal; box-shadow: none; margin-top: 0; border-top: 0; opacity: .7; color: var(--win-ink); }
+#chatAppPage#chatAppPage #chatListView[data-chat-tab] .chat-subnav-item[aria-label="Chats"] svg { color: var(--chat-teal); }
+#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"]) { background: var(--effect-face-white) !important; font-weight: 600; box-shadow: -1px 0 0 var(--effect-drop-color), 1px 0 0 var(--effect-drop-color); margin-top: -1px; border-top: 2px solid var(--chat-teal); opacity: 1; }
+#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"]) svg { color: var(--wk-accent); }
 
 #chatListView .chat-me-page button { font: inherit; color: inherit; cursor: pointer; }
 #chatListView svg.chat-me-px { flex: none; }

@@ -13,6 +13,7 @@ import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsPro
 import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
+import {contactName,subscribeContacts} from '../utils/contactsStorage';
 import {payFromData,payLabel} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
@@ -80,6 +81,7 @@ interface ChatPublicApi {
  smallphoneShowChatConfirm(options?:ChatConfirmationOptions):Promise<boolean>;
  smallphoneChatTargets():{key:string;name:string}[];
  smallphoneOpenCharacterCard(id?:unknown):void;
+ smallphonePatchCharacter(id:string,fields:{pinned?:boolean;favorite?:boolean}):void;
 }
 function serviceError(error:unknown){if(error instanceof Error&&error.name==='AbortError')return '已取消';return String(error instanceof Error?error.message:'请求失败').slice(0,150);}
 export function useChatControllers(messages:MessageNodesApi){const refs=useNativeRefs()!,navigation=useChatNavigation(),settingsNavigation=useSettingsNavigation(),world=useWorld(),profileAvatar=useProfileAvatar();const otherPages=useRef({settingsNavigation,world});otherPages.current={settingsNavigation,world};const history=useRef<{activeKey:string;restoring:boolean;histories:Record<string,string>;times:Record<string,number>;counts:Record<string,number>}>({activeKey:'',restoring:false,histories:{},times:{},counts:{}});const state=useRef({preferences:readPreferences('no-character'),suppressVoiceUntil:0});
@@ -111,7 +113,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.(detail),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:getCharacterLook(getCurrentChatPreferenceKey()).name||refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.({...detail,title:contactName(detail.chatKey,detail.title)}),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -214,6 +216,7 @@ function initChatApplication(){
         chatIdentity.room(activeCharacter);
         messageNodes?.identity();
     }
+    listen(window,'qingtuan:chat-identity-refresh',()=>syncChatIdentity());
 
     // React 导航通过类型化接口协作消息 / 录音 / 草稿服务。
     let chatNavigation!:ChatNavigationApi;
@@ -371,7 +374,7 @@ function initChatApplication(){
     /** 拍一拍：聊天设置关着就不拍。他拍你的后缀是他回复里自己写的；拍自己不加后缀。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
     function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix=''){
         const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat)return '';
-        const name=getCharacterLook(chatKey).name||getCurrentChatRoomName(),suffix=by==='user'?preferences.patSuffix:by==='assistant'?aiSuffix:'';
+        const name=contactName(chatKey,getCharacterLook(chatKey).name||getCurrentChatRoomName()),suffix=by==='user'?preferences.patSuffix:by==='assistant'?aiSuffix:'';
         const text=by==='user'?`我 拍了拍 ${name}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${name} 拍了拍 我${suffix}`;
         if(chatKey===history.current.activeKey){messageNodes.pat(by,text,suffix);messageNodes.scrollLatest();}
         else{history.current.histories[chatKey]=messageNodes.patHtml(history.current.histories[chatKey]||emptyChatHistory,by,text,suffix);history.current.times[chatKey]=Date.now();saveChatHistories();updateThreadPreview(chatKey);}
@@ -709,7 +712,7 @@ initChatApplication();
         const lastPreview = getLastChatPreview(character.archiveId);
         return {
             id: character.archiveId,
-            name: text(character.name, text(character.nickname, '未命名角色')),
+            name: contactName(character.archiveId, text(character.name, text(character.nickname, '未命名角色'))),
             photoUrl: character.photoUrl || '', favorite: Boolean(character.favorite), pinned: Boolean(character.pinned),
             preview: draft ? `草稿：${draft.replace(/\s+/g, ' ').slice(0, 42)}` : lastPreview,
             draft: Boolean(draft), time: !draft && lastPreview ? formatThreadTime(history.current.times[character.archiveId]) : '',
@@ -967,6 +970,9 @@ initChatApplication();
     function openCharacterCard(targetDossierId?:unknown) { window.dispatchEvent(new CustomEvent('qingtuan:character-dialog-open', { detail: targetDossierId })); }
     window.dispatchEvent(new CustomEvent('qingtuan:chat-list-services', { detail: { openCharacterCard } }));
     bridge.smallphoneOpenCharacterCard = openCharacterCard;
+    bridge.smallphonePatchCharacter = (id, fields) => { void characterStore.patch(id, fields); };
+    // 通讯录改了备注：聊天列表、聊天室标题和消息上的名字跟着换
+    dispose.push(subscribeContacts(() => { renderCharacters(); window.dispatchEvent(new CustomEvent('qingtuan:chat-identity-refresh')); }));
 
     renderCharacters();
     const timer=window.setInterval(refreshThreadTimes, 10000);dispose.push(()=>window.clearInterval(timer));

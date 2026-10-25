@@ -1,0 +1,47 @@
+/* 聊天 App「Contacts」：纸本通讯录——上面一排索引标签（选中的那张接到卡片上），下面一张卡片：标题列 + 照拼音分组的名单。颜色跟主题色走。 */
+#chatListView .chat-contacts-page { flex: 1 1 auto; min-height: 0; display: flex; padding: 14px 0 0; box-sizing: border-box; }
+#chatListView .chat-contacts-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
+.chat-contacts { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* 索引标签：只有有人的字母；人多一排放不下就左右滑。底边对齐，选中的那张高一截、接到卡片上 */
+.chat-contacts-tabs { flex: none; display: flex; align-items: flex-end; padding: 3px 6px 0; overflow-x: auto; scrollbar-width: none; }
+.chat-contacts-tabs::-webkit-scrollbar { display: none; }
+#chatListView .chat-contacts-tabs button {
+  flex: none; min-width: 22px; margin-right: -1px; padding: 4px 4px 3px; border: 1px solid var(--win-line); border-bottom: 0; border-radius: 2px 2px 0 0;
+  background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--win-ink); font-size: 10px; font-weight: 700; line-height: 1.2;
+}
+#chatListView .chat-contacts-tabs button[aria-selected="true"] { position: relative; z-index: 1; padding-top: 7px; padding-bottom: 4px; margin-bottom: -1px; background: var(--color-surface); }
+
+.chat-contacts-card { flex: 1; min-height: 0; display: flex; flex-direction: column; border: 1px solid var(--win-line); border-radius: 0 4px 4px 4px; background: var(--color-surface); box-shadow: var(--chat-raised); overflow: hidden; }
+.chat-contacts-top { flex: none; display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 2px solid var(--theme-color); }
+.chat-contacts-top b { color: var(--color-text); font-size: 13px; }
+.chat-contacts-top small { color: var(--color-muted); font-size: 10.5px; }
+.chat-contacts-search { margin-left: auto; width: 150px; height: 24px; display: flex; align-items: center; gap: 4px; padding: 0 6px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 2px; background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--color-muted); font-size: 11px; }
+.chat-contacts-search input { flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; background: none; color: var(--color-text); font: inherit; font-size: 11px; }
+
+.chat-contacts-list { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 10px 10px; }
+#chatListView .chat-contacts-head { width: 100%; display: flex; align-items: center; gap: 5px; margin: 6px 0 2px; padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 12px; font-weight: 700; text-align: left; }
+.chat-contacts-head > span { font-size: 9px; }
+.chat-contacts-head small { color: var(--color-muted); font-weight: 400; }
+#chatListView .chat-contacts-row { width: 100%; display: flex; align-items: center; gap: 9px; padding: 6px 4px; border: 0; border-bottom: 1px dotted var(--win-line); background: none; text-align: left; }
+#chatListView .chat-contacts-group .chat-contacts-row:last-child { border-bottom: 0; }
+.chat-contacts-avatar { flex: none; width: 34px; height: 34px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); object-fit: cover; }
+.chat-contacts-text { flex: 1; min-width: 0; }
+.chat-contacts-text b { display: block; overflow: hidden; color: var(--color-text); font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.chat-contacts-text b i { margin-left: 5px; color: var(--color-muted); font-size: 11px; font-style: normal; font-weight: 400; }
+.chat-contacts-text small { display: block; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+.chat-contacts-star { flex: none; color: var(--win-ink); font-size: 12px; }
+.chat-contacts-empty { margin: 24px 8px; color: var(--color-muted); font-size: 11px; line-height: 1.6; text-align: center; }
+
+/* 名片：大头像 + 名字，右上角星标；下面一格一格列出档案里有填的 */
+.chat-contacts-card-top { display: flex; align-items: center; gap: 12px; }
+.chat-contacts-card-top .chat-contacts-avatar { width: 68px; height: 68px; }
+.chat-contacts-card-top > span { flex: 1; min-width: 0; }
+.chat-contacts-card-top b { display: block; color: var(--color-text); font-size: 16px; }
+.chat-contacts-card-top small { display: block; margin-top: 2px; color: var(--color-muted); font-size: 11px; }
+.chat-contacts-starbtn { flex: none; align-self: flex-start; width: 28px; height: 28px; padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.chat-contacts-fields { margin-top: 10px; border: 1px solid var(--win-line); border-radius: 2px; }
+.chat-contacts-fields:empty { display: none; }
+.chat-contacts-fields div { display: flex; gap: 8px; padding: 6px 8px; border-bottom: 1px dotted var(--win-line); color: var(--color-text); font-size: 12px; line-height: 1.5; }
+.chat-contacts-fields div:last-child { border-bottom: 0; }
+.chat-contacts-fields span { flex: none; width: 34px; color: var(--color-muted); }

@@ -85,8 +85,8 @@ export function ChatMePage() {
     const onTab = (event: Event) => {
       const name = (event as CustomEvent<string>).detail;
       if (name === 'Me') setOpen(true);
-      else if (name === 'Chats') setOpen(false);
-      else showToast(`${name === 'Contacts' ? '通讯录' : '发现'}${LATER}`);
+      else if (name === 'Chats' || name === 'Contacts') setOpen(false);
+      else showToast(`发现${LATER}`);
     };
     // 从别的地方（例如还款提醒横幅）直接打开「我」的某一页
     const onOpenTab = (event: Event) => {
@@ -103,13 +103,13 @@ export function ChatMePage() {
   useLayoutEffect(() => {
     const view = refs?.get('chatListView'), nav = view?.querySelector('.chat-subnav');
     if (!view || !nav) return;
-    if (!open) { view.removeAttribute('data-chat-tab'); setHost(null); return; }
+    if (!open) { if (view.getAttribute('data-chat-tab') === 'me') view.removeAttribute('data-chat-tab'); setHost(null); return; }
     view.setAttribute('data-chat-tab', 'me');
     const box = document.createElement('div');
     box.className = 'chat-me-page';
     view.insertBefore(box, nav);
     setHost(box);
-    return () => { box.remove(); view.removeAttribute('data-chat-tab'); };
+    return () => { box.remove(); if (view.getAttribute('data-chat-tab') === 'me') view.removeAttribute('data-chat-tab'); };
   }, [open]);
   useEffect(() => { if (open) { setTab(wantTab.current); wantTab.current = 'me'; } }, [open]);
   // 看过钱包，还款提醒的小红点就熄掉
