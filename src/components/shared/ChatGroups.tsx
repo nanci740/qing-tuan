@@ -1,5 +1,5 @@
 import './ChatGroups.css';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PressedButton } from './PressedButton';
 import { readChatCharacters } from '../../utils/chatCharacterStorage';
@@ -26,6 +26,7 @@ const activeGroup = () => { const active = (window as Bridge).smallphoneGetActiv
 /** 群聊：右上角 ＋ 的小选单（新增角色、发起群聊）、发起群聊、群聊信息（改名、公告、成员、昵称、认不认识、解散），还有群里打 @ 跳出的成员名单。 */
 export function ChatGroups() {
   const [menu, setMenu] = useState<{ top: number; right: number } | null>(null), [draft, setDraft] = useState<Draft | null>(null), [busy, setBusy] = useState(false);
+  const photoInput = useRef<HTMLInputElement>(null);
   const [mention, setMention] = useState<{ query: string; left: number; bottom: number; field: HTMLTextAreaElement } | null>(null);
   useLayoutEffect(() => {
     const openMenu = (event: Event) => {
@@ -114,7 +115,8 @@ export function ChatGroups() {
           <label>群头像<small>不换就用成员头像拼起来</small></label>
           <div className="chat-group-photo">
             {draft.photo ? <img alt="" src={draft.photo} /> : <span className="chat-group-grid" data-count={Math.min(4, draft.members.length)}>{draft.members.slice(0, 4).map(key => <img key={key} alt="" src={characters.find(item => item.archiveId === key)?.photoUrl || DEFAULT_AVATAR} />)}</span>}
-            <label className="chat-group-photo-btn">换图片<input type="file" accept="image/*" hidden onChange={event => { void choosePhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} /></label>
+            <button type="button" className="chat-group-photo-btn" onClick={() => photoInput.current?.click()}>换图片</button>
+            <input ref={photoInput} type="file" accept="image/*" hidden onChange={event => { void choosePhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
             {draft.photo ? <button type="button" className="chat-group-photo-btn" onClick={() => setDraft({ ...draft, photo: '' })}>用成员头像</button> : null}
           </div>
           <label>成员<small>{draft.members.length} 人，至少两个</small></label>
@@ -123,7 +125,7 @@ export function ChatGroups() {
           <div className="chat-group-pick">
             {characters.map(item => { const on = draft.members.includes(item.archiveId); return <button type="button" key={item.archiveId} role="checkbox" aria-checked={on}
               onClick={() => setDraft({ ...draft, members: on ? draft.members.filter(one => one !== item.archiveId) : [...draft.members, item.archiveId] })}>
-              <span className="chat-group-box" aria-hidden="true">{on ? '✓' : ''}</span><img alt="" src={item.photoUrl || DEFAULT_AVATAR} />{shownName(item)}
+              <span className="chat-group-box" aria-hidden="true" /><img alt="" src={item.photoUrl || DEFAULT_AVATAR} />{shownName(item)}
             </button>; })}
             {!characters.length ? <small>还没有角色，先在 ＋ 新增角色。</small> : null}
           </div>
@@ -134,7 +136,7 @@ export function ChatGroups() {
             <input id="groupNick" maxLength={12} value={draft.nick} onChange={event => setDraft({ ...draft, nick: event.currentTarget.value })} />
           </>}
           <button type="button" className="chat-group-know" role="switch" aria-checked={draft.know} onClick={() => setDraft({ ...draft, know: !draft.know })}>
-            <span className="chat-group-box" aria-hidden="true">{draft.know ? '✓' : ''}</span><span>他们认识彼此<small>照档案里写的关系；不勾就是在群里才认识</small></span>
+            <span className="chat-group-box" aria-hidden="true" /><span>他们认识彼此<small>照档案里写的关系；不勾就是在群里才认识</small></span>
           </button>
         </div>
         <div className="sp-confirm-actions chat-me-form-actions">

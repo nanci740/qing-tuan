@@ -254,7 +254,7 @@ export function ChatContactsPage() {
   } else body = <>
     <div className="chat-contacts-top">
       <b>通讯录</b><small>{people.length} 人</small>
-      <label className="chat-contacts-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索名字、备注" value={query} onChange={event => setQuery(event.currentTarget.value)} /></label>
+      <label className="chat-contacts-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索名字、备注" value={query} onChange={event => setQuery(event.currentTarget.value)} />{query ? <button type="button" className="chat-contacts-clear" aria-label="清除" onClick={() => setQuery('')}>×</button> : null}</label>
     </div>
     <div className="chat-contacts-list">
       {needle || page !== ALL ? null : <>
