@@ -6,13 +6,11 @@ import { readChatCharacters } from '../../../utils/chatCharacterStorage';
 import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
 import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
-import { readMe } from '../../../utils/meStorage';
 import { addContactTag, compareContactNames, contactInitial, patchFriendRequest, readContacts, removeContactTag, renameContactTag, setContactRemark, setContactTags, subscribeContacts, updateContacts } from '../../../utils/contactsStorage';
 import type { FriendRequest, StrangerRate } from '../../../utils/contactsStorage';
-import { acceptFriend, addableCharacters, generateStranger, sendFriendRequest, strangerTick } from '../../../utils/friendRequests';
+import { acceptFriend, generateStranger, strangerTick } from '../../../utils/friendRequests';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import type { ChatCharacter } from '../../../types/chatCharacters';
-import type { CharacterDossier } from '../../../types/characterDossier';
 
 type Bridge = Window & {
   smallphoneOpenChatApp?: () => void;
@@ -20,21 +18,21 @@ type Bridge = Window & {
   smallphoneOpenCharacterCard?: (id?: unknown) => void;
   smallphonePatchCharacter?: (id: string, fields: { favorite?: boolean }) => void;
 };
-type View = 'all' | 'new' | 'add' | 'tags';
+type View = 'all' | 'new' | 'tags';
 interface Contact { key: string; name: string; remark: string; shown: string; photo: string; star: boolean; sub: string; character: ChatCharacter }
 const STAR = '★', ALL = '全部';
 const errorText = (error: unknown) => String((error as Error)?.message || error).slice(0, 60);
 
 /** 聊天 App 底下的「Contacts」：像纸本通讯录——上面一排索引标签（全部、星标、有人的字母，点了只看那一页），下面一张卡片。
-    卡片可以换成新的朋友（陌生人来加你、你发出的申请）、添加朋友（右上角 ＋，搜档案里的角色）、标签。点一个人打开名片。 */
+    卡片可以换成新的朋友（陌生人来加你）、标签。点一个人打开名片。 */
 export function ChatContactsPage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null), refs = useNativeRefs();
   const contacts = useSyncExternalStore(subscribeContacts, readContacts);
   const [characters, setCharacters] = useState<ChatCharacter[]>([]), [view, setView] = useState<View>('all'), [page, setPage] = useState(ALL);
-  const [query, setQuery] = useState(''), [addQuery, setAddQuery] = useState(''), [folded, setFolded] = useState<Record<string, boolean>>({});
+  const [query, setQuery] = useState(''), [folded, setFolded] = useState<Record<string, boolean>>({});
   const [viewing, setViewing] = useState(''), [remarkDraft, setRemarkDraft] = useState<string | null>(null);
   const [tagPick, setTagPick] = useState<{ ids: string[]; name: string } | null>(null), [tagEdit, setTagEdit] = useState<{ id: string; name: string } | null>(null);
-  const [stranger, setStranger] = useState(''), [sending, setSending] = useState<{ record: CharacterDossier; greeting: string } | null>(null), [busy, setBusy] = useState('');
+  const [stranger, setStranger] = useState(''), [busy, setBusy] = useState('');
   const ticking = useRef(false);
   useLayoutEffect(() => {
     const onTab = (event: Event) => { const name = (event as CustomEvent<string>).detail; setOpen(name === 'Contacts'); if (name === 'Contacts') { setView('all'); setPage(ALL); } };
@@ -61,9 +59,9 @@ export function ChatContactsPage() {
     const first = setTimeout(check, 8000), timer = setInterval(check, 60000);
     return () => { clearTimeout(first); clearInterval(timer); };
   }, []);
-  // 打开：跟「我」一样把列表中间那几块藏起来，通讯录放在底下分页的上面；右上角 ＋ 换成添加朋友
+  // 打开：跟「我」一样把列表中间那几块藏起来，通讯录放在底下分页的上面
   useLayoutEffect(() => {
-    const view = refs?.get('chatListView'), nav = view?.querySelector('.chat-subnav'), add = view?.querySelector<HTMLElement>('#chatAddCharacterBtn');
+    const view = refs?.get('chatListView'), nav = view?.querySelector('.chat-subnav');
     if (!view || !nav || !open) { setHost(null); return; }
     setCharacters(readChatCharacters()); setQuery('');
     view.setAttribute('data-chat-tab', 'contacts');
@@ -71,11 +69,8 @@ export function ChatContactsPage() {
     box.className = 'chat-contacts-page';
     view.insertBefore(box, nav);
     setHost(box);
-    const plus = (event: Event) => { event.stopPropagation(); event.preventDefault(); setAddQuery(''); setView('add'); };
-    add?.addEventListener('click', plus);
-    add?.setAttribute('aria-label', '添加朋友');
     return () => {
-      box.remove(); add?.removeEventListener('click', plus); add?.setAttribute('aria-label', '新增角色');
+      box.remove();
       if (view.getAttribute('data-chat-tab') === 'contacts') view.removeAttribute('data-chat-tab');
     };
   }, [open]);
@@ -102,8 +97,6 @@ export function ChatContactsPage() {
   const request = contacts.requests.find(item => item.id === stranger);
   useEffect(() => { if (viewing && !person) setViewing(''); }, [viewing, person]);
   const tagsOf = (key: string) => (contacts.tagged[key] || []).map(id => contacts.tags.find(tag => tag.id === id)).filter((tag): tag is NonNullable<typeof tag> => !!tag);
-  const addable = useMemo(() => view === 'add' ? addableCharacters() : [], [view, characters]);
-  const addShown = addQuery.trim() ? addable.filter(record => String(record.name || record.nickname || '').toLowerCase().includes(addQuery.trim().toLowerCase())) : addable;
 
   function goChat(key: string) { setViewing(''); setOpen(false); (window as Bridge).smallphoneOpenCharacterChat?.(key); }
   function saveRemark() { if (!person || remarkDraft === null) return; setContactRemark(person.key, remarkDraft); setRemarkDraft(null); }
@@ -134,15 +127,6 @@ export function ChatContactsPage() {
     try { const key = await acceptFriend(item); setStranger(''); showToast(`${item.name} 加进来了`); if (key) goChat(key); }
     catch (error) { showToast(errorText(error)); } finally { setBusy(''); }
   }
-  async function send() {
-    if (!sending) return;
-    setBusy('send');
-    try {
-      const result = await sendFriendRequest(sending.record, sending.greeting);
-      setSending(null); setView('new');
-      showToast(result.state === 'accepted' ? `${result.name} 接受了` : `${result.name} 没有接受`);
-    } catch (error) { showToast(errorText(error)); } finally { setBusy(''); }
-  }
 
   const row = (item: Contact) => <button type="button" className="chat-contacts-row" key={item.key} onClick={() => setViewing(item.key)}>
     <img className="chat-contacts-avatar" alt="" src={item.photo} />
@@ -156,25 +140,23 @@ export function ChatContactsPage() {
   </div>;
   const back = (title: string) => <button type="button" className="chat-contacts-back" onClick={() => setView('all')}>‹ {title}</button>;
   const requestRow = (item: FriendRequest) => {
-    const status = item.kind === 'in' ? (item.state === 'accepted' ? '已添加' : item.state === 'rejected' ? '已拒绝' : '')
-      : item.state === 'accepted' ? '已添加' : item.state === 'rejected' ? '已拒绝 · 可再加' : '等对方回应';
+    const status = item.state === 'accepted' ? '已添加' : item.state === 'rejected' ? '已拒绝' : '';
     return <div className="chat-contacts-row is-static" key={item.id}>
       <img className="chat-contacts-avatar" alt="" src={DEFAULT_AVATAR} />
-      <span className="chat-contacts-text"><b>{item.name}{item.kind === 'in' ? <i>陌生人</i> : null}</b>
-        <small>{item.kind === 'out' && item.state === 'rejected' && item.reply ? `对方：「${item.reply}」` : item.greeting ? `「${item.greeting}」` : ''}</small></span>
-      {item.kind === 'in' && item.state === 'pending' ? <button type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</button> : <span className="chat-contacts-state">{status}</span>}
+      <span className="chat-contacts-text"><b>{item.name}<i>陌生人</i></b>
+        <small>{item.greeting ? `「${item.greeting}」` : ''}</small></span>
+      {item.state === 'pending' ? <button type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</button> : <span className="chat-contacts-state">{status}</span>}
     </div>;
   };
 
   let body: React.ReactNode;
   if (view === 'new') {
-    const incoming = contacts.requests.filter(item => item.kind === 'in').slice().reverse(), outgoing = contacts.requests.filter(item => item.kind === 'out').slice().reverse();
+    const incoming = contacts.requests.filter(item => item.kind === 'in').slice().reverse();
     body = <>
       <div className="chat-contacts-top">{back('新的朋友')}</div>
       <div className="chat-contacts-list">
         <div className="chat-contacts-sec">来加你的人</div>
         {incoming.length ? incoming.slice(0, 15).map(requestRow) : <p className="chat-contacts-empty">还没有人来加你。</p>}
-        {outgoing.length ? <><div className="chat-contacts-sec">你发出的申请</div>{outgoing.slice(0, 15).map(requestRow)}</> : null}
         <div className="chat-contacts-sec">陌生人来加你</div>
         <div className="chat-contacts-set">
           <span>多久来一个<small>模型随机生成的人，收下就会变成新角色；小手机开着的时候才会来</small></span>
@@ -187,24 +169,6 @@ export function ChatContactsPage() {
           <span>现在就来一个<small>不想等的话</small></span>
           <button type="button" className="chat-contacts-btn" disabled={busy === 'stranger'} onClick={() => void newStranger()}>{busy === 'stranger' ? '想人中…' : '来一个'}</button>
         </div>
-      </div>
-    </>;
-  } else if (view === 'add') {
-    body = <>
-      <div className="chat-contacts-top">{back('添加朋友')}
-        <label className="chat-contacts-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜档案里的角色" value={addQuery} autoFocus onChange={event => setAddQuery(event.currentTarget.value)} /></label>
-      </div>
-      <div className="chat-contacts-list">
-        <button type="button" className="chat-contacts-row" onClick={() => { setOpen(false); (window as Bridge).smallphoneOpenCharacterCard?.(); }}>
-          <span className="chat-contacts-icon" aria-hidden="true">＋</span><span className="chat-contacts-text"><b>新建角色档案</b><small>自己写一个新角色，存好就会进聊天</small></span>
-        </button>
-        <div className="chat-contacts-sec">档案里还没加的角色</div>
-        {addShown.map(record => <div className="chat-contacts-row is-static" key={String(record.id)}>
-          <img className="chat-contacts-avatar" alt="" src={String(record.photoUrl || '') || DEFAULT_AVATAR} />
-          <span className="chat-contacts-text"><b>{String(record.name || record.nickname)}</b>{record.quote ? <small>{String(record.quote)}</small> : null}</span>
-          <button type="button" className="chat-contacts-btn is-primary" onClick={() => setSending({ record, greeting: readMe().name ? `我是${readMe().name}` : '你好' })}>添加</button>
-        </div>)}
-        {!addShown.length ? <p className="chat-contacts-empty">{addable.length ? `找不到「${addQuery.trim()}」。` : '档案里的角色都加过了。'}</p> : null}
       </div>
     </>;
   } else if (view === 'tags') {
@@ -230,7 +194,7 @@ export function ChatContactsPage() {
           {contacts.tags.length ? <span className="chat-contacts-state">{contacts.tags.slice(0, 3).map(tag => tag.name).join(' · ')}{contacts.tags.length > 3 ? ` 等 ${contacts.tags.length} 个` : ''}</span> : null}</button>
       </>}
       {visible.map(([letter, items]) => <div className="chat-contacts-group" key={letter}>{head(letter, letter === STAR ? '星标朋友' : letter, items.length)}{folded[letter] ? null : items.map(row)}</div>)}
-      {!people.length ? <p className="chat-contacts-empty">还没有联系人。点右上角 ＋ 添加朋友，或去「新的朋友」看看谁来加你。</p>
+      {!people.length ? <p className="chat-contacts-empty">还没有联系人。点右上角 ＋ 新增角色，或去「新的朋友」看看谁来加你。</p>
         : !visible.length ? <p className="chat-contacts-empty">找不到「{query.trim()}」。</p> : null}
     </div>
   </>;
@@ -337,18 +301,5 @@ export function ChatContactsPage() {
       </div>
     </div>
   </div>, document.body) : null}
-
-  {sending ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget && !busy) setSending(null); }}>
-    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="申请添加朋友">
-      <div className="sp-confirm-bar"><span className="sp-confirm-title">申请添加朋友</span></div>
-      <div className="sp-confirm-body chat-me-form">
-        <label htmlFor="contactGreeting">跟「{String(sending.record.name || sending.record.nickname)}」打个招呼<small>他照人设决定接不接受</small></label>
-        <input id="contactGreeting" maxLength={120} value={sending.greeting} autoFocus onChange={event => setSending({ ...sending, greeting: event.currentTarget.value })} />
-      </div>
-      <div className="sp-confirm-actions chat-me-form-actions">
-        <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => setSending(null)}>取消</PressedButton>
-        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!!busy} onClick={() => void send()}>{busy === 'send' ? '等对方回应…' : '发送'}</PressedButton>
-      </div>
-    </div>
-  </div>, document.body) : null}</>;
+</>;
 }

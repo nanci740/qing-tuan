@@ -1,9 +1,7 @@
 import type { ApiService } from '../types/api';
 import type { CharacterDossier } from '../types/characterDossier';
 import { extractChatAiReply } from './chatReplyParser';
-import { buildCharacterPrompt } from './characterPrompt';
 import { readChatCharacters } from './chatCharacterStorage';
-import { readCharacterRecords } from './characterArchiveStorage';
 import { activePersonaPrompt, readMe } from './meStorage';
 import { addFriendRequest, patchFriendRequest, readContacts, updateContacts } from './contactsStorage';
 import type { FriendRequest } from './contactsStorage';
@@ -52,41 +50,16 @@ export async function generateStranger() {
   return addFriendRequest({ kind: 'in', name: strangerName, greeting: str(data.greeting, 120), intro, meta: [age && `${age} 岁`, job].filter(Boolean).join(' · '), meet, profile });
 }
 
-/** 你去加档案里的角色：他照人设决定接不接受，回一句话。 */
-export async function sendFriendRequest(record: CharacterDossier, greeting: string) {
-  const request = addFriendRequest({ kind: 'out', name: str(record.name || record.nickname, 20), greeting: greeting.trim().slice(0, 120), intro: '', meta: '', meet: '', dossierId: String(record.id) });
-  try {
-    const me = activePersonaPrompt();
-    const data = await ask([
-      `你是「${str(record.name || record.nickname, 20)}」，以下是你的人设：\n${buildCharacterPrompt(record)}`,
-      me ? `申请加你好友的人：\n${me}` : '',
-      `对方在聊天软件上申请加你好友，招呼写着：「${request.greeting || '（没写招呼）'}」。照你的人设、你们的关系和对方的招呼，决定接不接受。`,
-      '只输出一个 JSON：{"accept":true,"reply":"接受的话是你加好友后发的第一句话；拒绝的话是拒绝时附的一句话，可以空着"}',
-    ].filter(Boolean).join('\n'));
-    const accept = data.accept === true || data.accept === 'true', reply = str(data.reply, 200);
-    if (!accept) { patchFriendRequest(request.id, { state: 'rejected', reply }); return { ...request, state: 'rejected' as const, reply }; }
-    await acceptFriend({ ...request, reply });
-    return { ...request, state: 'accepted' as const, reply };
-  } catch (error) { patchFriendRequest(request.id, { state: 'rejected', reply: '' }); throw error; }
-}
-
-/** 档案里还没放进聊天的角色（搜名字加朋友用）。 */
-export function addableCharacters() {
-  const inChat = new Set(readChatCharacters().map(item => String(item.dossierId)));
-  return readCharacterRecords().filter(record => (record.name || record.nickname) && !inChat.has(String(record.id)));
-}
-
-function addToChat(detail: { dossierId?: string; fields?: Partial<CharacterDossier> }) {
+function addToChat(detail: { fields?: Partial<CharacterDossier> }) {
   return new Promise<string>(resolve => window.dispatchEvent(new CustomEvent('qingtuan:character-add-to-chat', { detail: { ...detail, done: resolve } })));
 }
-/** 收下（或对方接受）：放进聊天，他先发第一句话。回传聊天的 archiveId。 */
+/** 收下陌生人：照申请里的资料建档案、放进聊天，他的招呼就是第一句话。回传聊天的 archiveId。 */
 export async function acceptFriend(request: FriendRequest) {
-  const dossierId = await addToChat(request.kind === 'out' ? { dossierId: request.dossierId } : { fields: request.profile });
+  const dossierId = await addToChat({ fields: request.profile });
   if (!dossierId) throw new Error('加不进聊天，检查一下储存空间');
   const chatKey = readChatCharacters().find(item => String(item.dossierId) === dossierId)?.archiveId || '';
   patchFriendRequest(request.id, { state: 'accepted', dossierId });
-  const first = request.kind === 'out' ? request.reply : request.greeting;
-  if (chatKey && first) (window as Bridge).smallphoneAppendBackgroundReply?.({ chatKey, reply: first, sentAt: Date.now() });
+  if (chatKey && request.greeting) (window as Bridge).smallphoneAppendBackgroundReply?.({ chatKey, reply: request.greeting, sentAt: Date.now() });
   return chatKey;
 }
 
