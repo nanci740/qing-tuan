@@ -37,7 +37,7 @@
 .chat-contacts-star { flex: none; color: var(--win-ink); font-size: 12px; }
 /* 新的朋友、标签那两行的方块图示；红点是还没处理的陌生人申请 */
 .chat-contacts-icon { flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--win-ink); font-size: 16px; font-weight: 700; }
-.chat-contacts-badge { flex: none; color: var(--color-danger); font-size: 11px; font-weight: 700; }
+.chat-contacts-badge { flex: none; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--color-danger); color: var(--color-surface); font-size: 10px; line-height: 16px; text-align: center; }
 .chat-contacts-state { flex: none; max-width: 45%; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
 #chatListView .chat-contacts-btn { flex: none; height: 22px; padding: 0 9px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font-size: 10.5px; white-space: nowrap; }
 #chatListView .chat-contacts-btn.is-primary { background: var(--win-bar); }
