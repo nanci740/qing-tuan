@@ -815,6 +815,9 @@ position:relative;
 /* @qingtuan-order:001981 */
 
 #chatListView .chat-subnav-item + .chat-subnav-item{box-shadow:-1px 0 0 var(--effect-drop-color)}
+/* 底栏的提醒（例如 Contacts 有新的朋友还没处理）：图标右上角一个红字数字 */
+#chatListView .chat-subnav-item[data-badge]{position:relative}
+#chatListView .chat-subnav-item[data-badge]::after{content:attr(data-badge);position:absolute;top:5px;left:calc(50% + 11px);color:var(--color-danger);font-size:10px;font-weight:700;letter-spacing:0}
 
 /* @qingtuan-order:001982 */
 
