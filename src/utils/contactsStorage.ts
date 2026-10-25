@@ -4,13 +4,13 @@ import type { CharacterDossier } from '../types/characterDossier';
 /** 通讯录（key 是聊天的 archiveId）：
     remarks 你给角色取的备注——聊天列表、聊天室、消息上的名字换成备注，他那边照旧用本名；
     tags 你建的标签，tagged 谁贴了哪些标签；
-    requests 好友申请：in 是陌生人来加你（模型随机生成的人，profile 是收下后建档案用的资料），out 是你去加档案里的角色；
+    requests 陌生人来加你的好友申请（模型随机生成的人，profile 是收下后建档案用的资料）；
     stranger 陌生人多久来一个（off 关、some 偶尔、often 常常），nextStrangerAt 下一个最早什么时候来。 */
 export interface ContactTag { id: string; name: string }
 export interface FriendRequest {
-  id: string; kind: 'in' | 'out'; at: number; state: 'pending' | 'accepted' | 'rejected';
+  id: string; kind: 'in'; at: number; state: 'pending' | 'accepted' | 'rejected';
   name: string; greeting: string; intro: string; meta: string; meet: string;
-  profile?: Partial<CharacterDossier>; dossierId?: string; reply?: string;
+  profile?: Partial<CharacterDossier>; dossierId?: string;
 }
 export type StrangerRate = 'off' | 'some' | 'often';
 interface Contacts { remarks: Record<string, string>; tags: ContactTag[]; tagged: Record<string, string[]>; requests: FriendRequest[]; stranger: StrangerRate; nextStrangerAt: number }
@@ -24,11 +24,11 @@ function clean(value: unknown): Contacts {
   if (row.tagged && typeof row.tagged === 'object') for (const [key, ids] of Object.entries(row.tagged)) { const kept = (Array.isArray(ids) ? ids : []).map(String).filter(id => tags.some(tag => tag.id === id)); if (key && kept.length) tagged[key] = [...new Set(kept)]; }
   const requests = (Array.isArray(row.requests) ? row.requests : []).flatMap((item): FriendRequest[] => {
     const entry = item as Record<string, unknown>;
-    if (!entry?.id || !text(entry.name, 20)) return [];
-    return [{ id: String(entry.id), kind: entry.kind === 'out' ? 'out' : 'in', at: Number(entry.at) || 0, state: entry.state === 'accepted' || entry.state === 'rejected' ? entry.state : 'pending',
+    if (!entry?.id || !text(entry.name, 20) || entry.kind === 'out') return [];
+    return [{ id: String(entry.id), kind: 'in', at: Number(entry.at) || 0, state: entry.state === 'accepted' || entry.state === 'rejected' ? entry.state : 'pending',
       name: text(entry.name, 20), greeting: text(entry.greeting, 120), intro: text(entry.intro, 300), meta: text(entry.meta, 40), meet: text(entry.meet, 40),
       ...(entry.profile && typeof entry.profile === 'object' ? { profile: entry.profile as Partial<CharacterDossier> } : {}),
-      ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}), ...(entry.reply ? { reply: text(entry.reply, 200) } : {}) }];
+      ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}) }];
   }).slice(-40);
   return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0 };
 }

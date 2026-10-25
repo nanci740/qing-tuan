@@ -349,10 +349,11 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     sticker: String(fields(item).sticker ?? fields(item).emoji ?? '').trim(),
                     pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet') || readReplyPay(fields(item).family_card ?? fields(item).familyCard, 'family'),
                     receive: readReceive(fields(item).receive),
-                    location: readReplyLocation(fields(item).location)
+                    location: readReplyLocation(fields(item).location),
+                    speaker: String(fields(item).speaker ?? fields(item).name ?? fields(item).from ?? '').trim()
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null };
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null, speaker: '' };
         }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : item.pay!.kind === 'family' ? '亲属卡' : '转账' } : item)
         : [];
     // receive 可以写在最外层，也可以写在某一条里（那一条只有 receive 也算）
@@ -378,6 +379,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             pays: structuredItems.map(item => item.pay),
             receive,
             locations: structuredItems.map(item => item.location),
+            speakers: structuredItems.map(item => item.speaker),
             quotes,
             quote: firstQuote?.quote || '',
             quoteTargetId: firstQuote?.quoteTargetId || ''

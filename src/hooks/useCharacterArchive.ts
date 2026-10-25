@@ -220,18 +220,14 @@ export function useCharacterArchive() {
       data.current={records:next,index:next.findIndex(record=>record.id===restored.id)};publish('form');panel('profile');return restored;
     } finally {importCommitBusy.current=false;}
   }
-  /** 通讯录加朋友：dossierId 是档案里已经有的角色，直接放进聊天；没有就照 fields 建一份新档案（陌生人收下的时候）。回传档案编号，失败是空字符串。 */
-  async function addToChat(detail: { dossierId?: string; fields?: Partial<CharacterDossier> }) {
-    if (importCommitBusy.current || !chat.current) return '';
+  /** 通讯录收下陌生人：照 fields 建一份新档案、放进聊天。回传档案编号，失败是空字符串。 */
+  async function addToChat(detail: { fields?: Partial<CharacterDossier> }) {
+    if (importCommitBusy.current || !chat.current || !detail.fields?.name) return '';
     const records = readCharacterRecords();
-    let record = detail.dossierId ? records.find(item => String(item.id) === String(detail.dossierId)) : undefined;
-    if (!record) {
-      if (!detail.fields?.name) return '';
-      record = { ...blankCharacterRecord(nextCharacterId(records)), ...detail.fields, isStamped: true, archivedAt: new Date().toISOString(), stampDate: todayStampDate() } as CharacterDossier;
-      records.push(record);
-      if (!await writeCharacterRecords(records)) return '';
-      data.current = { ...data.current, records };
-    }
+    const record = { ...blankCharacterRecord(nextCharacterId(records)), ...detail.fields, isStamped: true, archivedAt: new Date().toISOString(), stampDate: todayStampDate() } as CharacterDossier;
+    records.push(record);
+    if (!await writeCharacterRecords(records)) return '';
+    data.current = { ...data.current, records };
     return await chat.current.saveToChat(record) ? String(record.id) : '';
   }
   function captureClick(event: MouseEvent<HTMLDivElement>) {
@@ -254,7 +250,7 @@ export function useCharacterArchive() {
     window.addEventListener('qingtuan:character-dialog-open', show);
     window.addEventListener('qingtuan:character-dialog-close', hide);
     window.addEventListener('qingtuan:character-name-input', field);
-    const add = (event: Event) => { const detail = (event as CustomEvent<{ dossierId?: string; fields?: Partial<CharacterDossier>; done(id: string): void }>).detail; void addToChat(detail).then(detail.done, () => detail.done('')); };
+    const add = (event: Event) => { const detail = (event as CustomEvent<{ fields?: Partial<CharacterDossier>; done(id: string): void }>).detail; void addToChat(detail).then(detail.done, () => detail.done('')); };
     window.addEventListener('qingtuan:character-add-to-chat', add);
     return () => {
       window.removeEventListener('qingtuan:character-add-to-chat', add);

@@ -89,6 +89,7 @@ export function useChatSearch() {
     input,
     changeQuery,
     selectFilter,
-    newCharacter: () => services.current?.openCharacterCard()
+    // 右上角 ＋：打开小选单（新增角色、发起群聊）
+    newCharacter: (button?: HTMLElement) => window.dispatchEvent(new CustomEvent('qingtuan:chat-add-menu', { detail: button?.getBoundingClientRect() || null }))
   };
 }

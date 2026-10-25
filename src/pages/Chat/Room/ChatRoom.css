@@ -2228,3 +2228,11 @@
 #chatAppPage#chatAppPage #chatRoomView .cr-status.is-typing { color: var(--color-accent-strong); animation: cr-typing-blink 1.4s ease-in-out infinite; }
 @keyframes cr-typing-blink { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { #chatAppPage#chatAppPage #chatRoomView .cr-status.is-typing { animation: none; } }
+
+/* 群聊的右边栏：成员一人一行（小头像、名字、在线圆点），群公告放在原本「TA 的动态」那格 */
+#chatAppPage#chatAppPage #chatRoomView .cr-group-panel { flex: 0 1 auto; min-height: 0; }
+#chatAppPage#chatAppPage #chatRoomView .cr-members { overflow-y: auto; padding: 3px 0; }
+#chatAppPage#chatAppPage #chatRoomView .cr-member { display: flex; align-items: center; gap: 5px; padding: 3px 6px; }
+#chatAppPage#chatAppPage #chatRoomView .cr-member-photo { flex: none; width: 20px; height: 20px; box-sizing: border-box; border: 1px solid var(--cr-line); border-radius: 2px; background: var(--theme-color) center / cover no-repeat; }
+#chatAppPage#chatAppPage #chatRoomView .cr-member-name { flex: 1; min-width: 0; overflow: hidden; color: var(--cr-title); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+#chatAppPage#chatAppPage #chatRoomView .cr-member .cr-presence { flex: none; display: flex; }

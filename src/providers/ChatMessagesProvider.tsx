@@ -113,7 +113,7 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       // 原先历史保存观察器先于标签观察器执行，保留其保存顺序；标签更新不会再触发一次保存。
       listeners.current.forEach(listener=>listener());
       const shouldLabel=labelPending.current;labelPending.current=false;
-      if(shouldLabel){const next=model.cloneNodes(current.current);model.labelMessages(next,identity().peer,factory);if(!model.sameNodes(next,current.current))render(next);}
+      if(shouldLabel){const next=model.cloneNodes(current.current);model.labelMessages(next,identity(),factory);if(!model.sameNodes(next,current.current))render(next);}
     });
   }
   // 比较整棵树一律用结构比较（一找到不同就停），不再整棵 JSON.stringify：消息一多，每个动作都要等它。
@@ -210,13 +210,15 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       if(detail.pay)model.setPay(node,detail.pay,factory);
       if(detail.quote){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));const quote=model.quoteNode(detail.quote,detail.quoteTargetId||'',factory);if(caption)model.insertBeforeKey(bubble.children,caption.key,quote);else bubble.children.push(quote);}
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
+      // 群聊：这一则是哪个成员说的，名字和头像马上换成他的
+      if(detail.speaker){model.setAttr(node,'data-speaker',detail.speaker);const avatar=model.findClass(node,'chat-message-mini-avatar'),who=identity().members?.[detail.speaker];if(avatar&&who?.avatar)model.setAttr(avatar,'src',who.avatar);model.labelMessages([node],identity(),factory);}
       model.setAttr(node,'data-chat-ai-content',detail.reply);model.setAttr(node,'data-sent-at',String(detail.sentAt??Date.now()));if(selectionStyle)model.setAttr(node,'style',selectionStyle);if(time)model.setText(time,new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}),factory);
     });},
     appendUser(text,voice,quote,photo,location,sticker,pay){const row=model.userNode(text,voice,quote,identity().userAvatar,factory,photo,location,sticker,pay);mutate(next=>normalized([...next,row]));return{row:target(row),time:target(model.findClass(row,'chat-bubble-time'))};},
     result(row,className,text){updateRow(row,node=>{model.setResult(node,className,text,factory);requestLayout(current.current,node);});},translation(row,text){updateRow(row,node=>model.setTranslation(node,text,factory));},
     toggleTranscript(row){let expanded=false;updateRow(row,node=>{requestLayout(current.current,node);const result=model.findClass(node,'chat-voice-text-result');if(!result)return;expanded=!model.toggleClass(result,'is-collapsed');const bubble=model.findClass(node,'chat-bubble');if(bubble)model.toggleClass(bubble,'has-message-result',expanded);},false);return expanded;},
     markRead(row,all=false){mutate(next=>{const list=all?model.elements(next,n=>model.hasClass(n,'chat-message-row')&&model.hasClass(n,'is-user')):row?[getNode(next,row)].filter((n):n is MessageElement=>!!n):[];for(const node of list){if(!model.hasClass(node,'is-user'))continue;model.setAttr(node,'data-read','true');model.toggleClass(node,'is-read',true);}model.receipts(next,factory);});},
-    identity(){const next=clone();model.labelMessages(next,identity().peer,factory);render(next);},
+    identity(){const next=clone();model.labelMessages(next,identity(),factory);render(next);},
     unread(count){let marker:MessageElement|undefined,first:MessageElement|undefined;const n=Math.max(0,Number(count)||0);if(!n)return null;
       mutate(next=>{next=model.removeKeys(next,new Set(model.elements(next,node=>model.hasClass(node,'chat-unread-divider')).map(node=>node.key)));const rows=model.elements(next,row=>model.hasClass(row,'chat-message-row')&&model.hasClass(row,'is-chat')&&model.attr(row,'data-recalled')!=='true'&&model.attr(row,'data-ai-pending')!=='true');first=rows[Math.max(0,rows.length-n)];if(first){marker=factory.element('div',{class:'chat-unread-divider',role:'separator'},[factory.text('以下为新消息')]);model.insertBeforeKey(next,first.key,marker);}return next;});return marker&&first?(showRow(snapshot(first),{behavior:'auto',block:'start'}),{divider:target(marker),firstUnread:target(first)}):null;
     },

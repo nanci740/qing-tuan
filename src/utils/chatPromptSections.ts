@@ -37,7 +37,11 @@ export interface ChatPromptInput {
     familyCard?: string;
     /** 聊天设置开了拍一拍。 */
     pat?: boolean;
+    /** 群聊：characterName 是群名，persona 是各成员的设定；members 成员本名，mentions 你这一轮 @ 到的人，nick 你在群里的昵称。 */
+    group?: { members: string[]; mentions: string[]; nick: string } | null;
 }
+/** 群聊第一批先不送的段落：在线状态、撤回、语音、位置、转账红包、拍一拍。 */
+const GROUP_SKIP = new Set<PresetBuiltinId>(['presence', 'recall', 'voice', 'location', 'pay', 'pat']);
 
 const MARKERS = {
     quote: '[这条消息引用的原文：',
@@ -55,10 +59,13 @@ const MARKERS = {
 
 /** 基本说明：现在在用手机聊天。 */
 function basics(input: ChatPromptInput) {
+    if (input.group) return `你在一个叫「${input.characterName}」的群聊里，要同时扮演这些群成员：${input.group.members.join('、')}，跟用户和彼此用手机聊天。每个成员照自己的人设、说话习惯和跟别人的关系说话，不要混在一起，也不要替用户说话。` +
+        (input.group.nick ? `用户在群里的昵称是「${input.group.nick}」。` : '');
     return `你正在作为「${input.characterName}」与用户进行普通文字聊天。`;
 }
 
 function persona(input: ChatPromptInput) {
+    if (input.group) return input.persona ? `\n以下是群成员各自的设定，每个人照自己的设定说话和行事：\n${input.persona}\n` : '';
     return input.persona ? `\n以下是你的角色设定，请照着这个人设说话和行事：\n${input.persona}\n` : '';
 }
 
@@ -116,6 +123,13 @@ function replyFormat(input: ChatPromptInput) {
         natural: '回复长度保持自然，依内容需要决定，不刻意过短或过长。',
         detailed: '可以较完整地回应细节与情绪，但仍保持聊天口吻，不要写成报告。'
     } as Record<string, string>)[input.replyLength] || '';
+    if (input.group) {
+        const [a = '成员甲', b = '成员乙'] = input.group.members, mentions = input.group.mentions;
+        return `${length}请将本次回复输出为一个 JSON 对象，格式：{"replies":[{"speaker":"${a}","text":"一条消息","quote_id":""},{"speaker":"${b}","text":"一条消息","quote_id":""}]}。` +
+            `每一条 replies 都要写 speaker，值是说这句话的成员名字，只能是：${input.group.members.join('、')}，照原样写。` +
+            '这一轮谁开口、各说几句由你照话题和人设决定：不是每个人每次都要说话，可以只有一个人回，也可以几个人你一言我一语、互相接话、吐槽或附和；同一个人可以连发几条。text 里不要再写名字或「某某：」。' +
+            (mentions.length ? `用户这一轮 @ 了 ${mentions.join('、')}，${mentions.length > 1 ? '这几个人每个都' : '这个人'}一定要回。` : '');
+    }
     const example = input.segmented
         ? '{"replies":[{"text":"第一条消息","quote_id":""},{"text":"第二条消息","quote_id":"u3"}]}'
         : '{"replies":[{"text":"完整回复","quote_id":""}]}';
@@ -224,6 +238,7 @@ export function buildChatSystemPrompt(input: ChatPromptInput, preset: Preset = c
     systemAfter('start');
     for (const entry of preset.entries) {
         if (!entry.builtin) continue;
+        if (input.group && GROUP_SKIP.has(entry.builtin)) { systemAfter(entry.builtin); continue; }
         const on = entry.enabled || entry.builtin === 'format';
         if (entry.builtin === 'persona') parts.push(w.before, on ? persona(input) : '', w.after);
         else if (on) parts.push(SECTIONS[entry.builtin](input));

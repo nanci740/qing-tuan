@@ -239,7 +239,7 @@ export function ChatList() {
           {"Chat"}
         </OriginalElement>
         {"\n        "}
-        <PressedButton className="chat-app-add" id="chatAddCharacterBtn" type="button" aria-label="新增角色" data-title="新增角色" onClick={search.newCharacter}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></PressedButton>
+        <PressedButton className="chat-app-add" id="chatAddCharacterBtn" type="button" aria-label="新增角色" data-title="新增角色" onClick={event => search.newCharacter(event.currentTarget)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></PressedButton>
       </OriginalElement>
       {"\n\n        "}
       <OriginalElement tag="div" attributes={CHAT_LIST_ATTRIBUTES[6]}>
@@ -346,8 +346,8 @@ export function ChatList() {
           </OriginalElement>
         </div>
         {"\n            "}
-        <div id="chatDynamicThreads" aria-label="新增角色会话" hidden={search.filter === 'group' ? true : undefined}>{search.threads.map(thread => <ChatThread key={search.revision + ':' + thread.id} thread={thread} miss={search.misses.has(thread.id)} />)}</div>
-        <div className="chat-filter-empty" id="chatFilterEmpty" hidden={search.filter !== 'group'}>
+        <div id="chatDynamicThreads" aria-label="新增角色会话">{search.threads.filter(thread => search.filter === 'all' || (search.filter === 'group') === !!thread.group).map(thread => <ChatThread key={search.revision + ':' + thread.id} thread={thread} miss={search.misses.has(thread.id)} />)}</div>
+        <div className="chat-filter-empty" id="chatFilterEmpty" hidden={search.filter !== 'group' || search.threads.some(thread => thread.group)}>
           <OriginalElement tag="span" attributes={CHAT_LIST_ATTRIBUTES[23]}>
             <PixelIcon attributes={CHAT_LIST_ATTRIBUTES[24]}>
               <OriginalElement tag="rect" attributes={CHAT_LIST_ATTRIBUTES[25]} />
@@ -400,7 +400,7 @@ export function ChatList() {
             {"还没有群聊"}
           </OriginalElement>
           <OriginalElement tag="span" attributes={CHAT_LIST_ATTRIBUTES[60]}>
-            {"点 Contacts 右上角的 ＋ 创建群组"}
+            {"点右上角的 ＋ 发起群聊"}
           </OriginalElement>
         </div>
         {"\n            "}
