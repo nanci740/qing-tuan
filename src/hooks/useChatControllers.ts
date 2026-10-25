@@ -14,6 +14,7 @@ import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageStic
 import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
 import {contactName,subscribeContacts} from '../utils/contactsStorage';
+import {buildCharacterPrompt} from '../utils/characterPrompt';
 import {payFromData,payLabel} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
@@ -977,28 +978,6 @@ initChatApplication();
     renderCharacters();
     const timer=window.setInterval(refreshThreadTimes, 10000);dispose.push(()=>window.clearInterval(timer));
 
-    function buildCharacterPrompt(character:ChatCharacter|null) {
-        if (!character) return '';
-        const lines = [
-            '角色姓名：' + text(character.name, character.nickname),
-            '昵称：' + text(character.nickname),
-            '与你的关系：' + text(character.relationship),
-            '生日与星座：' + [text(character.birthday), text(character.constellation)].filter(Boolean).join(' '),
-            'MBTI：' + text(character.mbti),
-            '外貌与气质：' + text(character.appearanceText),
-            '性格标签：' + (character.selectedTags || []).join('、'),
-            '说话习惯：' + text(character.speechHabitsText),
-            '线上相处：' + text(character.onlineStyle),
-            '线下相处：' + text(character.offlineStyle),
-            '喜欢：' + text(character.favoriteThings),
-            '不喜欢：' + text(character.dislikes),
-            '随身信物：' + text(character.tokenItem),
-            '共同回忆：' + text(character.memoriesText),
-            '其他设定：' + text(character.otherSettingsText),
-            '私密备忘：' + text(character.secretMemo),
-        ];
-        return lines.filter(line => !line.endsWith('：')).join('\n');
-    }
 
     bridge.smallphoneGetActiveCharacterProfile = () => characterStore.read().find(item => item.archiveId === history.current.activeKey) || null;
     bridge.smallphoneGetActiveCharacterPrompt = () => buildCharacterPrompt(bridge.smallphoneGetActiveCharacterProfile());
