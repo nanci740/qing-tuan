@@ -3,7 +3,9 @@ import type { CharacterDossier } from '../types/characterDossier';
 import { extractChatAiReply } from './chatReplyParser';
 import { readChatCharacters } from './chatCharacterStorage';
 import { activePersonaPrompt, readMe } from './meStorage';
-import { addFriendRequest, patchFriendRequest, readContacts, updateContacts } from './contactsStorage';
+import { addFriendRequest, patchFriendRequest, readContacts, setBlockedBy, updateContacts } from './contactsStorage';
+import { buildCharacterPrompt } from './characterPrompt';
+import { readChatRecords } from './chatRecords';
 import type { FriendRequest } from './contactsStorage';
 
 type Bridge = Window & { smallphoneApi?: ApiService; smallphoneAppendBackgroundReply?: (detail: { chatKey: string; reply: string; sentAt: number }) => unknown };
@@ -75,4 +77,30 @@ export async function strangerTick(now = Date.now()) {
   window.dispatchEvent(new CustomEvent('qingtuan:system-banner', { detail: { title: '新的朋友', body: `${request.name} 请求添加你为朋友`,
     open: () => window.dispatchEvent(new CustomEvent('qingtuan:open-contacts', { detail: 'new' })) } }));
   return request;
+}
+
+/** 他把你拉黑了，你重新申请加他：照他的人设和你们最近的私聊（你被拒收的那些他没看到）决定放不放你出来。放了就解除，他的回话是第一句。 */
+export async function applyToUnblock(chatKey: string, greeting: string) {
+  const character = readChatCharacters().find(item => item.archiveId === chatKey);
+  if (!character) throw new Error('找不到这个角色');
+  const template = document.createElement('template');
+  try { template.innerHTML = readChatRecords().histories[chatKey] || ''; } catch { /* 记录还没读好就当没有 */ }
+  const recent = Array.from(template.content.querySelectorAll<HTMLElement>('.chat-message-row')).filter(row => row.dataset.rejected !== 'true').slice(-12)
+    .map(row => `${row.classList.contains('is-user') ? '对方' : '你'}：${String(row.dataset.chatAiContent || row.querySelector('.chat-bubble')?.textContent || '').trim().slice(0, 100)}`).join('\n');
+  const me = activePersonaPrompt(), name = String(character.name || character.nickname || '').trim();
+  const data = await ask([
+    `你是「${name}」，以下是你的人设：\n${buildCharacterPrompt(character)}`,
+    me ? `对方的设定：\n${me}` : '',
+    recent ? `你们之前的私聊（后来你把对方拉黑了）：\n${recent}` : '你之前把对方拉黑了。',
+    `现在对方重新申请加你好友，申请里写着：「${greeting.trim() || '（没写话）'}」。照你的人设、你们为什么闹翻和对方的态度，决定要不要放对方出来。`,
+    '只输出一个 JSON：{"accept":true,"reply":"放出来的话，是你加回来后发的第一句话；不放的话可以空着"}',
+  ].filter(Boolean).join('\n'));
+  const accept = data.accept === true || data.accept === 'true', reply = str(data.reply, 200);
+  if (accept) {
+    setBlockedBy(chatKey, false);
+    const bridge = window as Window & { smallphoneChatNotice?: (key: string, text: string) => void; smallphonePeerSay?: (key: string, text: string) => void };
+    bridge.smallphoneChatNotice?.(chatKey, `${name} 通过了你的好友申请`);
+    if (reply) bridge.smallphonePeerSay?.(chatKey, reply);
+  }
+  return { accept, reply, name };
 }

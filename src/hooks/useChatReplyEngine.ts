@@ -11,6 +11,7 @@ import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAi
 import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
 import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
+import {holdMessage,isBlocked,isBlockedBy,setBlockedBy} from '../utils/contactsStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -103,6 +104,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const rows = stored ? stored.slice(-limit) : nodes.rows(limit);
         const idOf = (row:HTMLElement) => stored ? row.dataset.messageId || '' : nodes.id(row);
         for (const row of rows) {
+            // 他把你拉黑时你发的（被拒收了）：他没收到
+            if (row.dataset.rejected === 'true') continue;
             // 我撤回的讯息：他有看到就知道原文，没看到只知道我撤回了一条
             if (row.classList.contains('chat-recall-notice') && row.dataset.recalledBy === 'user') {
                 const recalled = String(row.dataset.recalledContent || '').trim();
@@ -363,6 +366,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         // 群聊：一轮只问一次，模型决定谁说话；每条一定分开（各是谁说的）
         const groupInfo = services.current!.group(requestChatKey);
         if (groupInfo) requestPreferences.segmented = true;
+        // 私聊的拉黑：你把他拉黑了（他说的先拦下来），他把你拉黑了（你发的他收不到，只有让他想想要不要放你出来的时候才问他）
+        const blockedByUser = !groupInfo && isBlocked(requestChatKey), blockingUser = !groupInfo && isBlockedBy(requestChatKey);
+        if (blockingUser && !proactive) { say('对方把你拉黑了，消息送不到'); return; }
         const context = collectCurrentChatContext(active ? undefined : services.current!.historyRows(requestChatKey), groupInfo ? key => groupInfo.members.find(member => member.key === key)?.name || '' : undefined);
         if (proactive) context.push({ role: 'user', content: proactive.prompt, messageId: '', quoteCandidate: '' });
         else if (!context.length || context[context.length - 1].role !== 'user') {
@@ -414,6 +420,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             stickers: aiStickers().map(item => item.tag),
             familyCard: familyCardText(requestChatKey),
             pat: !!requestPreferences.pat,
+            block: groupInfo ? null : { byUser: blockedByUser, byYou: blockingUser },
             group: groupInfo ? { members: groupInfo.members.map(member => member.name), mentions, nick: groupInfo.nick,
                 presence: groupInfo.members.map(member => { const state = getChatPresence(member.key); return `${member.name}「${state.online}」${state.status ? '（' + state.status + '）' : ''}`; }).join('、') } : null,
         }, preset);
@@ -497,8 +504,14 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const jsonPat = /"pat"\s*:\s*(true|"([^"\n]{0,20})")/.exec(rawReply);
             const patSuffix = (leaked.pat ?? (jsonPat?.[2] && jsonPat[2] !== 'true' ? jsonPat[2] : '')).trim();
             const patText = !groupInfo && requestPreferences.pat && (leaked.pat !== null || jsonPat) ? services.current!.pat(requestChatKey, patSuffix && !/^[的地]/.test(patSuffix) ? '的' + patSuffix : patSuffix) : '';
+            // 拉黑：他放你出来就先放（这次说的话才送得到）；还不想放就什么都不发。他要拉黑你，等他把话说完再拉黑
+            const unblock = blockingUser && /"unblock"\s*:\s*(?:true|"true")/.test(rawReply), blockNow = !groupInfo && !blockingUser && /"block"\s*:\s*(?:true|"true")/.test(rawReply);
+            if (unblock) { setBlockedBy(requestChatKey, false); services.current!.notice(requestChatKey, `${characterName} 解除了对你的拉黑`); }
+            else if (blockingUser) return;
+            const emptyReplies = /"replies"\s*:\s*\[\s*\]/.test(rawReply);
+            if (blockNow && emptyReplies) { setBlockedBy(requestChatKey, true); services.current!.notice(requestChatKey, `${characterName} 把你拉黑了`); return; }
             // replies 是空的：主动找你时是他照人设决定这次不发；只拍不说话也是空的
-            if ((proactive || patText) && (/"replies"\s*:\s*\[\s*\]/.test(rawReply) || patText && !rawReply)) {
+            if ((proactive || patText || unblock) && (emptyReplies || patText && !rawReply)) {
                 if (patText) {
                     const viewed = isActiveReplyChat(requestChatKey) && services.current!.viewed();
                     services.current!.notify({ chatKey: requestChatKey, title: characterName, body: patText, avatar: characterAvatar, unreadCount: 1, viewed });
@@ -582,6 +595,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), ...(speaker ? { by: speaker.key } : {}) } : null;
                 // 找不到表情的那一则（只剩「表情」两个字）不发
                 if (!photo && !location && !sticker && !pay && !segments[index]) continue;
+                // 你把他拉黑了：他说的先拦下来（钱也不收），你在通讯录的黑名单里想看再看
+                if (blockedByUser) { holdMessage(requestChatKey, photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payLabel(pay) : segments[index]); continue; }
                 // 他发的转账、红包先记进钱包（还没收），卡片才看得到状态
                 if (pay) receivePay(pay, requestChatKey, speaker ? speaker.name : characterName);
                 const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : segments[index];
@@ -666,7 +681,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
                 }
             }
-            if (!inQuietHours()) services.current!.feedback('receive');
+            if (blockNow) { setBlockedBy(requestChatKey, true); services.current!.notice(requestChatKey, `${characterName} 把你拉黑了`); }
+            if (!inQuietHours() && !blockedByUser) services.current!.feedback('receive');
         } catch (error) {
             nodes.remove(pendingRows);
             say('回复失败：' + String((error as {message?:unknown}|null)?.message || error || '请检查 API 设置').slice(0, 100));

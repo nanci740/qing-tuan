@@ -5,7 +5,9 @@ import type { CharacterDossier } from '../types/characterDossier';
     remarks 你给角色取的备注——聊天列表、聊天室、消息上的名字换成备注，他那边照旧用本名；
     tags 你建的标签，tagged 谁贴了哪些标签；
     requests 陌生人来加你的好友申请（模型随机生成的人，profile 是收下后建档案用的资料）；
-    stranger 陌生人多久来一个（off 关、some 偶尔、often 常常），nextStrangerAt 下一个最早什么时候来。 */
+    stranger 陌生人多久来一个（off 关、some 偶尔、often 常常），nextStrangerAt 下一个最早什么时候来；
+    blocked 你拉黑的（他发的私聊收进 held，你想看再看）、blockedBy 把你拉黑的（next 是下一次让他想想要不要放你出来的时间）。都只管私聊，群里照常。 */
+export interface HeldMessage { text: string; at: number }
 export interface ContactTag { id: string; name: string }
 export interface FriendRequest {
   id: string; kind: 'in'; at: number; state: 'pending' | 'accepted' | 'rejected';
@@ -13,7 +15,8 @@ export interface FriendRequest {
   profile?: Partial<CharacterDossier>; dossierId?: string;
 }
 export type StrangerRate = 'off' | 'some' | 'often';
-interface Contacts { remarks: Record<string, string>; tags: ContactTag[]; tagged: Record<string, string[]>; requests: FriendRequest[]; stranger: StrangerRate; nextStrangerAt: number }
+interface Contacts { remarks: Record<string, string>; tags: ContactTag[]; tagged: Record<string, string[]>; requests: FriendRequest[]; stranger: StrangerRate; nextStrangerAt: number;
+  blocked: Record<string, { at: number }>; blockedBy: Record<string, { at: number; next: number }>; held: Record<string, HeldMessage[]> }
 const KEY = 'qingtuan_contacts_v1', EVENT = 'qingtuan:contacts-changed';
 let cache: Contacts | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -30,7 +33,12 @@ function clean(value: unknown): Contacts {
       ...(entry.profile && typeof entry.profile === 'object' ? { profile: entry.profile as Partial<CharacterDossier> } : {}),
       ...(entry.dossierId ? { dossierId: String(entry.dossierId) } : {}) }];
   }).slice(-40);
-  return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0 };
+  const record = (value: unknown) => value && typeof value === 'object' ? Object.entries(value as Record<string, Record<string, unknown>>).filter(([key, item]) => key && item && typeof item === 'object') : [];
+  const blocked = Object.fromEntries(record(row.blocked).map(([key, item]) => [key, { at: Number(item.at) || 0 }]));
+  const blockedBy = Object.fromEntries(record(row.blockedBy).map(([key, item]) => [key, { at: Number(item.at) || 0, next: Number(item.next) || 0 }]));
+  const held = Object.fromEntries((row.held && typeof row.held === 'object' ? Object.entries(row.held as Record<string, unknown>) : []).map(([key, list]): [string, HeldMessage[]] =>
+    [key, (Array.isArray(list) ? list : []).flatMap((item): HeldMessage[] => { const entry = item as Record<string, unknown>, said = text(entry?.text, 500); return said ? [{ text: said, at: Number(entry.at) || 0 }] : []; }).slice(-50)]).filter(([, list]) => list.length));
+  return { remarks, tags, tagged, requests, stranger: row.stranger === 'some' || row.stranger === 'often' ? row.stranger : 'off', nextStrangerAt: Number(row.nextStrangerAt) || 0, blocked, blockedBy, held };
 }
 export function readContacts(): Contacts {
   if (!cache) { try { cache = clean(JSON.parse(kv.getItem(KEY) || '{}')); } catch { cache = clean({}); } }
@@ -80,6 +88,30 @@ export function addFriendRequest(request: Omit<FriendRequest, 'id' | 'at' | 'sta
 }
 export function patchFriendRequest(id: string, patch: Partial<FriendRequest>) {
   updateContacts({ requests: readContacts().requests.map(item => item.id === id ? { ...item, ...patch } : item) });
+}
+/** 拉黑：你拉黑他、他拉黑你（next 是下一次让他想想要不要放你出来）、他被你拦下的私聊。 */
+export const isBlocked = (key: string) => !!readContacts().blocked[key];
+export const isBlockedBy = (key: string) => !!readContacts().blockedBy[key];
+export function setBlocked(key: string, on: boolean) {
+  const blocked = { ...readContacts().blocked };
+  if (on) blocked[key] = { at: Date.now() }; else delete blocked[key];
+  updateContacts({ blocked });
+}
+const HOUR = 3600000;
+export function setBlockedBy(key: string, on: boolean, now = Date.now()) {
+  const blockedBy = { ...readContacts().blockedBy };
+  if (on) blockedBy[key] = { at: now, next: now + (2 + Math.random() * 4) * HOUR }; else delete blockedBy[key];
+  updateContacts({ blockedBy });
+}
+/** 他把你拉黑了、该让他想想了的那几个（拿了就排下一次：三到八小时后）。 */
+export function dueUnblockChecks(now = Date.now()) {
+  const { blockedBy } = readContacts(), due = Object.entries(blockedBy).filter(([, item]) => item.next <= now).map(([key]) => key);
+  if (due.length) updateContacts({ blockedBy: Object.fromEntries(Object.entries(blockedBy).map(([key, item]) => [key, due.includes(key) ? { ...item, next: now + (3 + Math.random() * 5) * HOUR } : item])) });
+  return due;
+}
+export function holdMessage(key: string, said: string, at = Date.now()) {
+  const { held } = readContacts();
+  updateContacts({ held: { ...held, [key]: [...(held[key] || []), { text: said, at }].slice(-50) } });
 }
 /** 新的朋友那行的红点：还没处理的陌生人申请。 */
 export function pendingFriendCount() { return readContacts().requests.filter(item => item.kind === 'in' && item.state === 'pending').length; }

@@ -75,3 +75,10 @@
 .chat-contacts-pick { display: flex; flex-wrap: wrap; gap: 5px; }
 .chat-contacts-pick button { height: 24px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
 .chat-contacts-pick button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
+
+/* 黑名单：底下一段说明；名片里「加入黑名单」是一行字的按钮；被拦下的消息左边一栏放时间 */
+.chat-contacts-note { margin: 14px 4px; color: var(--color-muted); font-size: 10.5px; line-height: 1.7; }
+.chat-contacts-block { display: block; margin: 10px auto 0; padding: 2px 8px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 12px; cursor: pointer; }
+.chat-contacts-block.is-danger { color: var(--color-danger-ink); }
+.chat-contacts-held { max-height: 50vh; overflow-y: auto; }
+.chat-contacts-fields.chat-contacts-held span { width: 72px; font-size: 10.5px; }

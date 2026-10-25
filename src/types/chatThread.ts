@@ -11,6 +11,8 @@ export interface ChatThreadSnapshot {
   /** 群聊：avatars 是成员头像（最多四个，拼成群头像）。 */
   group?: boolean;
   avatars?: string[];
+  /** 你把他拉黑了：名字旁边标「已拉黑」。 */
+  blocked?: boolean;
   activate: () => void;
   openActions: (x: number, y: number) => void;
 }

@@ -1144,3 +1144,7 @@ position:relative;
         #chatListView#chatListView .chat-thread-favorite {
             color: var(--color-accent-strong) !important;
         }
+
+/* 你拉黑的人：名字旁边一块「已拉黑」，跟置顶同一个样子，不要图钉，底色换成提醒的红 */
+#chatListView#chatListView .chat-conversation-panel .chat-thread-pin.chat-thread-blocked { --pin-c: var(--color-danger); padding-left: 5px; }
+#chatListView#chatListView .chat-conversation-panel .chat-thread-pin.chat-thread-blocked::before { content: none; }

@@ -13,7 +13,7 @@ import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsPro
 import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
-import {contactName,subscribeContacts} from '../utils/contactsStorage';
+import {contactName,dueUnblockChecks,isBlocked,isBlockedBy,setBlocked,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
 import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
 import {payFromData,payLabel,payText} from '../utils/chatMessageNodes';
@@ -85,6 +85,8 @@ interface ChatPublicApi {
  smallphoneOpenCharacterCard(id?:unknown):void;
  smallphoneSaveGroup(group:ChatCharacter):Promise<boolean>;
  smallphoneChatNotice(chatKey:string,text:string):void;
+ smallphoneBlockContact(key:string,on:boolean):void;
+ smallphonePeerSay(key:string,text:string):void;
  smallphoneRemoveGroup(id:string):Promise<boolean>;
  smallphonePatchCharacter(id:string,fields:{pinned?:boolean;favorite?:boolean}):void;
 }
@@ -367,6 +369,7 @@ function initChatApplication(){
     bridge.smallphoneSendChatPay = (draft, source = '') => {
         if (!messageList) throw Error('先打开一个聊天');
         const chatKey = getCurrentChatPreferenceKey(), pay:MessagePay = { ...draft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) };
+        if (isBlockedBy(chatKey)) throw Error('对方把你拉黑了，钱转不过去');
         // 群里转账记成转给那个成员（名字照本名，给模型看的）
         sendPay(pay, chatKey, pay.to ? getCharacterLook(pay.to).name : getCharacterLook(chatKey).name || getCurrentChatRoomName(), source);
         sendCard(null, null, pay);
@@ -374,12 +377,16 @@ function initChatApplication(){
     bridge.smallphoneWritePhotoPrompt = (keywords, includeMe) => replyEngine.photoPrompt(keywords, includeMe);
     // 家机主动找你（「我 → 设置」）：每分钟看一次有没有定时到点的、有没有人该来找你；开着的那个聊天用画面上的记录
     const chatHtml=(key:string)=>key===history.current.activeKey?messageNodes.storedHtml():history.current.histories[key]||'';
-    const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())void replyEngine.proactive(due.chatKey,due.prompt);const chats=(characterStore?.read()||[]).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0,group:!!item.group}));
+    // 拉黑了的（你拉黑他、他拉黑你）不主动找、不定时；他拉黑你的，隔几个小时让他想想要不要放你出来
+    const blockedEither=(key:string)=>isBlocked(key)||isBlockedBy(key);
+    const proactiveTimer=window.setInterval(()=>{for(const due of dueSchedules())if(!blockedEither(due.chatKey))void replyEngine.proactive(due.chatKey,due.prompt);
+        for(const key of dueUnblockChecks())void replyEngine.proactive(key,`[系统提示：这条不是对方说的话，不要回应这条本身] 你把对方拉黑一阵子了，现在是 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})}。想想要不要把对方放出来。`);
+        const chats=(characterStore?.read()||[]).filter(item=>!blockedEither(item.archiveId)).map(item=>({key:item.archiveId,html:chatHtml(item.archiveId),time:Number(history.current.times[item.archiveId])||0,group:!!item.group}));
         const pick=pickProactive(chats);if(!pick)return;noteProactive(pick.chatKey,chatHtml(pick.chatKey));void replyEngine.proactive(pick.chatKey,pick.prompt);},60000);
     dispose.push(()=>window.clearInterval(proactiveTimer));
     /** 拍一拍：聊天设置关着就不拍。他拍你的后缀是他回复里自己写的；拍自己不加后缀。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
     function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix='',who:{from?:string;target?:string}={}){
-        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat)return '';
+        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat||by==='assistant'&&isBlocked(chatKey))return '';
         // 群聊：拍谁、谁拍的照成员算；你拍成员用的是那个成员私聊设定里「拍他的后缀」
         const group=!!groupService(chatKey),shown=(key:string)=>contactName(key,getCharacterLook(key).name);
         if(group&&by!=='self'&&!(by==='user'?who.target:who.from&&who.target))return '';
@@ -398,6 +405,10 @@ function initChatApplication(){
         else{history.current.histories[chatKey]=messageNodes.noticeHtml(history.current.histories[chatKey]||emptyChatHistory,text);saveChatHistories();}
     }
     bridge.smallphoneChatNotice=chatNotice;
+    /** 通讯录：你拉黑他、解除，聊天里各留一行灰字。 */
+    bridge.smallphoneBlockContact=(key,on)=>{if(isBlocked(key)===on)return;setBlocked(key,on);const name=contactName(key,getCharacterLook(key).name);chatNotice(key,on?`你把${name}拉黑了`:`你解除了对${name}的拉黑`);};
+    /** 他说一句（申请加回来他同意时）：开着的聊天直接出现，没开着的存进记录。 */
+    bridge.smallphonePeerSay=(key,text)=>{if(!key||!text)return;if(key===history.current.activeKey){const pending=messageNodes.appendPeer(text);messageNodes.finishPeer(pending.row,{reply:text,sentAt:Date.now()});messageNodes.scrollLatest();saveCurrentHistory();}else appendBackgroundReply({chatKey:key,reply:text,sentAt:Date.now()});};
     // 双击（手机上连点两下）头像或名字拍一拍：消息旁边的小头像和名字、右边栏的大头像都算；多选的时候不拍；拍他会等他回，拍自己不用
     let lastTap={who:'',at:0};
     listen(roomView,'click',event=>{
@@ -409,6 +420,7 @@ function initChatApplication(){
         if(lastTap.who!==key||now-lastTap.at>400){lastTap={who:key,at:now};return;}
         lastTap={who:'',at:0};
         if(!state.current.preferences.pat){showChatNotice('拍一拍关着，可以在聊天设置打开');return;}
+        if(who==='user'&&isBlockedBy(getCurrentChatPreferenceKey())){showChatNotice('对方把你拉黑了，拍不到');return;}
         if(!patChat(getCurrentChatPreferenceKey(),who,'',member?{target:member}:{}))return;
         triggerChatFeedback('send');
         if(who==='user')scheduleAutoReply();
@@ -572,7 +584,16 @@ function initChatApplication(){
         });
     }
     function closeChatEditModal(){messageOperations.closeEdit();}
-    function scheduleAutoReply(){replyTriggers.schedule();}
+    /** 发出去要等他回；他把你拉黑了就不等：最后那条标成被拒收，下面一行灰字。 */
+    function scheduleAutoReply(){
+        const key=history.current.activeKey;
+        if(key&&isBlockedBy(key)){
+            const rows=messageList?.querySelectorAll<HTMLElement>('.chat-message-row.is-user'),last=rows?.[rows.length-1];
+            if(last&&last.dataset.rejected!=='true'){messageNodes.setData(last,{rejected:'true'});bridge.smallphoneChatNotice(key,'消息已发出，但被对方拒收了');}
+            return;
+        }
+        replyTriggers.schedule();
+    }
     bridge.smallphoneFlushAutoReply = nextKey=>replyTriggers.flush(nextKey);
     bridge.smallphoneSetAutoReplyDelay = value=>replyTriggers.setDelay(value);
 
@@ -762,7 +783,7 @@ initChatApplication();
             id: character.archiveId,
             name: contactName(character.archiveId, text(character.name, text(character.nickname, '未命名角色'))),
             photoUrl: character.photoUrl || '', favorite: Boolean(character.favorite), pinned: Boolean(character.pinned),
-            group: isGroup(character), avatars: isGroup(character) ? groupMembers(character, characterStore.read()).slice(0, 4).map(member => member.photoUrl || DEFAULT_AVATAR) : undefined,
+            blocked: isBlocked(character.archiveId), group: isGroup(character), avatars: isGroup(character) ? groupMembers(character, characterStore.read()).slice(0, 4).map(member => member.photoUrl || DEFAULT_AVATAR) : undefined,
             preview: draft ? `草稿：${draft.replace(/\s+/g, ' ').slice(0, 42)}` : lastPreview,
             draft: Boolean(draft), time: !draft && lastPreview ? formatThreadTime(history.current.times[character.archiveId]) : '',
             unread: Math.max(0, Number(replyBridge.unread(character.archiveId)) || 0),
