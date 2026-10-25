@@ -15,6 +15,7 @@ import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
 import {contactName,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
+import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
 import {payFromData,payLabel} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
@@ -82,6 +83,8 @@ interface ChatPublicApi {
  smallphoneShowChatConfirm(options?:ChatConfirmationOptions):Promise<boolean>;
  smallphoneChatTargets():{key:string;name:string}[];
  smallphoneOpenCharacterCard(id?:unknown):void;
+ smallphoneSaveGroup(group:ChatCharacter):Promise<boolean>;
+ smallphoneRemoveGroup(id:string):Promise<boolean>;
  smallphonePatchCharacter(id:string,fields:{pinned?:boolean;favorite?:boolean}):void;
 }
 function serviceError(error:unknown){if(error instanceof Error&&error.name==='AbortError')return '已取消';return String(error instanceof Error?error.message:'请求失败').slice(0,150);}
@@ -96,7 +99,7 @@ function initChatApplication(){
     window.dispatchEvent(new CustomEvent<MessagesConnection>('qingtuan:chat-messages-connect', { detail: {
         identity: () => ({ peer: refs.get<HTMLElement>('chatRoomName')?.textContent || '对方',
             peerAvatar: refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc || refs.get<HTMLImageElement>('chatRoomAvatar')?.src || getCurrentUserAvatarSrc(),
-            userAvatar: getCurrentUserAvatarSrc() }),
+            userAvatar: getCurrentUserAvatarSrc(), members: memberLooks(history.current.activeKey) }),
         canInteract: () => Date.now() >= state.current.suppressVoiceUntil && !messageSelection.active(),
         play: toggleChatVoiceBubble, notice: showChatNotice, photo: openChatPhoto,
         accept: api => { messageNodes = api; bridge.smallphoneMessages = api; }
@@ -114,7 +117,7 @@ function initChatApplication(){
     function transcribeVoiceRow(row:HTMLElement,options?:{showResult?:boolean}){return chatVoice.transcribe(row,options);}
     function translateMessageRow(row:HTMLElement){return chatVoice.translate(row);}
     let replyEngine!:ChatReplyEngineApi;
-    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:getCharacterLook(getCurrentChatPreferenceKey()).name||refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.({...detail,title:contactName(detail.chatKey,detail.title)}),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
+    window.dispatchEvent(new CustomEvent<{services:ChatReplyEngineServices;accept(api:ChatReplyEngineApi):void}>('qingtuan:chat-reply-engine-connect',{detail:{services:{currentKey:getCurrentChatPreferenceKey,preferences:()=>{state.current.preferences=loadChatPreferences();return state.current.preferences;},identity:()=>({name:getCharacterLook(getCurrentChatPreferenceKey()).name||refs.get<HTMLElement>('chatRoomName')?.textContent?.trim()||'角色',avatar:refs.get<HTMLImageElement>('chatRoomAvatar')?.currentSrc||refs.get<HTMLImageElement>('chatRoomAvatar')?.src||''}),worldContext:getLinkedWorldBookContext,persona:getCharacterPersona,myPresence:()=>readMyPresence().online,refreshPins:refreshPinBar,roomVisible:()=>!roomView.classList.contains('is-hidden'),viewed:()=>page.classList.contains('active')&&!roomView.classList.contains('is-hidden'),background:detail=>bridge.smallphoneAppendBackgroundReply?.(detail),recallStored:detail=>bridge.smallphoneRecallStoredMessage?.(detail),character:getCharacterLook,preferencesFor:readPreferences,identityFor:storedIdentity,historyRows:storedRows,pat:(chatKey,suffix)=>patChat(chatKey,'assistant',suffix),group:groupService,photo:updateChatPhoto,notify:detail=>bridge.smallphoneHandleReplyComplete?.({...detail,title:contactName(detail.chatKey,detail.title)}),feedback:triggerChatFeedback},accept:api=>{replyEngine=api;bridge.smallphoneGetChatPresence=api.presence;bridge.smallphoneRefreshChatSide=api.reloadPresence;bridge.smallphoneGetMyPresence=()=>readMyPresence().online;bridge.smallphoneSyncChatReplyTyping=api.syncTyping;bridge.smallphoneSetChatStatus=api.status;}}}));
     function requestCurrentChatAiReply(){return replyEngine.request();}
     function appendChatAiReplyBubble(message:string){const pending=messageNodes.appendPeer(message);messageNodes.scrollLatest();return pending;}
     let chatIdentity!:ChatIdentityApi;
@@ -374,7 +377,7 @@ function initChatApplication(){
     dispose.push(()=>window.clearInterval(proactiveTimer));
     /** 拍一拍：聊天设置关着就不拍。他拍你的后缀是他回复里自己写的；拍自己不加后缀。开着的聊天直接加一行，没开着的改存着的记录。回传那一行的字。 */
     function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix=''){
-        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat)return '';
+        const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat||groupService(chatKey))return '';
         const name=contactName(chatKey,getCharacterLook(chatKey).name||getCurrentChatRoomName()),suffix=by==='user'?preferences.patSuffix:by==='assistant'?aiSuffix:'';
         const text=by==='user'?`我 拍了拍 ${name}${suffix}`:by==='self'?`我 拍了拍 自己${suffix}`:`${name} 拍了拍 我${suffix}`;
         if(chatKey===history.current.activeKey){messageNodes.pat(by,text,suffix);messageNodes.scrollLatest();}
@@ -429,7 +432,12 @@ function initChatApplication(){
         const photo:MessagePhoto={id,prompt:row.dataset.photoPrompt||'',caption:row.dataset.photoCaption||'',scene:row.dataset.photoScene||undefined,state:state==='pending'?'failed':state,src:box.querySelector('img')?.getAttribute('src')||undefined,error:row.dataset.photoError||undefined};
         window.dispatchEvent(new CustomEvent('qingtuan:chat-photo-view',{detail:{photo,canDraw:chatPhotoReady(),redraw:(prompt:string)=>replyEngine.photo(chatKey,{...photo,prompt:prompt.trim()||photo.prompt})}}));
     }
-    function getCharacterPersona(chatKey:string){return buildCharacterPrompt(characterStore?.read().find(item => item.archiveId === chatKey) || null);}
+    function getCharacterPersona(chatKey:string){const characters=characterStore?.read()||[],character=characters.find(item => item.archiveId === chatKey) || null;return isGroup(character)?groupPersona(character,characters):buildCharacterPrompt(character);}
+    /** 群聊：成员给你看的名字、头像（消息照 data-speaker 换）；不是群就没有。 */
+    function memberLooks(chatKey:string){let characters:ChatCharacter[]=[];try{characters=characterStore?.read()||[];}catch{/* 开机时角色清单还没接上，先当不是群 */}const group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return undefined;
+        return Object.fromEntries(groupMembers(group,characters).map(member=>[member.archiveId,{name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR}]));}
+    function groupService(chatKey:string){const characters=characterStore?.read()||[],group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return null;
+        return {members:groupMembers(group,characters).map(member=>({key:member.archiveId,name:memberName(member),shown:contactName(member.archiveId,memberName(member))})),nick:group.group.nick};}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
     function loadChatPreferences() { return preferenceBridge.load(getCurrentChatPreferenceKey()); }
     function applyChatRoomPreferences() {
@@ -660,7 +668,13 @@ initChatApplication();
             String(date.getDate());
     }
 
+    /** 聊天列表的最后一句；群聊前面加上是谁说的。 */
     function getLastChatPreview(key:string) {
+        let lastSpeaker = '';
+        const text = lastChatPreviewText(key, speaker => { lastSpeaker = speaker; }), member = lastSpeaker ? characterStore.read().find(item => item.archiveId === lastSpeaker) : null, who = member ? contactName(member.archiveId, memberName(member)) : '';
+        return who && text ? who + '：' + text : text;
+    }
+    function lastChatPreviewText(key:string, onSpeaker:(speaker:string)=>void) {
         const html = history.current.histories[key];
         if (!html) return '';
         // 只拆最后几条消息来找最后一个气泡，不用每次把整份聊天记录都拆一遍（记录长了会很慢）。
@@ -674,6 +688,7 @@ initChatApplication();
             lastBubble = bubbles[bubbles.length - 1];
         }
         if (!lastBubble) return '';
+        onSpeaker(lastBubble.closest<HTMLElement>('.chat-message-row')?.dataset.speaker || '');
         // 转发记录卡只显示消息类型，不把卡片标题、预览和页脚拼进聊天列表。
         if (lastBubble.querySelector('.chat-forward-record-card')) return '[聊天记录]';
         if (lastBubble.querySelector('.chat-photo')) return '[照片]';
@@ -715,6 +730,7 @@ initChatApplication();
             id: character.archiveId,
             name: contactName(character.archiveId, text(character.name, text(character.nickname, '未命名角色'))),
             photoUrl: character.photoUrl || '', favorite: Boolean(character.favorite), pinned: Boolean(character.pinned),
+            group: isGroup(character), avatars: isGroup(character) ? groupMembers(character, characterStore.read()).slice(0, 4).map(member => member.photoUrl || DEFAULT_AVATAR) : undefined,
             preview: draft ? `草稿：${draft.replace(/\s+/g, ' ').slice(0, 42)}` : lastPreview,
             draft: Boolean(draft), time: !draft && lastPreview ? formatThreadTime(history.current.times[character.archiveId]) : '',
             unread: Math.max(0, Number(replyBridge.unread(character.archiveId)) || 0),
@@ -972,6 +988,8 @@ initChatApplication();
     window.dispatchEvent(new CustomEvent('qingtuan:chat-list-services', { detail: { openCharacterCard } }));
     bridge.smallphoneOpenCharacterCard = openCharacterCard;
     bridge.smallphonePatchCharacter = (id, fields) => { void characterStore.patch(id, fields); };
+    bridge.smallphoneSaveGroup = group => characterStore.saveGroup(group);
+    bridge.smallphoneRemoveGroup = id => characterStore.removeGroup(id);
     // 通讯录改了备注：聊天列表、聊天室标题和消息上的名字跟着换
     dispose.push(subscribeContacts(() => { renderCharacters(); window.dispatchEvent(new CustomEvent('qingtuan:chat-identity-refresh')); }));
 

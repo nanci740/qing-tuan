@@ -8,6 +8,9 @@ export interface ChatThreadSnapshot {
   draft: boolean;
   time: string;
   unread: number;
+  /** 群聊：avatars 是成员头像（最多四个，拼成群头像）。 */
+  group?: boolean;
+  avatars?: string[];
   activate: () => void;
   openActions: (x: number, y: number) => void;
 }

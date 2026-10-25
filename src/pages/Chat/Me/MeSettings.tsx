@@ -20,7 +20,7 @@ function Choices<T extends string | number>({ value, options, onChange }: { valu
 }
 /** 勾角色：一排小方块标签，勾了的变主题色。 */
 function Who({ picked, onChange }: { picked: string[]; onChange: (next: string[]) => void }) {
-  const characters = readChatCharacters();
+  const characters = readChatCharacters().filter(item => !item.group);
   if (!characters.length) return <div className="chat-me-set-who"><small>还没有角色。</small></div>;
   return <div className="chat-me-set-who">
     {characters.map(item => { const on = picked.includes(item.archiveId); return <button type="button" key={item.archiveId} aria-pressed={on} className={on ? 'is-active' : ''}
@@ -39,7 +39,7 @@ export function MeSettings() {
   const settings = useSyncExternalStore(subscribeMeSettings, readMeSettings), file = useRef<HTMLInputElement>(null);
   const { proactive, schedules, notify, wallet, privacy } = settings;
   const [editing, setEditing] = useState<MeSchedule | null>(null), isNew = !!editing && !schedules.some(item => item.id === editing.id);
-  const characters = readChatCharacters(), nameOf = (key: string) => characters.find(item => item.archiveId === key)?.name || '已删除的角色';
+  const characters = readChatCharacters().filter(item => !item.group), nameOf = (key: string) => characters.find(item => item.archiveId === key)?.name || '已删除的角色';
   const patchSchedule = (id: string, patch: Partial<MeSchedule>) => writeSchedules(schedules.map(item => item.id === id ? { ...item, ...patch } : item));
   function saveSchedule() {
     if (!editing) return;

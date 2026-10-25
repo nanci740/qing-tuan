@@ -165,11 +165,12 @@ export function messageText(row: MessageElement) {
   return textOf(copy).replace(/\s+/g, ' ').trim();
 }
 export function quoteText(row: MessageElement) { const text = messageText(row); if (text) return text.slice(0, 120); const length = findClass(row, 'chat-voice-length'); return length && textOf(length).trim() ? `[语音 ${textOf(length).trim()}]` : '[消息]'; }
-export function labelMessages(nodes: MessageNode[], peer: string, factory: MessageFactory) {
+export function labelMessages(nodes: MessageNode[], identity: Pick<MessageIdentity, 'peer' | 'members'>, factory: MessageFactory) {
+  const peer = identity.peer;
   for (const row of elements(nodes, n => hasClass(n, 'chat-message-row'))) {
     const ms = Number(attr(row, 'data-sent-at')), date = Number.isFinite(ms) && ms > 0 ? new Date(ms) : null;
     const pad = (n: number) => String(n).padStart(2, '0');
-    const name = hasClass(row, 'is-user') ? '我' : peer.trim() || '对方', time = date ? `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` : '';
+    const speaker = attr(row, 'data-speaker'), name = hasClass(row, 'is-user') ? '我' : (speaker && identity.members?.[speaker]?.name) || peer.trim() || '对方', time = date ? `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` : '';
     setAttr(row, 'data-sender', name);
     removeAttr(row, 'data-time');
     // 名字、时间各自一个元素（自己写 CSS 美化时好抓）：.chat-message-head > .chat-message-name + .chat-message-time
@@ -246,7 +247,8 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
     let avatar = findClass(row, 'chat-message-mini-avatar');
     if (hasClass(row, 'is-chat') || hasClass(row, 'is-user')) {
       if (!avatar) { avatar = factory.element('img', {class:'chat-message-mini-avatar',alt:''}); if (hasClass(row,'is-chat')) row.children.unshift(avatar); else row.children.push(avatar); }
-      setAttr(avatar, 'src', hasClass(row, 'is-chat') ? identity.peerAvatar : identity.userAvatar);
+      const speaker = attr(row, 'data-speaker');
+      setAttr(avatar, 'src', hasClass(row, 'is-chat') ? (speaker && identity.members?.[speaker]?.avatar) || identity.peerAvatar : identity.userAvatar);
     }
   }
   const rows = ensureMessageIds(nodes);
@@ -473,6 +475,7 @@ export function backgroundNode(detail: PeerMessageDetail, factory: MessageFactor
   if(detail.recalled)return recallNode(detail,factory);
   const reply=String(detail.reply||'').trim(); const stamp=Number(detail.sentAt)||Date.now();
   const row=factory.element('div',{class:'chat-message-row is-chat','data-ai-pending':'false','data-chat-ai-content':reply,'data-sent-at':String(stamp),'data-message-id':'msg_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)});
+  if(detail.speaker)setAttr(row,'data-speaker',detail.speaker);
   const bubble=factory.element('div',{class:detail.voice?.dataUrl?'chat-bubble chat-bubble--voice':'chat-bubble'});
   if(detail.quote)bubble.children.push(quoteNode(String(detail.quote),String(detail.quoteTargetId||''),factory));
   if(detail.photo||detail.location||detail.sticker||detail.pay){/* 照片、定位、表情、转账等气泡放进这一行之后再换上 */}else if(detail.voice?.dataUrl){setAttr(row,'data-voice-transcript',reply);bubble.children.push(voiceNode({...detail.voice,lengthText:String(detail.voice.lengthText||'')},factory));if(detail.voiceAutoText)setResultInBubble(bubble,reply,factory);}else bubble.children.push(factory.element('div',{},[factory.text(reply)]));

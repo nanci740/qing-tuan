@@ -22,6 +22,8 @@ export interface ChatSegmentedReply {
   receive?: '' | 'accept' | 'return';
   /** 每一条发的定位；没有就是 null。 */
   locations?: (MessageLocation | null)[];
+  /** 群聊：每一条是哪个成员说的（名字），没写是空字符串。 */
+  speakers?: string[];
 }
 export interface ChatReplyParserApi {
   extract(data: unknown): string;

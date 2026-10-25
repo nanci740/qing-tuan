@@ -37,7 +37,7 @@ export function ChatContactsPage() {
   useLayoutEffect(() => {
     const onTab = (event: Event) => { const name = (event as CustomEvent<string>).detail; setOpen(name === 'Contacts'); if (name === 'Contacts') { setView('all'); setPage(ALL); } };
     // 角色新增、删除、改特别关注之后，聊天列表会重画一次：跟着重读
-    const onThreads = () => setCharacters(readChatCharacters());
+    const onThreads = () => setCharacters(readChatCharacters().filter(item => !item.group));
     // 横幅「新的朋友」点进来
     const onOpen = (event: Event) => {
       (window as Bridge).smallphoneOpenChatApp?.();
@@ -63,7 +63,7 @@ export function ChatContactsPage() {
   useLayoutEffect(() => {
     const view = refs?.get('chatListView'), nav = view?.querySelector('.chat-subnav');
     if (!view || !nav || !open) { setHost(null); return; }
-    setCharacters(readChatCharacters()); setQuery('');
+    setCharacters(readChatCharacters().filter(item => !item.group)); setQuery('');
     view.setAttribute('data-chat-tab', 'contacts');
     const box = document.createElement('div');
     box.className = 'chat-contacts-page';

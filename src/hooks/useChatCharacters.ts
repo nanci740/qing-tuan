@@ -92,6 +92,22 @@ export function useChatCharacters() {
     room.current!.finishRemoval(character);
     if (archiveDeleted) showToast('角色已删除');
   }
+  async function saveGroup(group: ChatCharacter) {
+    const index = data.current.findIndex(item => item.archiveId === group.archiveId);
+    data.current = index >= 0 ? data.current.map(item => item.archiveId === group.archiveId ? group : item) : [...data.current, group];
+    update();
+    if (!await writeChatCharacters(data.current)) { data.current = readChatCharacters(); update(); return false; }
+    room.current!.render();
+    room.current!.syncSaved(group);
+    return true;
+  }
+  async function removeGroup(id: string) {
+    const group = data.current.find(item => item.archiveId === id && item.group);
+    if (!group || !await beginRemove(group)) return false;
+    room.current!.render();
+    room.current!.finishRemoval(group);
+    return true;
+  }
   async function removeByDossier(id: CharacterDossier['id']) {
     const character = data.current.find(item => item.dossierId === String(id));
     if (!character) return true;
@@ -123,7 +139,9 @@ export function useChatCharacters() {
         saveArchive,
         patch,
         removeFromList,
-        removeByDossier
+        removeByDossier,
+        saveGroup,
+        removeGroup
       };
       (event as CustomEvent<{
         accept: (bridge: ChatCharacterStoreBridge) => void;

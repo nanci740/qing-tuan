@@ -4,7 +4,8 @@ export interface MessageElement { kind: 'element'; key: number; tag: string; nam
 export interface MessageText { kind: 'text'; key: number; text: string }
 export interface MessageComment { kind: 'comment'; key: number; text: string }
 export interface MessageFactory { element(tag: string, attrs?: Record<string, unknown> | NativeAttribute[], children?: MessageNode[], namespace?: string): MessageElement; text(value: unknown): MessageText; comment(value: string): MessageComment; key(): number }
-export interface MessageIdentity { peer: string; peerAvatar: string; userAvatar: string }
+/** members：群聊时每个成员（archiveId）给你看的名字和头像，消息照 data-speaker 换。 */
+export interface MessageIdentity { peer: string; peerAvatar: string; userAvatar: string; members?: Record<string, { name: string; avatar: string }> }
 export interface MessageVoice { dataUrl: string; seconds?: number; lengthText?: string }
 /** 家机发的照片。state：pending 正在画、done 画好了、failed 没画出来（可以重画）、text 没开生图时的文字照片（放预设照片，点开看描述，之后可以画）。
     prompt 是给生图模型的英文描述（他用文字打的照片一开始是空的），caption 是一句中文说明。 */
@@ -19,7 +20,7 @@ export interface MessageSticker { tag: string; image: string }
 export interface MessagePay { id: string; kind: 'transfer' | 'packet' | 'family'; amount: number; note: string }
 /** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */
 export interface MessageLocation { place: string; address?: string; distance?: string }
-export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sticker?: MessageSticker | null; pay?: MessagePay | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string }
+export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sticker?: MessageSticker | null; pay?: MessagePay | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string; speaker?: string }
 export interface MessageNodesApi {
   container(): HTMLDivElement|null;
   rows(limit?: number): HTMLElement[];
