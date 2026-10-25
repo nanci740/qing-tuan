@@ -1,9 +1,10 @@
-/* 聊天 App「Contacts」：纸本通讯录——上面一排索引标签（选中的那张接到卡片上），下面一张卡片：标题列 + 照拼音分组的名单。颜色跟主题色走。 */
+/* 聊天 App「Contacts」：纸本通讯录——上面一排索引标签（选中的那张接到卡片上），下面一张卡片：标题列 + 名单（或新的朋友、添加朋友、标签）。颜色跟主题色走。
+   卡片和标签列都要 min-width: 0，不然一句很长的签名会把整页撑出去。 */
 #chatListView .chat-contacts-page { flex: 1 1 auto; min-height: 0; display: flex; padding: 14px 0 0; box-sizing: border-box; }
 #chatListView .chat-contacts-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
-.chat-contacts { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.chat-contacts { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 
-/* 索引标签：只有有人的字母；人多一排放不下就左右滑。底边对齐，选中的那张高一截、接到卡片上 */
+/* 索引标签：全部、星标、有人的字母，点了只看那一页；人多一排放不下就左右滑。底边对齐，选中的那张高一截、接到卡片上 */
 .chat-contacts-tabs { flex: none; display: flex; align-items: flex-end; padding: 3px 6px 0; overflow-x: auto; scrollbar-width: none; }
 .chat-contacts-tabs::-webkit-scrollbar { display: none; }
 #chatListView .chat-contacts-tabs button {
@@ -20,17 +21,38 @@
 .chat-contacts-search input { flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; background: none; color: var(--color-text); font: inherit; font-size: 11px; }
 
 .chat-contacts-list { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 10px 10px; }
-#chatListView .chat-contacts-head { width: 100%; display: flex; align-items: center; gap: 5px; margin: 6px 0 2px; padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 12px; font-weight: 700; text-align: left; }
+#chatListView .chat-contacts-head { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; margin: 6px 0 2px; padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 12px; font-weight: 700; text-align: left; }
+.chat-contacts-head-row { display: flex; align-items: center; }
 .chat-contacts-head > span { font-size: 9px; }
+#chatListView .chat-contacts-more { flex: none; width: 24px; height: 20px; padding: 0; border: 1px solid var(--win-line); border-radius: 2px; background: var(--effect-face-white); font-size: 11px; }
 .chat-contacts-head small { color: var(--color-muted); font-weight: 400; }
 #chatListView .chat-contacts-row { width: 100%; display: flex; align-items: center; gap: 9px; padding: 6px 4px; border: 0; border-bottom: 1px dotted var(--win-line); background: none; text-align: left; }
 #chatListView .chat-contacts-group .chat-contacts-row:last-child { border-bottom: 0; }
+#chatListView .chat-contacts-row.is-static { cursor: default; }
 .chat-contacts-avatar { flex: none; width: 34px; height: 34px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); object-fit: cover; }
 .chat-contacts-text { flex: 1; min-width: 0; }
 .chat-contacts-text b { display: block; overflow: hidden; color: var(--color-text); font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .chat-contacts-text b i { margin-left: 5px; color: var(--color-muted); font-size: 11px; font-style: normal; font-weight: 400; }
 .chat-contacts-text small { display: block; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
 .chat-contacts-star { flex: none; color: var(--win-ink); font-size: 12px; }
+/* 新的朋友、标签那两行的方块图示；红点是还没处理的陌生人申请 */
+.chat-contacts-icon { flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: color-mix(in srgb, var(--theme-color) 55%, var(--color-surface)); color: var(--win-ink); font-size: 16px; font-weight: 700; }
+.chat-contacts-badge { flex: none; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--color-danger); color: var(--color-surface); font-size: 10px; line-height: 16px; text-align: center; }
+.chat-contacts-state { flex: none; max-width: 45%; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+#chatListView .chat-contacts-btn { flex: none; height: 22px; padding: 0 9px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font-size: 10.5px; white-space: nowrap; }
+#chatListView .chat-contacts-btn.is-primary { background: var(--win-bar); }
+#chatListView .chat-contacts-btn:disabled { opacity: .6; }
+.chat-contacts-top .chat-contacts-btn { margin-left: auto; }
+#chatListView .chat-contacts-back { flex: none; padding: 0; border: 0; background: none; color: var(--color-text); font-size: 13px; font-weight: 700; }
+.chat-contacts-sec { margin: 10px 0 3px; color: var(--win-ink); font-size: 11px; font-weight: 700; }
+.chat-contacts-set { display: flex; align-items: center; gap: 8px; padding: 7px 4px; border-bottom: 1px dotted var(--win-line); color: var(--color-text); font-size: 12px; }
+.chat-contacts-set > span:first-child { flex: 1; min-width: 0; }
+.chat-contacts-set small { display: block; margin-top: 2px; color: var(--color-muted); font-size: 10px; line-height: 1.4; }
+.chat-contacts-choices { flex: none; display: flex; }
+#chatListView .chat-contacts-choices button { height: 22px; padding: 0 7px; border: 1px solid var(--color-muted); border-left-width: 0; background: var(--effect-face-white); box-shadow: var(--effect-raised); font-size: 10.5px; white-space: nowrap; }
+#chatListView .chat-contacts-choices button:first-child { border-left-width: 1px; border-radius: 3px 0 0 3px; }
+#chatListView .chat-contacts-choices button:last-child { border-radius: 0 3px 3px 0; }
+#chatListView .chat-contacts-choices button[aria-checked="true"] { background: var(--win-bar); box-shadow: var(--effect-sunken); }
 .chat-contacts-empty { margin: 24px 8px; color: var(--color-muted); font-size: 11px; line-height: 1.6; text-align: center; }
 
 /* 名片：大头像 + 名字，右上角星标；下面一格一格列出档案里有填的 */
@@ -45,3 +67,11 @@
 .chat-contacts-fields div { display: flex; gap: 8px; padding: 6px 8px; border-bottom: 1px dotted var(--win-line); color: var(--color-text); font-size: 12px; line-height: 1.5; }
 .chat-contacts-fields div:last-child { border-bottom: 0; }
 .chat-contacts-fields span { flex: none; width: 34px; color: var(--color-muted); }
+/* 名片里的标签：一个个小方框，后面一颗 ＋ */
+.chat-contacts-fields .chat-contacts-tags { flex: 1; width: auto; display: flex; flex-wrap: wrap; gap: 4px; color: var(--color-text); }
+.chat-contacts-tags i, .chat-contacts-tags button { padding: 0 6px; border: 1px solid var(--win-line); border-radius: 2px; background: var(--color-surface); color: var(--win-ink); font: inherit; font-size: 11px; font-style: normal; line-height: 18px; }
+.chat-contacts-tags button { cursor: pointer; }
+/* 贴标签的窗口：一排可以勾的标签 */
+.chat-contacts-pick { display: flex; flex-wrap: wrap; gap: 5px; }
+.chat-contacts-pick button { height: 24px; padding: 0 9px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+.chat-contacts-pick button.is-active { border-color: var(--color-muted); background: var(--theme-color); }
