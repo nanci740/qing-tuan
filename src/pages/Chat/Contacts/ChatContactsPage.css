@@ -80,5 +80,3 @@
 .chat-contacts-note { margin: 14px 4px; color: var(--color-muted); font-size: 10.5px; line-height: 1.7; }
 .chat-contacts-block { display: block; margin: 10px auto 0; padding: 2px 8px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 12px; cursor: pointer; }
 .chat-contacts-block.is-danger { color: var(--color-danger-ink); }
-.chat-contacts-held { max-height: 50vh; overflow-y: auto; }
-.chat-contacts-fields.chat-contacts-held span { width: 72px; font-size: 10.5px; }

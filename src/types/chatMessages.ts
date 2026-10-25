@@ -21,7 +21,7 @@ export interface MessageSticker { tag: string; image: string }
 export interface MessagePay { id: string; kind: 'transfer' | 'packet' | 'family'; amount: number; note: string; count?: number; split?: 'lucky' | 'even'; to?: string; by?: string }
 /** 定位卡片：地点一定有；地址、距离（例如「3 公里」）可以没有。都是写出来的，不是真的定位。 */
 export interface MessageLocation { place: string; address?: string; distance?: string }
-export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sticker?: MessageSticker | null; pay?: MessagePay | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string; speaker?: string }
+export interface PeerMessageDetail { reply: string; photo?: MessagePhoto | null; location?: MessageLocation | null; sticker?: MessageSticker | null; pay?: MessagePay | null; sentAt?: number; quote?: string; quoteTargetId?: string; voice?: MessageVoice | null; voiceAutoText?: boolean; translation?: string; recalled?: boolean; recallNotice?: string; chatKey?: string; speaker?: string; rejected?: boolean }
 export interface MessageNodesApi {
   container(): HTMLDivElement|null;
   rows(limit?: number): HTMLElement[];

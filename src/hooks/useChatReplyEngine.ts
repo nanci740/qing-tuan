@@ -11,7 +11,7 @@ import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAi
 import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
 import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
-import {holdMessage,isBlocked,isBlockedBy,setBlockedBy} from '../utils/contactsStorage';
+import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsStorage';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -104,8 +104,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const rows = stored ? stored.slice(-limit) : nodes.rows(limit);
         const idOf = (row:HTMLElement) => stored ? row.dataset.messageId || '' : nodes.id(row);
         for (const row of rows) {
-            // 他把你拉黑时你发的（被拒收了）：他没收到
-            if (row.dataset.rejected === 'true') continue;
+            // 他把你拉黑时你发的（被拒收了）：他没收到。你把他拉黑时他发的照样给他看，标上被拒收
+            const rejected = row.dataset.rejected === 'true';
+            if (rejected && row.classList.contains('is-user')) continue;
             // 我撤回的讯息：他有看到就知道原文，没看到只知道我撤回了一条
             if (row.classList.contains('chat-recall-notice') && row.dataset.recalledBy === 'user') {
                 const recalled = String(row.dataset.recalledContent || '').trim();
@@ -191,7 +192,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             // 将引用快照和正文一起传给 AI，较早原文超出上下文时仍可读到。
             // 引用候选仍只保留正文，避免把上下文说明显示在引用卡里。
             const speaker = !isUserMessage && speakerName && row.dataset.speaker ? speakerName(row.dataset.speaker) : '';
-            context.push({ role: isUserMessage ? 'user' : 'assistant', content: withQuote(speaker ? speaker + '：' + content : content),
+            context.push({ role: isUserMessage ? 'user' : 'assistant', content: withQuote(speaker ? speaker + '：' + content : content) + (rejected ? '\n[这条消息已发出，但被对方拒收了]' : ''),
                 messageId: idOf(row), quoteCandidate: quoteText, quotedText,
                 // 他自己发过、已经画好的照片：之后也把图片附给他看。
                 photoId: !isUserMessage && row.dataset.photoId && row.querySelector('.chat-photo.is-done') ? row.dataset.photoId : undefined,
@@ -366,9 +367,10 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         // 群聊：一轮只问一次，模型决定谁说话；每条一定分开（各是谁说的）
         const groupInfo = services.current!.group(requestChatKey);
         if (groupInfo) requestPreferences.segmented = true;
-        // 私聊的拉黑：你把他拉黑了（他说的先拦下来），他把你拉黑了（你发的他收不到，只有让他想想要不要放你出来的时候才问他）
+        // 私聊的拉黑：你把他拉黑了（他照样说，只是你拒收），他把你拉黑了（你发的他收不到，只有让他想想要不要放你出来的时候才问他）
         const blockedByUser = !groupInfo && isBlocked(requestChatKey), blockingUser = !groupInfo && isBlockedBy(requestChatKey);
         if (blockingUser && !proactive) { say('对方把你拉黑了，消息送不到'); return; }
+        if (!groupInfo && !proactive && isDeleted(requestChatKey)) { say('对方还不是你的好友'); return; }
         const context = collectCurrentChatContext(active ? undefined : services.current!.historyRows(requestChatKey), groupInfo ? key => groupInfo.members.find(member => member.key === key)?.name || '' : undefined);
         if (proactive) context.push({ role: 'user', content: proactive.prompt, messageId: '', quoteCandidate: '' });
         else if (!context.length || context[context.length - 1].role !== 'user') {
@@ -595,8 +597,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), ...(speaker ? { by: speaker.key } : {}) } : null;
                 // 找不到表情的那一则（只剩「表情」两个字）不发
                 if (!photo && !location && !sticker && !pay && !segments[index]) continue;
-                // 你把他拉黑了：他说的先拦下来（钱也不收），你在通讯录的黑名单里想看再看
-                if (blockedByUser) { holdMessage(requestChatKey, photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payLabel(pay) : segments[index]); continue; }
+                // 你把他拉黑了：他说的照样出现，标上被你拒收（转账、红包不发）
+                if (blockedByUser && pay) continue;
                 // 他发的转账、红包先记进钱包（还没收），卡片才看得到状态
                 if (pay) receivePay(pay, requestChatKey, speaker ? speaker.name : characterName);
                 const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : segments[index];
@@ -618,7 +620,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     }
                     const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker, pay, speaker: speaker?.key,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker, pay, speaker: speaker?.key, rejected: blockedByUser,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -661,7 +663,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         voice: backgroundVoice,
                         voiceAutoText: !!(backgroundVoice && requestPreferences.voiceAutoText),
                         translation: backgroundTranslation,
-                        speaker: speaker?.key
+                        speaker: speaker?.key,
+                        rejected: blockedByUser
                     });
                 }
                 if (photo && aiPhotoDraw && !willRecall) void drawPhoto(requestChatKey, photo);
