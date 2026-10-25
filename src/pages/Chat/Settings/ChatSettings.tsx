@@ -135,36 +135,36 @@ export function ChatSettings() {
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"idw-row"}]}>
-                <OriginalElement tag="label" attributes={[]}>
+                <ChatIdentityField tag="label" attributes={[{"name":"id","value":"chatSettingsLabelRelation"}]}>
                   {"Relation"}
-                </OriginalElement>
+                </ChatIdentityField>
                 <ChatIdentityField tag="strong" attributes={[{"name":"id","value":"chatSettingsCardRelation"}]}>
                   {"—"}
                 </ChatIdentityField>
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"idw-row"}]}>
-                <OriginalElement tag="label" attributes={[]}>
+                <ChatIdentityField tag="label" attributes={[{"name":"id","value":"chatSettingsLabelBirthday"}]}>
                   {"Birthday"}
-                </OriginalElement>
+                </ChatIdentityField>
                 <ChatIdentityField tag="strong" attributes={[{"name":"id","value":"chatSettingsCardRole"}]}>
                   {"—"}
                 </ChatIdentityField>
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"idw-row"}]}>
-                <OriginalElement tag="label" attributes={[]}>
+                <ChatIdentityField tag="label" attributes={[{"name":"id","value":"chatSettingsLabelMBTI"}]}>
                   {"MBTI"}
-                </OriginalElement>
+                </ChatIdentityField>
                 <ChatIdentityField tag="strong" attributes={[{"name":"id","value":"chatSettingsCardMBTI"}]}>
                   {"—"}
                 </ChatIdentityField>
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"idw-row idw-memo"}]}>
-                <OriginalElement tag="label" attributes={[]}>
+                <ChatIdentityField tag="label" attributes={[{"name":"id","value":"chatSettingsLabelSignature"}]}>
                   {"Signature"}
-                </OriginalElement>
+                </ChatIdentityField>
                 <ChatIdentityField tag="strong" attributes={[{"name":"id","value":"chatSettingsCardSecretMemo"}]}>
                   {"—"}
                 </ChatIdentityField>
