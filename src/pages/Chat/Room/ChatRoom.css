@@ -2237,5 +2237,5 @@
 #chatAppPage#chatAppPage #chatRoomView .cr-member-name { flex: 1; min-width: 0; overflow: hidden; color: var(--cr-title); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 #chatAppPage#chatAppPage #chatRoomView .cr-member .cr-presence { flex: none; display: flex; }
 
-/* 被拒收的消息（他把你拉黑时你发的、你把他拉黑时他发的）：名字那行最右边一个红底白字的圆「!」（那几句下面接一行灰字「消息已发出，但被对方拒收了」） */
-#chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-rejected="true"] > .chat-message-head::after { content: '!'; display: inline-block; width: 13px; height: 13px; margin-left: 5px; border-radius: 50%; background: var(--color-danger); color: #fff; -webkit-text-fill-color: #fff; font-size: 9px; font-weight: 700; line-height: 13px; text-align: center; vertical-align: 1px; }
+/* 被拒收的消息（他把你拉黑时你发的、你把他拉黑时他发的）：名字那行最右边一个红色的「!」（那几句下面接一行灰字「消息已发出，但被对方拒收了」） */
+#chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-rejected="true"] > .chat-message-head::after { content: '!'; margin-left: 5px; color: var(--color-danger); -webkit-text-fill-color: var(--color-danger); font-weight: 700; }

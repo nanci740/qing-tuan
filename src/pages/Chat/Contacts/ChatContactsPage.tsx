@@ -100,6 +100,12 @@ export function ChatContactsPage() {
   const person = people.find(item => item.key === viewing), pending = contacts.requests.filter(item => item.kind === 'in' && item.state === 'pending');
   const request = contacts.requests.find(item => item.id === stranger);
   useEffect(() => { if (viewing && !person) setViewing(''); }, [viewing, person]);
+  // 底栏 Contacts 的提醒：还没处理的新的朋友有几个
+  useEffect(() => {
+    const item = refs?.get('chatListView')?.querySelector('.chat-subnav-item[aria-label="Contacts"]');
+    if (!item) return;
+    if (pending.length) item.setAttribute('data-badge', String(pending.length)); else item.removeAttribute('data-badge');
+  }, [pending.length, refs, characters]);
   const tagsOf = (key: string) => (contacts.tagged[key] || []).map(id => contacts.tags.find(tag => tag.id === id)).filter((tag): tag is NonNullable<typeof tag> => !!tag);
 
   function goChat(key: string) { setViewing(''); setOpen(false); (window as Bridge).smallphoneOpenCharacterChat?.(key); }
