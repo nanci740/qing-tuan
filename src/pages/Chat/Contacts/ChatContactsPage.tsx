@@ -8,7 +8,7 @@ import { showToast } from '../../../utils/toast';
 import { confirmChat } from '../../../utils/chatConfirm';
 import { addContactTag, compareContactNames, contactInitial, patchFriendRequest, readContacts, removeContactTag, renameContactTag, setContactRemark, setContactTags, subscribeContacts, updateContacts } from '../../../utils/contactsStorage';
 import type { FriendRequest, StrangerRate } from '../../../utils/contactsStorage';
-import { acceptFriend, generateStranger, strangerTick } from '../../../utils/friendRequests';
+import { acceptFriend, applyToUnblock, generateStranger, strangerTick } from '../../../utils/friendRequests';
 import { useNativeRefs } from '../../../providers/NativeRefsProvider';
 import type { ChatCharacter } from '../../../types/chatCharacters';
 
@@ -17,8 +17,9 @@ type Bridge = Window & {
   smallphoneOpenCharacterChat?: (key: string) => unknown;
   smallphoneOpenCharacterCard?: (id?: unknown) => void;
   smallphonePatchCharacter?: (id: string, fields: { favorite?: boolean }) => void;
+  smallphoneBlockContact?: (key: string, on: boolean) => void;
 };
-type View = 'all' | 'new' | 'tags';
+type View = 'all' | 'new' | 'tags' | 'blocked';
 interface Contact { key: string; name: string; remark: string; shown: string; photo: string; star: boolean; sub: string; character: ChatCharacter }
 const STAR = '★', ALL = '全部';
 const errorText = (error: unknown) => String((error as Error)?.message || error).slice(0, 60);
@@ -33,6 +34,7 @@ export function ChatContactsPage() {
   const [viewing, setViewing] = useState(''), [remarkDraft, setRemarkDraft] = useState<string | null>(null);
   const [tagPick, setTagPick] = useState<{ ids: string[]; name: string } | null>(null), [tagEdit, setTagEdit] = useState<{ id: string; name: string } | null>(null);
   const [stranger, setStranger] = useState(''), [busy, setBusy] = useState('');
+  const [heldOf, setHeldOf] = useState(''), [applying, setApplying] = useState<{ key: string; name: string; greeting: string } | null>(null);
   const ticking = useRef(false);
   useLayoutEffect(() => {
     const onTab = (event: Event) => { const name = (event as CustomEvent<string>).detail; setOpen(name === 'Contacts'); if (name === 'Contacts') { setView('all'); setPage(ALL); } };
@@ -128,6 +130,20 @@ export function ChatContactsPage() {
     catch (error) { showToast(errorText(error)); } finally { setBusy(''); }
   }
 
+  async function block(item: Contact) {
+    if (!await confirmChat({ title: `把${item.shown}拉黑？`, message: '他不能再主动找你、拍你，私聊发来的消息会被拦下，你在黑名单里想看再看。群里照常。', confirmText: '拉黑', danger: true })) return;
+    (window as Bridge).smallphoneBlockContact?.(item.key, true); showToast(`${item.shown} 拉黑了`);
+  }
+  async function apply() {
+    if (!applying) return;
+    setBusy('apply');
+    try {
+      const result = await applyToUnblock(applying.key, applying.greeting);
+      setApplying(null);
+      showToast(result.accept ? `${applying.name} 通过了` : `${applying.name} 没有通过${result.reply ? '：「' + result.reply + '」' : ''}`);
+    } catch (error) { showToast(errorText(error)); } finally { setBusy(''); }
+  }
+  const stamp = (at: number) => { const date = new Date(at); return `${date.getMonth() + 1}/${date.getDate()}`; };
   const row = (item: Contact) => <button type="button" className="chat-contacts-row" key={item.key} onClick={() => setViewing(item.key)}>
     <img className="chat-contacts-avatar" alt="" src={item.photo} />
     <span className="chat-contacts-text"><b>{item.shown}{item.remark ? <i>{item.name}</i> : null}</b>{item.sub ? <small>{item.sub}</small> : null}</span>
@@ -171,6 +187,29 @@ export function ChatContactsPage() {
         </div>
       </div>
     </>;
+  } else if (view === 'blocked') {
+    const mine = people.filter(item => contacts.blocked[item.key]), theirs = people.filter(item => contacts.blockedBy[item.key]);
+    body = <>
+      <div className="chat-contacts-top">{back('黑名单')}</div>
+      <div className="chat-contacts-list">
+        <div className="chat-contacts-sec">你拉黑的</div>
+        {mine.map(item => <div className="chat-contacts-row is-static" key={item.key}>
+          <img className="chat-contacts-avatar" alt="" src={item.photo} />
+          <span className="chat-contacts-text"><b>{item.shown}</b><small>{stamp(contacts.blocked[item.key].at)} 拉黑{contacts.held[item.key]?.length ? ` · 拦下 ${contacts.held[item.key].length} 条消息` : ''}</small></span>
+          {contacts.held[item.key]?.length ? <button type="button" className="chat-contacts-btn" onClick={() => setHeldOf(item.key)}>看消息</button> : null}
+          <button type="button" className="chat-contacts-btn is-primary" onClick={() => { (window as Bridge).smallphoneBlockContact?.(item.key, false); showToast(`${item.shown} 放出来了`); }}>解除</button>
+        </div>)}
+        {!mine.length ? <p className="chat-contacts-empty">没有拉黑谁。</p> : null}
+        <div className="chat-contacts-sec">把你拉黑的</div>
+        {theirs.map(item => <div className="chat-contacts-row is-static" key={item.key}>
+          <img className="chat-contacts-avatar" alt="" src={item.photo} />
+          <span className="chat-contacts-text"><b>{item.shown}</b><small>{stamp(contacts.blockedBy[item.key].at)} 把你拉黑了</small></span>
+          <button type="button" className="chat-contacts-btn is-primary" onClick={() => setApplying({ key: item.key, name: item.shown, greeting: '' })}>申请添加</button>
+        </div>)}
+        {!theirs.length ? <p className="chat-contacts-empty">没有人拉黑你。</p> : null}
+        <p className="chat-contacts-note">你拉黑的人：他不能主动找你、拍你，私聊发来的消息会被拦下，想看再看。<br />把你拉黑的人：你发的私聊他收不到，可以重新申请加他，接不接受由他决定；他也可能自己消气放你出来。<br />拉黑只管私聊，群里照常。</p>
+      </div>
+    </>;
   } else if (view === 'tags') {
     body = <>
       <div className="chat-contacts-top">{back('标签')}<button type="button" className="chat-contacts-btn" onClick={() => setTagEdit({ id: '', name: '' })}>＋ 新标签</button></div>
@@ -192,6 +231,8 @@ export function ChatContactsPage() {
         <button type="button" className="chat-contacts-row" onClick={() => setView('new')}><span className="chat-contacts-icon" aria-hidden="true">＋</span><span className="chat-contacts-text"><b>新的朋友</b></span>{pending.length ? <span className="chat-contacts-badge">{pending.length}</span> : null}</button>
         <button type="button" className="chat-contacts-row" onClick={() => setView('tags')}><span className="chat-contacts-icon" aria-hidden="true">#</span><span className="chat-contacts-text"><b>标签</b></span>
           {contacts.tags.length ? <span className="chat-contacts-state">{contacts.tags.slice(0, 3).map(tag => tag.name).join(' · ')}{contacts.tags.length > 3 ? ` 等 ${contacts.tags.length} 个` : ''}</span> : null}</button>
+        <button type="button" className="chat-contacts-row" onClick={() => setView('blocked')}><span className="chat-contacts-icon" aria-hidden="true">⊘</span><span className="chat-contacts-text"><b>黑名单</b></span>
+          {Object.keys(contacts.blocked).length || Object.keys(contacts.blockedBy).length ? <span className="chat-contacts-state">你拉黑 {Object.keys(contacts.blocked).length} · 拉黑你 {Object.keys(contacts.blockedBy).length}</span> : null}</button>
       </>}
       {visible.map(([letter, items]) => <div className="chat-contacts-group" key={letter}>{head(letter, letter === STAR ? '星标朋友' : letter, items.length)}{folded[letter] ? null : items.map(row)}</div>)}
       {!people.length ? <p className="chat-contacts-empty">还没有联系人。点右上角 ＋ 新增角色，或去「新的朋友」看看谁来加你。</p>
@@ -225,6 +266,8 @@ export function ChatContactsPage() {
           {[['备注', person.remark], ['关系', person.character.relationship], ['生日', [person.character.birthday, person.character.constellation].filter(Boolean).join(' · ')], ['签名', person.character.quote]]
             .filter(([, value]) => String(value || '').trim()).map(([label, value]) => <div key={String(label)}><span>{label}</span>{String(value)}</div>)}
         </div>
+        {contacts.blocked[person.key] ? <button type="button" className="chat-contacts-block" onClick={() => { (window as Bridge).smallphoneBlockContact?.(person.key, false); showToast(`${person.shown} 放出来了`); }}>移出黑名单</button>
+          : <button type="button" className="chat-contacts-block is-danger" onClick={() => void block(person)}>加入黑名单</button>}
       </div>
       <div className="sp-confirm-actions chat-me-form-actions">
         <PressedButton type="button" className="sp-confirm-btn" onClick={() => setRemarkDraft(person.remark)}>设备注</PressedButton>
@@ -277,6 +320,32 @@ export function ChatContactsPage() {
         {tagEdit.id ? <PressedButton type="button" className="sp-confirm-btn is-danger" onClick={() => void dropTag()}>删除</PressedButton> : null}
         <PressedButton type="button" className="sp-confirm-btn" onClick={() => setTagEdit(null)}>取消</PressedButton>
         <PressedButton type="button" className="sp-confirm-btn is-primary" onClick={() => void saveTagEdit()}>存好</PressedButton>
+      </div>
+    </div>
+  </div>, document.body) : null}
+
+  {heldOf ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget) setHeldOf(''); }}>
+    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="被拦下的消息">
+      <div className="sp-confirm-bar"><span className="sp-confirm-title">被拦下的消息</span></div>
+      <div className="sp-confirm-body"><div className="chat-contacts-fields chat-contacts-held">
+        {(contacts.held[heldOf] || []).map((item, index) => <div key={index}><span>{stamp(item.at)} {new Date(item.at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}</span>{item.text}</div>)}
+      </div></div>
+      <div className="sp-confirm-actions chat-me-form-actions">
+        <PressedButton type="button" className="sp-confirm-btn" onClick={() => setHeldOf('')}>关闭</PressedButton>
+      </div>
+    </div>
+  </div>, document.body) : null}
+
+  {applying ? createPortal(<div className="sp-confirm-overlay chat-me-dialog" onClick={event => { if (event.target === event.currentTarget && !busy) setApplying(null); }}>
+    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="申请添加朋友">
+      <div className="sp-confirm-bar"><span className="sp-confirm-title">申请添加朋友</span></div>
+      <div className="sp-confirm-body chat-me-form">
+        <label htmlFor="contactApply">跟「{applying.name}」说点什么<small>他照人设决定要不要放你出来</small></label>
+        <input id="contactApply" maxLength={120} placeholder="例如：我错了，别生气了" value={applying.greeting} autoFocus onChange={event => setApplying({ ...applying, greeting: event.currentTarget.value })} />
+      </div>
+      <div className="sp-confirm-actions chat-me-form-actions">
+        <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => setApplying(null)}>取消</PressedButton>
+        <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={!!busy} onClick={() => void apply()}>{busy === 'apply' ? '等他回应…' : '发送'}</PressedButton>
       </div>
     </div>
   </div>, document.body) : null}

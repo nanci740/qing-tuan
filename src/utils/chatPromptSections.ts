@@ -39,9 +39,11 @@ export interface ChatPromptInput {
     pat?: boolean;
     /** 群聊：characterName 是群名，persona 是各成员的设定；members 成员本名，mentions 你这一轮 @ 到的人，nick 你在群里的昵称。 */
     group?: { members: string[]; mentions: string[]; nick: string; presence: string } | null;
+    /** 私聊的拉黑：byUser 对方（用户）把你拉黑了，byYou 你把对方拉黑了。 */
+    block?: { byUser: boolean; byYou: boolean } | null;
 }
 /** 群聊不送的段落：语音（还只有一种声音，之后在聊天设置给每个成员选声音再开）。 */
-const GROUP_SKIP = new Set<PresetBuiltinId>(['voice']);
+const GROUP_SKIP = new Set<PresetBuiltinId>(['voice', 'block']);
 
 const MARKERS = {
     quote: '[这条消息引用的原文：',
@@ -208,6 +210,14 @@ function pat(input: ChatPromptInput) {
         '你想拍对方的时候（撒娇、逗对方、提醒对方、对方好久没回、被拍了想拍回去），在 JSON 最外层加 "pat":true，聊天里会显示「' + input.characterName + ' 拍了拍 我」；想拍对方哪里可以自己写后缀，例如 "pat":"的脑袋" 会显示「' + input.characterName + ' 拍了拍 我的脑袋」，照你的人设和当下的情境写，不用每次一样。只想拍不想说话，replies 可以是空的 []。pat 不是工具，不要用工具调用或函数调用的格式，跟 replies 写在同一个 JSON 里，例如 {"replies":[{"text":"…"}],"pat":"的脑袋"}。不要每次都拍，也不要连着拍。';
 }
 
+/** 拉黑：私聊才送。 */
+function block(input: ChatPromptInput) {
+    if (!input.block) return '';
+    if (input.block.byYou) return '你现在把对方拉黑了：对方发的私聊你收不到。要不要把对方放出来照你的人设和你们为什么闹翻决定：想放就在 JSON 最外层加 "unblock":true，可以顺便说一句话；还不想放就回 {"replies":[]}，什么都不会发出去。';
+    if (input.block.byUser) return '对方把你拉黑了：你现在发的私聊对方收不到（对方那边会显示被拒收），对方解除之前你说什么都送不到。照你的人设反应，可以继续发、生气、委屈或干脆不说话。';
+    return '如果对方真的把你惹火了、照你的人设会做出拉黑这种事，可以在 JSON 最外层加 "block":true 把对方拉黑：之后对方发的私聊你收不到，直到你自己放出来或对方重新申请、你同意。这是很重的举动，只在真的闹翻时才用，平常绝对不要加。';
+}
+
 /** 引用：设成「不引用」就只留一句，不送规则和编号清单。 */
 function quote(input: ChatPromptInput) {
     if (input.quotePolicy === 'never') return '不要引用任何消息，quote_id 必须始终留空。';
@@ -224,7 +234,7 @@ function outputCleanliness() {
 }
 
 const SECTIONS: Record<PresetBuiltinId, (input: ChatPromptInput) => string> = {
-    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, pay, pat, output: outputCleanliness, quote,
+    basics, persona, userPersona, time, presence, markers: contextMarkers, sameTurn, format: replyFormat, recall, voice, photo, location, sticker, pay, pat, block, output: outputCleanliness, quote,
 };
 /** 自己写的条目里的 {{char}}、{{user}} 换成名字；酒馆的注释 {{// …}} 和 {{trim}} 拿掉。 */
 function expandMacros(text: string, input: ChatPromptInput) {
