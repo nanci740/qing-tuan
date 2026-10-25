@@ -3,7 +3,8 @@ import type { CharacterDossier } from '../types/characterDossier';
 import { extractChatAiReply } from './chatReplyParser';
 import { readChatCharacters } from './chatCharacterStorage';
 import { activePersonaPrompt, readMe } from './meStorage';
-import { addFriendRequest, dueOutRequests, dueReadds, patchDeleted, patchFriendRequest, readContacts, setBlockedBy, setDeleted, updateContacts } from './contactsStorage';
+import { addFriendRequest, dueOutRequests, dueReadds, patchCut, patchFriendRequest, readContacts, setBlockedBy, setDeleted, updateContacts } from './contactsStorage';
+import type { Cut } from './contactsStorage';
 import { buildCharacterPrompt } from './characterPrompt';
 import { readChatRecords } from './chatRecords';
 import type { FriendRequest } from './contactsStorage';
@@ -79,7 +80,7 @@ export async function strangerTick(now = Date.now()) {
   return request;
 }
 
-type Peer = Window & { smallphoneChatNotice?: (key: string, text: string) => void; smallphonePeerSay?: (key: string, text: string) => void; smallphoneChatProactive?: (key: string, prompt: string) => void };
+type Peer = Window & { smallphoneChatNotice?: (key: string, text: string) => void; smallphonePeerSay?: (key: string, text: string) => void; smallphoneChatProactive?: (key: string, prompt: string) => void; smallphoneBlockContact?: (key: string, on: boolean) => void };
 const MINUTE = 60000;
 function banner(body: string) {
   window.dispatchEvent(new CustomEvent('qingtuan:system-banner', { detail: { title: '新的朋友', body, open: () => window.dispatchEvent(new CustomEvent('qingtuan:open-contacts', { detail: 'new' })) } }));
@@ -123,31 +124,41 @@ async function answerRequest(request: FriendRequest) {
   }
   banner(accept ? `${name} 通过了你的好友申请` : `${name} 没有通过你的好友申请`);
 }
-/** 你删了他：他照人设决定要不要来加你、写什么（最多来三次）。 */
-async function tryReadd(chatKey: string) {
-  const { name, lines } = personaOf(chatKey), tries = readContacts().deleted[chatKey]?.tries || 0, recent = recentChat(chatKey);
+const cutOf = (chatKey: string): Cut | null => readContacts().deleted[chatKey] ? 'deleted' : readContacts().blocked[chatKey] ? 'blocked' : null;
+/** 他来加你（你删了他、或你把他拉黑了想让你放他出来）：已经有一笔还没处理的就不再加。回传有没有加。 */
+export function peerApply(chatKey: string, message: string) {
+  const kind = cutOf(chatKey), name = readChatCharacters().find(item => item.archiveId === chatKey)?.name || '';
+  if (!kind || !name || readContacts().requests.some(item => item.kind === 'in' && item.chatKey === chatKey && item.state === 'pending')) return false;
+  patchCut(kind, chatKey, { tries: (readContacts()[kind][chatKey]?.tries || 0) + 1 });
+  addFriendRequest({ kind: 'in', chatKey, name, greeting: message.trim().slice(0, 120), intro: '', meta: '', meet: '' });
+  banner(`${name} 请求添加你为朋友`);
+  return true;
+}
+/** 你删了他、或拉黑了他：他照人设决定要不要来加你、写什么（最多来三次）。 */
+async function tryReadd(chatKey: string, kind: Cut) {
+  const { lines } = personaOf(chatKey), tries = readContacts()[kind][chatKey]?.tries || 0, recent = recentChat(chatKey);
+  const what = kind === 'deleted' ? '把你从好友里删掉了' : '在私聊里把你拉黑了，你发的消息对方都拒收';
   const data = await ask([...lines,
     recent ? `你们之前的私聊：\n${recent}` : '',
-    tries ? `对方把你删了，你来加过 ${tries} 次，都被拒绝了。` : '对方刚刚把你从好友里删掉了。',
-    '照你的人设和你们之间发生的事，决定要不要去加对方，要加就写一句申请时的留言（像真人，一两句）。不想加、或照人设会放弃，就不加。',
+    tries ? `对方${what}，你去申请加对方好友 ${tries} 次，都被拒绝了。` : `对方刚刚${what}。`,
+    `照你的人设和你们之间发生的事，决定要不要去申请加对方好友${kind === 'blocked' ? '（请对方把你放出来）' : ''}，要加就写一句申请时的留言（像真人，一两句）。不想加、或照人设会放弃，就不加。`,
     '只输出一个 JSON：{"add":true,"message":"留言"} 或 {"add":false}',
   ].filter(Boolean).join('\n'));
-  if (!(data.add === true || data.add === 'true') || !readContacts().deleted[chatKey]) return;
-  patchDeleted(chatKey, { tries: tries + 1 });
-  addFriendRequest({ kind: 'in', chatKey, name, greeting: str(data.message, 120), intro: '', meta: '', meet: '' });
-  banner(`${name} 请求添加你为朋友`);
+  if (data.add === true || data.add === 'true') peerApply(chatKey, str(data.message, 120));
 }
-/** 他来加你、你通过：加回来，通知他。拒绝：还没满三次就过一阵子再想想。 */
+/** 他来加你、你通过：删掉的加回来（他先开口），拉黑的放出来（他会知道）。拒绝：还没满三次就过一阵子再想想。 */
 export function answerReadd(request: FriendRequest, accept: boolean) {
-  const chatKey = request.chatKey || '';
+  const chatKey = request.chatKey || '', kind = cutOf(chatKey);
   patchFriendRequest(request.id, { state: accept ? 'accepted' : 'rejected' });
+  if (!kind) return;
   if (accept) {
-    setDeleted(chatKey, false);
     (window as Peer).smallphoneChatNotice?.(chatKey, `你通过了${request.name}的好友申请`);
+    if (kind === 'blocked') { (window as Peer).smallphoneBlockContact?.(chatKey, false); return; }
+    setDeleted(chatKey, false);
     (window as Peer).smallphoneChatProactive?.(chatKey, `[系统提示：这条不是对方说的话，不要回应这条本身] 对方通过了你的好友申请，你们又是好友了。照你的人设说点什么。`);
   } else {
-    const tries = readContacts().deleted[chatKey]?.tries || 0;
-    patchDeleted(chatKey, { next: tries < 3 ? Date.now() + (30 + Math.random() * 150) * MINUTE : 0 });
+    const tries = readContacts()[kind][chatKey]?.tries || 0;
+    patchCut(kind, chatKey, { next: tries < 3 ? Date.now() + (30 + Math.random() * 150) * MINUTE : 0 });
   }
 }
 /** 每分钟看一次：该回的申请、该想想要不要来加你的人。出错就十分钟后再试。 */
@@ -155,7 +166,7 @@ export async function friendTick(now = Date.now()) {
   for (const request of dueOutRequests(now)) {
     try { await answerRequest(request); } catch { patchFriendRequest(request.id, { due: Date.now() + 10 * MINUTE }); }
   }
-  for (const chatKey of dueReadds(now)) {
-    try { await tryReadd(chatKey); } catch { patchDeleted(chatKey, { next: Date.now() + 10 * MINUTE }); }
+  for (const { key, kind } of dueReadds(now)) {
+    try { await tryReadd(key, kind); } catch { patchCut(kind, key, { next: Date.now() + 10 * MINUTE }); }
   }
 }

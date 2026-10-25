@@ -414,7 +414,7 @@ function initChatApplication(){
     bridge.smallphoneDeleteContact=key=>{if(isDeleted(key))return;const name=contactName(key,getCharacterLook(key).name);chatNotice(key,`你把${name}删除了`);setDeleted(key,true);};
     bridge.smallphoneChatProactive=(key,prompt)=>{void replyEngine.proactive(key,prompt);};
     /** 他说一句（申请加回来他同意时）：开着的聊天直接出现，没开着的存进记录；你还拉黑着他就标上被拒收。 */
-    bridge.smallphonePeerSay=(key,text)=>{if(!key||!text)return;const rejected=isBlocked(key);if(key===history.current.activeKey){const pending=messageNodes.appendPeer(text);messageNodes.finishPeer(pending.row,{reply:text,sentAt:Date.now(),rejected});messageNodes.scrollLatest();saveCurrentHistory();}else appendBackgroundReply({chatKey:key,reply:text,sentAt:Date.now(),rejected});};
+    bridge.smallphonePeerSay=(key,text)=>{if(!key||!text)return;const rejected=isBlocked(key);if(key===history.current.activeKey){const pending=messageNodes.appendPeer(text);messageNodes.finishPeer(pending.row,{reply:text,sentAt:Date.now(),rejected});messageNodes.scrollLatest();saveCurrentHistory();}else appendBackgroundReply({chatKey:key,reply:text,sentAt:Date.now(),rejected});if(rejected)chatNotice(key,'消息已发出，但被对方拒收了');};
     // 双击（手机上连点两下）头像或名字拍一拍：消息旁边的小头像和名字、右边栏的大头像都算；多选的时候不拍；拍他会等他回，拍自己不用
     let lastTap={who:'',at:0};
     listen(roomView,'click',event=>{
