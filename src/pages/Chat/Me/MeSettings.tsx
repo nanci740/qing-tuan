@@ -96,7 +96,7 @@ export function MeSettings() {
       <div className="chat-me-set-row is-center"><button type="button" className="chat-me-st-btn"
         onClick={() => setEditing({ id: `s${Date.now().toString(36)}`, chatKey: characters.length === 1 ? characters[0].archiveId : '', time: '08:00', days: [1, 2, 3, 4, 5, 6, 7], note: '', enabled: true })}>＋ 新增定时</button></div>
     </div>
-    <p className="chat-me-set-note">到了时间他就来找你，不管有没有在聊。勿扰时间里也照样会来，毕竟是你自己定的。那时候小手机没开着的话，半小时内打开还会补上。</p>
+    <p className="chat-me-set-note">到了时间他就来找你，不管有没有在聊。</p>
 
     <div className="chat-me-group-head">通知</div>
     <div className="chat-me-set-box">

@@ -139,7 +139,7 @@ export function ChatContactsPage() {
   }
 
   async function block(item: Contact) {
-    if (!await confirmChat({ title: `把${item.shown}拉黑？`, message: '他会知道被你拉黑了。他发的私聊照样出现，但都会被你拒收；他拍不到你。群里照常。', confirmText: '拉黑', danger: true })) return;
+    if (!await confirmChat({ title: `把${item.shown}拉黑？`, message: '他发的私聊都会被你拒收，群里照常。', confirmText: '拉黑', danger: true })) return;
     (window as Bridge).smallphoneBlockContact?.(item.key, true); showToast(`${item.shown} 拉黑了`);
   }
   async function remove(item: Contact) {
@@ -237,7 +237,7 @@ export function ChatContactsPage() {
           {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn is-primary" onClick={() => startApply(item.key, item.shown)}>申请添加</button>}
         </div>)}
         {!theirs.length ? <p className="chat-contacts-empty">没有人拉黑你。</p> : null}
-        <p className="chat-contacts-note">你拉黑的人：他知道被你拉黑了，发的私聊照样出现，但都被你拒收；拍不到你。他可能会来申请加你，通过就放他出来。<br />把你拉黑的人：你发的私聊他收不到，可以申请加他，申请会出现在新的朋友，过一会儿他才回；他也可能自己消气放你出来。<br />拉黑只管私聊，群里照常。</p>
+        <p className="chat-contacts-note">你拉黑的人，消息会被你拒收，他可能会来申请。<br />把你拉黑的人，收不到你的消息，可以申请加他。<br />群里照常。</p>
       </div>
     </>;
   } else if (view === 'tags') {
