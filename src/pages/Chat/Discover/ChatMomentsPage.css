@@ -56,7 +56,8 @@
 .chat-moments-reply { flex: none; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; padding: 4px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); }
 .chat-moments-reply input { flex: 1; min-width: 0; padding: 3px 6px; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--color-text); font: inherit; font-size: 12px; outline: 0; }
 #chatListView .chat-moments-reply button { flex: none; padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); font-size: 11px; }
-#chatListView .chat-moments-reply button.is-primary { background: var(--win-bar); }
+/* 发送跟弹窗里的主按钮（存好、发表）同一套亮面主题色 */
+#chatListView .chat-moments-reply button.is-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); box-shadow: var(--effect-button-shadow); }
 
 /* 发动态：照片一格（＋ 或选好的图），谁可以看三选一 */
 .chat-moments-addphoto { display: flex; align-items: flex-end; gap: 8px; }
