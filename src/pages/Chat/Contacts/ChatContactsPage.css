@@ -43,7 +43,8 @@
 .chat-contacts-badge { flex: none; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--color-danger); color: var(--color-surface); font-size: 10px; line-height: 16px; text-align: center; }
 .chat-contacts-state { flex: none; max-width: 45%; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
 #chatListView .chat-contacts-btn { flex: none; height: 22px; padding: 0 9px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font-size: 10.5px; white-space: nowrap; }
-#chatListView .chat-contacts-btn.is-primary { background: var(--win-bar); }
+/* 主按钮（查看、解除）跟弹窗里的主按钮同一套亮面主题色；申请添加这类次要的维持白色 */
+#chatListView .chat-contacts-btn.is-primary { background: var(--effect-face-accent); color: var(--color-surface); text-shadow: var(--effect-text-white); box-shadow: var(--effect-button-shadow); }
 #chatListView .chat-contacts-btn:disabled { opacity: .6; }
 .chat-contacts-top .chat-contacts-btn { margin-left: auto; }
 #chatListView .chat-contacts-back { flex: none; padding: 0; border: 0; background: none; color: var(--color-text); font-size: 13px; font-weight: 700; }

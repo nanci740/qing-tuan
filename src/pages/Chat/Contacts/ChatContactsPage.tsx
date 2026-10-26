@@ -234,7 +234,7 @@ export function ChatContactsPage() {
         {theirs.map(item => <div className="chat-contacts-row is-static" key={item.key}>
           <img className="chat-contacts-avatar" alt="" src={item.photo} />
           <span className="chat-contacts-text"><b>{item.shown}</b><small>{lastSaid(item.key, 'out', item.name, `${stamp(contacts.blockedBy[item.key].at)} 把你拉黑了`)}</small></span>
-          {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn is-primary" onClick={() => startApply(item.key, item.shown)}>申请添加</button>}
+          {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn" onClick={() => startApply(item.key, item.shown)}>申请添加</button>}
         </div>)}
         {!theirs.length ? <p className="chat-contacts-empty">没有人拉黑你。</p> : null}
         <p className="chat-contacts-note">你拉黑的人，消息会被你拒收，他可能会来申请。<br />把你拉黑的人，收不到你的消息，可以申请加他。<br />群里照常。</p>
