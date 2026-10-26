@@ -25,7 +25,7 @@ function readJson(raw: string): Record<string, unknown> {
   if (start < 0 || end <= start) throw new Error('回复格式不对，再试一次');
   try { return JSON.parse(raw.slice(start, end + 1)); } catch { throw new Error('回复格式不对，再试一次'); }
 }
-async function ask(prompt: string) {
+export async function ask(prompt: string) {
   const data = await api().requestChat([{ role: 'user', content: prompt }], { temperature: 1 });
   return readJson(extractChatAiReply(data));
 }
@@ -86,13 +86,13 @@ function banner(body: string) {
   window.dispatchEvent(new CustomEvent('qingtuan:system-banner', { detail: { title: '新的朋友', body, open: () => window.dispatchEvent(new CustomEvent('qingtuan:open-contacts', { detail: 'new' })) } }));
 }
 /** 你们最近的私聊（他没收到的不算），给他想事情用。 */
-function recentChat(chatKey: string) {
+export function recentChat(chatKey: string) {
   const template = document.createElement('template');
   try { template.innerHTML = readChatRecords().histories[chatKey] || ''; } catch { /* 记录还没读好就当没有 */ }
   return Array.from(template.content.querySelectorAll<HTMLElement>('.chat-message-row, .chat-system-notice')).filter(row => !(row.dataset.rejected === 'true' && row.classList.contains('is-user'))).slice(-14)
     .map(row => row.classList.contains('chat-system-notice') ? `（${row.textContent?.trim()}）` : `${row.classList.contains('is-user') ? '对方' : '你'}：${String(row.dataset.chatAiContent || row.querySelector('.chat-bubble')?.textContent || '').trim().slice(0, 100)}`).join('\n');
 }
-function personaOf(chatKey: string) {
+export function personaOf(chatKey: string) {
   const character = readChatCharacters().find(item => item.archiveId === chatKey);
   if (!character) throw new Error('找不到这个角色');
   const me = activePersonaPrompt(), name = String(character.name || character.nickname || '').trim();

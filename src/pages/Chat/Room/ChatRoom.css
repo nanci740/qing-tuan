@@ -2239,3 +2239,5 @@
 
 /* 被拒收的消息（他把你拉黑时你发的、你把他拉黑时他发的）：名字那行最右边一个红色的「!」（那几句下面接一行灰字「消息已发出，但被对方拒收了」） */
 #chatAppPage#chatAppPage #chatRoomView .chat-message-row[data-rejected="true"] > .chat-message-head::after { content: '!'; margin-left: 5px; color: var(--color-danger); -webkit-text-fill-color: var(--color-danger); font-weight: 700; }
+/* 右边栏「TA 的动态」：他最新一条朋友圈，上面一行时间 */
+#chatAppPage#chatAppPage #chatRoomView .cr-feed-time { font-weight: 700; }

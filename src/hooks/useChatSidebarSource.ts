@@ -21,5 +21,5 @@ export function useChatSidebarSource(){
  const characters=readChatCharacters(),active=characters.find(item=>item.archiveId===view.activeKey);
  const group=isGroup(active)?{notice:active.group.notice,members:groupMembers(active,characters).map(member=>{const state=presenceMap[member.archiveId]?.online;
   return {key:member.archiveId,name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR,online:['在线','忙碌','离开','隐身'].includes(state)?state:'在线'};})}:null;
- return {peerAvatar:raw?new URL(raw,document.baseURI).href:'',peerName:view.text.chatRoomName||'聊天',selfAvatar,online,status:String(saved?.status||'').slice(0,30),group};
+ return {key:view.activeKey,peerAvatar:raw?new URL(raw,document.baseURI).href:'',peerName:view.text.chatRoomName||'聊天',selfAvatar,online,status:String(saved?.status||'').slice(0,30),group};
 }
