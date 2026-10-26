@@ -13,6 +13,7 @@ import type {RoomToolsApi,RoomToolsServices} from '../providers/ChatRoomToolsPro
 import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,MessagesConnection,PeerMessageDetail} from '../types/chatMessages';
 import {sendPay} from '../utils/walletStorage';
 import {dueSchedules,noteProactive,pickProactive} from '../utils/chatProactive';
+import {momentsMemory} from '../utils/momentsEngine';
 import {contactName,dueUnblockChecks,isBlocked,isBlockedBy,isDeleted,setBlocked,setDeleted,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
 import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
@@ -471,6 +472,7 @@ function initChatApplication(){
     function memberLooks(chatKey:string){let characters:ChatCharacter[]=[];try{characters=characterStore?.read()||[];}catch{/* 开机时角色清单还没接上，先当不是群 */}const group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return undefined;
         return Object.fromEntries(groupMembers(group,characters).map(member=>[member.archiveId,{name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR}]));}
     /** 私聊时，他也在的群最近两天的对话（每个群最后 12 句）：让他记得群里发生的事。 */
+    /** 私聊时接在提示词后面：他也在的群最近的对话，还有你们最近的朋友圈。 */
     function groupMemory(chatKey:string){
         const characters=characterStore?.read()||[],me=characters.find(item=>item.archiveId===chatKey);if(!me||isGroup(me))return '';
         const pad=(n:number)=>String(n).padStart(2,'0'),since=Date.now()-2*24*3600000,blocks:string[]=[];
@@ -484,7 +486,8 @@ function initChatApplication(){
             }).filter(Boolean);
             if(lines.length)blocks.push(`【${group.name}】\n${lines.join('\n')}`);
         }
-        return blocks.length?`你也在下面这些群聊里，以下是最近群里的对话。这些是在群里发生的，不是这个私聊；你记得这些事，可以自然地提起，但不用刻意提，也不要照抄这个格式：\n${blocks.join('\n\n')}`:'';
+        const moments=momentsMemory(chatKey);
+        return [blocks.length?`你也在下面这些群聊里，以下是最近群里的对话。这些是在群里发生的，不是这个私聊；你记得这些事，可以自然地提起，但不用刻意提，也不要照抄这个格式：\n${blocks.join('\n\n')}`:'',moments].filter(Boolean).join('\n\n');
     }
     function groupService(chatKey:string){const characters=characterStore?.read()||[],group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return null;
         return {members:groupMembers(group,characters).map(member=>({key:member.archiveId,name:memberName(member),shown:contactName(member.archiveId,memberName(member))})),nick:group.group.nick};}

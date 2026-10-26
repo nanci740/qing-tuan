@@ -23,7 +23,6 @@ import { readWallet, subscribeWallet, yuan } from '../../../utils/walletStorage'
 
 type Bridge = Window & { smallphoneOpenCharacterChat?: (key: string) => unknown; smallphoneOpenChatApp?: () => unknown };
 type Tab = 'me' | 'favorites' | 'stickers' | 'wallet' | 'settings';
-const LATER = '之后开放';
 
 /** 聊天记录里数出来的陪伴纪录：认识第几天、聊了几条、最常聊谁、上次聊天。 */
 function companionStats() {
@@ -85,8 +84,7 @@ export function ChatMePage() {
     const onTab = (event: Event) => {
       const name = (event as CustomEvent<string>).detail;
       if (name === 'Me') setOpen(true);
-      else if (name === 'Chats' || name === 'Contacts') setOpen(false);
-      else showToast(`发现${LATER}`);
+      else setOpen(false);
     };
     // 从别的地方（例如还款提醒横幅）直接打开「我」的某一页
     const onOpenTab = (event: Event) => {

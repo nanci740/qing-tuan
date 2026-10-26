@@ -1,0 +1,79 @@
+/* 聊天 App「Discover」：整页是朋友圈。一张卡片，上面封面（斜纹浅底或你换的图，你的名字和头像压在右下角，右上角的笔是发动态），
+   签名，置顶（有才出现，下面一道不贴边的虚线），一条条动态之间也是不贴边的虚线。颜色跟主题色走。 */
+#chatListView .chat-moments-page { flex: 1 1 auto; min-height: 0; display: flex; padding: 14px 0 0; box-sizing: border-box; }
+#chatListView .chat-moments-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
+.chat-moments { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.chat-moments-card { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); box-shadow: var(--chat-raised); }
+
+.chat-moments-cover { position: relative; height: 132px; margin-bottom: 20px; border-bottom: 1px solid var(--win-line); background: linear-gradient(170deg, color-mix(in srgb, var(--theme-color) 55%, #fff), var(--theme-color)); }
+#chatListView .chat-moments-cover-pic { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; overflow: hidden; background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255, 255, 255, .25) 6px 7px); }
+.chat-moments-cover-pic img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.chat-moments-cover-pic small { position: absolute; left: 10px; top: 8px; color: var(--color-muted); font-size: 9.5px; letter-spacing: .5px; }
+#chatListView .chat-moments-write { position: absolute; right: 8px; top: 7px; width: 24px; height: 22px; padding: 0; border: 1px solid var(--win-line); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--win-ink); font-size: 12px; line-height: 20px; }
+.chat-moments-me { position: absolute; right: 10px; bottom: -18px; display: flex; align-items: flex-end; gap: 8px; pointer-events: none; }
+.chat-moments-me b { margin-bottom: 22px; color: var(--win-ink); font-size: 13px; letter-spacing: .5px; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.chat-moments-me img { width: 46px; height: 46px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; background: #fff; object-fit: cover; box-shadow: 1px 1px 0 var(--effect-drop-color); }
+.chat-moments-sign { min-height: 6px; margin: 0; padding: 0 12px 6px; color: var(--color-muted); font-size: 10px; text-align: right; }
+
+/* 置顶：左边「置顶」两个字，右边最多三格（照片，或文字的开头） */
+.chat-moments-pinned { display: flex; gap: 10px; margin: 0 12px; padding: 4px 0 10px; border-bottom: 1px dotted var(--win-line); }
+.chat-moments-pinned > span { flex: none; width: 32px; color: var(--win-ink); font-size: 12px; font-weight: 700; }
+.chat-moments-pinned > div { display: flex; gap: 4px; min-width: 0; }
+#chatListView .chat-moments-pinned button { width: 56px; height: 56px; padding: 4px; overflow: hidden; border: 1px solid var(--win-line); background: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface)); color: var(--color-text); font-size: 9.5px; line-height: 1.35; text-align: left; }
+.chat-moments-pinned img { width: calc(100% + 8px); height: calc(100% + 8px); margin: -4px; display: block; object-fit: cover; }
+.chat-moments-pinned button span { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+.chat-moment { display: flex; gap: 8px; margin: 0 12px; padding: 8px 0 7px; }
+.chat-moment + .chat-moment { border-top: 1px dotted var(--win-line); }
+.chat-moment-avatar { flex: none; width: 32px; height: 32px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; object-fit: cover; }
+.chat-moment-body { flex: 1; min-width: 0; color: var(--color-text); font-size: 12px; line-height: 1.45; }
+.chat-moment-name { display: block; margin-bottom: 1px; color: var(--win-ink); font-size: 12px; }
+.chat-moment-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+#chatListView button.chat-moment-photo { display: block; max-width: 150px; margin: 4px 0 2px; padding: 0; border: 1px solid var(--win-line); background: none; }
+.chat-moment-photo img { max-width: 100%; max-height: 180px; display: block; object-fit: cover; }
+.chat-moment-photo.is-text { margin: 4px 0 2px; border: 1px solid var(--win-line); width: 112px; min-height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px; box-sizing: border-box; background: color-mix(in srgb, var(--theme-color) 35%, #fff); color: var(--color-muted); font-size: 9.5px; line-height: 1.4; text-align: center; }
+#chatListView .chat-moment-photo.is-text button { padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 9.5px; text-decoration: underline; }
+.chat-moment-meta { display: flex; align-items: center; gap: 8px; margin-top: 2px; color: var(--color-muted); font-size: 9.5px; }
+#chatListView .chat-moment-del { padding: 0; border: 0; background: none; color: var(--win-ink); font-size: 9.5px; }
+.chat-moment-tools { position: relative; margin-left: auto; display: flex; align-items: center; }
+#chatListView .chat-moment-act { width: 22px; height: 14px; display: flex; align-items: center; justify-content: center; gap: 2px; padding: 0; border: 1px solid var(--win-line); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-raised); }
+.chat-moment-act i { width: 3px; height: 3px; border-radius: 50%; background: var(--win-ink); }
+/* 点了「··」：左边弹出一条小选单（赞、评论，自己的多一个置顶） */
+.chat-moment-menu { position: absolute; right: 26px; top: 50%; z-index: 2; display: flex; transform: translateY(-50%); border: 1px solid var(--win-line); border-radius: 2px; background: var(--color-surface); box-shadow: 2px 2px 0 color-mix(in srgb, var(--win-line) 60%, transparent); }
+#chatListView .chat-moment-menu button { padding: 3px 9px; border: 0; border-right: 1px dotted var(--win-line); background: none; color: var(--color-text); font-size: 11px; white-space: nowrap; }
+#chatListView .chat-moment-menu button:last-child { border-right: 0; }
+#chatListView .chat-moment-menu button:active { background: var(--theme-color); }
+
+/* 赞和评论：浅底框，左上角一个小尖角指着上面那条 */
+.chat-moment-box { position: relative; margin-top: 5px; padding: 3px 6px; border: 1px solid var(--win-line); background: color-mix(in srgb, var(--theme-color) 28%, var(--color-surface)); font-size: 11px; line-height: 1.5; }
+.chat-moment-box::before { content: ''; position: absolute; left: 8px; top: -5px; width: 7px; height: 7px; border-left: 1px solid var(--win-line); border-top: 1px solid var(--win-line); background: inherit; transform: rotate(45deg); }
+.chat-moment-likes { color: var(--win-ink); }
+.chat-moment-likes:not(:last-child) { margin-bottom: 2px; padding-bottom: 2px; border-bottom: 1px dotted var(--win-line); }
+#chatListView .chat-moment-comment { display: block; width: 100%; padding: 0; border: 0; background: none; color: var(--color-text); font-size: 11px; line-height: 1.5; text-align: left; overflow-wrap: anywhere; }
+.chat-moment-comment i { font-style: normal; font-weight: 700; color: var(--win-ink); }
+.chat-moments-empty { margin: 24px 16px; color: var(--color-muted); font-size: 11px; line-height: 1.7; text-align: center; }
+
+/* 评论框：卡片底下一条输入列 */
+.chat-moments-reply { flex: none; display: flex; gap: 4px; margin-top: 4px; padding: 4px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); }
+.chat-moments-reply input { flex: 1; min-width: 0; padding: 3px 6px; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--color-text); font: inherit; font-size: 12px; outline: 0; }
+#chatListView .chat-moments-reply button { flex: none; padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); font-size: 11px; }
+#chatListView .chat-moments-reply button.is-primary { background: var(--win-bar); }
+
+/* 发动态：照片一格（＋ 或选好的图），谁可以看三选一 */
+.chat-moments-addphoto { display: flex; align-items: flex-end; gap: 8px; }
+.chat-moments-addphoto img, .chat-moments-plus { width: 64px; height: 64px; box-sizing: border-box; border: 1px solid var(--win-line); object-fit: cover; }
+.chat-moments-plus { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; background: color-mix(in srgb, var(--theme-color) 35%, #fff); color: var(--win-ink); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
+.chat-moments-plus small { margin-top: 3px; font-size: 10px; }
+.chat-moments-addphoto > button:not(.chat-moments-plus) { padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+.chat-moments-choices { display: flex; }
+.chat-moments-choices button { flex: 1; padding: 3px 0; border: 1px solid var(--color-muted); border-left-width: 0; background: var(--effect-face-white); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+.chat-moments-choices button:first-child { border-left-width: 1px; border-radius: 3px 0 0 3px; }
+.chat-moments-choices button:last-child { border-radius: 0 3px 3px 0; }
+.chat-moments-choices button[aria-checked="true"] { background: var(--win-bar); box-shadow: var(--chat-sunken); font-weight: 700; }
+
+.chat-moments-viewer { display: flex; align-items: center; justify-content: center; }
+.chat-moments-viewer img { max-width: 92%; max-height: 86%; border: 1px solid var(--win-line); box-shadow: var(--chat-raised); }
+
+/* 底栏 Discover：你没在看、别人发了新的，图标右上角一个红点 */
+#chatListView .chat-subnav-item[data-dot] { position: relative; }
+#chatListView .chat-subnav-item[data-dot]::after { content: ''; position: absolute; top: 5px; left: calc(50% + 9px); width: 7px; height: 7px; border-radius: 50%; background: var(--color-danger); }

@@ -6,11 +6,11 @@
   flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; padding: 14px 0 0; box-sizing: border-box;
 }
 
-/* 底下分页：在「我」或 Contacts 的时候，那一格亮起来、Chats 那格回到没选的样子（跟原本 .active 同一套）。 */
+/* 底下分页：在「我」、Contacts 或 Discover 的时候，那一格亮起来、Chats 那格回到没选的样子（跟原本 .active 同一套）。 */
 #chatAppPage#chatAppPage #chatListView[data-chat-tab] .chat-subnav-item[aria-label="Chats"] { background: transparent !important; font-weight: normal; box-shadow: none; margin-top: 0; border-top: 0; opacity: .7; color: var(--win-ink); }
 #chatAppPage#chatAppPage #chatListView[data-chat-tab] .chat-subnav-item[aria-label="Chats"] svg { color: var(--chat-teal); }
-#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"]) { background: var(--effect-face-white) !important; font-weight: 600; box-shadow: -1px 0 0 var(--effect-drop-color), 1px 0 0 var(--effect-drop-color); margin-top: -1px; border-top: 2px solid var(--chat-teal); opacity: 1; }
-#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"]) svg { color: var(--wk-accent); }
+#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"], #chatListView[data-chat-tab="discover"] .chat-subnav-item[aria-label="Discover"]) { background: var(--effect-face-white) !important; font-weight: 600; box-shadow: -1px 0 0 var(--effect-drop-color), 1px 0 0 var(--effect-drop-color); margin-top: -1px; border-top: 2px solid var(--chat-teal); opacity: 1; }
+#chatAppPage#chatAppPage :is(#chatListView[data-chat-tab="me"] .chat-subnav-item[aria-label="Me"], #chatListView[data-chat-tab="contacts"] .chat-subnav-item[aria-label="Contacts"], #chatListView[data-chat-tab="discover"] .chat-subnav-item[aria-label="Discover"]) svg { color: var(--wk-accent); }
 
 #chatListView .chat-me-page button { font: inherit; color: inherit; cursor: pointer; }
 #chatListView svg.chat-me-px { flex: none; }
