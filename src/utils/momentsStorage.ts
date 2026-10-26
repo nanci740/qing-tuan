@@ -1,22 +1,24 @@
 import { kv } from './kvStorage';
 
 /** 朋友圈（key 是聊天的 archiveId，你自己是 'me'）：
-    posts 一条条动态（新的在后面）：photo 是照片库里的编号（你上传的、他发的照片画好的都放照片库），caption 是照片说明，
-      prompt 是他写的画面描述（还没画、画失败可以再画）；see 谁看得到（all 所有人、only 只给这些人、except 不给这些人）；
+    posts 一条条动态（新的在后面）：pics 照片，最多九张，每张 photo 是照片库里的编号（你上传的、他发的照片画好的都放照片库），caption 是照片说明，
+      prompt 是他写的画面描述（还没画、画失败可以再画）；place 所在位置；see 谁看得到（all 所有人、only 只给这些人、except 不给这些人）；
       likes 谁点了赞，comments 评论（to 是回复谁，可以带一张表情 sticker 或图片 photo），pinned 你的置顶，translation 翻成中文的（动态、评论都有）；
     rate 他们多久发一条（off 关、some 偶尔、often 常常），next 每个人下一次发的时间；
     queue 之后要做的事：react 看到你的动态（点赞、评论），reply 有人在评论里跟他说话，crowd 他认识的人（模型随机生成，key 是 npc:名字）来他的动态底下点赞、留言，到了 at 才做；
-    cover 封面（照片库编号），seen 你上一次看朋友圈的时间（之后有新的，底栏 Discover 亮红点）。 */
+    cover 封面（照片库编号），seen 你上一次看朋友圈的时间（之后有新的，底栏 Discover 亮红点）；
+    notes 新消息：有人赞了你的动态、在你的动态底下留言、回复你，notesSeen 你上一次看新消息的时间（之后的算没看过，底栏 Discover 写几条）。 */
 export type MomentRate = 'off' | 'some' | 'often';
 export interface MomentComment { id: string; by: string; text: string; at: number; to?: string; sticker?: { tag: string; image: string }; photo?: string; translation?: string }
+export interface MomentPic { photo?: string; caption?: string; prompt?: string; drawing?: 'pending' | 'failed' }
+export interface MomentNote { id: string; post: string; by: string; kind: 'like' | 'comment'; comment?: string; at: number }
 export interface MomentPost {
-  id: string; by: string; text: string; at: number;
-  photo?: string; caption?: string; prompt?: string; drawing?: 'pending' | 'failed';
+  id: string; by: string; text: string; at: number; pics: MomentPic[]; place?: string;
   see: { mode: 'all' | 'only' | 'except'; keys: string[] };
   likes: string[]; comments: MomentComment[]; pinned?: boolean; translation?: string;
 }
 export interface MomentTask { id: string; kind: 'react' | 'reply' | 'crowd'; post: string; who: string; at: number; comment?: string }
-interface Moments { posts: MomentPost[]; rate: MomentRate; next: Record<string, number>; queue: MomentTask[]; cover: string; seen: number }
+interface Moments { posts: MomentPost[]; rate: MomentRate; next: Record<string, number>; queue: MomentTask[]; cover: string; seen: number; notes: MomentNote[]; notesSeen: number }
 const KEY = 'qingtuan_moments_v1', EVENT = 'qingtuan:moments-changed';
 let cache: Moments | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -24,11 +26,13 @@ const list = (value: unknown) => Array.isArray(value) ? value as Record<string, 
 function clean(value: unknown): Moments {
   const row = value && typeof value === 'object' ? value as Record<string, unknown> : {};
   const posts = list(row.posts).flatMap((item): MomentPost[] => {
-    if (!item?.id || !item.by || !text(item.text, 1000) && !item.photo && !item.caption) return [];
+    // 旧版一条只有一张照片（photo、caption、prompt、drawing 直接放在动态上），搬进 pics
+    const pics = (Array.isArray(item.pics) ? list(item.pics) : item.photo || item.caption ? [item] : []).flatMap((one): MomentPic[] => one?.photo || text(one?.caption, 200)
+      ? [{ ...(one.photo ? { photo: String(one.photo) } : {}), ...(one.caption ? { caption: text(one.caption, 200) } : {}), ...(one.prompt ? { prompt: text(one.prompt, 1500) } : {}),
+        ...(one.drawing === 'pending' || one.drawing === 'failed' ? { drawing: one.drawing } : {}) }] : []).slice(0, 9);
+    if (!item?.id || !item.by || !text(item.text, 1000) && !pics.length) return [];
     const see = item.see as Record<string, unknown> | undefined, mode = see?.mode === 'only' || see?.mode === 'except' ? see.mode : 'all';
-    return [{ id: String(item.id), by: String(item.by), text: text(item.text, 1000), at: Number(item.at) || 0,
-      ...(item.photo ? { photo: String(item.photo) } : {}), ...(item.caption ? { caption: text(item.caption, 200) } : {}), ...(item.prompt ? { prompt: text(item.prompt, 1500) } : {}),
-      ...(item.drawing === 'pending' || item.drawing === 'failed' ? { drawing: item.drawing } : {}),
+    return [{ id: String(item.id), by: String(item.by), text: text(item.text, 1000), at: Number(item.at) || 0, pics, ...(text(item.place, 40) ? { place: text(item.place, 40) } : {}),
       see: { mode, keys: (Array.isArray(see?.keys) ? see.keys : []).map(String) },
       likes: [...new Set((Array.isArray(item.likes) ? item.likes : []).map(String))],
       comments: list(item.comments).flatMap((one): MomentComment[] => {
@@ -40,7 +44,9 @@ function clean(value: unknown): Moments {
   const next = row.next && typeof row.next === 'object' ? Object.fromEntries(Object.entries(row.next as Record<string, unknown>).map(([key, at]) => [key, Number(at) || 0])) : {};
   const queue = list(row.queue).flatMap((item): MomentTask[] => item?.id && item.post && item.who && (item.kind === 'react' || item.kind === 'reply' || item.kind === 'crowd')
     ? [{ id: String(item.id), kind: item.kind, post: String(item.post), who: String(item.who), at: Number(item.at) || 0, ...(item.comment ? { comment: String(item.comment) } : {}) }] : []).slice(-100);
-  return { posts, rate: row.rate === 'off' || row.rate === 'often' ? row.rate : 'some', next, queue, cover: text(row.cover, 100), seen: Number(row.seen) || 0 };
+  const notes = list(row.notes).flatMap((item): MomentNote[] => item?.id && item.post && item.by && (item.kind === 'like' || item.kind === 'comment')
+    ? [{ id: String(item.id), post: String(item.post), by: String(item.by), kind: item.kind, at: Number(item.at) || 0, ...(item.comment ? { comment: String(item.comment) } : {}) }] : []).slice(-60);
+  return { posts, rate: row.rate === 'off' || row.rate === 'often' ? row.rate : 'some', next, queue, cover: text(row.cover, 100), seen: Number(row.seen) || 0, notes, notesSeen: Number(row.notesSeen) || 0 };
 }
 export function readMoments(): Moments {
   if (!cache) { try { cache = clean(JSON.parse(kv.getItem(KEY) || '{}')); } catch { cache = clean({}); } }
@@ -64,15 +70,20 @@ export function patchPost(id: string, patch: Partial<MomentPost> | ((post: Momen
   updateMoments({ posts: readMoments().posts.map(post => post.id === id ? { ...post, ...(typeof patch === 'function' ? patch(post) : patch) } : post) });
 }
 export function removePost(id: string) {
-  const { posts, queue } = readMoments();
-  updateMoments({ posts: posts.filter(post => post.id !== id), queue: queue.filter(task => task.post !== id) });
+  const { posts, queue, notes } = readMoments();
+  updateMoments({ posts: posts.filter(post => post.id !== id), queue: queue.filter(task => task.post !== id), notes: notes.filter(note => note.post !== id) });
 }
+/** 新消息加一笔（别人赞了你的动态、在你的动态底下留言、回复你）。 */
+function note(entry: Omit<MomentNote, 'id' | 'at'>) { updateMoments({ notes: [...readMoments().notes, { ...entry, id: momentId('mn'), at: Date.now() }] }); }
 export function toggleLike(id: string, who: string, on?: boolean) {
+  const post = findPost(id), fresh = !!post && !post.likes.includes(who) && on !== false;
   patchPost(id, post => { const liked = post.likes.includes(who), want = on ?? !liked; return { likes: want ? (liked ? post.likes : [...post.likes, who]) : post.likes.filter(one => one !== who) }; });
+  if (fresh && who !== 'me' && post?.by === 'me') note({ post: id, by: who, kind: 'like' });
 }
 export function addComment(id: string, comment: Omit<MomentComment, 'id' | 'at'>) {
   const entry: MomentComment = { ...comment, id: momentId('mc'), at: Date.now() };
   patchPost(id, post => ({ comments: [...post.comments, entry] }));
+  if (entry.by !== 'me' && (findPost(id)?.by === 'me' || entry.to === 'me')) note({ post: id, by: entry.by, kind: 'comment', comment: entry.id });
   return entry;
 }
 export function patchComment(id: string, commentId: string, patch: Partial<MomentComment>) { patchPost(id, post => ({ comments: post.comments.map(one => one.id === commentId ? { ...one, ...patch } : one) })); }
@@ -86,3 +97,5 @@ export function canSee(post: MomentPost, who: string) {
 }
 /** 底栏 Discover 的红点：你上次看过之后，别人发了新的。 */
 export function hasNewMoments() { const { posts, seen } = readMoments(); return posts.some(post => post.by !== 'me' && post.at > seen); }
+/** 还没看过的新消息有几条。 */
+export function unreadNotes() { const { notes, notesSeen } = readMoments(); return notes.filter(item => item.at > notesSeen).length; }

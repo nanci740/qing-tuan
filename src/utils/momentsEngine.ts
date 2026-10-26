@@ -8,7 +8,7 @@ import type { ApiService } from '../types/api';
 import { chatPhotoLook, chatPhotoReady, generateChatPhoto } from './chatPhoto';
 import { saveChatPhoto } from './chatPhotoStore';
 import { addComment, addPost, canSee, findPost, patchPost, queueTask, readMoments, toggleLike, updateMoments } from './momentsStorage';
-import type { MomentPost } from './momentsStorage';
+import type { MomentPic, MomentPost } from './momentsStorage';
 
 const MINUTE = 60000, HOUR = 60 * MINUTE;
 /** 多久发一条：偶尔大约一两天一条，常常大约半天一条。 */
@@ -31,7 +31,8 @@ export function describePost(post: MomentPost, viewer: string) {
   const sees = (by: string, to?: string) => viewer === post.by || by === viewer || by === post.by || to === viewer;
   const when = new Date(post.at), stamp = `${when.getMonth() + 1}月${when.getDate()}日 ${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
   const who = (key: string) => key === viewer ? '你' : realName(key);
-  const lines = [`${who(post.by)}（${stamp}）：${post.text || ''}${post.caption ? `［照片：${post.caption}］` : ''}`];
+  const pics = post.pics.map(pic => `［照片${pic.caption ? '：' + pic.caption : ''}］`).join('');
+  const lines = [`${who(post.by)}（${stamp}${post.place ? `，在${post.place}` : ''}）：${post.text || ''}${pics}`];
   const likes = post.likes.filter(key => sees(key));
   if (likes.length) lines.push(`  赞：${likes.map(who).join('、')}`);
   for (const comment of post.comments.filter(one => sees(one.by, one.to))) lines.push(`  ${who(comment.by)}${comment.to ? ` 回复 ${who(comment.to)}` : ''}：${comment.text}${comment.sticker ? `［表情：${comment.sticker.tag}］` : ''}${comment.photo ? '［图片］' : ''}`);
@@ -46,29 +47,35 @@ async function writePost(key: string) {
     recent ? `你们最近的私聊：\n${recent}` : '',
     mine.length ? `你最近发过的朋友圈：\n${mine.map(post => describePost(post, key)).join('\n')}` : '',
     `现在是 ${now.getMonth() + 1}月${now.getDate()}日 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}。你要不要发一条朋友圈？照你的人设和你现在的生活写，像真人发朋友圈：可以是日常、心情、看到的东西，一两句就好，不要每次都提到对方，不要跟之前发过的重复。`,
-    `想配照片就写 photo（${look.style === 'tags' ? '英文标签，逗号分隔' : '英文画面描述'}，画面里有你自己时写出你的外貌）和 caption（中文，一句话说照片里是什么）；不配就不写。`,
-    '只输出一个 JSON：{"post":true,"text":"朋友圈文字","photo":"","caption":""} 或 {"post":false}',
+    `想配照片就写 photos，一到四张，不配就空着：每张 photo 是画面（${look.style === 'tags' ? '英文标签，逗号分隔' : '英文画面描述'}，画面里有你自己时写出你的外貌），caption 是中文，一句话说照片里是什么。想写在哪里就写 place（地名，简短），不写就空着。`,
+    '只输出一个 JSON：{"post":true,"text":"朋友圈文字","photos":[{"photo":"","caption":""}],"place":""} 或 {"post":false}',
   ].filter(Boolean).join('\n'));
   if (!yes(data.post)) return null;
-  const text = str(data.text, 500), prompt = str(data.photo, 1500), caption = str(data.caption, 200) || (prompt ? '一张照片' : '');
-  if (!text && !caption) return null;
-  const post = addPost({ by: key, text, at: Date.now(), see: { mode: 'all', keys: [] }, ...(caption ? { caption, prompt, ...(chatPhotoReady() ? { drawing: 'pending' as const } : {}) } : {}) });
-  if (post.drawing) void drawMomentPhoto(post.id);
+  // 照片：新的写法是 photos 一串；旧的写法（photo、caption 直接放外面）也收
+  const raw = Array.isArray(data.photos) ? data.photos as Record<string, unknown>[] : data.photo || data.caption ? [data] : [];
+  const draw = chatPhotoReady();
+  const pics: MomentPic[] = raw.slice(0, 4).flatMap(one => { const prompt = str(one?.photo, 1500), caption = str(one?.caption, 200) || (prompt ? '一张照片' : '');
+    return caption ? [{ caption, ...(prompt ? { prompt } : {}), ...(prompt && draw ? { drawing: 'pending' as const } : {}) }] : []; });
+  const text = str(data.text, 500), place = str(data.place, 40);
+  if (!text && !pics.length) return null;
+  const post = addPost({ by: key, text, at: Date.now(), pics, ...(place ? { place } : {}), see: { mode: 'all', keys: [] } });
+  void (async () => { for (const [index, pic] of post.pics.entries()) if (pic.drawing) await drawMomentPhoto(post.id, index); })();
   // 他自己认识的人（同事、朋友、家人……）陆续来看
   queueTask({ kind: 'crowd', post: post.id, who: key, at: Date.now() + between(5, 60) * MINUTE });
   return post;
 }
-/** 他照片的画面描述画成图，存进照片库。 */
-export async function drawMomentPhoto(id: string) {
-  const post = findPost(id);
-  if (!post?.prompt) return;
-  patchPost(id, { drawing: 'pending' });
+/** 他第 index 张照片的画面描述画成图，存进照片库。 */
+export async function drawMomentPhoto(id: string, index: number) {
+  const prompt = findPost(id)?.pics[index]?.prompt;
+  if (!prompt) return;
+  const setPic = (patch: Partial<MomentPic>) => patchPost(id, post => ({ pics: post.pics.map((pic, at) => at === index ? { ...pic, ...patch } : pic) }));
+  setPic({ drawing: 'pending' });
   try {
-    const character = readChatCharacters().find(item => item.archiveId === post.by);
-    const photo = 'moment_' + id;
-    await saveChatPhoto(photo, await generateChatPhoto(post.prompt, { name: String(character?.name || ''), appearance: String(character?.appearanceText || '') }));
-    patchPost(id, { photo, drawing: undefined });
-  } catch { patchPost(id, { drawing: 'failed' }); }
+    const post = findPost(id), character = readChatCharacters().find(item => item.archiveId === post?.by);
+    const photo = `moment_${id}_${index}`;
+    await saveChatPhoto(photo, await generateChatPhoto(prompt, { name: String(character?.name || ''), appearance: String(character?.appearanceText || '') }));
+    setPic({ photo, drawing: undefined });
+  } catch { setPic({ drawing: 'failed' }); }
 }
 
 /** 你发了一条：看得到的人陆续来看（最多五个）。 */
