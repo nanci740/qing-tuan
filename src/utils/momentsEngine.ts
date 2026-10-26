@@ -3,6 +3,8 @@ import { isGroup } from './chatGroups';
 import { contactName, isBlocked, isBlockedBy, isDeleted } from './contactsStorage';
 import { ask, personaOf, recentChat } from './friendRequests';
 import { readMe } from './meStorage';
+import { extractChatAiReply } from './chatReplyParser';
+import type { ApiService } from '../types/api';
 import { chatPhotoLook, chatPhotoReady, generateChatPhoto } from './chatPhoto';
 import { saveChatPhoto } from './chatPhotoStore';
 import { addComment, addPost, canSee, findPost, patchPost, queueTask, readMoments, toggleLike, updateMoments } from './momentsStorage';
@@ -166,3 +168,13 @@ export function momentsMemory(chatKey: string) {
   return `你们最近的朋友圈（你记得这些，可以自然地提起，但不用刻意提，也不要照抄这个格式）：\n${[...his, ...mine].sort((a, b) => a.at - b.at).map(post => describePost(post, chatKey)).join('\n')}`;
 }
 export { nameOf as momentName };
+
+/** 翻译：人设是外国人的会发别的语言，翻成简体中文给你看。 */
+export async function translateMoment(source: string) {
+  const service = (window as Window & { smallphoneApi?: ApiService }).smallphoneApi, config = service?.getConfig?.();
+  if (!service?.requestChat || !config?.baseUrl || !config?.apiKey) throw new Error('先在设置里接好 API');
+  const data = await service.requestChat([{ role: 'system', content: 'Translate the user text into Simplified Chinese (zh-CN). Return only the translation without commentary.' }, { role: 'user', content: source }], { temperature: .2 });
+  const translated = String(extractChatAiReply(data) || '').trim();
+  if (!translated) throw new Error('接口没有返回译文');
+  return translated;
+}

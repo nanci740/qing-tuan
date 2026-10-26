@@ -1,8 +1,8 @@
 /* 聊天 App「Discover」：整页是朋友圈。一张卡片，上面封面（斜纹浅底或你换的图，你的名字和头像压在右下角，右上角的笔是发动态），
-   签名，置顶（有才出现，下面一道不贴边的实线），一条条动态之间也是不贴边的实线，线跟内容之间留宽一点。颜色跟主题色走。 */
+   签名，置顶（有才出现，下面一道不贴边的实线），一条条动态之间也是不贴边的实线，线跟内容之间留宽一点；分隔线都用淡一点的 --moment-line。颜色跟主题色走。 */
 #chatListView .chat-moments-page { flex: 1 1 auto; min-height: 0; display: flex; padding: 14px 0 0; box-sizing: border-box; }
 #chatListView .chat-moments-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
-.chat-moments { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.chat-moments { --moment-line: color-mix(in srgb, var(--win-line) 40%, var(--color-surface)); position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .chat-moments-card { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); box-shadow: var(--chat-raised); }
 
 .chat-moments-cover { position: relative; height: 132px; margin-bottom: 20px; border-bottom: 1px solid var(--win-line); background: linear-gradient(170deg, color-mix(in srgb, var(--theme-color) 55%, #fff), var(--theme-color)); }
@@ -16,7 +16,7 @@
 .chat-moments-sign { min-height: 6px; margin: 0; padding: 0 12px 6px; color: var(--color-muted); font-size: 10px; text-align: right; }
 
 /* 置顶：左边「置顶」两个字，右边最多三格（照片，或文字的开头） */
-.chat-moments-pinned { display: flex; gap: 10px; margin: 0 12px; padding: 4px 0 13px; border-bottom: 1px solid var(--win-line); }
+.chat-moments-pinned { display: flex; gap: 10px; margin: 0 12px; padding: 4px 0 13px; border-bottom: 1px solid var(--moment-line); }
 .chat-moments-pinned > span { flex: none; width: 32px; color: var(--win-ink); font-size: 12px; font-weight: 700; }
 .chat-moments-pinned > div { display: flex; gap: 4px; min-width: 0; }
 #chatListView .chat-moments-pinned button { width: 56px; height: 56px; padding: 4px; overflow: hidden; border: 1px solid var(--win-line); background: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface)); color: var(--color-text); font-size: 9.5px; line-height: 1.35; text-align: left; }
@@ -24,7 +24,7 @@
 .chat-moments-pinned button span { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 
 .chat-moment { display: flex; gap: 8px; margin: 0 12px; padding: 12px 0 11px; }
-.chat-moment + .chat-moment { border-top: 1px solid var(--win-line); }
+.chat-moment + .chat-moment { border-top: 1px solid var(--moment-line); }
 .chat-moment-avatar { flex: none; width: 32px; height: 32px; box-sizing: border-box; border: 1px solid var(--win-line); border-radius: 3px; object-fit: cover; }
 .chat-moment-body { flex: 1; min-width: 0; color: var(--color-text); font-size: 12px; line-height: 1.45; }
 .chat-moment-name { display: block; margin-bottom: 1px; color: var(--win-ink); font-size: 12px; }
@@ -47,7 +47,7 @@
 .chat-moment-box { position: relative; margin-top: 5px; padding: 3px 6px; border: 1px solid var(--win-line); background: color-mix(in srgb, var(--theme-color) 28%, var(--color-surface)); font-size: 11px; line-height: 1.5; }
 .chat-moment-box::before { content: ''; position: absolute; left: 8px; top: -5px; width: 7px; height: 7px; border-left: 1px solid var(--win-line); border-top: 1px solid var(--win-line); background: inherit; transform: rotate(45deg); }
 .chat-moment-likes { color: var(--win-ink); }
-.chat-moment-likes:not(:last-child) { margin-bottom: 2px; padding-bottom: 2px; border-bottom: 1px solid var(--win-line); }
+.chat-moment-likes:not(:last-child) { margin-bottom: 2px; padding-bottom: 2px; border-bottom: 1px solid var(--moment-line); }
 #chatListView .chat-moment-comment { display: block; width: 100%; padding: 0; border: 0; background: none; color: var(--color-text); font-size: 11px; line-height: 1.5; text-align: left; overflow-wrap: anywhere; }
 .chat-moment-comment i { font-style: normal; font-weight: 700; color: var(--win-ink); }
 .chat-moments-empty { margin: 24px 16px; color: var(--color-muted); font-size: 11px; line-height: 1.7; text-align: center; }
@@ -89,3 +89,7 @@
 .chat-moments-pop button:active { background: var(--theme-color); }
 .chat-moments-pop button.is-danger { color: var(--color-danger-ink); }
 .chat-moments-pop-mask { background: transparent !important; }
+
+/* 翻译：原文下面一行淡色的中文，前面一道细线 */
+.chat-moment-trans { display: block; margin-top: 2px; padding-left: 6px; border-left: 2px solid var(--moment-line); color: var(--color-muted); font-size: 11px; line-height: 1.45; white-space: pre-wrap; }
+.chat-moment-text { -webkit-user-select: none; user-select: none; }
