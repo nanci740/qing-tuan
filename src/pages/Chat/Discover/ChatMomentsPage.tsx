@@ -11,15 +11,15 @@ import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
 import { prepareImage } from '../../../utils/imageAssets';
 import { readMe, subscribeMe } from '../../../utils/meStorage';
 import { showToast } from '../../../utils/toast';
-import { addComment, addPost, patchComment, hasNewMoments, momentId, patchPost, readMoments, removeComment, removePost, subscribeMoments, toggleLike, updateMoments } from '../../../utils/momentsStorage';
-import type { MomentComment, MomentPost } from '../../../utils/momentsStorage';
+import { addComment, addPost, patchComment, hasNewMoments, unreadNotes, momentId, patchPost, readMoments, removeComment, removePost, subscribeMoments, toggleLike, updateMoments } from '../../../utils/momentsStorage';
+import type { MomentComment, MomentPic, MomentPost } from '../../../utils/momentsStorage';
 import type { MessageSticker } from '../../../types/chatMessages';
 import { pickSticker } from '../../../components/shared/ChatStickerPicker';
 import { stickerImageUrl } from '../../../utils/stickerStorage';
 import { afterMyComment, afterMyPost, drawMomentPhoto, translateMoment, momentName, momentPeople, momentsTick } from '../../../utils/momentsEngine';
 
 type Bridge = Window & { smallphoneOpenChatApp?: () => void };
-interface Draft { text: string; photo: string; mode: 'all' | 'only' | 'except'; keys: string[] }
+interface Draft { text: string; photos: string[]; place: string; mode: 'all' | 'only' | 'except'; keys: string[] }
 const errorText = (error: unknown) => String((error as Error)?.message || error).slice(0, 60);
 /** 几分钟前、几小时前、昨天、几月几号。 */
 function ago(at: number) {
@@ -36,6 +36,7 @@ export function ChatMomentsPage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null), refs = useNativeRefs(), avatar = useProfileAvatar();
   const moments = useSyncExternalStore(subscribeMoments, readMoments), me = useSyncExternalStore(subscribeMe, readMe);
   const [menu, setMenu] = useState(''), [typing, setTyping] = useState<{ post: string; to?: string; text: string; sticker?: MessageSticker; image?: string } | null>(null);
+  const [notesOpen, setNotesOpen] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null), [viewing, setViewing] = useState(''), [busy, setBusy] = useState(false);
   const [pop, setPop] = useState<{ post: MomentPost; comment: MomentComment | null; x: number; y: number } | null>(null), commentFile = useRef<HTMLInputElement>(null);
   const cover = useRef<HTMLInputElement>(null), photo = useRef<HTMLInputElement>(null), list = useRef<HTMLDivElement>(null), ticking = useRef(false);
@@ -59,14 +60,19 @@ export function ChatMomentsPage() {
     box.className = 'chat-moments-page';
     view.insertBefore(box, nav);
     setHost(box);
-    return () => { box.remove(); if (view.getAttribute('data-chat-tab') === 'discover') view.removeAttribute('data-chat-tab'); setMenu(''); setTyping(null); };
+    return () => { box.remove(); if (view.getAttribute('data-chat-tab') === 'discover') view.removeAttribute('data-chat-tab'); setMenu(''); setTyping(null); setNotesOpen(false); };
   }, [open]);
-  // 看着朋友圈就算看过了；没在看、别人又发了新的，底栏 Discover 亮红点
+  // 看着朋友圈就算看过了；打开新消息就算新消息看过了。
+  // 底栏 Discover：有没看过的新消息写几条（白字红底），没有的话，没在看、别人又发了新的就亮红点
   useEffect(() => {
     if (open && moments.posts.some(post => post.by !== 'me' && post.at > moments.seen)) updateMoments({ seen: Date.now() });
+    if (open && notesOpen && moments.notes.some(item => item.at > moments.notesSeen)) updateMoments({ notesSeen: Date.now() });
     const item = refs?.get('chatListView')?.querySelector('.chat-subnav-item[aria-label="Discover"]');
-    if (item) item.toggleAttribute('data-dot', !open && hasNewMoments());
-  }, [open, moments, refs]);
+    if (!item) return;
+    const unread = unreadNotes();
+    if (unread) item.setAttribute('data-badge', String(unread)); else item.removeAttribute('data-badge');
+    item.toggleAttribute('data-dot', !unread && !open && hasNewMoments());
+  }, [open, notesOpen, moments, refs]);
   useEffect(() => {
     if (!menu) return;
     const close = () => setMenu('');
@@ -83,19 +89,25 @@ export function ChatMomentsPage() {
     try { const id = 'moments_cover'; await saveChatPhoto(id, await prepareImage(file, 1280, .84)); updateMoments({ cover: id + '#' + Date.now().toString(36) }); }
     catch (error) { showToast(errorText(error)); }
   }
-  async function pickPhoto(file?: File) {
-    if (!draft || !file) return;
-    try { setDraft({ ...draft, photo: await prepareImage(file, 1280, .84) }); } catch (error) { showToast(errorText(error)); }
+  // 发动态的照片：一次可以选好几张，最多九张
+  async function pickPhotos(files: File[]) {
+    if (!draft || !files.length) return;
+    try {
+      const room = 9 - draft.photos.length, picked = await Promise.all(files.slice(0, room).map(file => prepareImage(file, 1280, .84)));
+      if (files.length > room) showToast('最多九张');
+      setDraft(current => current && { ...current, photos: [...current.photos, ...picked].slice(0, 9) });
+    } catch (error) { showToast(errorText(error)); }
   }
   async function publish() {
     if (!draft || busy) return;
-    if (!draft.text.trim() && !draft.photo) { showToast('写点什么，或放一张照片'); return; }
+    if (!draft.text.trim() && !draft.photos.length) { showToast('写点什么，或放一张照片'); return; }
     if (draft.mode !== 'all' && !draft.keys.length) { showToast(draft.mode === 'only' ? '选几个人看' : '选不给谁看'); return; }
     setBusy(true);
     try {
-      const id = momentId('mo'), image = draft.photo ? 'moment_' + id : '';
-      if (draft.photo) await saveChatPhoto(image, draft.photo);
-      const post = addPost({ id, by: 'me', text: draft.text.trim().slice(0, 1000), at: Date.now(), see: { mode: draft.mode, keys: draft.keys }, ...(image ? { photo: image } : {}) });
+      const id = momentId('mo'), pics = draft.photos.map((_, index) => ({ photo: `moment_${id}_${index}` }));
+      await Promise.all(draft.photos.map((image, index) => saveChatPhoto(pics[index].photo, image)));
+      const place = draft.place.trim().slice(0, 40);
+      const post = addPost({ id, by: 'me', text: draft.text.trim().slice(0, 1000), at: Date.now(), pics, ...(place ? { place } : {}), see: { mode: draft.mode, keys: draft.keys } });
       afterMyPost(post); setDraft(null); list.current?.scrollTo({ top: 0 });
     } catch (error) { showToast(errorText(error)); } finally { setBusy(false); }
   }
@@ -138,7 +150,16 @@ export function ChatMomentsPage() {
   }
 
   const card = (post: MomentPost) => {
-    const mine = post.by === 'me', liked = post.likes.includes('me'), url = post.photo ? chatPhotoUrl(post.photo.split('#')[0]) : '';
+    const mine = post.by === 'me', liked = post.likes.includes('me');
+    // 一张照片：照原本比例放大一点；好几张：三张一排的方格，刚好四张排成两排两张；没画出来的照片是一格文字卡
+    const pic = (item: MomentPic, index: number, single: boolean) => {
+      const url = item.photo ? chatPhotoUrl(item.photo) : '';
+      if (url) return <button type="button" key={index} className={'chat-moment-photo' + (single ? '' : ' is-cell')} onClick={() => setViewing(url)}><img alt={item.caption || '照片'} src={url} /></button>;
+      return <div key={index} className={'chat-moment-photo is-text' + (single ? '' : ' is-cell')}>
+        <span>［照片］{item.caption}</span>
+        {item.drawing === 'pending' ? <small>画照片中…</small> : item.drawing === 'failed' ? <button type="button" onClick={() => void drawMomentPhoto(post.id, index)}>没画出来，再画一次</button> : null}
+      </div>;
+    };
     return <article className="chat-moment" key={post.id} data-moment={post.id}>
       <img className="chat-moment-avatar" alt="" src={photoOf(post.by)} />
       <div className="chat-moment-body">
@@ -146,11 +167,9 @@ export function ChatMomentsPage() {
         {post.text ? <p className="chat-moment-text" onPointerDown={event => holdComment(event, post, null)} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
           onContextMenu={event => event.preventDefault()}>{post.text}</p> : null}
         {post.translation ? <p className="chat-moment-trans">[译] {post.translation}</p> : null}
-        {url ? <button type="button" className="chat-moment-photo" onClick={() => setViewing(url)}><img alt={post.caption || '照片'} src={url} /></button>
-          : post.caption ? <div className="chat-moment-photo is-text">
-            <span>［照片］{post.caption}</span>
-            {post.drawing === 'pending' ? <small>画照片中…</small> : post.drawing === 'failed' ? <button type="button" onClick={() => void drawMomentPhoto(post.id)}>没画出来，再画一次</button> : null}
-          </div> : null}
+        {post.pics.length === 1 ? pic(post.pics[0], 0, true)
+          : post.pics.length ? <div className={'chat-moment-grid' + (post.pics.length === 4 ? ' is-four' : '')}>{post.pics.map((item, index) => pic(item, index, false))}</div> : null}
+        {post.place ? <span className="chat-moment-place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>{post.place}</span> : null}
         <div className="chat-moment-meta">
           <span>{ago(post.at)}</span>
           {mine && post.see.mode !== 'all' ? <span title={post.see.mode === 'only' ? '部分可见' : '不给谁看'}>{post.see.mode === 'only' ? '部分可见' : '部分不可见'}</span> : null}
@@ -183,21 +202,43 @@ export function ChatMomentsPage() {
   return <>
     {open && host ? createPortal(<section className="chat-moments" aria-label="朋友圈">
       <div className="chat-moments-card" ref={list}>
+        {notesOpen ? <>
+          <div className="chat-moments-notes-top">
+            <button type="button" className="chat-moments-back" onClick={() => setNotesOpen(false)}>‹ 新消息</button>
+            {moments.notes.length ? <button type="button" className="chat-moments-clear" onClick={() => updateMoments({ notes: [] })}>清空</button> : null}
+          </div>
+          {moments.notes.slice().reverse().map(item => {
+            const post = moments.posts.find(one => one.id === item.post), comment = post?.comments.find(one => one.id === item.comment);
+            if (!post || item.kind === 'comment' && !comment) return null;
+            const thumb = post.pics[0]?.photo ? chatPhotoUrl(post.pics[0].photo) : '';
+            return <button type="button" className="chat-moments-note" key={item.id} onClick={() => { setNotesOpen(false); setTimeout(() => list.current?.querySelector(`[data-moment="${post.id}"]`)?.scrollIntoView({ block: 'start' }), 0); }}>
+              <img className="chat-moment-avatar" alt="" src={photoOf(item.by)} />
+              <span className="chat-moments-note-body"><b>{momentName(item.by)}</b>
+                <span>{item.kind === 'like' ? '♡' : <>{comment!.to === 'me' && post.by !== 'me' ? '回复你：' : ''}{comment!.text}{comment!.sticker ? '［表情］' : ''}{comment!.photo ? '［图片］' : ''}</>}</span>
+                <small>{ago(item.at)}</small></span>
+              <span className="chat-moments-note-thumb">{thumb ? <img alt="" src={thumb} /> : post.text}</span>
+            </button>;
+          })}
+          {!moments.notes.length ? <p className="chat-moments-empty">没有新消息。</p> : null}
+        </> : <>
         <div className="chat-moments-cover">
           <button type="button" className="chat-moments-cover-pic" aria-label="换封面" onClick={() => cover.current?.click()}>{coverUrl ? <img alt="" src={coverUrl} /> : <small>MOMENTS · 点一下换封面</small>}</button>
-          <button type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photo: '', mode: 'all', keys: [] })}>＋</button>
+          <button type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photos: [], place: '', mode: 'all', keys: [] })}>＋</button>
           <span className="chat-moments-me"><b>{me.name || '我'}</b><img alt="" src={avatar.api.sidebarAvatar()} /></span>
           <input ref={cover} type="file" accept="image/*" hidden onChange={event => { void changeCover(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         </div>
         <p className="chat-moments-sign">{me.signature}</p>
+        {unreadNotes() ? (() => { const last = moments.notes[moments.notes.length - 1]; return <button type="button" className="chat-moments-pill" onClick={() => setNotesOpen(true)}>
+          <img alt="" src={photoOf(last.by)} />{unreadNotes()} 条新消息</button>; })() : null}
         {pinned.length ? <div className="chat-moments-pinned">
           <span>置顶</span>
           <div>{pinned.slice(0, 3).map(post => <button type="button" key={post.id} onClick={() => list.current?.querySelector(`[data-moment="${post.id}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' })}>
-            {post.photo ? <img alt="" src={chatPhotoUrl(post.photo)} /> : <span>{post.text}</span>}
+            {post.pics[0]?.photo ? <img alt="" src={chatPhotoUrl(post.pics[0].photo)} /> : <span>{post.text}</span>}
           </button>)}</div>
         </div> : null}
         {posts.map(card)}
         {!posts.length ? <p className="chat-moments-empty">还没有动态。点右上角的 ＋ 发第一条；他们也会照「我 → 设置」里的频率发。</p> : null}
+        </>}
       </div>
       {typing ? <div className="chat-moments-reply">
         {typing.sticker || typing.image ? <div className="chat-moments-attach"><span>
@@ -233,10 +274,13 @@ export function ChatMomentsPage() {
         <div className="sp-confirm-body chat-me-form chat-moments-form">
           <textarea rows={4} maxLength={1000} placeholder="这一刻的想法…" autoFocus value={draft.text} onChange={event => setDraft({ ...draft, text: event.currentTarget.value })} />
           <div className="chat-moments-addphoto">
-            {draft.photo ? <><img alt="" src={draft.photo} /><button type="button" onClick={() => setDraft({ ...draft, photo: '' })}>拿掉</button></>
-              : <button type="button" className="chat-moments-plus" onClick={() => photo.current?.click()}>＋<small>照片</small></button>}
-            <input ref={photo} type="file" accept="image/*" hidden onChange={event => { void pickPhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
+            {draft.photos.map((image, index) => <span key={index}><img alt="" src={image} />
+              <button type="button" aria-label="拿掉这张" onClick={() => setDraft({ ...draft, photos: draft.photos.filter((_, at) => at !== index) })} /></span>)}
+            {draft.photos.length < 9 ? <button type="button" className="chat-moments-plus" onClick={() => photo.current?.click()}>＋<small>照片</small></button> : null}
+            <input ref={photo} type="file" accept="image/*" multiple hidden onChange={event => { void pickPhotos(Array.from(event.currentTarget.files || [])); event.currentTarget.value = ''; }} />
           </div>
+          <label htmlFor="momentPlace">所在位置<small>可以不写</small></label>
+          <input id="momentPlace" maxLength={40} placeholder="例如：厦门 · 曾厝垵" value={draft.place} onChange={event => setDraft({ ...draft, place: event.currentTarget.value })} />
           <label>谁可以看<small>拉黑和删掉的人本来就看不到</small></label>
           <span className="chat-moments-choices" role="radiogroup">
             {([['all', '所有人'], ['only', '选人看'], ['except', '不给谁看']] as const).map(([mode, label]) => <button type="button" role="radio" key={mode} aria-checked={draft.mode === mode} onClick={() => setDraft({ ...draft, mode })}>{label}</button>)}
