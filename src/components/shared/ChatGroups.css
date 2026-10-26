@@ -4,6 +4,7 @@
 .chat-add-menu button:last-child { border-bottom: 0; }
 .chat-add-menu button:active { background: var(--theme-color); }
 .chat-add-menu span { width: 14px; color: var(--win-ink); text-align: center; }
+.chat-add-menu span svg { width: 14px; height: 14px; display: block; }
 
 /* 群里打 @：输入框上面一张成员名单 */
 .chat-mention { position: fixed; z-index: 1200; width: 180px; max-height: 240px; overflow-y: auto; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: 2px 2px 0 color-mix(in srgb, var(--win-line) 60%, transparent); }

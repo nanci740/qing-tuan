@@ -31,7 +31,7 @@ function ago(at: number) {
   return days === 1 ? `昨天 ${time}` : `${date.getMonth() + 1}月${date.getDate()}日 ${time}`;
 }
 
-/** 聊天 App 底下的「Discover」：整页就是朋友圈——封面（你的名字、头像、签名，右上角的笔是发动态），你的置顶，下面一条条动态（赞、评论、回复）。 */
+/** 聊天 App 底下的「Discover」：整页就是朋友圈——封面（你的名字、头像、签名，右上角的 ＋ 是发动态），你的置顶，下面一条条动态（赞、评论、回复）。 */
 export function ChatMomentsPage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null), refs = useNativeRefs(), avatar = useProfileAvatar();
   const moments = useSyncExternalStore(subscribeMoments, readMoments), me = useSyncExternalStore(subscribeMe, readMe);
@@ -185,7 +185,7 @@ export function ChatMomentsPage() {
       <div className="chat-moments-card" ref={list}>
         <div className="chat-moments-cover">
           <button type="button" className="chat-moments-cover-pic" aria-label="换封面" onClick={() => cover.current?.click()}>{coverUrl ? <img alt="" src={coverUrl} /> : <small>MOMENTS · 点一下换封面</small>}</button>
-          <button type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photo: '', mode: 'all', keys: [] })}>✎</button>
+          <button type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photo: '', mode: 'all', keys: [] })}>＋</button>
           <span className="chat-moments-me"><b>{me.name || '我'}</b><img alt="" src={avatar.api.sidebarAvatar()} /></span>
           <input ref={cover} type="file" accept="image/*" hidden onChange={event => { void changeCover(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         </div>
@@ -197,7 +197,7 @@ export function ChatMomentsPage() {
           </button>)}</div>
         </div> : null}
         {posts.map(card)}
-        {!posts.length ? <p className="chat-moments-empty">还没有动态。点右上角的笔发第一条；他们也会照「我 → 设置」里的频率发。</p> : null}
+        {!posts.length ? <p className="chat-moments-empty">还没有动态。点右上角的 ＋ 发第一条；他们也会照「我 → 设置」里的频率发。</p> : null}
       </div>
       {typing ? <div className="chat-moments-reply">
         {typing.sticker || typing.image ? <div className="chat-moments-attach"><span>
@@ -206,8 +206,8 @@ export function ChatMomentsPage() {
         </span></div> : null}
         <input autoFocus maxLength={300} placeholder={typing.to ? `回复 ${momentName(typing.to)}` : '评论'} value={typing.text}
           onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) void sendComment(); if (event.key === 'Escape') setTyping(null); }} />
-        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => setTyping(current => current && { ...current, sticker, image: undefined }))}>☺</button>
-        <button type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}>▣</button>
+        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => setTyping(current => current && { ...current, sticker, image: undefined }))}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></svg></button>
+        <button type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg></button>
         <input ref={commentFile} type="file" accept="image/*" hidden onChange={event => { void commentPhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         <button type="button" onClick={() => setTyping(null)}>取消</button>
         <button type="button" className="is-primary" onClick={() => void sendComment()}>发送</button>

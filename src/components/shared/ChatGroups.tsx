@@ -97,7 +97,7 @@ export function ChatGroups() {
   return <>
     {menu ? createPortal(<div className="chat-add-menu" role="menu" style={{ top: menu.top, right: menu.right }} onPointerDown={event => event.stopPropagation()}>
       <button type="button" role="menuitem" onClick={() => { setMenu(null); (window as Bridge).smallphoneOpenCharacterCard?.(); }}><span aria-hidden="true">＋</span>新增角色</button>
-      <button type="button" role="menuitem" onClick={() => { setMenu(null); setDraft({ id: 'new', name: '', photo: '', members: [], notice: '', nick: '', know: true }); }}><span aria-hidden="true">⁂</span>发起群聊</button>
+      <button type="button" role="menuitem" onClick={() => { setMenu(null); setDraft({ id: 'new', name: '', photo: '', members: [], notice: '', nick: '', know: true }); }}><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1" /><path d="M19 10h1a2 2 0 012 2v1" /><path d="M5 10H4a2 2 0 00-2 2v1" /><circle cx="12" cy="11" r="3" /><circle cx="18" cy="4" r="2" /><circle cx="6" cy="4" r="2" /></svg></span>发起群聊</button>
     </div>, document.body) : null}
 
     {mention && group && (options.length || !mention.query) ? createPortal(<div className="chat-mention" role="listbox" aria-label="提醒谁看" style={{ left: mention.left, bottom: mention.bottom }} onPointerDown={event => event.preventDefault()}>
