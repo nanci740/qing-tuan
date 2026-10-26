@@ -5,7 +5,7 @@ import { kv } from './kvStorage';
       prompt 是他写的画面描述（还没画、画失败可以再画）；see 谁看得到（all 所有人、only 只给这些人、except 不给这些人）；
       likes 谁点了赞，comments 评论（to 是回复谁），pinned 你的置顶；
     rate 他们多久发一条（off 关、some 偶尔、often 常常），next 每个人下一次发的时间；
-    queue 之后要做的事：react 看到一条动态（点赞、评论），reply 有人在评论里跟他说话，到了 at 才做；
+    queue 之后要做的事：react 看到你的动态（点赞、评论），reply 有人在评论里跟他说话，crowd 他认识的人（模型随机生成，key 是 npc:名字）来他的动态底下点赞、留言，到了 at 才做；
     cover 封面（照片库编号），seen 你上一次看朋友圈的时间（之后有新的，底栏 Discover 亮红点）。 */
 export type MomentRate = 'off' | 'some' | 'often';
 export interface MomentComment { id: string; by: string; text: string; at: number; to?: string }
@@ -15,7 +15,7 @@ export interface MomentPost {
   see: { mode: 'all' | 'only' | 'except'; keys: string[] };
   likes: string[]; comments: MomentComment[]; pinned?: boolean;
 }
-export interface MomentTask { id: string; kind: 'react' | 'reply'; post: string; who: string; at: number; comment?: string }
+export interface MomentTask { id: string; kind: 'react' | 'reply' | 'crowd'; post: string; who: string; at: number; comment?: string }
 interface Moments { posts: MomentPost[]; rate: MomentRate; next: Record<string, number>; queue: MomentTask[]; cover: string; seen: number }
 const KEY = 'qingtuan_moments_v1', EVENT = 'qingtuan:moments-changed';
 let cache: Moments | null = null;
@@ -35,7 +35,7 @@ function clean(value: unknown): Moments {
       ...(item.pinned ? { pinned: true } : {}) }];
   }).slice(-200);
   const next = row.next && typeof row.next === 'object' ? Object.fromEntries(Object.entries(row.next as Record<string, unknown>).map(([key, at]) => [key, Number(at) || 0])) : {};
-  const queue = list(row.queue).flatMap((item): MomentTask[] => item?.id && item.post && item.who && (item.kind === 'react' || item.kind === 'reply')
+  const queue = list(row.queue).flatMap((item): MomentTask[] => item?.id && item.post && item.who && (item.kind === 'react' || item.kind === 'reply' || item.kind === 'crowd')
     ? [{ id: String(item.id), kind: item.kind, post: String(item.post), who: String(item.who), at: Number(item.at) || 0, ...(item.comment ? { comment: String(item.comment) } : {}) }] : []).slice(-100);
   return { posts, rate: row.rate === 'off' || row.rate === 'often' ? row.rate : 'some', next, queue, cover: text(row.cover, 100), seen: Number(row.seen) || 0 };
 }

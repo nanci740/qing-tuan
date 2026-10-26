@@ -19,21 +19,20 @@ const yes = (value: unknown) => value === true || value === 'true';
 export function momentPeople() {
   return readChatCharacters().filter(item => !isGroup(item) && !isBlocked(item.archiveId) && !isBlockedBy(item.archiveId) && !isDeleted(item.archiveId));
 }
-const nameOf = (key: string) => key === 'me' ? (readMe().name || '我') : contactName(key, String(readChatCharacters().find(item => item.archiveId === key)?.name || ''));
+const npc = (key: string) => key.startsWith('npc:') ? key.slice(4) : '';
+const nameOf = (key: string) => key === 'me' ? (readMe().name || '我') : npc(key) || contactName(key, String(readChatCharacters().find(item => item.archiveId === key)?.name || ''));
 /** 给模型看的名字：你那边用你的名字，他们用本名（备注只有你看得到）。 */
-const realName = (key: string) => key === 'me' ? (readMe().name || '对方') : String(readChatCharacters().find(item => item.archiveId === key)?.name || '');
-/** 他认识谁：跟他在同一个群里的人（你永远认识）。 */
-function friendsOf(key: string) {
-  const groups = readChatCharacters().filter(item => isGroup(item) && item.group.members.includes(key));
-  return new Set(groups.flatMap(group => group.group?.members || []).filter(one => one !== key));
-}
-/** 一条动态写成给模型看的样子：谁发的、什么时候、写了什么、照片、赞和评论（only 只留这些人的评论）。 */
+const realName = (key: string) => key === 'me' ? (readMe().name || '对方') : npc(key) || String(readChatCharacters().find(item => item.archiveId === key)?.name || '');
+/** 一条动态写成给模型看的样子：谁发的、什么时候、写了什么、照片、赞和评论。
+    跟微信一样，不是自己发的就只看得到自己、发的人的赞和评论（还有回复自己的）；角色之间互相不认识。 */
 export function describePost(post: MomentPost, viewer: string) {
+  const sees = (by: string, to?: string) => viewer === post.by || by === viewer || by === post.by || to === viewer;
   const when = new Date(post.at), stamp = `${when.getMonth() + 1}月${when.getDate()}日 ${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
   const who = (key: string) => key === viewer ? '你' : realName(key);
   const lines = [`${who(post.by)}（${stamp}）：${post.text || ''}${post.caption ? `［照片：${post.caption}］` : ''}`];
-  if (post.likes.length) lines.push(`  赞：${post.likes.map(who).join('、')}`);
-  for (const comment of post.comments) lines.push(`  ${who(comment.by)}${comment.to ? ` 回复 ${who(comment.to)}` : ''}：${comment.text}`);
+  const likes = post.likes.filter(key => sees(key));
+  if (likes.length) lines.push(`  赞：${likes.map(who).join('、')}`);
+  for (const comment of post.comments.filter(one => sees(one.by, one.to))) lines.push(`  ${who(comment.by)}${comment.to ? ` 回复 ${who(comment.to)}` : ''}：${comment.text}`);
   return lines.join('\n');
 }
 
@@ -53,8 +52,8 @@ async function writePost(key: string) {
   if (!text && !caption) return null;
   const post = addPost({ by: key, text, at: Date.now(), see: { mode: 'all', keys: [] }, ...(caption ? { caption, prompt, ...(chatPhotoReady() ? { drawing: 'pending' as const } : {}) } : {}) });
   if (post.drawing) void drawMomentPhoto(post.id);
-  // 认识他的人陆续看到
-  for (const friend of [...friendsOf(key)].filter(one => momentPeople().some(item => item.archiveId === one)).slice(0, 3)) queueTask({ kind: 'react', post: post.id, who: friend, at: Date.now() + between(5, 60) * MINUTE });
+  // 他自己认识的人（同事、朋友、家人……）陆续来看
+  queueTask({ kind: 'crowd', post: post.id, who: key, at: Date.now() + between(5, 60) * MINUTE });
   return post;
 }
 /** 他照片的画面描述画成图，存进照片库。 */
@@ -78,7 +77,7 @@ export function afterMyPost(post: MomentPost) {
 /** 你留了言：在他的动态底下就是他回你；你回复了谁，就是那个人回你。 */
 export function afterMyComment(postId: string, commentId: string, to?: string) {
   const post = findPost(postId), who = to && to !== 'me' ? to : post && post.by !== 'me' ? post.by : '';
-  if (who && momentPeople().some(item => item.archiveId === who)) queueTask({ kind: 'reply', post: postId, who, comment: commentId, at: Date.now() + between(1, 8) * MINUTE });
+  if (who && post && momentPeople().some(item => item.archiveId === (npc(who) ? post.by : who))) queueTask({ kind: 'reply', post: postId, who, comment: commentId, at: Date.now() + between(1, 8) * MINUTE });
 }
 
 /** 他看到一条动态：点不点赞、留不留言。 */
@@ -93,16 +92,36 @@ async function react(who: string, post: MomentPost) {
   ].filter(Boolean).join('\n'));
   if (yes(data.like)) toggleLike(post.id, who, true);
   const said = str(data.comment, 200);
-  if (!said) return;
-  const comment = addComment(post.id, { by: who, text: said });
-  // 在别人（不是你）的动态底下留言：发的人可能会回
-  if (post.by !== 'me' && post.by !== who && Math.random() < .6) queueTask({ kind: 'reply', post: post.id, who: post.by, comment: comment.id, at: Date.now() + between(3, 40) * MINUTE });
+  if (said) addComment(post.id, { by: who, text: said });
+}
+/** 他的动态底下：他自己认识的人（模型照他的人设随机生成，常出现的人会沿用）来点赞、留言，他想回就回。 */
+async function crowd(who: string, post: MomentPost) {
+  const { lines } = personaOf(who), name = realName(who);
+  const known = [...new Set(readMoments().posts.filter(one => one.by === who).flatMap(one => [...one.likes, ...one.comments.map(comment => comment.by)]).map(npc).filter(Boolean))].slice(-8);
+  const data = await ask([...lines,
+    `你刚发了一条朋友圈：
+${describePost(post, who)}`,
+    known.length ? `你朋友圈里常出现的人：${known.join('、')}（可以沿用，也可以有新的人）。` : '',
+    `想一想你现实生活里认识的人（同事、朋友、家人、同学……照你的人设来，不是对方，也不是聊天软件里的其他角色）会不会来点赞、留言：0 到 4 个人，名字要像真人的微信昵称或你平常怎么备注他们；留言像真人，一句就好，不是每个人都留言。你想回谁就在 reply 写你的回复，不想回就空着。`,
+    '只输出一个 JSON：{"people":[{"name":"名字","like":true,"comment":"","reply":""}]}',
+  ].filter(Boolean).join('\n'));
+  for (const person of (Array.isArray(data.people) ? data.people as Record<string, unknown>[] : []).slice(0, 4)) {
+    const key = 'npc:' + str(person.name, 12).replace(/[:：]/g, '');
+    if (key === 'npc:' || key === 'npc:' + name) continue;
+    if (yes(person.like)) toggleLike(post.id, key, true);
+    const said = str(person.comment, 200), answer = str(person.reply, 200);
+    if (said) addComment(post.id, { by: key, text: said });
+    if (said && answer) addComment(post.id, { by: who, text: answer, to: key });
+  }
 }
 /** 有人在评论里跟他说话：他回一句（不想回可以不回）。 */
 async function reply(who: string, post: MomentPost, commentId: string) {
   const target = post.comments.find(comment => comment.id === commentId);
   if (!target) return;
-  const { lines } = personaOf(who), recent = target.by === 'me' ? recentChat(who) : '';
+  // 认识他的人（npc:名字）回你：照发动态那个人的人设，扮演他认识的那个人
+  const author = npc(who) ? personaOf(post.by) : null;
+  const lines = author ? [`你现在扮演「${npc(who)}」，是「${realName(post.by)}」现实生活里认识的人（不是${realName(post.by)}本人，跟对方也不熟）。以下是${realName(post.by)}的人设，让你知道他是什么样的人：\n${author.lines[0]}`] : personaOf(who).lines;
+  const recent = !author && target.by === 'me' ? recentChat(who) : '';
   const data = await ask([...lines,
     recent ? `你们最近的私聊：\n${recent}` : '',
     `朋友圈里的这一条：\n${describePost(post, who)}`,
@@ -132,8 +151,8 @@ export async function momentsTick(now = Date.now()) {
     if (tasks.length) updateMoments({ queue: readMoments().queue.filter(task => !tasks.some(one => one.id === task.id)) });
     for (const task of tasks) {
       const post = findPost(task.post);
-      if (!post || !people.some(item => item.archiveId === task.who) || !canSee(post, task.who)) continue;
-      try { if (task.kind === 'react') await react(task.who, post); else if (task.comment) await reply(task.who, post, task.comment); }
+      if (!post || !people.some(item => item.archiveId === (npc(task.who) ? post.by : task.who)) || !npc(task.who) && !canSee(post, task.who)) continue;
+      try { if (task.kind === 'react') await react(task.who, post); else if (task.kind === 'crowd') await crowd(task.who, post); else if (task.comment) await reply(task.who, post, task.comment); }
       catch { queueTask({ ...task, at: Date.now() + 10 * MINUTE }); }
     }
   } finally { busy = false; }
