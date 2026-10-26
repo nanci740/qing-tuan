@@ -3,12 +3,12 @@ import { kv } from './kvStorage';
 /** 朋友圈（key 是聊天的 archiveId，你自己是 'me'）：
     posts 一条条动态（新的在后面）：photo 是照片库里的编号（你上传的、他发的照片画好的都放照片库），caption 是照片说明，
       prompt 是他写的画面描述（还没画、画失败可以再画）；see 谁看得到（all 所有人、only 只给这些人、except 不给这些人）；
-      likes 谁点了赞，comments 评论（to 是回复谁），pinned 你的置顶；
+      likes 谁点了赞，comments 评论（to 是回复谁，可以带一张表情 sticker 或图片 photo），pinned 你的置顶；
     rate 他们多久发一条（off 关、some 偶尔、often 常常），next 每个人下一次发的时间；
     queue 之后要做的事：react 看到你的动态（点赞、评论），reply 有人在评论里跟他说话，crowd 他认识的人（模型随机生成，key 是 npc:名字）来他的动态底下点赞、留言，到了 at 才做；
     cover 封面（照片库编号），seen 你上一次看朋友圈的时间（之后有新的，底栏 Discover 亮红点）。 */
 export type MomentRate = 'off' | 'some' | 'often';
-export interface MomentComment { id: string; by: string; text: string; at: number; to?: string }
+export interface MomentComment { id: string; by: string; text: string; at: number; to?: string; sticker?: { tag: string; image: string }; photo?: string }
 export interface MomentPost {
   id: string; by: string; text: string; at: number;
   photo?: string; caption?: string; prompt?: string; drawing?: 'pending' | 'failed';
@@ -31,7 +31,10 @@ function clean(value: unknown): Moments {
       ...(item.drawing === 'pending' || item.drawing === 'failed' ? { drawing: item.drawing } : {}),
       see: { mode, keys: (Array.isArray(see?.keys) ? see.keys : []).map(String) },
       likes: [...new Set((Array.isArray(item.likes) ? item.likes : []).map(String))],
-      comments: list(item.comments).flatMap((one): MomentComment[] => one?.id && one.by && text(one.text, 300) ? [{ id: String(one.id), by: String(one.by), text: text(one.text, 300), at: Number(one.at) || 0, ...(one.to ? { to: String(one.to) } : {}) }] : []).slice(-60),
+      comments: list(item.comments).flatMap((one): MomentComment[] => {
+        const sticker = one?.sticker as Record<string, unknown> | undefined, image = sticker?.image ? { tag: text(sticker.tag, 20), image: String(sticker.image) } : null;
+        return one?.id && one.by && (text(one.text, 300) || image || one.photo) ? [{ id: String(one.id), by: String(one.by), text: text(one.text, 300), at: Number(one.at) || 0, ...(one.to ? { to: String(one.to) } : {}), ...(image ? { sticker: image } : {}), ...(one.photo ? { photo: String(one.photo) } : {}) }] : [];
+      }).slice(-60),
       ...(item.pinned ? { pinned: true } : {}) }];
   }).slice(-200);
   const next = row.next && typeof row.next === 'object' ? Object.fromEntries(Object.entries(row.next as Record<string, unknown>).map(([key, at]) => [key, Number(at) || 0])) : {};

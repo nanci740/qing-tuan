@@ -32,7 +32,7 @@ export function describePost(post: MomentPost, viewer: string) {
   const lines = [`${who(post.by)}（${stamp}）：${post.text || ''}${post.caption ? `［照片：${post.caption}］` : ''}`];
   const likes = post.likes.filter(key => sees(key));
   if (likes.length) lines.push(`  赞：${likes.map(who).join('、')}`);
-  for (const comment of post.comments.filter(one => sees(one.by, one.to))) lines.push(`  ${who(comment.by)}${comment.to ? ` 回复 ${who(comment.to)}` : ''}：${comment.text}`);
+  for (const comment of post.comments.filter(one => sees(one.by, one.to))) lines.push(`  ${who(comment.by)}${comment.to ? ` 回复 ${who(comment.to)}` : ''}：${comment.text}${comment.sticker ? `［表情：${comment.sticker.tag}］` : ''}${comment.photo ? '［图片］' : ''}`);
   return lines.join('\n');
 }
 
@@ -125,7 +125,7 @@ async function reply(who: string, post: MomentPost, commentId: string) {
   const data = await ask([...lines,
     recent ? `你们最近的私聊：\n${recent}` : '',
     `朋友圈里的这一条：\n${describePost(post, who)}`,
-    `${target.by === 'me' ? '对方' : realName(target.by)}在评论里对你说：「${target.text}」。照你的人设回一句（像真人在朋友圈回复，简短）；不想回就空着。`,
+    `${target.by === 'me' ? '对方' : realName(target.by)}在评论里对你说：「${target.text}${target.sticker ? `［表情：${target.sticker.tag}］` : ''}${target.photo ? '［图片］' : ''}」。照你的人设回一句（像真人在朋友圈回复，简短）；不想回就空着。`,
     '只输出一个 JSON：{"reply":"回复"}',
   ].filter(Boolean).join('\n'));
   const said = str(data.reply, 200);
