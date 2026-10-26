@@ -350,8 +350,9 @@
 /* @qingtuan-order:001786 */
 
 
+        /* 底栏是固定的，高度会再加上手机底下手势条那一截（safe-area），这里留的空也要跟着加，不然最下面的东西会被底栏挡住 */
         .chat-list-view {
-            padding-bottom: 68px;
+            padding-bottom: calc(68px + env(safe-area-inset-bottom));
         }
 
 /* @qingtuan-order:001787 */
