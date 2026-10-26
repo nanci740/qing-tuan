@@ -1,9 +1,10 @@
-/* 聊天 App「Discover」：整页是朋友圈。一张卡片，上面封面（斜纹浅底或你换的图，你的名字和头像压在右下角，右上角的 ＋ 是发动态），
+/* 聊天 App「Discover」：整页是朋友圈，不留边、不加外框。上面封面（斜纹浅底或你换的图，你的名字和头像压在右下角，右上角的 ＋ 是发动态），
    签名，置顶（有才出现，下面一道不贴边的实线），一条条动态之间也是不贴边的实线，线跟内容之间留宽一点；分隔线都用淡一点的 --moment-line。颜色跟主题色走。 */
-#chatListView .chat-moments-page { flex: 1 1 auto; min-height: 0; display: flex; padding: 14px 0 0; box-sizing: border-box; }
+/* 整页贴满：抵掉聊天列表左右 14px 的留白，往下接到底栏 */
+#chatListView .chat-moments-page { flex: 1 1 auto; min-height: 0; display: flex; margin: 0 -14px -26px; padding: 0; box-sizing: border-box; }
 #chatListView .chat-moments-page :where(button) { font: inherit; color: inherit; cursor: pointer; }
 .chat-moments { --moment-line: color-mix(in srgb, var(--win-line) 40%, var(--color-surface)); position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.chat-moments-card { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid var(--win-line); border-radius: 4px; background: var(--color-surface); box-shadow: var(--chat-raised); }
+.chat-moments-card { flex: 1; min-height: 0; overflow-y: auto; background: var(--color-surface); }
 
 .chat-moments-cover { position: relative; height: 132px; margin-bottom: 20px; border-bottom: 1px solid var(--win-line); background: linear-gradient(170deg, color-mix(in srgb, var(--theme-color) 55%, #fff), var(--theme-color)); }
 #chatListView .chat-moments-cover-pic { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; overflow: hidden; background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255, 255, 255, .25) 6px 7px); }
