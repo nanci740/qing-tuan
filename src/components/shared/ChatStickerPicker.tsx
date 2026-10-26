@@ -6,15 +6,19 @@ import { loadStickerImages, readStickers, stickerSrc, subscribeStickers } from '
 import type { MessageSticker } from '../../types/chatMessages';
 
 type Bridge = Window & { smallphoneSendChatSticker?: (sticker: MessageSticker) => void };
+/** 别的地方（例如朋友圈评论）也要挑表情：发 qingtuan:sticker-pick，挑好的交给 done。 */
+export function pickSticker(done: (sticker: MessageSticker) => void) { window.dispatchEvent(new CustomEvent('qingtuan:sticker-pick', { detail: done })); }
 
 /** 聊天输入框下面的「表情」：点开挑一张表情发出去。所有分组都能用（家机能不能用只管他那边）；上面一排分组，下面一排四张。 */
 export function ChatStickerPicker() {
   const groups = useSyncExternalStore(subscribeStickers, readStickers);
-  const [open, setOpen] = useState(false), [groupId, setGroupId] = useState(''), [, setLoaded] = useState(0);
+  const [open, setOpen] = useState(false), [groupId, setGroupId] = useState(''), [, setLoaded] = useState(0), [done, setDone] = useState<((sticker: MessageSticker) => void) | null>(null);
   useLayoutEffect(() => {
-    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'sticker') setOpen(true); };
+    const start = (event: Event) => { if ((event as CustomEvent<string>).detail === 'sticker') { setDone(null); setOpen(true); } };
+    const pick = (event: Event) => { const callback = (event as CustomEvent<(sticker: MessageSticker) => void>).detail; setDone(() => callback); setOpen(true); };
     window.addEventListener('qingtuan:chat-action', start);
-    return () => window.removeEventListener('qingtuan:chat-action', start);
+    window.addEventListener('qingtuan:sticker-pick', pick);
+    return () => { window.removeEventListener('qingtuan:chat-action', start); window.removeEventListener('qingtuan:sticker-pick', pick); };
   }, []);
   // 打开时把上传的表情读出来（开机读过的会直接有）
   useEffect(() => { if (open) loadStickerImages(groups).then(() => setLoaded(value => value + 1), () => setLoaded(value => value + 1)); }, [open, groups]);
@@ -23,6 +27,7 @@ export function ChatStickerPicker() {
   const current = filled.find(group => group.id === groupId) || filled[0];
   function send(tag: string, image: string) {
     setOpen(false);
+    if (done) { done({ tag, image }); setDone(null); return; }
     (window as Bridge).smallphoneSendChatSticker?.({ tag, image });
   }
   return createPortal(<div className="sp-confirm-overlay chat-sticker-picker" onClick={event => { if (event.target === event.currentTarget) setOpen(false); }}>

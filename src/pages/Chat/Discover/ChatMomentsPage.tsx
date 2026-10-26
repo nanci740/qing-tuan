@@ -12,7 +12,10 @@ import { prepareImage } from '../../../utils/imageAssets';
 import { readMe, subscribeMe } from '../../../utils/meStorage';
 import { showToast } from '../../../utils/toast';
 import { addComment, addPost, hasNewMoments, momentId, patchPost, readMoments, removeComment, removePost, subscribeMoments, toggleLike, updateMoments } from '../../../utils/momentsStorage';
-import type { MomentPost } from '../../../utils/momentsStorage';
+import type { MomentComment, MomentPost } from '../../../utils/momentsStorage';
+import type { MessageSticker } from '../../../types/chatMessages';
+import { pickSticker } from '../../../components/shared/ChatStickerPicker';
+import { stickerImageUrl } from '../../../utils/stickerStorage';
 import { afterMyComment, afterMyPost, drawMomentPhoto, momentName, momentPeople, momentsTick } from '../../../utils/momentsEngine';
 
 type Bridge = Window & { smallphoneOpenChatApp?: () => void };
@@ -34,6 +37,7 @@ export function ChatMomentsPage() {
   const moments = useSyncExternalStore(subscribeMoments, readMoments), me = useSyncExternalStore(subscribeMe, readMe);
   const [menu, setMenu] = useState(''), [typing, setTyping] = useState<{ post: string; to?: string; text: string } | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null), [viewing, setViewing] = useState(''), [busy, setBusy] = useState(false);
+  const [pop, setPop] = useState<{ post: MomentPost; comment: MomentComment; x: number; y: number } | null>(null), commentFile = useRef<HTMLInputElement>(null);
   const cover = useRef<HTMLInputElement>(null), photo = useRef<HTMLInputElement>(null), list = useRef<HTMLDivElement>(null), ticking = useRef(false);
   useLayoutEffect(() => {
     const onTab = (event: Event) => setOpen((event as CustomEvent<string>).detail === 'Discover');
@@ -95,17 +99,32 @@ export function ChatMomentsPage() {
       afterMyPost(post); setDraft(null); list.current?.scrollTo({ top: 0 });
     } catch (error) { showToast(errorText(error)); } finally { setBusy(false); }
   }
-  function sendComment() {
-    if (!typing?.text.trim()) return;
-    const comment = addComment(typing.post, { by: 'me', text: typing.text.trim().slice(0, 300), ...(typing.to ? { to: typing.to } : {}) });
+  /** 送出评论：打的字，可以再带一张表情或图片（带了就直接送，不用再按发送）。 */
+  function sendComment(extra: { sticker?: MessageSticker; photo?: string } = {}) {
+    if (!typing || !typing.text.trim() && !extra.sticker && !extra.photo) return;
+    const comment = addComment(typing.post, { by: 'me', text: typing.text.trim().slice(0, 300), ...(typing.to ? { to: typing.to } : {}), ...extra });
     afterMyComment(typing.post, comment.id, typing.to); setTyping(null);
+  }
+  async function commentPhoto(file?: File) {
+    if (!file) return;
+    try { const id = momentId('mcp'); await saveChatPhoto(id, await prepareImage(file, 1080, .84)); sendComment({ photo: id }); } catch (error) { showToast(errorText(error)); }
+  }
+  // 长按评论：手指旁边跳出复制、回复、删除（自己的评论，或在你自己的动态底下的都能删）
+  const press = useRef<number | null>(null);
+  function holdComment(event: React.PointerEvent, post: MomentPost, comment: MomentComment) {
+    const { clientX: x, clientY: y } = event;
+    press.current = window.setTimeout(() => { press.current = -1; setPop({ post, comment, x: Math.min(x, innerWidth - 110), y: Math.min(y, innerHeight - 130) }); }, 480);
+  }
+  function release() { if (press.current && press.current > 0) clearTimeout(press.current); }
+  function tapComment(post: MomentPost, comment: MomentComment) {
+    if (press.current === -1) { press.current = null; return; }
+    press.current = null;
+    if (comment.by !== 'me') setTyping({ post: post.id, to: comment.by, text: '' });
   }
   async function dropPost(post: MomentPost) {
     if (await confirmChat({ title: '删除这条朋友圈？', message: '赞和评论会一起删掉。', confirmText: '删除', danger: true })) removePost(post.id);
   }
-  async function dropComment(post: MomentPost, id: string) {
-    if (await confirmChat({ title: '删除这条评论？', message: '', confirmText: '删除', danger: true })) removeComment(post.id, id);
-  }
+  function dropComment(post: MomentPost, id: string) { removeComment(post.id, id); }
 
   const card = (post: MomentPost) => {
     const mine = post.by === 'me', liked = post.likes.includes('me'), url = post.photo ? chatPhotoUrl(post.photo.split('#')[0]) : '';
@@ -135,8 +154,11 @@ export function ChatMomentsPage() {
         {post.likes.length || post.comments.length ? <div className="chat-moment-box">
           {post.likes.length ? <div className="chat-moment-likes">♡ {post.likes.map(momentName).join('，')}</div> : null}
           {post.comments.map(comment => <button type="button" className="chat-moment-comment" key={comment.id}
-            onClick={() => comment.by === 'me' ? void dropComment(post, comment.id) : setTyping({ post: post.id, to: comment.by, text: '' })}>
+            onPointerDown={event => holdComment(event, post, comment)} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
+            onContextMenu={event => event.preventDefault()} onClick={() => tapComment(post, comment)}>
             <i>{momentName(comment.by)}</i>{comment.to ? <> 回复 <i>{momentName(comment.to)}</i></> : null}：{comment.text}
+            {comment.sticker ? <img className="is-sticker" alt={comment.sticker.tag} src={stickerImageUrl(comment.sticker.image)} /> : null}
+            {comment.photo ? <img alt="图片" src={chatPhotoUrl(comment.photo)} onClick={event => { event.stopPropagation(); setViewing(chatPhotoUrl(comment.photo!)); }} /> : null}
           </button>)}
         </div> : null}
       </div>
@@ -166,10 +188,21 @@ export function ChatMomentsPage() {
       {typing ? <div className="chat-moments-reply">
         <input autoFocus maxLength={300} placeholder={typing.to ? `回复 ${momentName(typing.to)}` : '评论'} value={typing.text}
           onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) sendComment(); if (event.key === 'Escape') setTyping(null); }} />
+        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => sendComment({ sticker }))}>☺</button>
+        <button type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}>▣</button>
+        <input ref={commentFile} type="file" accept="image/*" hidden onChange={event => { void commentPhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         <button type="button" onClick={() => setTyping(null)}>取消</button>
-        <button type="button" className="is-primary" onClick={sendComment}>发送</button>
+        <button type="button" className="is-primary" onClick={() => sendComment()}>发送</button>
       </div> : null}
     </section>, host) : null}
+
+    {pop ? createPortal(<div className="sp-confirm-overlay chat-moments-pop-mask" onPointerDown={event => { if (event.target === event.currentTarget) setPop(null); }}>
+      <div className="chat-moments-pop" role="menu" style={{ left: pop.x, top: pop.y }}>
+        {pop.comment.text ? <button type="button" role="menuitem" onClick={() => { void navigator.clipboard?.writeText(pop.comment.text).then(() => showToast('复制好了'), () => showToast('复制不了')); setPop(null); }}>复制</button> : null}
+        {pop.comment.by !== 'me' ? <button type="button" role="menuitem" onClick={() => { setTyping({ post: pop.post.id, to: pop.comment.by, text: '' }); setPop(null); }}>回复</button> : null}
+        {pop.comment.by === 'me' || pop.post.by === 'me' ? <button type="button" role="menuitem" className="is-danger" onClick={() => { dropComment(pop.post, pop.comment.id); setPop(null); }}>删除</button> : null}
+      </div>
+    </div>, document.body) : null}
 
     {viewing ? createPortal(<div className="sp-confirm-overlay chat-moments-viewer" onClick={() => setViewing('')}><img alt="" src={viewing} /></div>, document.body) : null}
 
