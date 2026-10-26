@@ -34,6 +34,7 @@ import { ChatPay } from './components/shared/ChatPay';
 import { ChatMePage } from './pages/Chat/Me/ChatMePage';
 import { ChatContactsPage } from './pages/Chat/Contacts/ChatContactsPage';
 import { ChatMomentsPage } from './pages/Chat/Discover/ChatMomentsPage';
+import { Diary } from './pages/Diary/Diary';
 import { ChatGroups } from './components/shared/ChatGroups';
 import { CharacterArchive } from './pages/Chat/Characters/CharacterArchive';
 import { ChatMyPresenceMenu } from './pages/Chat/Room/ChatMyPresenceMenu';
@@ -158,7 +159,7 @@ export function App() {
       {"\n\n"}
       
       {"\n\n"}
-      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatWorldPanel /><ChatLocationSend /><ChatStickerPicker /><ChatPay /><ChatMePage /><ChatContactsPage /><ChatMomentsPage /><ChatGroups /><ChatMyPresenceMenu /><ChatControllers />
+      <ChatReplyParser /><ChatForwardRecords /><ChatCharacterStore /><ChatConfirmation /><ChatPhotoViewer /><ChatPhotoSend /><ChatWorldPanel /><ChatLocationSend /><ChatStickerPicker /><ChatPay /><ChatMePage /><ChatContactsPage /><ChatMomentsPage /><Diary /><ChatGroups /><ChatMyPresenceMenu /><ChatControllers />
       {"\n\n\n"}
     </BootProvider></ChatSidebarProvider></WorldProvider></VoiceImageProvider></AppearanceProvider></MusicProvider></HomeTextsProvider></McpProvider></ApiProvider></ChoiceProvider></ChatPinsProvider></ChatIdentityProvider></ChatRoomToolsProvider></ChatReplyEngineProvider></ChatVoiceProvider></ChatMessagesProvider></ChatReplyTriggersProvider></ChatComposerProvider></ChatSelectionProvider></ChatMessageOperationsProvider></ChatPreferencesProvider></ChatNavigationProvider></SettingsNavigationProvider></NativeRefsProvider></ChatMemoryProvider></ProfileAvatarProvider>
   );

@@ -124,7 +124,7 @@ export function DockBar() {
         {"\n"}
       </a>
       {"\n"}
-      <a href="#" data-dock-icon-key="diary" className={"dock-item" + (appearance.icons.dock['diary'] ? ' has-custom-icon' : '')}>
+      <a href="#" onClick={event => { event.preventDefault(); event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-diary')); }} data-dock-icon-key="diary" className={"dock-item" + (appearance.icons.dock['diary'] ? ' has-custom-icon' : '')}>
         {"\n"}
         <img className="dock-icon-image" alt="Diary icon" src={appearance.icons.dock['diary'] || undefined} />
         {"\n"}
