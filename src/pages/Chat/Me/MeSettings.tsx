@@ -8,6 +8,7 @@ import { PROACTIVE_AFTER, PROACTIVE_CHASE, PROACTIVE_PER_DAY, WALLET_REMIND, rea
 import { exportMeData, importMeData } from '../../../utils/meBackup';
 import { clearBills } from '../../../utils/walletStorage';
 import { readMoments, subscribeMoments, updateMoments, type MomentRate } from '../../../utils/momentsStorage';
+import { readDiary, subscribeDiary, updateDiary, type DiaryRate } from '../../../utils/diaryStorage';
 
 /** 开关：凹下去的小槽，开的时候滑块到右边、槽变主题色。 */
 function Toggle({ on, label, onChange }: { on: boolean; label: string; onChange: (on: boolean) => void }) {
@@ -38,7 +39,7 @@ function daysText(days: number[]) {
 /** 「我」→ 设置：跟你本人有关、所有角色共用的设定（每个聊天自己的设定在聊天设置里）。 */
 export function MeSettings() {
   const settings = useSyncExternalStore(subscribeMeSettings, readMeSettings), file = useRef<HTMLInputElement>(null);
-  const moments = useSyncExternalStore(subscribeMoments, readMoments);
+  const moments = useSyncExternalStore(subscribeMoments, readMoments), diary = useSyncExternalStore(subscribeDiary, readDiary);
   const { proactive, schedules, notify, wallet, privacy } = settings;
   const [editing, setEditing] = useState<MeSchedule | null>(null), isNew = !!editing && !schedules.some(item => item.id === editing.id);
   const characters = readChatCharacters().filter(item => !item.group), nameOf = (key: string) => characters.find(item => item.archiveId === key)?.name || '已删除的角色';
@@ -105,6 +106,12 @@ export function MeSettings() {
       <div className="chat-me-set-row is-nowrap"><span>他们多久发一条</span><Choices value={moments.rate} options={[['off', '关'], ['some', '偶尔'], ['often', '常常']] as const satisfies readonly (readonly [MomentRate, string])[]} onChange={rate => updateMoments({ rate, next: {} })} /></div>
     </div>
     <p className="chat-me-set-note">偶尔大约一两天一条，常常大约半天一条。</p>
+
+    <div className="chat-me-group-head">日记</div>
+    <div className="chat-me-set-box">
+      <div className="chat-me-set-row is-nowrap"><span>他们多久写一篇</span><Choices value={diary.rate} options={[['off', '关'], ['daily', '每天'], ['sometimes', '隔几天']] as const satisfies readonly (readonly [DiaryRate, string])[]} onChange={rate => updateDiary({ rate, next: {} })} /></div>
+    </div>
+    <p className="chat-me-set-note">都在晚上九点以后写。</p>
 
     <div className="chat-me-group-head">通知</div>
     <div className="chat-me-set-box">
