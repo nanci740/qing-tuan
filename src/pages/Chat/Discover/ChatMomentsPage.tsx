@@ -202,7 +202,7 @@ export function ChatMomentsPage() {
       {typing ? <div className="chat-moments-reply">
         {typing.sticker || typing.image ? <div className="chat-moments-attach"><span>
           <img className={typing.sticker ? 'is-sticker' : ''} alt="" src={typing.sticker ? stickerImageUrl(typing.sticker.image) : typing.image} />
-          <button type="button" aria-label="拿掉" onClick={() => setTyping({ ...typing, sticker: undefined, image: undefined })}>×</button>
+          <button type="button" aria-label="拿掉" onClick={() => setTyping({ ...typing, sticker: undefined, image: undefined })} />
         </span></div> : null}
         <input autoFocus maxLength={300} placeholder={typing.to ? `回复 ${momentName(typing.to)}` : '评论'} value={typing.text}
           onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) void sendComment(); if (event.key === 'Escape') setTyping(null); }} />
