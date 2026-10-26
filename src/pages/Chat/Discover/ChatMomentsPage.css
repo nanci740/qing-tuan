@@ -53,7 +53,7 @@
 .chat-moments-empty { margin: 24px 16px; color: var(--color-muted); font-size: 11px; line-height: 1.7; text-align: center; }
 
 /* 评论框：卡片底下一条输入列 */
-.chat-moments-reply { flex: none; display: flex; gap: 4px; margin-top: 4px; padding: 4px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); }
+.chat-moments-reply { flex: none; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; padding: 4px; border: 1px solid var(--win-line); border-radius: 3px; background: var(--color-surface); }
 .chat-moments-reply input { flex: 1; min-width: 0; padding: 3px 6px; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--chat-sunken); color: var(--color-text); font: inherit; font-size: 12px; outline: 0; }
 #chatListView .chat-moments-reply button { flex: none; padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); font-size: 11px; }
 #chatListView .chat-moments-reply button.is-primary { background: var(--win-bar); }
@@ -90,6 +90,14 @@
 .chat-moments-pop button.is-danger { color: var(--color-danger-ink); }
 .chat-moments-pop-mask { background: transparent !important; }
 
-/* 翻译：原文下面一行淡色的中文，前面一道细线 */
+/* 翻译：原文下面一行淡色的中文，开头写 [译]，前面一道细线 */
 .chat-moment-trans { display: block; margin-top: 2px; padding-left: 6px; border-left: 2px solid var(--moment-line); color: var(--color-muted); font-size: 11px; line-height: 1.45; white-space: pre-wrap; }
 .chat-moment-text { -webkit-user-select: none; user-select: none; }
+
+/* 评论框上面：先放着、还没送的表情或图片（右上角 × 拿掉） */
+.chat-moments-attach { flex: 0 0 100%; display: flex; padding: 4px 0 0 2px; }
+.chat-moments-attach > span { position: relative; display: block; }
+.chat-moments-attach img { display: block; min-width: 24px; min-height: 24px; max-width: 56px; max-height: 56px; border: 1px solid var(--win-line); object-fit: cover; }
+.chat-moments-attach img.is-sticker { border: 0; object-fit: contain; }
+#chatListView .chat-moments-attach button { position: absolute; right: -7px; top: -6px; width: 16px; height: 16px; padding: 0; border: 1px solid var(--win-line); border-radius: 50%; background: var(--color-surface); box-shadow: none; color: var(--color-muted); font-size: 11px; line-height: 14px; }
+.chat-moments-reply input:not([type]) { flex: 1 1 0; }

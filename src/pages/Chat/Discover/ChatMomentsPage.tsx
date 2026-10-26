@@ -35,7 +35,7 @@ function ago(at: number) {
 export function ChatMomentsPage() {
   const [open, setOpen] = useState(false), [host, setHost] = useState<HTMLElement | null>(null), refs = useNativeRefs(), avatar = useProfileAvatar();
   const moments = useSyncExternalStore(subscribeMoments, readMoments), me = useSyncExternalStore(subscribeMe, readMe);
-  const [menu, setMenu] = useState(''), [typing, setTyping] = useState<{ post: string; to?: string; text: string } | null>(null);
+  const [menu, setMenu] = useState(''), [typing, setTyping] = useState<{ post: string; to?: string; text: string; sticker?: MessageSticker; image?: string } | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null), [viewing, setViewing] = useState(''), [busy, setBusy] = useState(false);
   const [pop, setPop] = useState<{ post: MomentPost; comment: MomentComment | null; x: number; y: number } | null>(null), commentFile = useRef<HTMLInputElement>(null);
   const cover = useRef<HTMLInputElement>(null), photo = useRef<HTMLInputElement>(null), list = useRef<HTMLDivElement>(null), ticking = useRef(false);
@@ -99,15 +99,19 @@ export function ChatMomentsPage() {
       afterMyPost(post); setDraft(null); list.current?.scrollTo({ top: 0 });
     } catch (error) { showToast(errorText(error)); } finally { setBusy(false); }
   }
-  /** 送出评论：打的字，可以再带一张表情或图片（带了就直接送，不用再按发送）。 */
-  function sendComment(extra: { sticker?: MessageSticker; photo?: string } = {}) {
-    if (!typing || !typing.text.trim() && !extra.sticker && !extra.photo) return;
-    const comment = addComment(typing.post, { by: 'me', text: typing.text.trim().slice(0, 300), ...(typing.to ? { to: typing.to } : {}), ...extra });
-    afterMyComment(typing.post, comment.id, typing.to); setTyping(null);
+  /** 送出评论：打的字，加上先放着的那张表情或图片（选了表情或图片不会马上送，按发送才一起送）。 */
+  async function sendComment() {
+    if (!typing || !typing.text.trim() && !typing.sticker && !typing.image) return;
+    try {
+      const photo = typing.image ? momentId('mcp') : '';
+      if (photo) await saveChatPhoto(photo, typing.image!);
+      const comment = addComment(typing.post, { by: 'me', text: typing.text.trim().slice(0, 300), ...(typing.to ? { to: typing.to } : {}), ...(typing.sticker ? { sticker: typing.sticker } : {}), ...(photo ? { photo } : {}) });
+      afterMyComment(typing.post, comment.id, typing.to); setTyping(null);
+    } catch (error) { showToast(errorText(error)); }
   }
   async function commentPhoto(file?: File) {
     if (!file) return;
-    try { const id = momentId('mcp'); await saveChatPhoto(id, await prepareImage(file, 1080, .84)); sendComment({ photo: id }); } catch (error) { showToast(errorText(error)); }
+    try { const image = await prepareImage(file, 1080, .84); setTyping(current => current && { ...current, image, sticker: undefined }); } catch (error) { showToast(errorText(error)); }
   }
   // 长按评论：手指旁边跳出复制、翻译、回复、删除（自己的评论，或在你自己的动态底下的都能删）；长按动态的字是复制、翻译
   const press = useRef<number | null>(null);
@@ -141,7 +145,7 @@ export function ChatMomentsPage() {
         <b className="chat-moment-name">{momentName(post.by)}</b>
         {post.text ? <p className="chat-moment-text" onPointerDown={event => holdComment(event, post, null)} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
           onContextMenu={event => event.preventDefault()}>{post.text}</p> : null}
-        {post.translation ? <p className="chat-moment-trans">{post.translation}</p> : null}
+        {post.translation ? <p className="chat-moment-trans">[译] {post.translation}</p> : null}
         {url ? <button type="button" className="chat-moment-photo" onClick={() => setViewing(url)}><img alt={post.caption || '照片'} src={url} /></button>
           : post.caption ? <div className="chat-moment-photo is-text">
             <span>［照片］{post.caption}</span>
@@ -166,7 +170,7 @@ export function ChatMomentsPage() {
             onPointerDown={event => holdComment(event, post, comment)} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
             onContextMenu={event => event.preventDefault()} onClick={() => tapComment(post, comment)}>
             <i>{momentName(comment.by)}</i>{comment.to ? <> 回复 <i>{momentName(comment.to)}</i></> : null}：{comment.text}
-            {comment.translation ? <span className="chat-moment-trans">{comment.translation}</span> : null}
+            {comment.translation ? <span className="chat-moment-trans">[译] {comment.translation}</span> : null}
             {comment.sticker ? <img className="is-sticker" alt={comment.sticker.tag} src={stickerImageUrl(comment.sticker.image)} /> : null}
             {comment.photo ? <img alt="图片" src={chatPhotoUrl(comment.photo)} onClick={event => { event.stopPropagation(); setViewing(chatPhotoUrl(comment.photo!)); }} /> : null}
           </button>)}
@@ -196,13 +200,17 @@ export function ChatMomentsPage() {
         {!posts.length ? <p className="chat-moments-empty">还没有动态。点右上角的笔发第一条；他们也会照「我 → 设置」里的频率发。</p> : null}
       </div>
       {typing ? <div className="chat-moments-reply">
+        {typing.sticker || typing.image ? <div className="chat-moments-attach"><span>
+          <img className={typing.sticker ? 'is-sticker' : ''} alt="" src={typing.sticker ? stickerImageUrl(typing.sticker.image) : typing.image} />
+          <button type="button" aria-label="拿掉" onClick={() => setTyping({ ...typing, sticker: undefined, image: undefined })}>×</button>
+        </span></div> : null}
         <input autoFocus maxLength={300} placeholder={typing.to ? `回复 ${momentName(typing.to)}` : '评论'} value={typing.text}
-          onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) sendComment(); if (event.key === 'Escape') setTyping(null); }} />
-        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => sendComment({ sticker }))}>☺</button>
+          onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) void sendComment(); if (event.key === 'Escape') setTyping(null); }} />
+        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => setTyping(current => current && { ...current, sticker, image: undefined }))}>☺</button>
         <button type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}>▣</button>
         <input ref={commentFile} type="file" accept="image/*" hidden onChange={event => { void commentPhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         <button type="button" onClick={() => setTyping(null)}>取消</button>
-        <button type="button" className="is-primary" onClick={() => sendComment()}>发送</button>
+        <button type="button" className="is-primary" onClick={() => void sendComment()}>发送</button>
       </div> : null}
     </section>, host) : null}
 
