@@ -70,6 +70,7 @@ export function Diary() {
   }
   const newDraft = (): Draft => ({ day: dayOf(Date.now()), weather: '', mood: '', title: '', body: '', share: [] });
 
+  const now = new Date(), today = <>{String(now.getMonth() + 1).padStart(2, '0')}.{String(now.getDate()).padStart(2, '0')}<br />{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][now.getDay()]}</>;
   let title = 'Diary', body: React.ReactNode;
   if (view.kind === 'list') {
     const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me';
@@ -140,9 +141,9 @@ export function Diary() {
       <button type="button" className="diary-back" aria-label={view.kind === 'shelf' ? '返回主页' : '返回'} onClick={back}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
       </button>
-      <h1>{title}{view.kind === 'shelf' ? <small>.log</small> : null}</h1>
+      <h1 className="diary-strip">{title}</h1>
+      <span className="diary-today">{today}</span>
     </header>
-    <div className="diary-binding" aria-hidden="true">{Array.from({ length: 10 }, (_, index) => <i key={index} />)}</div>
     <div className="diary-body">{body}</div>
   </section>;
 }
