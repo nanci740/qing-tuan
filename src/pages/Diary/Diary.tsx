@@ -25,13 +25,16 @@ function Body({ text }: { text: string }) {
   return <>{text.split(/(~~.+?~~)/s).map((part, index) => part.startsWith('~~') && part.endsWith('~~') && part.length > 4 ? <s key={index}>{part.slice(2, -2)}</s> : <span key={index}>{part}</span>)}</>;
 }
 function LockIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>; }
-/** 被撬开偷看过的痕迹：他撬开时最近的三篇和之后写的，每篇有一两处（折角、杯印、折痕和指印），杯印和指印的位置每篇不一样；不写是谁。 */
+/** 被撬开偷看过的痕迹：每次撬开，他看的是那时最近的三篇，其中随机一两篇留下痕迹（折角、杯印、折痕和指印），杯印和指印的位置每篇不一样；不写是谁。 */
+const hash = (text: string) => { let seed = 0; for (const char of text) seed = (seed * 31 + char.charCodeAt(0)) >>> 0; return seed; };
 function Clues({ entry, mine, cracks }: { entry: DiaryEntry; mine: DiaryEntry[]; cracks: number[] }) {
-  if (!cracks.length) return null;
-  const first = Math.min(...cracks), before = mine.filter(item => item.at <= first);
-  if (entry.at <= first && !before.slice(-3).includes(entry)) return null;
-  let seed = 0;
-  for (const char of entry.id + first) seed = (seed * 31 + char.charCodeAt(0)) >>> 0;
+  const hit = cracks.find(at => {
+    const seen = mine.filter(item => item.at <= at).slice(-3), index = seen.indexOf(entry);
+    if (index < 0) return false;
+    return index === hash(String(at)) % seen.length || hash(entry.id + at) % 10 < 3;
+  });
+  if (hit === undefined) return null;
+  let seed = hash(entry.id + hit);
   const roll = (max: number) => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 8) % max; };
   const kinds = [roll(3)];
   if (roll(10) < 3) kinds.push((kinds[0] + 1 + roll(2)) % 3);
