@@ -6,14 +6,14 @@ import { kv } from './kvStorage';
     locks 每本的锁（四位数字 code，他的还有一句提示 hint；你的是你自己设的）；
     access 你怎么打开他的（code 知道密码、crack 撬开的，只算这一次，退出他的本子就又锁上），seenBy 他怎么打开你的（撬开的也只看到撬开那时候最近的三篇）；
     traces 你的本子上留下的痕迹（谁、用密码还是撬开、什么时候），lockedAt 你上一次设密码的时间（之后被撬过，他撬开时最近的三篇和之后写的，纸上会有折角、杯印、指印之类的痕迹，不写是谁）；
-    misses 你猜错他的密码几次（每次猜错 40% 会被他知道），caught 他发现你偷看他的日记（撬开的、猜中密码的）的时间，given 他把密码给你的时间（猜中的、撬开的没有）。 */
+    misses 你猜错他的密码几次（每次猜错 40% 会被他知道），caught 他发现你偷看他的日记（撬开的、猜中密码的）的时间，given 他把密码给你的时间（猜中的、撬开的没有），tries 他上一次试着撬你日记的时间（有机率起念头，照人设决定撬不撬；撬没撬开都算）。 */
 export type DiaryOpen = 'code' | 'crack';
 export interface DiaryLock { code: string; hint: string }
 export interface DiaryTrace { by: string; kind: DiaryOpen; at: number }
 export type DiaryRate = 'off' | 'daily' | 'sometimes';
 export interface DiaryEntry { id: string; by: string; at: number; day: string; title: string; weather: string; mood: string; body: string; share?: string[] }
 interface Diary { entries: DiaryEntry[]; rate: DiaryRate; next: Record<string, number>; locks: Record<string, DiaryLock>; access: Record<string, DiaryOpen>; seenBy: Record<string, DiaryOpen>;
-  traces: DiaryTrace[]; lockedAt: number; misses: Record<string, number>; caught: Record<string, number>; given: Record<string, number> }
+  traces: DiaryTrace[]; lockedAt: number; misses: Record<string, number>; caught: Record<string, number>; given: Record<string, number>; tries: Record<string, number> }
 const KEY = 'qingtuan_diary_v1', EVENT = 'qingtuan:diary-changed';
 let cache: Diary | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -31,7 +31,7 @@ function clean(value: unknown): Diary {
   const locks = map(row.locks, item => { const lock = item as Record<string, unknown>; return /^\d{4}$/.test(String(lock?.code)) ? { code: String(lock.code), hint: text(lock.hint, 40) } : null; });
   const traces = (Array.isArray(row.traces) ? row.traces as Record<string, unknown>[] : []).flatMap((item): DiaryTrace[] => item?.by && open(item.kind) ? [{ by: String(item.by), kind: open(item.kind)!, at: Number(item.at) || 0 }] : []).slice(-30);
   return { entries, rate: row.rate === 'off' || row.rate === 'sometimes' ? row.rate : 'daily', next, locks, access: map(row.access, open), seenBy: map(row.seenBy, open), traces,
-    lockedAt: Number(row.lockedAt) || 0, misses: map(row.misses, item => Number(item) || null), caught: map(row.caught, item => Number(item) || null), given: map(row.given, item => Number(item) || null) };
+    lockedAt: Number(row.lockedAt) || 0, misses: map(row.misses, item => Number(item) || null), caught: map(row.caught, item => Number(item) || null), given: map(row.given, item => Number(item) || null), tries: map(row.tries, item => Number(item) || null) };
 }
 export function readDiary(): Diary {
   if (!cache) { try { cache = clean(JSON.parse(kv.getItem(KEY) || '{}')); } catch { cache = clean({}); } }
