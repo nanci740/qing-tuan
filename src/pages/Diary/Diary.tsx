@@ -9,7 +9,7 @@ import { confirmChat } from '../../utils/chatConfirm';
 import { showToast } from '../../utils/toast';
 import { dayOf, readDiary, removeEntry, saveEntry, subscribeDiary } from '../../utils/diaryStorage';
 import type { DiaryEntry } from '../../utils/diaryStorage';
-import { askCode, crackLock, diaryTick, ensureLock, peekEntry, relockCracked, setMyCode, tryCode, writeDiary } from '../../utils/diaryEngine';
+import { askCode, caughtSince, crackLock, diaryTick, ensureLock, lingerCheck, peekEntry, relockCracked, setMyCode, tryCode, writeDiary } from '../../utils/diaryEngine';
 import { momentPeople } from '../../utils/momentsEngine';
 
 /** 锁的弹窗：mode 是打开他的（open）、打开你自己的（mine）、设你的密码（set，再输一次确认）。 */
@@ -58,6 +58,8 @@ export function Diary() {
   const diary = useSyncExternalStore(subscribeDiary, readDiary), ticking = useRef(false);
   // lock 是锁的弹窗；mineOpen 这次打开日记 App 以后，你的本子输过密码了
   const [lock, setLock] = useState<Lock | null>(null), [mineOpen, setMineOpen] = useState(false), digitsRef = useRef<HTMLInputElement>(null);
+  // visitAt 这次点开他本子的时间（这之后被他发现，本子里写「他发现你在看了」）
+  const visitAt = useRef(0);
   useLayoutEffect(() => {
     const show = () => { relockCracked(); setView({ kind: 'shelf' }); setMineOpen(false); setOpen(true); };
     window.addEventListener('qingtuan:open-diary', show);
@@ -70,6 +72,13 @@ export function Diary() {
     return () => { clearTimeout(first); clearInterval(timer); };
   }, []);
   useEffect(() => { if (lock) setTimeout(() => digitsRef.current?.focus(), 50); }, [lock?.key, lock?.mode]);
+  // 待在他的本子里（列表或某一篇）：偷看的话，久了也可能被他发现
+  const inside = !open ? '' : view.kind === 'list' && view.key !== 'me' ? view.key : view.kind === 'entry' ? diary.entries.find(item => item.id === view.id)?.by || '' : '';
+  useEffect(() => {
+    if (!inside || inside === 'me') return;
+    const timer = setInterval(() => lingerCheck(inside, visitAt.current), 20000);
+    return () => clearInterval(timer);
+  }, [inside]);
   if (!open) return null;
 
   const people = momentPeople(), books = ['me', ...people.map(item => item.archiveId)];
@@ -103,6 +112,7 @@ export function Diary() {
       if (mineOpen) { setView({ kind: 'list', key }); return; }
       setLock({ key, mode: 'mine', digits: '', note: '' }); return;
     }
+    visitAt.current = Date.now();
     if (diary.access[key]) { setView({ kind: 'list', key }); return; }
     setLock({ key, mode: 'open', digits: '', note: '', busy: true });
     try { await ensureLock(key); setLock(current => current && { ...current, busy: false }); }
@@ -130,7 +140,7 @@ export function Diary() {
     if (crackLock(key)) { setLock(null); setView({ kind: 'list', key }); return; }
     setLock(current => current && { ...current, busy: false, note: '没撬开，锁还是好好的。' });
   }
-  function openEntry(item: DiaryEntry) { if (item.by !== 'me') peekEntry(item); setView({ kind: 'entry', id: item.id }); }
+  function openEntry(item: DiaryEntry) { if (item.by !== 'me') peekEntry(item, visitAt.current); setView({ kind: 'entry', id: item.id }); }
   const newDraft = (): Draft => ({ day: dayOf(Date.now()), weather: '', mood: '', title: '', body: '', share: [] });
 
   const now = new Date(), today = <>{String(now.getMonth() + 1).padStart(2, '0')}.{String(now.getDate()).padStart(2, '0')}<br />{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][now.getDay()]}</>;
@@ -167,7 +177,7 @@ export function Diary() {
         <span>{entry.share?.length ? `给${entry.share.map(nameOf).join('、')}看过` : '只有你看得到'}</span>
         <button type="button" className="diary-btn" onClick={() => setView({ kind: 'edit', draft: { id: entry.id, day: entry.day, weather: entry.weather, mood: entry.mood, title: entry.title, body: entry.body, share: entry.share || [] } })}>编辑</button>
         <button type="button" className="diary-btn is-danger" onClick={() => void drop(entry)}>删除</button>
-      </div> : <p className="diary-foot is-quiet">他不知道你看过。</p>}
+      </div> : <p className="diary-foot is-quiet">{diary.given[entry.by] ? '他把密码给了你。' : caughtSince(entry.by, visitAt.current) ? '他发现你在看了。' : caughtSince(entry.by, Date.now() - 3 * 86400000) ? '他之前发现过你偷看。' : '他不知道你看过。'}</p>}
     </>;
   } else if (view.kind === 'edit') {
     const draft = view.draft, set = (patch: Partial<Draft>) => setView({ kind: 'edit', draft: { ...draft, ...patch } });
