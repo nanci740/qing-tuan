@@ -36,9 +36,11 @@ function Clues({ entry, mine, cracks }: { entry: DiaryEntry; mine: DiaryEntry[];
   const kinds = [roll(3)];
   if (roll(10) < 3) kinds.push((kinds[0] + 1 + roll(2)) % 3);
   const spot = () => ({ left: `${12 + roll(60)}%`, top: `${22 + roll(58)}%`, transform: `rotate(${roll(60) - 30}deg)` });
-  return <>{kinds.map(kind => kind === 0 ? <span key={kind} className="diary-clue-fold" aria-hidden="true" />
-    : kind === 1 ? <span key={kind} className="diary-clue-ring" style={spot()} aria-hidden="true" />
-    : <span key={kind}><span className="diary-clue-crease" style={{ top: `${30 + roll(50)}%`, transform: `rotate(${roll(12) - 6}deg)` }} aria-hidden="true" /><span className="diary-clue-print" style={spot()} aria-hidden="true" /></span>)}</>;
+  return <>
+    <span className="diary-clues" aria-hidden="true">{kinds.map(kind => kind === 1 ? <span key={kind} className="diary-clue-ring" style={spot()} />
+      : kind === 2 ? <span key={kind}><span className="diary-clue-crease" style={{ top: `${30 + roll(50)}%`, transform: `rotate(${roll(12) - 6}deg)` }} /><span className="diary-clue-print" style={spot()} /></span> : null)}</span>
+    {kinds.includes(0) ? <span className="diary-clue-fold" aria-hidden="true" /> : null}
+  </>;
 }
 const plain = (text: string) => text.replace(/~~(.+?)~~/gs, '$1').replace(/\s+/g, ' ');
 const dateParts = (day: string) => { const date = new Date(day + 'T12:00:00'); return { d: date.getDate(), m: MONTH[date.getMonth()] + '月', w: '周' + WEEK[date.getDay()], full: `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} 周${WEEK[date.getDay()]}` }; };

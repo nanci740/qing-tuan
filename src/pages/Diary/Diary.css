@@ -56,7 +56,7 @@
 .diary-row-text small { display: block; margin-top: 2px; overflow: hidden; color: var(--color-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 
 /* 一篇：横线纸，左边一道淡红线；划掉的字中间一道线 */
-.diary-paper { position: relative; overflow: hidden; min-height: 60vh; padding: 8px 14px 22px 32px; border: 1px solid var(--dy-line); background: repeating-linear-gradient(var(--color-surface) 0 25px, color-mix(in srgb, var(--theme-color) 70%, var(--color-surface)) 25px 26px); line-height: 26px; }
+.diary-paper { position: relative; min-height: 60vh; padding: 8px 14px 22px 32px; border: 1px solid var(--dy-line); background: repeating-linear-gradient(var(--color-surface) 0 25px, color-mix(in srgb, var(--theme-color) 70%, var(--color-surface)) 25px 26px); line-height: 26px; }
 .diary-paper::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--color-danger) 45%, transparent); }
 .diary-paper-head { display: flex; flex-wrap: wrap; gap: 10px; color: var(--color-muted); font-size: 11px; }
 .diary-paper h3 { margin: 0; color: var(--dy-ink); font-size: 15px; line-height: 26px; }
@@ -80,7 +80,10 @@
 
 /* 你的本子被打开过：最上面一格淡红的提醒，写谁、什么时候、用密码还是撬开 */
 /* 被撬开偷看过的痕迹：很淡，不细看看不出来 */
-.diary-clue-fold { position: absolute; right: -1px; top: -1px; width: 22px; height: 22px; background: linear-gradient(225deg, var(--color-page) 50%, color-mix(in srgb, var(--dy-line) 55%, var(--color-surface)) 50%, var(--color-surface) 100%); box-shadow: -1px 1px 2px rgba(0, 0, 0, .07); pointer-events: none; }
+.diary-clues { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+/* 折角盖住纸的边框：右上那半是底色，左下那半是折过来的纸背，两条直角边是折过来的纸边 */
+.diary-clue-fold { position: absolute; right: -1px; top: -1px; width: 23px; height: 23px; box-sizing: border-box; border-left: 1px solid var(--dy-line); border-bottom: 1px solid var(--dy-line);
+  background: linear-gradient(225deg, var(--color-page) 50%, color-mix(in srgb, var(--dy-line) 55%, var(--color-surface)) 50%, var(--color-surface) 100%); box-shadow: -1px 1px 2px rgba(0, 0, 0, .07); pointer-events: none; }
 .diary-clue-ring { position: absolute; width: 70px; height: 66px; margin: -33px 0 0 -35px; border: 3px solid rgba(160, 110, 70, .07); border-radius: 50%; box-shadow: inset 0 0 6px rgba(160, 110, 70, .05); pointer-events: none; }
 .diary-clue-ring::after { content: ''; position: absolute; top: -8px; right: 8px; width: 28px; height: 28px; border: 2px solid rgba(160, 110, 70, .045); border-radius: 50%; }
 .diary-clue-crease { position: absolute; left: -10%; right: -10%; height: 2px; background: linear-gradient(rgba(0, 0, 0, .05), rgba(255, 255, 255, .9)); pointer-events: none; }
