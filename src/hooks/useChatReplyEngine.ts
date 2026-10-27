@@ -13,6 +13,7 @@ import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} fr
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
 import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsStorage';
 import {peerApply} from '../utils/friendRequests';
+import {diaryAction,diaryHeard} from '../utils/diaryEngine';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -373,6 +374,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (blockingUser && !proactive) { say('对方把你拉黑了，消息送不到'); return; }
         if (!groupInfo && !proactive && isDeleted(requestChatKey)) { say('对方还不是你的好友'); return; }
         const context = collectCurrentChatContext(active ? undefined : services.current!.historyRows(requestChatKey), groupInfo ? key => groupInfo.members.find(member => member.key === key)?.name || '' : undefined);
+        // 日记的锁：你这一轮说出了你日记的密码，他就知道了
+        if (!groupInfo && !proactive) { const said:string[] = []; for (let at = context.length - 1; at >= 0 && context[at].role === 'user'; at--) said.push(String(context[at].content || '')); diaryHeard(requestChatKey, said.join('\n'), 'user'); }
         if (proactive) context.push({ role: 'user', content: proactive.prompt, messageId: '', quoteCandidate: '' });
         else if (!context.length || context[context.length - 1].role !== 'user') {
             say('先发送一条消息');
@@ -512,6 +515,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (unblock) { setBlockedBy(requestChatKey, false); services.current!.notice(requestChatKey, `${characterName} 解除了对你的拉黑`); }
             else if (blockingUser) return;
             // 你把他拉黑了：他可以发好友申请（"apply":"留言"）请你放他出来，出现在新的朋友
+            // 日记：他撬开你的、换他的密码
+            if (!groupInfo) diaryAction(requestChatKey, rawReply);
             const applyText = blockedByUser ? /"apply"\s*:\s*"([^"\n]{1,120})"/.exec(rawReply)?.[1] || '' : '';
             if (applyText) peerApply(requestChatKey, applyText);
             const emptyReplies = /"replies"\s*:\s*\[\s*\]/.test(rawReply);
@@ -688,6 +693,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
                 }
             }
+            // 他这次说的话里有他日记的密码：你就拿到了
+            if (!groupInfo) diaryHeard(requestChatKey, segments.join('\n'), 'peer');
             // 被你拒收的那几句后面一行灰字，跟你被他拒收时一样
             if (blockedByUser && segments.some(Boolean)) services.current!.notice(requestChatKey, '消息已发出，但被对方拒收了');
             if (blockNow) { setBlockedBy(requestChatKey, true); services.current!.notice(requestChatKey, `${characterName} 把你拉黑了`); }

@@ -1,5 +1,7 @@
 import './Diary.css';
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
+import { PressedButton } from '../../components/shared/PressedButton';
 import { readChatCharacters } from '../../utils/chatCharacterStorage';
 import { contactName } from '../../utils/contactsStorage';
 import { DEFAULT_AVATAR } from '../../utils/defaultAvatar';
@@ -7,9 +9,11 @@ import { confirmChat } from '../../utils/chatConfirm';
 import { showToast } from '../../utils/toast';
 import { dayOf, readDiary, removeEntry, saveEntry, subscribeDiary } from '../../utils/diaryStorage';
 import type { DiaryEntry } from '../../utils/diaryStorage';
-import { diaryTick, writeDiary } from '../../utils/diaryEngine';
+import { askCode, crackLock, diaryTick, ensureLock, peekEntry, setMyCode, tryCode, writeDiary } from '../../utils/diaryEngine';
 import { momentPeople } from '../../utils/momentsEngine';
 
+/** 锁的弹窗：mode 是打开他的（open）、打开你自己的（mine）、设你的密码（set，再输一次确认）。 */
+interface Lock { key: string; mode: 'open' | 'mine' | 'set'; digits: string; first?: string; note: string; busy?: boolean }
 type View = { kind: 'shelf' } | { kind: 'list'; key: string } | { kind: 'entry'; id: string } | { kind: 'edit'; draft: Draft };
 interface Draft { id?: string; day: string; weather: string; mood: string; title: string; body: string; share: string[] }
 const WEATHER = ['晴', '多云', '阴', '雨', '雪', '风', '雾'];
@@ -20,6 +24,8 @@ const photoOf = (key: string) => readChatCharacters().find(item => item.archiveI
 function Body({ text }: { text: string }) {
   return <>{text.split(/(~~.+?~~)/s).map((part, index) => part.startsWith('~~') && part.endsWith('~~') && part.length > 4 ? <s key={index}>{part.slice(2, -2)}</s> : <span key={index}>{part}</span>)}</>;
 }
+function LockIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>; }
+const stamp = (at: number) => { const date = new Date(at); return `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`; };
 const plain = (text: string) => text.replace(/~~(.+?)~~/gs, '$1').replace(/\s+/g, ' ');
 const dateParts = (day: string) => { const date = new Date(day + 'T12:00:00'); return { d: date.getDate(), m: MONTH[date.getMonth()] + '月', w: '周' + WEEK[date.getDay()], full: `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} 周${WEEK[date.getDay()]}` }; };
 function ago(at: number) {
@@ -31,8 +37,10 @@ function ago(at: number) {
 export function Diary() {
   const [open, setOpen] = useState(false), [view, setView] = useState<View>({ kind: 'shelf' }), [busy, setBusy] = useState('');
   const diary = useSyncExternalStore(subscribeDiary, readDiary), ticking = useRef(false);
+  // lock 是锁的弹窗；mineOpen 这次打开日记 App 以后，你的本子输过密码了
+  const [lock, setLock] = useState<Lock | null>(null), [mineOpen, setMineOpen] = useState(false), digitsRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
-    const show = () => { setView({ kind: 'shelf' }); setOpen(true); };
+    const show = () => { setView({ kind: 'shelf' }); setMineOpen(false); setOpen(true); };
     window.addEventListener('qingtuan:open-diary', show);
     return () => window.removeEventListener('qingtuan:open-diary', show);
   }, []);
@@ -42,6 +50,7 @@ export function Diary() {
     const first = setTimeout(check, 12000), timer = setInterval(check, 60000);
     return () => { clearTimeout(first); clearInterval(timer); };
   }, []);
+  useEffect(() => { if (lock) setTimeout(() => digitsRef.current?.focus(), 50); }, [lock?.key, lock?.mode]);
   if (!open) return null;
 
   const people = momentPeople(), books = ['me', ...people.map(item => item.archiveId)];
@@ -68,20 +77,56 @@ export function Diary() {
     if (!await confirmChat({ title: '删除这篇日记？', message: '删掉就找不回来了。', confirmText: '删除', danger: true })) return;
     removeEntry(item.id); setView({ kind: 'list', key: item.by });
   }
+  // 点一本：他的没打开过就先跳锁（第一次会先想好密码），你的没设密码先设，设了要输一次
+  async function openBook(key: string) {
+    if (key === 'me') {
+      if (!diary.locks.me) { setLock({ key, mode: 'set', digits: '', note: '先给你的日记设一个四位数字密码。' }); return; }
+      if (mineOpen) { setView({ kind: 'list', key }); return; }
+      setLock({ key, mode: 'mine', digits: '', note: '' }); return;
+    }
+    if (diary.access[key]) { setView({ kind: 'list', key }); return; }
+    setLock({ key, mode: 'open', digits: '', note: '', busy: true });
+    try { await ensureLock(key); setLock(current => current && { ...current, busy: false }); }
+    catch (error) { setLock(null); showToast(String((error as Error)?.message || error).slice(0, 60)); }
+  }
+  function submitLock() {
+    if (!lock || lock.digits.length !== 4) return;
+    if (lock.mode === 'set') {
+      if (!lock.first) { setLock({ ...lock, first: lock.digits, digits: '', note: '再输一次确认。' }); return; }
+      if (lock.first !== lock.digits) { setLock({ ...lock, first: undefined, digits: '', note: '两次不一样，重新设一次。' }); return; }
+      setMyCode(lock.digits); setLock(null); setMineOpen(true); setView({ kind: 'list', key: 'me' }); showToast('密码设好了'); return;
+    }
+    if (lock.mode === 'mine') {
+      if (diary.locks.me?.code !== lock.digits) { setLock({ ...lock, digits: '', note: '不对，再想想。' }); return; }
+      setLock(null); setMineOpen(true); setView({ kind: 'list', key: 'me' }); return;
+    }
+    const missed = tryCode(lock.key, lock.digits);
+    if (!missed) { setLock(null); setView({ kind: 'list', key: lock.key }); showToast('打开了'); return; }
+    setLock({ ...lock, digits: '', note: `不对。这是第 ${missed} 次猜错，他会知道。` });
+  }
+  async function crack(key: string) {
+    if (!await confirmChat({ title: '强行撬开？', message: '马上就能看。但撬的时候、之后每翻开一篇，都可能被他发现。', confirmText: '撬开', danger: true })) return;
+    crackLock(key); setLock(null); setView({ kind: 'list', key });
+  }
+  function openEntry(item: DiaryEntry) { if (item.by !== 'me') peekEntry(item); setView({ kind: 'entry', id: item.id }); }
   const newDraft = (): Draft => ({ day: dayOf(Date.now()), weather: '', mood: '', title: '', body: '', share: [] });
 
   const now = new Date(), today = <>{String(now.getMonth() + 1).padStart(2, '0')}.{String(now.getDate()).padStart(2, '0')}<br />{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][now.getDay()]}</>;
   let title = 'Diary', body: React.ReactNode;
   if (view.kind === 'list') {
-    const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me';
+    const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me', traces = diary.traces.filter(item => item.at > diary.lockedAt);
     title = mine ? '我的日记' : `${nameOf(view.key)}的日记`;
     body = <>
+      {mine && traces.length ? <div className="diary-trace"><span aria-hidden="true">!</span><span><b>{traces.some(item => item.kind === 'crack') ? '锁有被撬过的痕迹' : '有人打开过你的日记'}</b>
+        {traces.slice().reverse().slice(0, 5).map((item, index) => <small key={index}>{nameOf(item.by)} · {stamp(item.at)} {item.kind === 'crack' ? '撬开了你的日记' : '用你给的密码打开过'}</small>)}</span></div> : null}
+      {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的。每翻开一篇，都可能被他发现。</p> : null}
       <div className="diary-tools">
-        <span>{list.length} 篇</span>
+        <span>{list.length} 篇{mine && diary.locks.me ? '　·　密码 ****' : ''}</span>
+        {mine ? <button type="button" className="diary-btn" onClick={() => setLock({ key: 'me', mode: 'set', digits: '', note: '设一个新的四位数字密码。之后他们都要重新问你。' })}>改密码</button> : null}
         {mine ? <button type="button" className="diary-btn is-primary" onClick={() => setView({ kind: 'edit', draft: newDraft() })}>写日记</button>
           : <button type="button" className="diary-btn is-primary" disabled={!!busy} onClick={() => void askWrite(view.key)}>{busy === view.key ? '他在写…' : '让他写一篇'}</button>}
       </div>
-      {list.map(item => { const date = dateParts(item.day); return <button type="button" className="diary-row" key={item.id} onClick={() => setView({ kind: 'entry', id: item.id })}>
+      {list.map(item => { const date = dateParts(item.day); return <button type="button" className="diary-row" key={item.id} onClick={() => openEntry(item)}>
         <span className="diary-date"><b>{date.d}</b><small>{date.m} {date.w}</small></span>
         <span className="diary-row-text"><b>{item.title || '无题'}</b>{[item.weather, item.mood].filter(Boolean).length ? <em>{[item.weather, item.mood].filter(Boolean).join(' · ')}</em> : null}
           <small>{plain(item.body)}</small></span>
@@ -127,9 +172,11 @@ export function Diary() {
     </div>;
   } else {
     body = <div className="diary-shelf">
-      {books.map(key => { const list = entriesOf(key), last = list[list.length - 1]; return <button type="button" className="diary-book" key={key} onClick={() => setView({ kind: 'list', key })}>
+      {books.map(key => { const list = entriesOf(key), last = list[list.length - 1]; return <button type="button" className="diary-book" key={key} onClick={() => void openBook(key)}>
         <span className="diary-book-tag">{nameOf(key) === '我' ? '我的日记' : nameOf(key)}<small>{key === 'me' ? 'ONLY ME' : 'DIARY'}</small></span>
         <span className="diary-book-belt" aria-hidden="true" />
+        {key === 'me' ? (diary.traces.some(item => item.kind === 'crack' && item.at > diary.lockedAt) ? <span className="diary-book-stamp">被撬过</span> : null)
+          : diary.access[key] ? null : <span className="diary-book-lock" aria-label="上了锁"><LockIcon /></span>}
         {key === 'me' ? null : <img className="diary-book-photo" alt="" src={photoOf(key)} />}
         <span className="diary-book-meta">{list.length} 篇{last ? <><br />{ago(last.at)}</> : null}</span>
       </button>; })}
@@ -145,5 +192,28 @@ export function Diary() {
       <span className="diary-today">{today}</span>
     </header>
     <div className="diary-body">{body}</div>
+    {lock ? createPortal(<div className="sp-confirm-overlay chat-me-dialog diary-lock-dialog" onClick={event => { if (event.target === event.currentTarget) setLock(null); }}>
+      <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="日记的锁">
+        <div className="sp-confirm-bar"><span className="sp-confirm-title">{lock.mode === 'set' ? '设密码' : lock.key === 'me' ? '我的日记' : `${nameOf(lock.key)}的日记`}</span></div>
+        <div className="sp-confirm-body diary-lock">
+          <span className="diary-lock-pad"><LockIcon /></span>
+          {lock.mode === 'open' ? (lock.busy ? <p className="diary-lock-hint">他在想密码…</p> : <p className="diary-lock-hint">提示：{diary.locks[lock.key]?.hint}</p>) : null}
+          <label className="diary-lock-digits">
+            {[0, 1, 2, 3].map(index => <i key={index} className={lock.digits.length === index ? 'is-now' : ''}>{lock.digits[index] || ''}</i>)}
+            <input ref={digitsRef} inputMode="numeric" autoComplete="off" maxLength={4} aria-label="四位数字密码" value={lock.digits} disabled={lock.busy}
+              onChange={event => setLock({ ...lock, digits: event.currentTarget.value.replace(/\D/g, '').slice(0, 4) })} onKeyDown={event => { if (event.key === 'Enter') submitLock(); }} />
+          </label>
+          <p className={'diary-lock-note' + (/不对|不一样/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他会知道你猜了什么。' : ' ')}</p>
+          {lock.mode === 'open' ? <div className="diary-lock-more">
+            <button type="button" disabled={lock.busy} onClick={() => { askCode(lock.key); setLock(null); showToast('去聊天里问他了'); }}>跟他要密码</button>
+            <button type="button" className="is-danger" disabled={lock.busy} onClick={() => void crack(lock.key)}>强行撬开</button>
+          </div> : null}
+        </div>
+        <div className="sp-confirm-actions chat-me-form-actions">
+          <PressedButton type="button" className="sp-confirm-btn" onClick={() => setLock(null)}>取消</PressedButton>
+          <PressedButton type="button" className="sp-confirm-btn is-primary" disabled={lock.busy || lock.digits.length !== 4} onClick={submitLock}>{lock.mode === 'set' ? (lock.first ? '确定' : '下一步') : '打开'}</PressedButton>
+        </div>
+      </div>
+    </div>, document.body) : null}
   </section>;
 }
