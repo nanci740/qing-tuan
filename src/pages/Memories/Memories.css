@@ -44,8 +44,8 @@
 .mx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 6px; margin-top: 14px; }
 .mx-folder-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 0; border: 0; background: none; text-align: center; }
 .mx-folder { width: 64px; height: 52px; overflow: visible; }
-.mx-folder-back { fill: color-mix(in srgb, var(--theme-color) 55%, #fff6cf); stroke: var(--mx-ink); stroke-width: 1; }
-.mx-folder-front { fill: color-mix(in srgb, var(--theme-color) 40%, #fffbe6); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-folder-back { fill: color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-folder-front { fill: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface)); stroke: var(--mx-ink); stroke-width: 1; }
 .mx-folder-shine { fill: none; stroke: #fff; stroke-width: 1.2; opacity: .8; }
 .mx-folder-heart { fill: var(--color-accent-strong); }
 .mx-folder-photo { fill: #fff; stroke: var(--mx-ink); stroke-width: 1; }
@@ -62,8 +62,10 @@
 /* 一个人的记忆：一行一个折角的小文件 */
 .mx-row { width: 100%; display: flex; align-items: flex-start; gap: 8px; padding: 7px 3px; border: 0; border-bottom: 1px dotted var(--mx-soft); background: none; text-align: left; }
 .mx-row:active { background: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface)); }
-.mx-file { flex: none; width: 16px; height: 19px; margin-top: 1px; border: 1px solid var(--mx-ink); background: var(--color-surface); color: var(--color-accent-strong); font: 10px/17px sans-serif; text-align: center;
-  clip-path: polygon(0 0, 70% 0, 100% 25%, 100% 100%, 0 100%); }
+.mx-file { flex: none; width: 16px; height: 19px; margin-top: 1px; }
+.mx-file-paper { fill: var(--color-surface); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-file-fold { fill: color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-pixel { fill: var(--color-accent-strong); }
 .mx-row-text { flex: 1; min-width: 0; font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
 .mx-row-text small { display: block; color: var(--color-muted); font: 9.5px ui-monospace, Menlo, monospace; }
 .mx-pin { flex: none; width: 14px; height: 14px; margin-top: 2px; fill: var(--color-accent-strong); }
@@ -81,6 +83,8 @@
 .mx-form > b { margin-top: 2px; color: var(--spc-title); font-size: 12px; font-weight: 400; }
 .mx-kinds { display: flex; gap: 6px; }
 .mx-kinds button { flex: 1; padding: 5px 0; border: 1px solid var(--spc-line); border-radius: 2px; background: var(--spc-btn-face); box-shadow: var(--spc-btn-shadow); color: var(--spc-title); font: inherit; font-size: 11.5px; cursor: pointer; }
+.mx-kinds button { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.mx-kinds svg { width: 11px; height: 11px; }
 .mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); font-weight: 700; }
 .mx-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; font-size: 12px; line-height: 1.5; resize: none; }
 .mx-form .mx-check { margin-top: 4px; color: var(--spc-title); --mx-ink: var(--spc-title); }

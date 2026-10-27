@@ -14,7 +14,22 @@ import { KIND_NAME, sweepChat } from '../../utils/memoryEngine';
 type View = { kind: 'home' } | { kind: 'chat'; key: string };
 interface Draft { id?: string; kind: MemoryKind; text: string; pinned: boolean }
 const KINDS: MemoryKind[] = ['you', 'event', 'promise'];
-const ICON: Record<MemoryKind, string> = { you: '♥', event: '✎', promise: '✦' };
+/** 三种记忆的像素小图：关于你是爱心、发生过是铅笔、约定是星星（7×7，一格一点）。 */
+const PIXELS: Record<MemoryKind, string[]> = {
+  you: ['.XX.XX.', 'XXXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...', '.......'],
+  event: ['.....XX', '....X.X', '...X.X.', '..X.X..', '.XXX...', 'XXX....', 'X......'],
+  promise: ['...X...', '...X...', 'XXXXXXX', '.XXXXX.', '..XXX..', '.XX.XX.', '.X...X.'],
+};
+function PixelIcon({ kind, x = 0, y = 0 }: { kind: MemoryKind; x?: number; y?: number }) {
+  return <g className="mx-pixel">{PIXELS[kind].flatMap((row, top) => [...row].map((dot, left) => dot === 'X' ? <rect key={`${top}-${left}`} x={x + left} y={y + top} width="1" height="1" /> : null))}</g>;
+}
+/** 一条记忆的小文件：右上角往下折一个角，中间是像素图。 */
+function FileIcon({ kind }: { kind: MemoryKind }) {
+  return <svg className="mx-file" viewBox="0 0 16 19" shapeRendering="crispEdges" aria-hidden="true">
+    <path className="mx-file-paper" d="M.5.5h10l5 5v13H.5z" /><path className="mx-file-fold" d="M10.5.5v5h5" />
+    <PixelIcon kind={kind} x={4} y={8} />
+  </svg>;
+}
 const FROM = { chat: '聊天时记下', sweep: '整理自聊天', mine: '你加的' };
 const day = (at: number) => { const date = new Date(at); return `${date.getMonth() + 1}/${date.getDate()}`; };
 const nameOf = (key: string) => { const item = readChatCharacters().find(one => one.archiveId === key); return item ? contactName(key, String(item.name || '')) : ''; };
@@ -108,7 +123,7 @@ export function Memories() {
     <div className={'mx-pane' + (inside ? ' is-list' : '')}>
       {inside ? <>
         {list.map(item => <button type="button" className="mx-row" key={item.id} onClick={() => setDraft({ id: item.id, kind: item.kind, text: item.text, pinned: !!item.pinned })}>
-          <span className="mx-file" aria-hidden="true">{ICON[item.kind]}</span>
+          <FileIcon kind={item.kind} />
           <span className="mx-row-text">{item.text}<small>{KIND_NAME[item.kind]} · {day(item.at)} · {whoText(item)}</small></span>
           {item.pinned ? <Pin /> : null}
         </button>)}
@@ -141,7 +156,7 @@ export function Memories() {
         <div className="sp-confirm-bar"><span className="sp-confirm-title">{draft.id ? '改这条记忆' : '新增记忆'}</span></div>
         <div className="sp-confirm-body mx-form">
           <b>类型</b>
-          <div className="mx-kinds">{KINDS.map(kind => <button type="button" key={kind} aria-pressed={draft.kind === kind} onClick={() => setDraft({ ...draft, kind })}>{ICON[kind]} {KIND_NAME[kind]}</button>)}</div>
+          <div className="mx-kinds">{KINDS.map(kind => <button type="button" key={kind} aria-pressed={draft.kind === kind} onClick={() => setDraft({ ...draft, kind })}><svg viewBox="0 0 7 7" shapeRendering="crispEdges" aria-hidden="true"><PixelIcon kind={kind} /></svg>{KIND_NAME[kind]}</button>)}</div>
           <b>内容</b>
           <textarea rows={3} maxLength={200} value={draft.text} placeholder={group ? '例如：说好周末一起去吃火锅' : '例如：她不吃香菜'} onChange={event => setDraft({ ...draft, text: event.currentTarget.value })} />
           <label className="mx-check"><input type="checkbox" checked={draft.pinned} onChange={event => setDraft({ ...draft, pinned: event.currentTarget.checked })} /><i aria-hidden="true" />钉住，每次都记得</label>
