@@ -99,13 +99,13 @@ export async function ensureLock(key: string) {
   updateDiary({ locks: { ...readDiary().locks, [key]: lock } });
   return lock;
 }
-/** 你猜他的密码：猜对了以后都打得开；猜错了他会知道你猜了什么。 */
+/** 你猜他的密码：猜对了以后都打得开；猜错了 40% 会被他知道你猜了什么。 */
 export function tryCode(key: string, guess: string) {
   const { locks, access, misses } = readDiary();
   if (locks[key]?.code === guess) { updateDiary({ access: { ...access, [key]: 'code' }, misses: { ...misses, [key]: 0 } }); return 0; }
   const count = (misses[key] || 0) + 1;
   updateDiary({ misses: { ...misses, [key]: count } });
-  tell(key, `对方刚刚在偷偷猜你日记的密码，猜了「${guess}」，猜错了（这是第 ${count} 次）。照你的人设对这件事做出反应。`);
+  if (Math.random() < .4) tell(key, `对方刚刚在偷偷猜你日记的密码，猜了「${guess}」，猜错了。照你的人设对这件事做出反应。`);
   return count;
 }
 /** 跟他要密码：聊天里留一行灰字，他照人设决定给不给。 */

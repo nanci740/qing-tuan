@@ -6,7 +6,7 @@ import { kv } from './kvStorage';
     locks 每本的锁（四位数字 code，他的还有一句提示 hint；你的是你自己设的）；
     access 你怎么打开他的（code 知道密码、crack 撬开的，只算这一次，退出他的本子就又锁上），seenBy 他怎么打开你的（撬开的也只看到撬开那时候最近的三篇）；
     traces 你的本子上留下的痕迹（谁、用密码还是撬开、什么时候），lockedAt 你上一次设密码的时间（之后被撬过，他撬开时最近的三篇和之后写的，纸上会有折角、杯印、指印之类的痕迹，不写是谁）；
-    misses 你猜错他的密码几次，caught 他发现你撬开他的日记的时间。 */
+    misses 你猜错他的密码几次（每次猜错 40% 会被他知道），caught 他发现你撬开他的日记的时间。 */
 export type DiaryOpen = 'code' | 'crack';
 export interface DiaryLock { code: string; hint: string }
 export interface DiaryTrace { by: string; kind: DiaryOpen; at: number }

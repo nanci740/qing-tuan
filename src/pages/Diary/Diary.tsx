@@ -121,7 +121,7 @@ export function Diary() {
     }
     const missed = tryCode(lock.key, lock.digits);
     if (!missed) { setLock(null); setView({ kind: 'list', key: lock.key }); showToast('打开了'); return; }
-    setLock({ ...lock, digits: '', note: `不对。这是第 ${missed} 次猜错，他会知道。` });
+    setLock({ ...lock, digits: '', note: '密码错误。' });
   }
   async function crack(key: string) {
     if (!await confirmChat({ title: '强行撬开？', message: '不一定撬得开，撬的时候可能被他发现。撬开了也只能看这一次，退出就又锁上。', confirmText: '撬', danger: true })) return;
@@ -222,7 +222,7 @@ export function Diary() {
             <input ref={digitsRef} inputMode="numeric" autoComplete="off" maxLength={4} aria-label="四位数字密码" value={lock.digits} disabled={lock.busy}
               onChange={event => setLock({ ...lock, digits: event.currentTarget.value.replace(/\D/g, '').slice(0, 4) })} onKeyDown={event => { if (event.key === 'Enter') submitLock(); }} />
           </label>
-          <p className={'diary-lock-note' + (/不对|不一样|没撬开/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他会知道你猜了什么。' : ' ')}</p>
+          <p className={'diary-lock-note' + (/不对|不一样|没撬开|错误/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他可能会知道。' : ' ')}</p>
           {lock.mode === 'open' ? <div className="diary-lock-more">
             <button type="button" disabled={lock.busy} onClick={() => { askCode(lock.key); setLock(null); showToast('去聊天里问他了'); }}>跟他要密码</button>
             <button type="button" className="is-danger" disabled={lock.busy} onClick={() => void crack(lock.key)}>强行撬开</button>
