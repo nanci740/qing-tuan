@@ -77,6 +77,7 @@ export function diaryMemory(chatKey: string) {
     lock && access[chatKey] === 'code' && readDiary().given[chatKey] ? '你把日记的密码给了对方。照你的人设，过一阵子你可能会想换一个（不常换）。' : '',
     shared.length ? `对方给你看过的日记（对方知道你看过）：\n${shared.map(describeEntry).join('\n\n')}` : '',
     mine.length ? (seenBy[chatKey] === 'crack' ? `你${ago(cracked)}偷偷撬开过对方上锁的日记（对方不知道是你撬的，除非看出痕迹），只看了那一次（纸上可能留了痕迹，对方可能已经发现了），当时看到的是：\n` : '你用对方给你的密码打开过对方的日记，里面最近写的是：\n') + mine.map(describeEntry).join('\n\n') : '',
+    urges[chatKey] ? '你现在突然有点想偷看对方那本上锁的日记（你不知道密码）。照你的人设决定要不要偷偷撬开：要撬就在 JSON 最外层加 "diary":"crack"（不一定撬得开；撬开了只能看那一次，纸上可能留下痕迹，对方可能会发现）；不撬就什么都不用加，也不用提这个念头。' : '',
     tried && !(seenBy[chatKey] === 'crack' && cracked >= tried) && now - tried < DAY ? '你今天想偷偷撬开对方上锁的日记，没撬开。对方不知道；你心里有点虚，说话可能会露出一点马脚，但不要直接承认。' : '',
   ].filter(Boolean);
   return parts.join('\n\n');
@@ -164,15 +165,24 @@ function lastCrack(key: string) {
   return Math.max(0, ...traces.filter(item => item.by === key && item.kind === 'crack' && item.at > lockedAt).map(item => item.at));
 }
 const ago = (at: number) => { const days = Math.floor((Date.now() - at) / DAY); return days < 1 ? '今天' : days === 1 ? '昨天' : `${days} 天前`; };
-/** 他私聊回你话之前：你的日记上了锁、他没有你给的密码、三天内没试过，就有 8% 会去撬；跟你撬他的一样，一半撬得开（只看那一次，纸上可能留下痕迹）。 */
+/** 他私聊回你话之前：你的日记上了锁、他没有你给的密码、三天内没撬过、一天内没起过念头，就有 8% 起念头想偷看；
+    起了念头，这一次的提示词会提醒他，撬不撬照他的人设自己决定（回话里加 "diary":"crack"）。urges 是还没回完的念头。 */
+const urges: Record<string, number> = {}, urgedAt: Record<string, number> = {};
 export function diaryRoll(key: string) {
-  const { locks, seenBy, traces, tries } = readDiary(), now = Date.now();
-  if (!locks.me || seenBy[key] === 'code' || now - (tries[key] || 0) < 3 * DAY || Math.random() >= .08) return;
-  const opened = Math.random() < .5;
+  const { locks, seenBy, tries } = readDiary(), now = Date.now();
+  delete urges[key];
+  if (!locks.me || seenBy[key] === 'code' || now - (tries[key] || 0) < 3 * DAY || now - (urgedAt[key] || 0) < DAY || Math.random() >= .08) return;
+  urges[key] = urgedAt[key] = now;
+}
+/** 他决定撬：跟你撬他的一样，一半撬得开（只看那一次，纸上可能留下痕迹）；撬没撬开都算试过，三天内不再撬。 */
+function heCracks(key: string) {
+  const { seenBy, traces, tries } = readDiary(), now = Date.now(), opened = Math.random() < .5;
   updateDiary({ tries: { ...tries, [key]: now }, ...(opened ? { seenBy: { ...seenBy, [key]: 'crack' }, traces: [...traces, { by: key, kind: 'crack', at: now }] } : {}) });
 }
-/** 他回话里的动作：换他的密码（你又打不开了）。 */
+/** 他回话里的动作：起了念头以后决定撬你的日记、换他的密码（你又打不开了）。 */
 export function diaryAction(key: string, raw: string) {
+  if (urges[key] && Date.now() - urges[key] < 10 * MINUTE && /"diary"\s*:\s*"crack"/.test(raw)) heCracks(key);
+  delete urges[key];
   const { locks, access } = readDiary();
   // 密码写成字串或数字都认；提示可以只换提示
   const code = /"diary_code"\s*:\s*"?(\d{4})\b/.exec(raw)?.[1], hint = str(/"diary_hint"\s*:\s*"([^"\n]{1,60})"/.exec(raw)?.[1], 40);

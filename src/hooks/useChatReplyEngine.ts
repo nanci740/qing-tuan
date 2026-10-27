@@ -431,7 +431,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 presence: groupInfo.members.map(member => { const state = getChatPresence(member.key); return `${member.name}「${state.online}」${state.status ? '（' + state.status + '）' : ''}`; }).join('、') } : null,
         }, preset);
         // 私聊：他也在的群最近聊了什么，接在系统提示词后面
-        // 日记：他这次可能先去撬你的日记（有机率，撬开了才看得到）
+        // 日记：他这次可能起念头想撬你的日记（有机率），撬不撬他自己决定
         if (!groupInfo) diaryRoll(requestChatKey);
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
@@ -517,7 +517,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (unblock) { setBlockedBy(requestChatKey, false); services.current!.notice(requestChatKey, `${characterName} 解除了对你的拉黑`); }
             else if (blockingUser) return;
             // 你把他拉黑了：他可以发好友申请（"apply":"留言"）请你放他出来，出现在新的朋友
-            // 日记：他换他的密码
+            // 日记：他撬你的（起了念头才算）、换他的密码
             if (!groupInfo) diaryAction(requestChatKey, rawReply);
             const applyText = blockedByUser ? /"apply"\s*:\s*"([^"\n]{1,120})"/.exec(rawReply)?.[1] || '' : '';
             if (applyText) peerApply(requestChatKey, applyText);
