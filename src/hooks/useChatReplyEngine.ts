@@ -14,6 +14,7 @@ import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsSto
 import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsStorage';
 import {peerApply} from '../utils/friendRequests';
 import {diaryAction,diaryHeard,diaryRoll} from '../utils/diaryEngine';
+import {memoryAction,memoryAfterReply,memoryPrompt} from '../utils/memoryEngine';
 import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
@@ -434,6 +435,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         // 日记：他这次可能起念头想撬你的日记（有机率），撬不撬他自己决定
         if (!groupInfo) diaryRoll(requestChatKey);
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
+        // 记忆（Memories App）：他记得的事，私聊、群聊都带；还有他可以悄悄记下新的事
+        { const remembered = memoryPrompt(requestChatKey, recent.map(item => String(item.content || '')).join('\n')); if (remembered) prompt.system += '\n' + remembered; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
         const messages:ApiMessage[] = [
@@ -519,6 +522,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             // 你把他拉黑了：他可以发好友申请（"apply":"留言"）请你放他出来，出现在新的朋友
             // 日记：他撬你的（起了念头才算）、换他的密码
             if (!groupInfo) diaryAction(requestChatKey, rawReply);
+            // 记忆：他悄悄记下的；挤出上下文的聊天攒够了就在背后整理
+            memoryAction(requestChatKey, rawReply); memoryAfterReply(requestChatKey);
             const applyText = blockedByUser ? /"apply"\s*:\s*"([^"\n]{1,120})"/.exec(rawReply)?.[1] || '' : '';
             if (applyText) peerApply(requestChatKey, applyText);
             const emptyReplies = /"replies"\s*:\s*\[\s*\]/.test(rawReply);
