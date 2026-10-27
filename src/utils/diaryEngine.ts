@@ -109,18 +109,26 @@ export function askCode(key: string) {
   tell(key, '对方跟你要你日记的密码。照你的人设决定给不给；要给的话就把四位数字直接写在回话里。');
 }
 /** 他发现你撬他的日记：记下来，他在聊天里反应，可能换密码。 */
-function caughtBy(key: string, how: string) {
+function caughtBy(key: string, what: string) {
   updateDiary({ caught: { ...readDiary().caught, [key]: Date.now() } });
-  tell(key, `你发现对方撬开了你上锁的日记在偷看（${how}被你发现的）。照你的人设反应；想换密码就在 JSON 最外层加 "diary_code":"新的四位数字"。`);
+  tell(key, `你发现${what}。照你的人设反应；想换密码就在 JSON 最外层加 "diary_code":"新的四位数字"。`);
 }
-/** 你撬开他的：马上能看；撬的那一下 30% 会被发现。 */
+/** 你撬他的：一半机会撬得开；撬的时候不管开没开，30% 会被他发现。撬开的只算这一次，退出他的本子就又锁上。 */
 export function crackLock(key: string) {
-  updateDiary({ access: { ...readDiary().access, [key]: 'crack' } });
-  if (Math.random() < .3) caughtBy(key, '撬锁的时候');
+  const opened = Math.random() < .5;
+  if (opened) updateDiary({ access: { ...readDiary().access, [key]: 'crack' } });
+  if (Math.random() < .3) caughtBy(key, opened ? '对方撬开了你上锁的日记在偷看（撬锁的时候被你发现的）' : '对方想撬开你上锁的日记，没撬开，被你撞见了');
+  return opened;
+}
+/** 退出他的本子：撬开的都重新锁上（知道密码的不用）。 */
+export function relockCracked() {
+  const { access } = readDiary();
+  if (!Object.values(access).includes('crack')) return;
+  updateDiary({ access: Object.fromEntries(Object.entries(access).filter(([, how]) => how !== 'crack')) });
 }
 /** 撬开以后每翻开一篇，15% 会被发现。 */
 export function peekEntry(entry: DiaryEntry) {
-  if (readDiary().access[entry.by] === 'crack' && Math.random() < .15) caughtBy(entry.by, `翻开《${entry.title || '无题'}》的时候`);
+  if (readDiary().access[entry.by] === 'crack' && Math.random() < .15) caughtBy(entry.by, `对方撬开了你上锁的日记在偷看（翻开《${entry.title || '无题'}》的时候被你发现的）`);
 }
 /** 你的锁：设、改密码；改了以后他们都要重新问（撬过的也打不开了）。 */
 export function setMyCode(code: string) { updateDiary({ locks: { ...readDiary().locks, me: { code, hint: '' } }, lockedAt: Date.now(), seenBy: {} }); }

@@ -9,7 +9,7 @@ import { confirmChat } from '../../utils/chatConfirm';
 import { showToast } from '../../utils/toast';
 import { dayOf, readDiary, removeEntry, saveEntry, subscribeDiary } from '../../utils/diaryStorage';
 import type { DiaryEntry } from '../../utils/diaryStorage';
-import { askCode, crackLock, diaryTick, ensureLock, peekEntry, setMyCode, tryCode, writeDiary } from '../../utils/diaryEngine';
+import { askCode, crackLock, diaryTick, ensureLock, peekEntry, relockCracked, setMyCode, tryCode, writeDiary } from '../../utils/diaryEngine';
 import { momentPeople } from '../../utils/momentsEngine';
 
 /** 锁的弹窗：mode 是打开他的（open）、打开你自己的（mine）、设你的密码（set，再输一次确认）。 */
@@ -36,9 +36,11 @@ function Clues({ entry, mine, cracks }: { entry: DiaryEntry; mine: DiaryEntry[];
   const kinds = [roll(3)];
   if (roll(10) < 3) kinds.push((kinds[0] + 1 + roll(2)) % 3);
   const spot = () => ({ left: `${12 + roll(60)}%`, top: `${22 + roll(58)}%`, transform: `rotate(${roll(60) - 30}deg)` });
-  return <>{kinds.map(kind => kind === 0 ? <span key={kind} className="diary-clue-fold" aria-hidden="true" />
-    : kind === 1 ? <span key={kind} className="diary-clue-ring" style={spot()} aria-hidden="true" />
-    : <span key={kind}><span className="diary-clue-crease" style={{ top: `${30 + roll(50)}%`, transform: `rotate(${roll(12) - 6}deg)` }} aria-hidden="true" /><span className="diary-clue-print" style={spot()} aria-hidden="true" /></span>)}</>;
+  return <>
+    <span className="diary-clues" aria-hidden="true">{kinds.map(kind => kind === 1 ? <span key={kind} className="diary-clue-ring" style={spot()} />
+      : kind === 2 ? <span key={kind}><span className="diary-clue-crease" style={{ top: `${30 + roll(50)}%`, transform: `rotate(${roll(12) - 6}deg)` }} /><span className="diary-clue-print" style={spot()} /></span> : null)}</span>
+    {kinds.includes(0) ? <span className="diary-clue-fold" aria-hidden="true" /> : null}
+  </>;
 }
 const plain = (text: string) => text.replace(/~~(.+?)~~/gs, '$1').replace(/\s+/g, ' ');
 const dateParts = (day: string) => { const date = new Date(day + 'T12:00:00'); return { d: date.getDate(), m: MONTH[date.getMonth()] + '月', w: '周' + WEEK[date.getDay()], full: `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} 周${WEEK[date.getDay()]}` }; };
@@ -54,7 +56,7 @@ export function Diary() {
   // lock 是锁的弹窗；mineOpen 这次打开日记 App 以后，你的本子输过密码了
   const [lock, setLock] = useState<Lock | null>(null), [mineOpen, setMineOpen] = useState(false), digitsRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
-    const show = () => { setView({ kind: 'shelf' }); setMineOpen(false); setOpen(true); };
+    const show = () => { relockCracked(); setView({ kind: 'shelf' }); setMineOpen(false); setOpen(true); };
     window.addEventListener('qingtuan:open-diary', show);
     return () => window.removeEventListener('qingtuan:open-diary', show);
   }, []);
@@ -74,7 +76,7 @@ export function Diary() {
     if (view.kind === 'shelf') { setOpen(false); return; }
     if (view.kind === 'entry' && entry) { setView({ kind: 'list', key: entry.by }); return; }
     if (view.kind === 'edit') { setView(view.draft.id ? { kind: 'entry', id: view.draft.id } : { kind: 'list', key: 'me' }); return; }
-    setView({ kind: 'shelf' });
+    relockCracked(); setView({ kind: 'shelf' });
   }
   async function askWrite(key: string) {
     setBusy(key);
@@ -119,8 +121,11 @@ export function Diary() {
     setLock({ ...lock, digits: '', note: `不对。这是第 ${missed} 次猜错，他会知道。` });
   }
   async function crack(key: string) {
-    if (!await confirmChat({ title: '强行撬开？', message: '马上就能看。但撬的时候、之后每翻开一篇，都可能被他发现。', confirmText: '撬开', danger: true })) return;
-    crackLock(key); setLock(null); setView({ kind: 'list', key });
+    if (!await confirmChat({ title: '强行撬开？', message: '不一定撬得开，撬的时候可能被他发现。撬开了也只能看这一次，退出就又锁上。', confirmText: '撬', danger: true })) return;
+    setLock(current => current && { ...current, busy: true, digits: '', note: '在撬…' });
+    await new Promise(done => setTimeout(done, 1200));
+    if (crackLock(key)) { setLock(null); setView({ kind: 'list', key }); return; }
+    setLock(current => current && { ...current, busy: false, note: '没撬开，锁还是好好的。' });
   }
   function openEntry(item: DiaryEntry) { if (item.by !== 'me') peekEntry(item); setView({ kind: 'entry', id: item.id }); }
   const newDraft = (): Draft => ({ day: dayOf(Date.now()), weather: '', mood: '', title: '', body: '', share: [] });
@@ -131,7 +136,7 @@ export function Diary() {
     const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me';
     title = mine ? '我的日记' : `${nameOf(view.key)}的日记`;
     body = <>
-      {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的。每翻开一篇，都可能被他发现。</p> : null}
+      {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的，退出就又锁上。每翻开一篇，都可能被他发现。</p> : null}
       <div className="diary-tools">
         <span>{list.length} 篇{mine && diary.locks.me ? '　·　密码 ****' : ''}</span>
         {mine ? <button type="button" className="diary-btn" onClick={() => setLock({ key: 'me', mode: 'set', digits: '', note: '设一个新的四位数字密码。之后他们都要重新问你。' })}>改密码</button> : null}
@@ -208,13 +213,13 @@ export function Diary() {
         <div className="sp-confirm-bar"><span className="sp-confirm-title">{lock.mode === 'set' ? '设密码' : lock.key === 'me' ? '我的日记' : `${nameOf(lock.key)}的日记`}</span></div>
         <div className="sp-confirm-body diary-lock">
           <span className="diary-lock-pad"><LockIcon /></span>
-          {lock.mode === 'open' ? (lock.busy ? <p className="diary-lock-hint">他在想密码…</p> : <p className="diary-lock-hint">提示：{diary.locks[lock.key]?.hint}</p>) : null}
+          {lock.mode === 'open' ? (lock.busy && !diary.locks[lock.key] ? <p className="diary-lock-hint">他在想密码…</p> : <p className="diary-lock-hint">提示：{diary.locks[lock.key]?.hint}</p>) : null}
           <label className="diary-lock-digits">
             {[0, 1, 2, 3].map(index => <i key={index} className={lock.digits.length === index ? 'is-now' : ''}>{lock.digits[index] || ''}</i>)}
             <input ref={digitsRef} inputMode="numeric" autoComplete="off" maxLength={4} aria-label="四位数字密码" value={lock.digits} disabled={lock.busy}
               onChange={event => setLock({ ...lock, digits: event.currentTarget.value.replace(/\D/g, '').slice(0, 4) })} onKeyDown={event => { if (event.key === 'Enter') submitLock(); }} />
           </label>
-          <p className={'diary-lock-note' + (/不对|不一样/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他会知道你猜了什么。' : ' ')}</p>
+          <p className={'diary-lock-note' + (/不对|不一样|没撬开/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他会知道你猜了什么。' : ' ')}</p>
           {lock.mode === 'open' ? <div className="diary-lock-more">
             <button type="button" disabled={lock.busy} onClick={() => { askCode(lock.key); setLock(null); showToast('去聊天里问他了'); }}>跟他要密码</button>
             <button type="button" className="is-danger" disabled={lock.busy} onClick={() => void crack(lock.key)}>强行撬开</button>
