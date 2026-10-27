@@ -13,7 +13,7 @@
 .diary-page *, .diary-page *::before, .diary-page *::after { box-sizing: border-box; }
 .diary-page :where(button) { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
-.diary-titlebar { position: relative; flex: none; display: flex; align-items: center; gap: 10px; padding: max(12px, env(safe-area-inset-top)) max(16px, calc((100% - 460px) / 2)) 13px;
+.diary-titlebar { position: relative; flex: none; display: flex; align-items: center; gap: 10px; padding: max(8px, env(safe-area-inset-top)) max(16px, calc((100% - 460px) / 2)) 8px;
   background: var(--color-accent-strong); border-bottom: 1px solid var(--dy-edge); box-shadow: inset 0 1px 0 var(--effect-highlight); }
 .diary-back { width: 24px; height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: none; color: var(--color-surface) !important; }
 /* 标题写在一张横线纸条上，用胶带斜斜贴着 */
