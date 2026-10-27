@@ -25,7 +25,21 @@ function Body({ text }: { text: string }) {
   return <>{text.split(/(~~.+?~~)/s).map((part, index) => part.startsWith('~~') && part.endsWith('~~') && part.length > 4 ? <s key={index}>{part.slice(2, -2)}</s> : <span key={index}>{part}</span>)}</>;
 }
 function LockIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>; }
-const stamp = (at: number) => { const date = new Date(at); return `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`; };
+/** 被撬开偷看过的痕迹：他撬开时最近的三篇和之后写的，每篇有一两处（折角、杯印、折痕和指印），杯印和指印的位置每篇不一样；不写是谁。 */
+function Clues({ entry, mine, cracks }: { entry: DiaryEntry; mine: DiaryEntry[]; cracks: number[] }) {
+  if (!cracks.length) return null;
+  const first = Math.min(...cracks), before = mine.filter(item => item.at <= first);
+  if (entry.at <= first && !before.slice(-3).includes(entry)) return null;
+  let seed = 0;
+  for (const char of entry.id + first) seed = (seed * 31 + char.charCodeAt(0)) >>> 0;
+  const roll = (max: number) => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 8) % max; };
+  const kinds = [roll(3)];
+  if (roll(10) < 3) kinds.push((kinds[0] + 1 + roll(2)) % 3);
+  const spot = () => ({ left: `${12 + roll(60)}%`, top: `${22 + roll(58)}%`, transform: `rotate(${roll(60) - 30}deg)` });
+  return <>{kinds.map(kind => kind === 0 ? <span key={kind} className="diary-clue-fold" aria-hidden="true" />
+    : kind === 1 ? <span key={kind} className="diary-clue-ring" style={spot()} aria-hidden="true" />
+    : <span key={kind}><span className="diary-clue-crease" style={{ top: `${30 + roll(50)}%`, transform: `rotate(${roll(12) - 6}deg)` }} aria-hidden="true" /><span className="diary-clue-print" style={spot()} aria-hidden="true" /></span>)}</>;
+}
 const plain = (text: string) => text.replace(/~~(.+?)~~/gs, '$1').replace(/\s+/g, ' ');
 const dateParts = (day: string) => { const date = new Date(day + 'T12:00:00'); return { d: date.getDate(), m: MONTH[date.getMonth()] + '月', w: '周' + WEEK[date.getDay()], full: `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} 周${WEEK[date.getDay()]}` }; };
 function ago(at: number) {
@@ -114,11 +128,9 @@ export function Diary() {
   const now = new Date(), today = <>{String(now.getMonth() + 1).padStart(2, '0')}.{String(now.getDate()).padStart(2, '0')}<br />{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][now.getDay()]}</>;
   let title = 'Diary', body: React.ReactNode;
   if (view.kind === 'list') {
-    const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me', traces = diary.traces.filter(item => item.at > diary.lockedAt);
+    const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me';
     title = mine ? '我的日记' : `${nameOf(view.key)}的日记`;
     body = <>
-      {mine && traces.length ? <div className="diary-trace"><b>{traces.some(item => item.kind === 'crack') ? '锁有被撬过的痕迹' : '有人打开过你的日记'}</b>
-        {traces.slice().reverse().slice(0, 5).map((item, index) => <small key={index}>{nameOf(item.by)} · {stamp(item.at)} {item.kind === 'crack' ? '撬开了你的日记' : '用你给的密码打开过'}</small>)}</div> : null}
       {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的。每翻开一篇，都可能被他发现。</p> : null}
       <div className="diary-tools">
         <span>{list.length} 篇{mine && diary.locks.me ? '　·　密码 ****' : ''}</span>
@@ -141,6 +153,7 @@ export function Diary() {
         <div className="diary-paper-head"><span>{date.full}</span>{entry.weather ? <span>{entry.weather}</span> : null}{entry.mood ? <span>{entry.mood}</span> : null}</div>
         <h3>{entry.title || '无题'}</h3>
         <p><Body text={entry.body} /></p>
+        {mine ? <Clues entry={entry} mine={entriesOf('me')} cracks={diary.traces.filter(item => item.kind === 'crack' && item.at > diary.lockedAt).map(item => item.at)} /> : null}
       </article>
       {mine ? <div className="diary-foot">
         <span>{entry.share?.length ? `给${entry.share.map(nameOf).join('、')}看过` : '只有你看得到'}</span>
