@@ -1,0 +1,87 @@
+/* Memories App：整页是一个老电脑的资料夹程序（memories.exe）。标题栏当顶栏（左边返回，右边三个线框小方块只是装饰），
+   底下选单、网址列，中间凹进去的白底窗格铺满到底，最下面状态列。颜色都跟着主题色。 */
+.mx-page {
+  --mx-ink: var(--color-text);
+  --mx-line: color-mix(in srgb, var(--color-muted) 80%, var(--color-text));
+  --mx-soft: color-mix(in srgb, var(--color-muted) 45%, var(--color-surface));
+  --mx-face: color-mix(in srgb, var(--theme-color) 12%, var(--color-surface));
+  --mx-deco: color-mix(in srgb, var(--color-accent-strong) 55%, var(--color-surface));
+  position: fixed; inset: 0; z-index: 2100; display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom); background: var(--mx-face); color: var(--mx-ink); font-size: 11px; isolation: isolate;
+  animation: mxIn .38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes mxIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.mx-page *, .mx-page *::before, .mx-page *::after { box-sizing: border-box; }
+.mx-page :where(button) { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+.mx-bar { flex: none; display: flex; align-items: center; gap: 6px; min-height: 34px; padding: max(6px, env(safe-area-inset-top)) 8px 6px;
+  background: linear-gradient(rgba(255, 255, 255, .35), rgba(255, 255, 255, .08) 50%, transparent 52%),
+    linear-gradient(90deg, var(--color-accent-strong) 8%, color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 82%, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface))); }
+.mx-bar b { flex: 1; min-width: 0; overflow: hidden; color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .5px; text-overflow: ellipsis; text-shadow: var(--effect-text-white); white-space: nowrap; }
+.mx-back { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; background: none; color: #fff !important; }
+.mx-back svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.mx-deco { flex: none; display: flex; gap: 4px; }
+.mx-deco i { display: grid; place-items: center; width: 20px; height: 18px; border: 1px solid var(--mx-deco); }
+.mx-deco svg { width: 10px; height: 10px; fill: none; stroke: var(--mx-deco); stroke-linecap: round; }
+
+.mx-menu { flex: none; display: flex; gap: 12px; padding: 4px 8px 3px; border-bottom: 1px solid var(--mx-soft); box-shadow: 0 1px 0 var(--effect-reflection-edge); font-size: 10px; }
+.mx-menu u { text-underline-offset: 1.5px; }
+.mx-address { flex: none; display: flex; align-items: center; gap: 6px; margin: 5px 6px; font-size: 10px; }
+.mx-address code { flex: 1; min-width: 0; overflow: hidden; padding: 3px 6px; border: 1px solid var(--mx-line); background: var(--color-surface); box-shadow: var(--effect-sunken);
+  font: 10.5px ui-monospace, Menlo, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.mx-btn { padding: 5px 10px; border: 1px solid var(--mx-line); border-radius: 0; background: var(--mx-face); box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--mx-soft); font-size: 11px !important; white-space: nowrap; }
+.mx-btn:disabled { opacity: .6; }
+.mx-up { flex: none; padding: 2px 7px; font-size: 10px !important; }
+
+.mx-tabs { flex: none; display: flex; margin: 3px 6px 0; padding-left: 3px; }
+.mx-tabs button { margin-right: -1px; padding: 4px 11px 3px; border: 1px solid var(--mx-line); border-bottom: 0; border-radius: 3px 3px 0 0; background: color-mix(in srgb, var(--theme-color) 18%, var(--color-surface)); font-size: 10.5px; }
+.mx-tabs button[aria-selected="true"] { position: relative; z-index: 1; margin-bottom: -1px; padding-bottom: 4px; background: var(--color-surface); font-weight: 700; }
+.mx-pane { flex: 1; min-height: 0; overflow-y: auto; margin: 0 6px; padding: 10px 8px; border: 1px solid var(--mx-line); background: var(--color-surface); box-shadow: inset 1px 1px 0 var(--mx-soft); }
+.mx-pane.is-list { padding-top: 4px; }
+.mx-empty { margin: 30px 10px; color: var(--color-muted); font-size: 11px; line-height: 1.7; text-align: center; }
+
+/* 首页：资料夹图示 */
+.mx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 6px; margin-top: 14px; }
+.mx-folder-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 0; border: 0; background: none; text-align: center; }
+.mx-folder { width: 64px; height: 52px; overflow: visible; }
+.mx-folder-back { fill: color-mix(in srgb, var(--theme-color) 55%, #fff6cf); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-folder-front { fill: color-mix(in srgb, var(--theme-color) 40%, #fffbe6); stroke: var(--mx-ink); stroke-width: 1; }
+.mx-folder-shine { fill: none; stroke: #fff; stroke-width: 1.2; opacity: .8; }
+.mx-folder-heart { fill: var(--color-accent-strong); }
+.mx-folder-photo { fill: #fff; stroke: var(--mx-ink); stroke-width: 1; }
+.mx-folder-item b { max-width: 100%; overflow: hidden; padding: 0 3px; font-size: 11px; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+.mx-folder-item:active b { background: var(--color-accent-strong); color: #fff; outline: 1px dotted var(--mx-ink); }
+.mx-folder-item small { color: var(--color-muted); font: 9.5px ui-monospace, Menlo, monospace; }
+.mx-check { position: relative; display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; }
+.mx-pane .mx-check { margin: 18px 2px 0; padding-top: 10px; border-top: 1px dashed var(--mx-soft); }
+.mx-check input { position: absolute; opacity: 0; pointer-events: none; }
+.mx-check i { flex: none; width: 12px; height: 12px; border: 1px solid var(--mx-ink); background: var(--color-surface); box-shadow: var(--effect-sunken); }
+.mx-check input:checked + i { background: var(--color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%23333' stroke-width='1.8'/%3E%3C/svg%3E") center / 10px no-repeat; }
+.mx-check input:focus-visible + i { outline: 1px dotted var(--mx-ink); outline-offset: 1px; }
+
+/* 一个人的记忆：一行一个折角的小文件 */
+.mx-row { width: 100%; display: flex; align-items: flex-start; gap: 8px; padding: 7px 3px; border: 0; border-bottom: 1px dotted var(--mx-soft); background: none; text-align: left; }
+.mx-row:active { background: color-mix(in srgb, var(--theme-color) 30%, var(--color-surface)); }
+.mx-file { flex: none; width: 16px; height: 19px; margin-top: 1px; border: 1px solid var(--mx-ink); background: var(--color-surface); color: var(--color-accent-strong); font: 10px/17px sans-serif; text-align: center;
+  clip-path: polygon(0 0, 70% 0, 100% 25%, 100% 100%, 0 100%); }
+.mx-row-text { flex: 1; min-width: 0; font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.mx-row-text small { display: block; color: var(--color-muted); font: 9.5px ui-monospace, Menlo, monospace; }
+.mx-pin { flex: none; width: 14px; height: 14px; margin-top: 2px; fill: var(--color-accent-strong); }
+.mx-pin-needle { fill: var(--mx-ink); }
+.mx-pin-shine { fill: #fff; opacity: .7; }
+.mx-tools { flex: none; display: flex; gap: 6px; margin: 6px 6px 0; }
+.mx-tools .mx-btn { flex: 1; }
+.mx-status { flex: none; display: flex; gap: 4px; margin: 5px 6px 6px; font-size: 10px; }
+.mx-status span { padding: 1px 6px; border: 1px solid var(--mx-soft); box-shadow: inset 1px 1px 0 var(--mx-soft); }
+.mx-status span:first-child { flex: 1; }
+
+/* 改一条、新增：跟其他确认弹窗同一款 */
+.mx-dialog .sp-confirm { width: min(320px, 92vw); }
+.mx-form { display: flex; flex-direction: column; gap: 6px; }
+.mx-form > b { margin-top: 2px; color: var(--spc-title); font-size: 12px; font-weight: 400; }
+.mx-kinds { display: flex; gap: 6px; }
+.mx-kinds button { flex: 1; padding: 5px 0; border: 1px solid var(--spc-line); border-radius: 2px; background: var(--spc-btn-face); box-shadow: var(--spc-btn-shadow); color: var(--spc-title); font: inherit; font-size: 11.5px; cursor: pointer; }
+.mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); font-weight: 700; }
+.mx-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; font-size: 12px; line-height: 1.5; resize: none; }
+.mx-form .mx-check { margin-top: 4px; color: var(--spc-title); --mx-ink: var(--spc-title); }
+.mx-delete { align-self: flex-start; margin-top: 2px; padding: 0; border: 0; border-bottom: 1px dashed currentColor; background: none; color: var(--color-danger-ink); font: inherit; font-size: 11.5px; cursor: pointer; }

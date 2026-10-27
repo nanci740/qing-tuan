@@ -699,7 +699,7 @@ export function Home() {
             {"\n"}
           </div>
           {"\n"}
-          <div className="app-item" data-app-icon-key="memories">
+          <div className="app-item" data-app-icon-key="memories" role="button" tabIndex={0} aria-label="打开记忆" onClick={event => { event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-memories')); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-memories')); } }}>
             {"\n"}
             <div className="app-card">
               {"\n"}
