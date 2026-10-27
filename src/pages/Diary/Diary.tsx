@@ -117,8 +117,8 @@ export function Diary() {
     const list = entriesOf(view.key).slice().reverse(), mine = view.key === 'me', traces = diary.traces.filter(item => item.at > diary.lockedAt);
     title = mine ? '我的日记' : `${nameOf(view.key)}的日记`;
     body = <>
-      {mine && traces.length ? <div className="diary-trace"><span aria-hidden="true">!</span><span><b>{traces.some(item => item.kind === 'crack') ? '锁有被撬过的痕迹' : '有人打开过你的日记'}</b>
-        {traces.slice().reverse().slice(0, 5).map((item, index) => <small key={index}>{nameOf(item.by)} · {stamp(item.at)} {item.kind === 'crack' ? '撬开了你的日记' : '用你给的密码打开过'}</small>)}</span></div> : null}
+      {mine && traces.length ? <div className="diary-trace"><b>{traces.some(item => item.kind === 'crack') ? '锁有被撬过的痕迹' : '有人打开过你的日记'}</b>
+        {traces.slice().reverse().slice(0, 5).map((item, index) => <small key={index}>{nameOf(item.by)} · {stamp(item.at)} {item.kind === 'crack' ? '撬开了你的日记' : '用你给的密码打开过'}</small>)}</div> : null}
       {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的。每翻开一篇，都可能被他发现。</p> : null}
       <div className="diary-tools">
         <span>{list.length} 篇{mine && diary.locks.me ? '　·　密码 ****' : ''}</span>
@@ -171,10 +171,9 @@ export function Diary() {
       <div className="diary-form-actions"><button type="button" className="diary-btn" onClick={back}>取消</button><button type="button" className="diary-btn is-primary" onClick={() => save(draft)}>存好</button></div>
     </div>;
   } else {
-    const cracked = diary.traces.some(item => item.kind === 'crack' && item.at > diary.lockedAt);
     body = <div className="diary-shelf">
       {books.map(key => { const list = entriesOf(key), last = list[list.length - 1]; return <button type="button" className="diary-book" key={key} onClick={() => void openBook(key)}>
-        <span className="diary-book-tag">{nameOf(key) === '我' ? '我的日记' : nameOf(key)}{key === 'me' && cracked ? <small className="is-cracked">被撬过</small> : <small>{key === 'me' ? 'ONLY ME' : 'DIARY'}</small>}</span>
+        <span className="diary-book-tag">{nameOf(key) === '我' ? '我的日记' : nameOf(key)}<small>{key === 'me' ? 'ONLY ME' : 'DIARY'}</small></span>
         <span className="diary-book-belt" aria-hidden="true" />
         {key === 'me' ? null : <img className="diary-book-photo" alt="" src={photoOf(key)} />}
         <span className="diary-book-meta">{list.length} 篇{last ? <><br />{ago(last.at)}</> : null}</span>
