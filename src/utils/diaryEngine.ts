@@ -38,7 +38,7 @@ export async function writeDiary(key: string) {
     shared.length ? `对方给你看过的日记：\n${shared.map(describeEntry).join('\n\n')}` : '',
     mine.length ? `你前几篇日记：\n${mine.map(describeEntry).join('\n\n')}` : '',
     `今天是 ${now.getMonth() + 1}月${now.getDate()}日 星期${WEEK[now.getDay()]}，晚上了。照你的人设写今天的日记：第一人称，写你自己这一天的生活、心情和想法，有时会写到对方（用你平常心里怎么称呼对方），但不要整篇都是对方。像真人写的日记，150 到 400 字，可以零碎、可以口是心非；写了又后悔的字用 ~~这样~~ 包起来（划掉，一篇最多一两处）。不要跟前几篇重复。`,
-    readDiary().access[key] === 'code' ? '对方知道你日记的密码。照你的人设，偶尔会想换一个：要换就在 JSON 里加 "diary_code":"新的四位数字"（不常换，平常不要加）。' : '',
+    readDiary().access[key] === 'code' ? '对方知道你日记的密码。照你的人设，偶尔会想换一个：要换就在 JSON 里加 "diary_code":"新的四位数字"，想换提示再加 "diary_hint":"新的提示"（不常换，平常不要加）。' : '',
     '只输出一个 JSON：{"title":"标题（短，可以是无题）","weather":"天气（一两个字）","mood":"心情（两四个字）","body":"正文"}',
   ].filter(Boolean).join('\n'));
   diaryAction(key, JSON.stringify(data));
@@ -72,7 +72,7 @@ export function diaryMemory(chatKey: string) {
     : seenBy[chatKey] === 'crack' && cracked ? entries.filter(entry => entry.by === 'me' && entry.at <= cracked).slice(-3) : [];
   const parts = [
     his.length ? `你最近写的日记（只有你自己知道写了什么，对方不知道你写日记；可以影响你的心情和说话，但不要直接念出来）：\n${his.map(describeEntry).join('\n\n')}` : '',
-    lock ? `你的日记上了锁，密码是 ${lock.code}（你留给对方的提示：「${lock.hint}」）。只有你知道；对方跟你要的话，照你的人设决定给不给，要给就把四位数字直接写在回话里。想换密码就在 JSON 最外层加 "diary_code":"新的四位数字"，换了以后对方就打不开了。` : '',
+    lock ? `你的日记上了锁，密码是 ${lock.code}（你留给对方的提示：「${lock.hint}」）。只有你知道；对方跟你要的话，照你的人设决定给不给，要给就把四位数字直接写在回话里。\n要换密码（对方叫你换、或你自己想换）一定要在 JSON 最外层加 "diary_code":"新的四位数字"，提示也一起换就再加 "diary_hint":"新的提示（一句话，不能直接写出数字）"；只在话里说换了不算数。换了以后对方就打不开了。` : '',
     lock && caught[chatKey] && now - caught[chatKey] < 3 * DAY ? '你之前发现对方撬开你的日记偷看过，你记得这件事。' : '',
     lock && access[chatKey] === 'code' ? '对方现在知道你日记的密码。照你的人设，过一阵子你可能会想换一个（不常换）。' : '',
     shared.length ? `对方给你看过的日记（对方知道你看过）：\n${shared.map(describeEntry).join('\n\n')}` : '',
@@ -116,7 +116,7 @@ export function askCode(key: string) {
 /** 他发现你撬他的日记：记下来，他在聊天里反应，可能换密码。 */
 function caughtBy(key: string, what: string) {
   updateDiary({ caught: { ...readDiary().caught, [key]: Date.now() } });
-  tell(key, `你发现${what}。照你的人设反应；想换密码就在 JSON 最外层加 "diary_code":"新的四位数字"。`);
+  tell(key, `你发现${what}。照你的人设反应；想换密码就在 JSON 最外层加 "diary_code":"新的四位数字"，提示也换就再加 "diary_hint":"新的提示"。`);
 }
 /** 你撬他的：一半机会撬得开；撬的时候不管开没开，30% 会被他发现。撬开的只算这一次，退出他的本子就又锁上。 */
 export function crackLock(key: string) {
@@ -159,9 +159,11 @@ const ago = (at: number) => { const days = Math.floor((Date.now() - at) / DAY); 
 export function diaryAction(key: string, raw: string) {
   const { locks, seenBy, traces, access } = readDiary();
   if (/"diary"\s*:\s*"crack"/.test(raw) && locks.me && seenBy[key] !== 'code' && Date.now() - lastCrack(key) > 3 * DAY) updateDiary({ seenBy: { ...seenBy, [key]: 'crack' }, traces: [...traces, { by: key, kind: 'crack', at: Date.now() }] });
-  const code = /"diary_code"\s*:\s*"(\d{4})"/.exec(raw)?.[1];
-  if (code && locks[key] && locks[key].code !== code) {
-    const rest = { ...access }; delete rest[key];
-    updateDiary({ locks: { ...readDiary().locks, [key]: { ...locks[key], code } }, access: rest, misses: { ...readDiary().misses, [key]: 0 } });
+  // 密码写成字串或数字都认；提示可以只换提示
+  const code = /"diary_code"\s*:\s*"?(\d{4})\b/.exec(raw)?.[1], hint = str(/"diary_hint"\s*:\s*"([^"\n]{1,60})"/.exec(raw)?.[1], 40);
+  if (locks[key] && (code && locks[key].code !== code || hint && locks[key].hint !== hint)) {
+    const changed = !!code && locks[key].code !== code, rest = { ...access };
+    if (changed) delete rest[key];
+    updateDiary({ locks: { ...readDiary().locks, [key]: { code: code || locks[key].code, hint: hint || locks[key].hint } }, ...(changed ? { access: rest, misses: { ...readDiary().misses, [key]: 0 } } : {}) });
   }
 }
