@@ -75,3 +75,28 @@
 .diary-chips button { padding: 2px 9px; border: 1px solid var(--dy-edge); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow); font-size: 11px; }
 .diary-chips button[aria-pressed="true"] { background: var(--theme-color); box-shadow: var(--effect-sunken); font-weight: 700; }
 .diary-form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 14px; }
+
+/* 书架：他的本子上了锁（右上角一颗小锁）；你的本子被撬过，标签上斜斜盖一个红色「被撬过」 */
+
+/* 你的本子被打开过：最上面一格淡红的提醒，写谁、什么时候、用密码还是撬开 */
+.diary-trace { position: relative; margin: 8px 6px 14px; padding: 8px 14px 6px; border: 1px solid var(--dy-line); transform: rotate(-.8deg);
+  background: #fffdf8 repeating-linear-gradient(#fffdf8 0 19px, color-mix(in srgb, var(--theme-color) 60%, #fff) 19px 20px); background-position: 0 6px; box-shadow: 1px 1px 0 rgba(0, 0, 0, .08); line-height: 20px; }
+.diary-trace::before { content: ''; position: absolute; left: 50%; top: -6px; width: 40px; height: 12px; margin-left: -20px; border: 1px dashed rgba(255, 255, 255, .7); background: color-mix(in srgb, var(--theme-color) 50%, rgba(255, 255, 255, .7)); transform: rotate(3deg); }
+.diary-trace b { display: block; color: var(--color-danger-ink); font: 700 12px/20px 'Songti SC', Georgia, serif; }
+.diary-trace small { display: block; color: var(--dy-ink); font-size: 10.5px; }
+.diary-warn { margin: 0 0 8px; color: var(--color-danger-ink); font-size: 10.5px; }
+
+/* 锁的弹窗：一颗圆锁、他的提示、四格数字（看不见的输入框盖在上面）、猜错的提醒，下面两个小字按钮：跟他要密码、强行撬开 */
+.diary-lock { display: flex; flex-direction: column; align-items: center; padding-top: 14px !important; text-align: center; }
+.diary-lock-pad { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--win-line); border-radius: 50%; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow); }
+.diary-lock-pad svg { width: 24px; height: 24px; fill: none; stroke: var(--color-text); stroke-width: 1.8; }
+.diary-lock-hint { margin: 10px 0 0; padding: 3px 10px; border: 1px dashed var(--win-line); background: #fffdf8; color: var(--color-text); font-size: 11px; }
+.diary-lock-digits { position: relative; display: flex; gap: 10px; margin-top: 14px; cursor: text; }
+.diary-lock-digits i { width: 34px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--win-line); background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font-size: 18px; font-style: normal; }
+.diary-lock-digits i.is-now { border-color: var(--color-text); }
+.diary-lock-digits input { position: absolute; inset: 0; width: 100%; opacity: 0; font-size: 16px; }
+.diary-lock-note { min-height: 16px; margin: 8px 0 0; color: var(--color-muted); font-size: 10.5px; }
+.diary-lock-note.is-error { color: var(--color-danger-ink); }
+.diary-lock-more { display: flex; gap: 18px; margin-top: 10px; }
+.diary-lock-more button { padding: 2px 0; border: 0; border-bottom: 1px dashed currentColor; background: none; color: var(--color-text); font: inherit; font-size: 11.5px; cursor: pointer; }
+.diary-lock-more button.is-danger { color: var(--color-danger-ink); }
