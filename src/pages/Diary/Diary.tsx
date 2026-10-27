@@ -171,12 +171,11 @@ export function Diary() {
       <div className="diary-form-actions"><button type="button" className="diary-btn" onClick={back}>取消</button><button type="button" className="diary-btn is-primary" onClick={() => save(draft)}>存好</button></div>
     </div>;
   } else {
+    const cracked = diary.traces.some(item => item.kind === 'crack' && item.at > diary.lockedAt);
     body = <div className="diary-shelf">
       {books.map(key => { const list = entriesOf(key), last = list[list.length - 1]; return <button type="button" className="diary-book" key={key} onClick={() => void openBook(key)}>
-        <span className="diary-book-tag">{nameOf(key) === '我' ? '我的日记' : nameOf(key)}<small>{key === 'me' ? 'ONLY ME' : 'DIARY'}</small></span>
+        <span className="diary-book-tag">{nameOf(key) === '我' ? '我的日记' : nameOf(key)}{key === 'me' && cracked ? <small className="is-cracked">被撬过</small> : <small>{key === 'me' ? 'ONLY ME' : 'DIARY'}</small>}</span>
         <span className="diary-book-belt" aria-hidden="true" />
-        {key === 'me' ? (diary.traces.some(item => item.kind === 'crack' && item.at > diary.lockedAt) ? <span className="diary-book-stamp">被撬过</span> : null)
-          : diary.access[key] ? null : <span className="diary-book-lock" aria-label="上了锁"><LockIcon /></span>}
         {key === 'me' ? null : <img className="diary-book-photo" alt="" src={photoOf(key)} />}
         <span className="diary-book-meta">{list.length} 篇{last ? <><br />{ago(last.at)}</> : null}</span>
       </button>; })}

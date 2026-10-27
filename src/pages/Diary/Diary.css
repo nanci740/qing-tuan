@@ -38,6 +38,7 @@
 .diary-book::before { content: ''; position: absolute; inset: 6px; border: 1.5px dashed color-mix(in srgb, var(--dy-cover) 55%, var(--dy-ink)); border-radius: 3px 7px 7px 3px; pointer-events: none; }
 .diary-book-tag { position: absolute; left: 22px; right: 22px; top: 26px; padding: 6px 4px; overflow: hidden; border: 1px solid var(--dy-line); background: var(--color-surface); color: var(--dy-ink); font: 700 13px/1.4 'Songti SC', Georgia, serif; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .diary-book-tag small { display: block; color: var(--color-muted); font: 9px Georgia, serif; letter-spacing: 2px; }
+.diary-book-tag small.is-cracked { color: var(--color-danger-ink); font-family: inherit; }
 .diary-book-belt { position: absolute; right: -4px; top: 72px; width: 46px; height: 20px; border-radius: 3px 0 0 3px; background: color-mix(in srgb, var(--dy-cover) 75%, var(--dy-ink)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); }
 .diary-book-belt::after { content: ''; position: absolute; left: 6px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-surface); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25); }
 .diary-book-photo { position: absolute; left: 22px; bottom: 16px; width: 38px; height: 38px; border: 3px solid var(--color-surface); border-radius: 50%; background: #fff; object-fit: cover; }
@@ -77,9 +78,6 @@
 .diary-form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 14px; }
 
 /* 书架：他的本子上了锁（右上角一颗小锁）；你的本子被撬过，标签上斜斜盖一个红色「被撬过」 */
-.diary-book-lock { position: absolute; right: 12px; top: 11px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--dy-line); border-radius: 50%; background: var(--color-surface); }
-.diary-book-lock svg { width: 12px; height: 12px; fill: none; stroke: var(--dy-ink); stroke-width: 2.2; }
-.diary-book-stamp { position: absolute; right: 18px; top: 58px; padding: 0 4px; border: 1px solid var(--color-danger); background: var(--color-surface); color: var(--color-danger-ink); font-size: 9px; transform: rotate(-8deg); }
 
 /* 你的本子被打开过：最上面一格淡红的提醒，写谁、什么时候、用密码还是撬开 */
 .diary-trace { display: flex; gap: 8px; margin-bottom: 10px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--color-danger) 45%, var(--dy-line)); background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface)); line-height: 1.6; }
