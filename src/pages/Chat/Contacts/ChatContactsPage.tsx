@@ -183,7 +183,7 @@ export function ChatContactsPage() {
     return <div className="chat-contacts-row is-static" key={item.id}>
       <img className="chat-contacts-avatar" alt="" src={who?.photoUrl || DEFAULT_AVATAR} />
       <span className="chat-contacts-text"><b>{name}</b><small>{out ? '我' : item.name}：{item.greeting || '请求添加你为朋友'}</small></span>
-      {!out && item.state === 'pending' ? <button type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</button>
+      {!out && item.state === 'pending' ? <PressedButton type="button" className="chat-contacts-btn is-primary" onClick={() => setStranger(item.id)}>查看</PressedButton>
         : <span className="chat-contacts-state">{out ? <span aria-hidden="true">↗ </span> : null}{status}</span>}
     </div>;
   };
@@ -201,19 +201,19 @@ export function ChatContactsPage() {
           {gone.map(item => { const name = contacts.remarks[item.archiveId] || String(item.name || item.nickname || ''); return <div className="chat-contacts-row is-static" key={item.archiveId}>
             <img className="chat-contacts-avatar" alt="" src={item.photoUrl || DEFAULT_AVATAR} />
             <span className="chat-contacts-text"><b>{name}</b><small>{lastSaid(item.archiveId, 'out', name, `${stamp(contacts.deleted[item.archiveId].at)} 删除`)}</small></span>
-            {outPending(item.archiveId) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn" onClick={() => startApply(item.archiveId, name)}>申请添加</button>}
+            {outPending(item.archiveId) ? <span className="chat-contacts-state">↗ 等待验证</span> : <PressedButton type="button" className="chat-contacts-btn" onClick={() => startApply(item.archiveId, name)}>申请添加</PressedButton>}
           </div>; })}</> : null}
         <div className="chat-contacts-sec">陌生人来加你</div>
         <div className="chat-contacts-set">
           <span>多久来一个<small>模型随机生成的人，收下就会变成新角色；小手机开着的时候才会来</small></span>
           <span className="chat-contacts-choices" role="radiogroup">
-            {([['off', '关'], ['some', '偶尔'], ['often', '常常']] as [StrangerRate, string][]).map(([value, label]) => <button type="button" role="radio" key={value} aria-checked={contacts.stranger === value}
-              onClick={() => updateContacts({ stranger: value, nextStrangerAt: 0 })}>{label}</button>)}
+            {([['off', '关'], ['some', '偶尔'], ['often', '常常']] as [StrangerRate, string][]).map(([value, label]) => <PressedButton type="button" role="radio" key={value} aria-checked={contacts.stranger === value}
+              onClick={() => updateContacts({ stranger: value, nextStrangerAt: 0 })}>{label}</PressedButton>)}
           </span>
         </div>
         <div className="chat-contacts-set">
           <span>现在就来一个<small>不想等的话</small></span>
-          <button type="button" className="chat-contacts-btn" disabled={busy === 'stranger'} onClick={() => void newStranger()}>{busy === 'stranger' ? '想人中…' : '来一个'}</button>
+          <PressedButton type="button" className="chat-contacts-btn" disabled={busy === 'stranger'} onClick={() => void newStranger()}>{busy === 'stranger' ? '想人中…' : '来一个'}</PressedButton>
         </div>
       </div>
     </>;
@@ -226,15 +226,15 @@ export function ChatContactsPage() {
         {mine.map(item => <div className="chat-contacts-row is-static" key={item.key}>
           <img className="chat-contacts-avatar" alt="" src={item.photo} />
           <span className="chat-contacts-text"><b>{item.shown}</b><small>{lastSaid(item.key, 'in', item.name, `${stamp(contacts.blocked[item.key].at)} 拉黑`)}</small></span>
-          {inPending(item.key) ? <button type="button" className="chat-contacts-btn" onClick={() => setStranger(inPending(item.key)!.id)}>查看</button> : null}
-          <button type="button" className="chat-contacts-btn is-primary" onClick={() => { (window as Bridge).smallphoneBlockContact?.(item.key, false); showToast(`${item.shown} 放出来了`); }}>解除</button>
+          {inPending(item.key) ? <PressedButton type="button" className="chat-contacts-btn" onClick={() => setStranger(inPending(item.key)!.id)}>查看</PressedButton> : null}
+          <PressedButton type="button" className="chat-contacts-btn is-primary" onClick={() => { (window as Bridge).smallphoneBlockContact?.(item.key, false); showToast(`${item.shown} 放出来了`); }}>解除</PressedButton>
         </div>)}
         {!mine.length ? <p className="chat-contacts-empty">没有拉黑谁。</p> : null}
         <div className="chat-contacts-sec">把你拉黑的</div>
         {theirs.map(item => <div className="chat-contacts-row is-static" key={item.key}>
           <img className="chat-contacts-avatar" alt="" src={item.photo} />
           <span className="chat-contacts-text"><b>{item.shown}</b><small>{lastSaid(item.key, 'out', item.name, `${stamp(contacts.blockedBy[item.key].at)} 把你拉黑了`)}</small></span>
-          {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <button type="button" className="chat-contacts-btn" onClick={() => startApply(item.key, item.shown)}>申请添加</button>}
+          {outPending(item.key) ? <span className="chat-contacts-state">↗ 等待验证</span> : <PressedButton type="button" className="chat-contacts-btn" onClick={() => startApply(item.key, item.shown)}>申请添加</PressedButton>}
         </div>)}
         {!theirs.length ? <p className="chat-contacts-empty">没有人拉黑你。</p> : null}
         <p className="chat-contacts-note">你拉黑的人，消息会被你拒收，他可能会来申请。<br />把你拉黑的人，收不到你的消息，可以申请加他。<br />群里照常。</p>
@@ -242,10 +242,10 @@ export function ChatContactsPage() {
     </>;
   } else if (view === 'tags') {
     body = <>
-      <div className="chat-contacts-top">{back('标签')}<button type="button" className="chat-contacts-btn" onClick={() => setTagEdit({ id: '', name: '' })}>＋ 新标签</button></div>
+      <div className="chat-contacts-top">{back('标签')}<PressedButton type="button" className="chat-contacts-btn" onClick={() => setTagEdit({ id: '', name: '' })}>＋ 新标签</PressedButton></div>
       <div className="chat-contacts-list">
         {contacts.tags.map(tag => { const members = people.filter(item => contacts.tagged[item.key]?.includes(tag.id)); return <div className="chat-contacts-group" key={tag.id}>
-          {head('tag:' + tag.id, tag.name, members.length, <button type="button" className="chat-contacts-more" aria-label="改标签" onClick={() => setTagEdit({ ...tag })}>⋯</button>)}
+          {head('tag:' + tag.id, tag.name, members.length, <PressedButton type="button" className="chat-contacts-more" aria-label="改标签" onClick={() => setTagEdit({ ...tag })}>⋯</PressedButton>)}
           {folded['tag:' + tag.id] ? null : members.map(row)}
         </div>; })}
         {!contacts.tags.length ? <p className="chat-contacts-empty">还没有标签。按右上角新建，或在名片里点「＋」给人贴标签。</p> : null}
