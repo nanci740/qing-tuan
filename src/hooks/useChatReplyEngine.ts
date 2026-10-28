@@ -6,6 +6,7 @@ import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
 import type {ChatPreferences} from '../types/chatPreferences';
+import {loadChatPreferences} from '../utils/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
 import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
@@ -396,7 +397,10 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             : '（暂无可引用的较早消息）';
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
-        const aiVoiceAllowed = !groupInfo && !!requestPreferences.aiVoice && !!requestPreferences.voiceName && !!window.smallphoneVoiceReady?.();
+        // 语音：私聊用这个聊天设的音色；群聊每个成员用自己聊天设置里的音色，没设音色的成员只能打字
+        const voiceOf = (key?: string) => groupInfo ? (key ? loadChatPreferences(key).voiceName : '') : requestPreferences.voiceName;
+        const voiceMembers = groupInfo ? groupInfo.members.filter(member => voiceOf(member.key)) : [];
+        const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.() && (groupInfo ? voiceMembers.length > 0 : !!requestPreferences.voiceName);
         // 照片随时都能发；「家机照片生图」开着、生图也设定好了才真的画出来，不然就放预设照片，点开看画面描述。
         const aiPhotoDraw = !!requestPreferences.aiPhoto && chatPhotoReady();
         let trailingUserMessages = 0;
@@ -436,6 +440,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (!groupInfo) diaryRoll(requestChatKey);
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 记忆（Memories App）：他记得的事，私聊、群聊都带；还有他可以悄悄记下新的事
+        if (groupInfo && aiVoiceAllowed) prompt.system += `\n群里的语音：每一条 replies 还可以加上 "voice":true，表示这个成员这条用语音发（大家会收到一条可以播放的语音消息）。能发语音的成员只有：${voiceMembers.map(member => member.name).join('、')}；其他成员只能打字。要不要用语音，照各自的人设和当下气氛决定，不要每条都用。`;
         { const remembered = memoryPrompt(requestChatKey, recent.map(item => String(item.content || '')).join('\n')); if (remembered) prompt.system += '\n' + remembered; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -631,8 +636,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && !willRecall && !photo && !location && !sticker && !pay) {
-                        try { voiceAudio = await voice.prepare(reply, requestPreferences.voiceName); } catch (error) { voiceAudio = null; }
+                    if (segmentVoices[index] && voiceOf(speaker?.key) && !willRecall && !photo && !location && !sticker && !pay) {
+                        try { voiceAudio = await voice.prepare(reply, voiceOf(speaker?.key)); } catch (error) { voiceAudio = null; }
                     }
                     const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : reply);
                     pendingRows.push(pending.row);
@@ -654,9 +659,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index] && !photo && !location && !sticker && !pay) {
+                    if (segmentVoices[index] && voiceOf(speaker?.key) && !photo && !location && !sticker && !pay) {
                         try {
-                            const voiceAudio = await voice.prepare(reply, requestPreferences.voiceName);
+                            const voiceAudio = await voice.prepare(reply, voiceOf(speaker?.key));
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
                             if (backgroundVoice) notifyVoiceLength = backgroundVoice.lengthText;
                         } catch (error) { backgroundVoice = null; }

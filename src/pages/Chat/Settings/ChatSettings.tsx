@@ -4,7 +4,7 @@ import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/Cha
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
 import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft } from './ChatAppearanceControls';
 import { ChatOpeningInput, ChatRestartButton } from './ChatOpeningControls';
-import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect, ChatVoiceName } from './ChatReplyControls';
+import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect, ChatVoiceName, ChatGroupVoices } from './ChatReplyControls';
 import { ChatSettingCheckbox } from './ChatSettingCheckbox';
 import { ChatPatSuffix } from './ChatPatControls';
 import { ChatSettingTimeDisplay } from './ChatSettingTimeDisplay';
@@ -414,6 +414,7 @@ export function ChatSettings() {
                 <span className="chat-setting-field-label"><strong>{"音色"}</strong><span>{"他发语音用的声音，每个角色各填各的。MiniMax 填 Voice ID，OpenAI 填 alloy 这类名字；空着就发不了语音。"}</span></span>
                 <ChatVoiceName />
               </div>
+              <ChatGroupVoices />
               {"\n                        "}
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>

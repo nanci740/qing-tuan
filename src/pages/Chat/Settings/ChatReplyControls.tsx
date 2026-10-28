@@ -8,6 +8,11 @@ import { PressedButton } from '../../../components/shared/PressedButton';
 import { showToast } from '../../../utils/toast';
 import { loadVoiceImageSettings } from '../../../utils/voiceImageServices';
 import { applyVoiceProviderPreset } from '../../../utils/voiceImagePresets';
+import { loadChatPreferences, saveChatPreferences } from '../../../utils/chatPreferences';
+import { readChatCharacters } from '../../../utils/chatCharacterStorage';
+import { groupMembers, isGroup, memberName } from '../../../utils/chatGroups';
+import { contactName } from '../../../utils/contactsStorage';
+import type { ChatCharacter } from '../../../types/chatCharacters';
 
 export function ChatReplySelect({ id, setting, children }: {
   id: string; setting: 'replyLength' | 'quotePolicy' | 'photoInteraction'; children: ReactNode;
@@ -69,15 +74,14 @@ export function ChatReplyModel() {
     onBlur={commit} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) commit(); }} />;
 }
 
-/** 他发语音用的音色：每个聊天自己填，旁边可以试听一句。提示照「语音与生图设置」选的服务写。 */
-export function ChatVoiceName() {
-  const { values, syncVersion, change } = useChatPreferences();
+/** 音色输入框加试听：value 是现在存的音色，onCommit 存新的。提示照「语音与生图设置」选的服务写。 */
+function VoiceNameInput({ id, value, version, onCommit }: { id?: string; value: string; version: number; onCommit: (next: string) => void }) {
   const input = useRef<HTMLInputElement | null>(null), [busy, setBusy] = useState(false);
-  useLayoutEffect(() => { if (input.current) input.current.value = values.voiceName; }, [values.voiceName, syncVersion]);
-  const provider = loadVoiceImageSettings().voice.provider, placeholder = applyVoiceProviderPreset(loadVoiceImageSettings().voice, provider).meta.voicePlaceholder || '音色';
+  useLayoutEffect(() => { if (input.current) input.current.value = value; }, [value, version]);
+  const settings = loadVoiceImageSettings().voice, placeholder = applyVoiceProviderPreset(settings, settings.provider).meta.voicePlaceholder || '音色';
   function commit() {
     const next = input.current?.value.trim().slice(0, 120) || '';
-    if (next !== values.voiceName) change('voiceName', next);
+    if (next !== value) onCommit(next);
     return next;
   }
   async function listen() {
@@ -95,8 +99,26 @@ export function ChatVoiceName() {
     finally { setBusy(false); }
   }
   return <span className="chat-setting-voice-name">
-    <input className="chat-setting-input" id="chatSettingVoiceName" type="text" autoComplete="off" placeholder={placeholder} ref={input} onBlur={commit}
+    <input className="chat-setting-input" id={id} type="text" autoComplete="off" placeholder={placeholder} ref={input} onBlur={commit}
       onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) commit(); }} />
     <PressedButton type="button" className="chat-setting-action" disabled={busy} onClick={() => void listen()}>{busy ? '念…' : '试听'}</PressedButton>
   </span>;
+}
+/** 私聊：他发语音用的音色，存在这个聊天的设置里。 */
+export function ChatVoiceName() {
+  const { values, syncVersion, change } = useChatPreferences();
+  return <VoiceNameInput id="chatSettingVoiceName" value={values.voiceName} version={syncVersion} onCommit={next => change('voiceName', next)} />;
+}
+/** 群聊：每个成员一栏音色，存在成员自己的私聊设置里（私聊、群聊用同一个声音）。 */
+export function ChatGroupVoices() {
+  const { values, syncVersion } = useChatPreferences(), [, refresh] = useState(0);
+  const group = (window as Window & { smallphoneGetActiveCharacterProfile?: () => ChatCharacter | null }).smallphoneGetActiveCharacterProfile?.() || null;
+  void values;
+  if (!isGroup(group)) return null;
+  const characters = readChatCharacters();
+  return <>{groupMembers(group, characters).map(member => <div className="chat-setting-field-row chat-setting-member-voice" key={member.archiveId}>
+    <span className="chat-setting-field-label"><strong>{contactName(member.archiveId, memberName(member))}</strong><span>{'跟他私聊用的是同一个音色'}</span></span>
+    <VoiceNameInput value={loadChatPreferences(member.archiveId).voiceName} version={syncVersion}
+      onCommit={next => { saveChatPreferences(member.archiveId, { ...loadChatPreferences(member.archiveId), voiceName: next }); refresh(n => n + 1); }} />
+  </div>)}</>;
 }

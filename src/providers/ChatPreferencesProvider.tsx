@@ -66,7 +66,7 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
     } else if (key === 'openingText' || key === 'voiceTranscribe' || key === 'voiceDirect' || key === 'aiVoice' || key === 'aiPhoto' || key === 'voiceAutoText' || key === 'voiceAutoTranslate') {
       if (key === 'aiVoice' && value && !window.smallphoneVoiceReady?.()) {
         showToast('请先在「语音与生图设置」开启语音并填好服务，家机才发得出语音');
-      } else if (key === 'aiVoice' && value && !preferences.voiceName) {
+      } else if (key === 'aiVoice' && value && !(window as Window & { smallphoneGetActiveCharacterProfile?: () => { group?: unknown } | null }).smallphoneGetActiveCharacterProfile?.()?.group && !preferences.voiceName) {
         showToast('在下面填好他的音色，家机才发得出语音');
       }
       if (key === 'aiPhoto' && value && !chatPhotoReady()) {
