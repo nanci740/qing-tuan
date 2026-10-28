@@ -62,9 +62,9 @@ function DayPicker({ value, onPick, onClose }: { value: string; onPick: (day: st
     <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="选择日期">
       <div className="sp-confirm-bar"><span className="sp-confirm-title">选择日期</span></div>
       <div className="diary-picker-nav">
-        <button type="button" className="diary-btn" aria-label="上个月" onClick={() => setMonth(new Date(year, index - 1, 1))}>{arrow('15 18 9 12 15 6')}</button>
+        <PressedButton type="button" aria-label="上个月" onClick={() => setMonth(new Date(year, index - 1, 1))}>{arrow('15 18 9 12 15 6')}</PressedButton>
         <strong aria-live="polite">{year}年{index + 1}月</strong>
-        <button type="button" className="diary-btn" aria-label="下个月" onClick={() => setMonth(new Date(year, index + 1, 1))}>{arrow('9 18 15 12 9 6')}</button>
+        <PressedButton type="button" aria-label="下个月" onClick={() => setMonth(new Date(year, index + 1, 1))}>{arrow('9 18 15 12 9 6')}</PressedButton>
       </div>
       <div className="diary-picker-week" aria-hidden="true">{[...WEEK].map(day => <span key={day}>{day}</span>)}</div>
       <div className="diary-picker-days">
@@ -72,7 +72,7 @@ function DayPicker({ value, onPick, onClose }: { value: string; onPick: (day: st
         {Array.from({ length: count }, (_, i) => { const day = `${year}-${pad(index + 1)}-${pad(i + 1)}`;
           return <button type="button" key={day} aria-pressed={day === value} aria-current={day === today ? 'date' : undefined} aria-label={`${year}年${index + 1}月${i + 1}日`} onClick={() => onPick(day)}>{i + 1}</button>; })}
       </div>
-      <div className="diary-picker-actions"><button type="button" className="diary-btn" onClick={() => onPick(today)}>今天</button></div>
+      <div className="diary-picker-actions"><PressedButton type="button" onClick={() => onPick(today)}>今天</PressedButton></div>
     </div>
   </div>, document.body);
 }
@@ -179,9 +179,9 @@ export function Diary() {
       {!mine && diary.access[view.key] === 'crack' ? <p className="diary-warn">你是撬开的，退出就又锁上。每翻开一篇，都可能被他发现。</p> : null}
       <div className="diary-tools">
         <span>{list.length} 篇{mine && diary.locks.me ? '　·　密码 ****' : ''}</span>
-        {mine ? <button type="button" className="diary-btn" onClick={() => setLock({ key: 'me', mode: 'set', digits: '', note: '设一个新的四位数字密码。之后他们都要重新问你。' })}>改密码</button> : null}
-        {mine ? <button type="button" className="diary-btn is-primary" onClick={() => setView({ kind: 'edit', draft: newDraft() })}>写日记</button>
-          : <button type="button" className="diary-btn is-primary" disabled={!!busy} onClick={() => void askWrite(view.key)}>{busy === view.key ? '他在写…' : '让他写一篇'}</button>}
+        {mine ? <PressedButton type="button" className="diary-btn" onClick={() => setLock({ key: 'me', mode: 'set', digits: '', note: '设一个新的四位数字密码。之后他们都要重新问你。' })}>改密码</PressedButton> : null}
+        {mine ? <PressedButton type="button" className="diary-btn is-primary" onClick={() => setView({ kind: 'edit', draft: newDraft() })}>写日记</PressedButton>
+          : <PressedButton type="button" className="diary-btn is-primary" disabled={!!busy} onClick={() => void askWrite(view.key)}>{busy === view.key ? '他在写…' : '让他写一篇'}</PressedButton>}
       </div>
       {list.map(item => { const date = dateParts(item.day); return <button type="button" className="diary-row" key={item.id} onClick={() => openEntry(item)}>
         <span className="diary-date"><b>{date.d}</b><small>{date.m} {date.w}</small></span>
@@ -202,8 +202,8 @@ export function Diary() {
       </article>
       {mine ? <div className="diary-foot">
         <span>{entry.share?.length ? `给${entry.share.map(nameOf).join('、')}看过` : '只有你看得到'}</span>
-        <button type="button" className="diary-btn" onClick={() => setView({ kind: 'edit', draft: { id: entry.id, day: entry.day, weather: entry.weather, mood: entry.mood, title: entry.title, body: entry.body, share: entry.share || [] } })}>编辑</button>
-        <button type="button" className="diary-btn is-danger" onClick={() => void drop(entry)}>删除</button>
+        <PressedButton type="button" className="diary-btn" onClick={() => setView({ kind: 'edit', draft: { id: entry.id, day: entry.day, weather: entry.weather, mood: entry.mood, title: entry.title, body: entry.body, share: entry.share || [] } })}>编辑</PressedButton>
+        <PressedButton type="button" className="diary-btn is-danger" onClick={() => void drop(entry)}>删除</PressedButton>
       </div> : <p className="diary-foot is-quiet">{diary.given[entry.by] ? '他把密码给了你。' : caughtSince(entry.by, visitAt.current) ? '他发现你在看了。' : caughtSince(entry.by, Date.now() - 3 * 86400000) ? '他之前发现过你偷看。' : '他不知道你看过。'}</p>}
     </>;
   } else if (view.kind === 'edit') {
@@ -215,7 +215,7 @@ export function Diary() {
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5" /></svg></button>
       {picking ? <DayPicker value={draft.day} onPick={day => { set({ day }); setPicking(false); }} onClose={() => setPicking(false)} /> : null}
       <label>天气</label>
-      <div className="diary-chips">{WEATHER.map(item => <button type="button" key={item} aria-pressed={draft.weather === item} onClick={() => set({ weather: draft.weather === item ? '' : item })}>{item}</button>)}</div>
+      <div className="diary-chips">{WEATHER.map(item => <PressedButton type="button" key={item} aria-pressed={draft.weather === item} onClick={() => set({ weather: draft.weather === item ? '' : item })}>{item}</PressedButton>)}</div>
       <label htmlFor="diaryMood">心情</label>
       <input id="diaryMood" maxLength={12} placeholder="例如：开心" value={draft.mood} onChange={event => set({ mood: event.currentTarget.value })} />
       <label htmlFor="diaryTitle">标题<small>可以不写</small></label>
@@ -224,11 +224,11 @@ export function Diary() {
       <textarea id="diaryBody" rows={9} maxLength={4000} value={draft.body} onChange={event => set({ body: event.currentTarget.value })} />
       <label>给谁看<small>勾了的人会知道你写了这篇，聊天时可能会提起</small></label>
       <div className="diary-chips">
-        <button type="button" aria-pressed={!draft.share.length} onClick={() => set({ share: [] })}>只有自己</button>
-        {people.map(item => { const on = draft.share.includes(item.archiveId); return <button type="button" key={item.archiveId} aria-pressed={on}
-          onClick={() => set({ share: on ? draft.share.filter(key => key !== item.archiveId) : [...draft.share, item.archiveId] })}>{nameOf(item.archiveId)}</button>; })}
+        <PressedButton type="button" aria-pressed={!draft.share.length} onClick={() => set({ share: [] })}>只有自己</PressedButton>
+        {people.map(item => { const on = draft.share.includes(item.archiveId); return <PressedButton type="button" key={item.archiveId} aria-pressed={on}
+          onClick={() => set({ share: on ? draft.share.filter(key => key !== item.archiveId) : [...draft.share, item.archiveId] })}>{nameOf(item.archiveId)}</PressedButton>; })}
       </div>
-      <div className="diary-form-actions"><button type="button" className="diary-btn" onClick={back}>取消</button><button type="button" className="diary-btn is-primary" onClick={() => save(draft)}>存好</button></div>
+      <div className="diary-form-actions"><PressedButton type="button" className="diary-btn" onClick={back}>取消</PressedButton><PressedButton type="button" className="diary-btn is-primary" onClick={() => save(draft)}>存好</PressedButton></div>
     </div>;
   } else {
     body = <div className="diary-shelf">

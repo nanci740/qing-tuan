@@ -57,7 +57,7 @@
 .mx-check input { position: absolute; opacity: 0; pointer-events: none; }
 .mx-check i { position: relative; flex: none; width: 12px; height: 12px; border: 1px solid var(--mx-ink); background: var(--color-surface); box-shadow: var(--effect-sunken); }
 /* 勾是主题色 */
-.mx-check input:checked + i::after { content: ''; position: absolute; left: 3px; top: 0; width: 4px; height: 7px; border: solid var(--color-accent-strong); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.mx-check input:checked + i::after { content: ''; position: absolute; left: 50%; top: 45%; width: 3px; height: 6px; border: solid var(--color-accent-strong); border-width: 0 1.6px 1.6px 0; transform: translate(-50%, -50%) rotate(45deg); }
 .mx-check input:focus-visible + i { outline: 1px dotted var(--mx-ink); outline-offset: 1px; }
 
 /* 一个人的记忆：一行一个折角的小文件 */
