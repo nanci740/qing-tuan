@@ -336,6 +336,17 @@ export function Api() {
               <input id="apiSummaryModel" value={api.form.summary} onChange={event => api.field('summary', event.currentTarget.value)} type="hidden" />
               {"\n                    "}
             </div>
+            <div className="api-row">
+              {"\n                        "}
+              <span className="api-row-label">
+                {"向量模型"}
+              </span>
+              {"\n                        "}
+              <PressedButton className={`api-model-select-btn${!api.form.embedding.trim() ? ' is-default' : ''}${api.busy.embedding ? ' is-loading' : ''}`} id="apiEmbeddingModelBtn" disabled={!!api.busy.embedding} onClick={() => api.loadModels('embedding')} type="button">{api.form.embedding.trim() || '不用（照字眼比对）'}</PressedButton>
+              {"\n                        "}
+              <input id="apiEmbeddingModel" value={api.form.embedding} onChange={event => api.field('embedding', event.currentTarget.value)} type="hidden" />
+              {"\n                    "}
+            </div>
             {"\n                "}
           </div>
           {"\n            "}

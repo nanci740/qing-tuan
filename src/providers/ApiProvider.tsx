@@ -5,21 +5,22 @@ import type { ApiConfig, ApiConnection, ApiMessage, ApiOverrides, ApiResponse, A
 import { cleanBaseUrl, clampNumber, fetchModels, getFeatureModel, buildFallbackConfig, performChatRequest, extractUsage } from '../utils/apiClient';
 import { API_STORAGE_KEY, API_PROVIDER_PRESETS, PROVIDER_OPTIONS, getSavedConfig, getApiStats, getApiLogs, saveApiStats, pushApiLog } from '../utils/apiStorage';
 import { showToast } from '../utils/toast';
+import { embed } from '../utils/memoryVectors';
 import { useSettingsNavigation } from './SettingsNavigationProvider';
 const errMessage = (error: unknown) => error instanceof Error ? error.message : '';
 export const API_DEFAULT_MODEL_SENTINEL = '__DEFAULT_MAIN_MODEL__';
-export type ModelTarget = 'model' | 'fallbackModel' | 'chat' | 'diary' | 'summary';
-interface ApiForm { provider: string; baseUrl: string; apiKey: string; model: string; temperature: string; maxTokens: string; topP: string; contextMessages: string; timeoutSeconds: string; retryCount: string; stream: boolean; fallbackEnabled: boolean; fallbackProvider: string; fallbackBaseUrl: string; fallbackApiKey: string; fallbackModel: string; chat: string; diary: string; summary: string }
-const initialForm: ApiForm = { provider: 'openai-compatible', baseUrl: 'https://api.openai.com/v1', apiKey: '', model: '', temperature: '0.8', maxTokens: '', topP: '1', contextMessages: '30', timeoutSeconds: '60', retryCount: '1', stream: true, fallbackEnabled: false, fallbackProvider: 'openai-compatible', fallbackBaseUrl: '', fallbackApiKey: '', fallbackModel: '', chat: '', diary: '', summary: '' };
+export type ModelTarget = 'model' | 'fallbackModel' | 'chat' | 'diary' | 'summary' | 'embedding';
+interface ApiForm { provider: string; baseUrl: string; apiKey: string; model: string; temperature: string; maxTokens: string; topP: string; contextMessages: string; timeoutSeconds: string; retryCount: string; stream: boolean; fallbackEnabled: boolean; fallbackProvider: string; fallbackBaseUrl: string; fallbackApiKey: string; fallbackModel: string; chat: string; diary: string; summary: string; embedding: string }
+const initialForm: ApiForm = { provider: 'openai-compatible', baseUrl: 'https://api.openai.com/v1', apiKey: '', model: '', temperature: '0.8', maxTokens: '', topP: '1', contextMessages: '30', timeoutSeconds: '60', retryCount: '1', stream: true, fallbackEnabled: false, fallbackProvider: 'openai-compatible', fallbackBaseUrl: '', fallbackApiKey: '', fallbackModel: '', chat: '', diary: '', summary: '', embedding: '' };
 function loadForm(previous: ApiForm = initialForm): ApiForm {
   const saved = getSavedConfig();
   if (!saved || typeof saved !== 'object') return { ...previous, baseUrl: previous.baseUrl.trim() ? previous.baseUrl : (API_PROVIDER_PRESETS[previous.provider] || API_PROVIDER_PRESETS['custom-compatible']).baseUrl };
   const provider = PROVIDER_OPTIONS.includes(saved.provider || 'openai-compatible') ? (saved.provider || 'openai-compatible') : '';
   const fbProvider = PROVIDER_OPTIONS.filter(x => x !== 'grok').includes(saved.fallback?.provider || 'openai-compatible') ? (saved.fallback?.provider || 'openai-compatible') : '';
-  return { provider, baseUrl: saved.baseUrl || (API_PROVIDER_PRESETS[provider] || API_PROVIDER_PRESETS['custom-compatible']).baseUrl, apiKey: saved.apiKey || '', model: saved.model || '', temperature: String(saved.temperature ?? .8), maxTokens: saved.maxTokens ? String(saved.maxTokens) : '', topP: String(saved.topP ?? 1), contextMessages: String(saved.contextMessages ?? 30), timeoutSeconds: String(saved.timeoutSeconds ?? 60), retryCount: String(saved.retryCount ?? 1), stream: saved.stream !== false, fallbackEnabled: !!saved.fallbackEnabled, fallbackProvider: fbProvider, fallbackBaseUrl: saved.fallback?.baseUrl || '', fallbackApiKey: saved.fallback?.apiKey || '', fallbackModel: saved.fallback?.model || '', chat: saved.featureModels?.chat || '', diary: saved.featureModels?.diary || '', summary: saved.featureModels?.summary || '' };
+  return { provider, baseUrl: saved.baseUrl || (API_PROVIDER_PRESETS[provider] || API_PROVIDER_PRESETS['custom-compatible']).baseUrl, apiKey: saved.apiKey || '', model: saved.model || '', temperature: String(saved.temperature ?? .8), maxTokens: saved.maxTokens ? String(saved.maxTokens) : '', topP: String(saved.topP ?? 1), contextMessages: String(saved.contextMessages ?? 30), timeoutSeconds: String(saved.timeoutSeconds ?? 60), retryCount: String(saved.retryCount ?? 1), stream: saved.stream !== false, fallbackEnabled: !!saved.fallbackEnabled, fallbackProvider: fbProvider, fallbackBaseUrl: saved.fallback?.baseUrl || '', fallbackApiKey: saved.fallback?.apiKey || '', fallbackModel: saved.fallback?.model || '', chat: saved.featureModels?.chat || '', diary: saved.featureModels?.diary || '', summary: saved.featureModels?.summary || '', embedding: saved.featureModels?.embedding || '' };
 }
 function formConfig(form: ApiForm): ApiConfig {
-  return { provider: form.provider, baseUrl: cleanBaseUrl(form.baseUrl), apiKey: form.apiKey.trim(), model: form.model.trim(), temperature: clampNumber(form.temperature, 0, 2, .8), maxTokens: Number(form.maxTokens) > 0 ? Math.round(clampNumber(form.maxTokens,1,32768,2048)) : 0, topP: clampNumber(form.topP,0,1,1), contextMessages: Math.round(clampNumber(form.contextMessages,1,200,30)), timeoutSeconds: Math.round(clampNumber(form.timeoutSeconds,5,300,60)), retryCount: Math.round(clampNumber(form.retryCount,0,3,1)), stream: form.stream, fallbackEnabled: form.fallbackEnabled, fallback: { provider: form.fallbackProvider, baseUrl: cleanBaseUrl(form.fallbackBaseUrl), apiKey: form.fallbackApiKey.trim(), model: form.fallbackModel.trim() }, featureModels: { chat: form.chat.trim(), diary: form.diary.trim(), summary: form.summary.trim() } };
+  return { provider: form.provider, baseUrl: cleanBaseUrl(form.baseUrl), apiKey: form.apiKey.trim(), model: form.model.trim(), temperature: clampNumber(form.temperature, 0, 2, .8), maxTokens: Number(form.maxTokens) > 0 ? Math.round(clampNumber(form.maxTokens,1,32768,2048)) : 0, topP: clampNumber(form.topP,0,1,1), contextMessages: Math.round(clampNumber(form.contextMessages,1,200,30)), timeoutSeconds: Math.round(clampNumber(form.timeoutSeconds,5,300,60)), retryCount: Math.round(clampNumber(form.retryCount,0,3,1)), stream: form.stream, fallbackEnabled: form.fallbackEnabled, fallback: { provider: form.fallbackProvider, baseUrl: cleanBaseUrl(form.fallbackBaseUrl), apiKey: form.fallbackApiKey.trim(), model: form.fallbackModel.trim() }, featureModels: { chat: form.chat.trim(), diary: form.diary.trim(), summary: form.summary.trim(), embedding: form.embedding.trim() } };
 }
 function useApiState() {
   const { registerDestination } = useSettingsNavigation();
@@ -99,7 +100,7 @@ function useApiState() {
     try {
       const models = await getModels(target === 'fallbackModel' ? readFormConfig().fallback : readFormConfig());
       if (target === 'model') setStatus({ type: 'ok', title: '接口可访问', desc: models.length ? `读取到 ${models.length} 个模型` : '接口已连接，但没有返回模型列表', badge: 'ONLINE' });
-      openModels(models,target,({ model: '选择主模型', fallbackModel: '选择备用模型', chat: '选择 Chat 模型', diary: '选择日记模型', summary: '选择总结模型' })[target]);
+      openModels(models,target,({ model: '选择主模型', fallbackModel: '选择备用模型', chat: '选择 Chat 模型', diary: '选择日记模型', summary: '选择总结模型', embedding: '选择向量模型' })[target]);
     } catch (error) { if (target === 'model') setStatus({ type: 'error', title: '获取模型失败', desc: errMessage(error)||'未知错误', badge: 'ERROR' }); else showToast(errMessage(error)||(target === 'fallbackModel' ? '获取备用模型失败' : '获取模型失败')); }
     finally { setLoading(target,false); }
   }
@@ -121,16 +122,21 @@ function useApiState() {
     updateForm({ ...formRef.current, temperature: '0.8', maxTokens: '', topP: '1', contextMessages: '30', timeoutSeconds: '60', retryCount: '1', stream: true });
     try { saveConfig(statusRef.current.type === 'ok'); showToast('高级设置已重置'); } catch { showToast('重置失败'); }
   }
+  // 向量模型：选好当下先算一句试试，通了才留着（Memories 照意思想起记忆用）
+  async function testEmbedding(model: string) {
+    try { const [vector] = await embed(readFormConfig(), model, ['你好'], 15000); showToast(`向量模型可用，维度 ${vector.length}；记得保存设置`); }
+    catch (error) { field('embedding', ''); showToast(`向量模型用不了：${errMessage(error) || '未知错误'}`); }
+  }
   async function testConnection() {
     setLoading('test',true); setStatus({ type: '', title: '正在测试连接', desc: '正在发送极短测试请求…', badge: 'WAIT' });
     try { const config = readFormConfig(), data = await requestChat([{ role: 'user', content: 'Reply with OK only.' }], { model: config.model, temperature: 0, maxTokens: 8, topP: 1, fallbackEnabled: false }); setStatus({ type: 'ok', title: '连接正常', desc: data?.model || config.model || '接口返回成功', badge: 'ONLINE' }); saveConfig(true); }
     catch (error) { setStatus({ type: 'error', title: '连接失败', desc: errMessage(error)||'未知错误', badge: 'ERROR' }); } finally { setLoading('test',false); }
   }
-  const query = modelPicker.filterQuery.trim().toLowerCase(), modelName = (model: string) => model === API_DEFAULT_MODEL_SENTINEL ? '默认主模型' : model;
+  const query = modelPicker.filterQuery.trim().toLowerCase(), modelName = (model: string) => model === API_DEFAULT_MODEL_SENTINEL ? (modelPicker.target === 'embedding' ? '不用（照字眼比对）' : '默认主模型') : model;
   return { service, form, field, pageRef, pageOpen, closePage: () => { blurWithin(pageRef.current); setPageOpen(false); }, keyVisible, toggleKey: () => setKeyVisible(v=>!v), advancedOpen, toggleAdvanced: () => setAdvancedOpen(v=>!v), status, stats, logs, busy, modelPlaceholder: (API_PROVIDER_PRESETS[form.provider] || API_PROVIDER_PRESETS['custom-compatible']).modelPlaceholder,
     filterDecimal: (input: string) => { const value = input.replace(/[^0-9.]/g, ''); const dot = value.indexOf('.'); return dot === -1 ? value : value.slice(0, dot+1) + value.slice(dot+1).replace(/\./g, ''); },
     changeProvider, changeFallback, openProvider, closeProvider, providerPicker, providerModalRef, selectProvider: (selected: string) => setProviderPicker(previous=>({ ...previous, selected, revision: previous.revision+1 })), confirmProvider: () => { if (providerPicker.selected) { changeProvider(providerPicker.target,providerPicker.selected); closeProvider(); } },
-    loadModels, refreshModels, modelPicker, modelModalRef, closeModel, modelName, visibleModels: modelPicker.models.filter(model=>!query || modelName(model).toLowerCase().includes(query)), searchModels: (query: string) => setModelPicker(previous=>({ ...previous, query, filterQuery: query, revision: previous.revision+1 })), selectModel: (selected: string) => setModelPicker(previous=>({ ...previous, selected, revision: previous.revision+1 })), confirmModel: () => { if (modelPicker.selected) { field(modelPicker.target,modelPicker.selected === API_DEFAULT_MODEL_SENTINEL ? '' : modelPicker.selected); closeModel(); } }, handleSave, resetAdvanced, testConnection };
+    loadModels, refreshModels, modelPicker, modelModalRef, closeModel, modelName, visibleModels: modelPicker.models.filter(model=>!query || modelName(model).toLowerCase().includes(query)), searchModels: (query: string) => setModelPicker(previous=>({ ...previous, query, filterQuery: query, revision: previous.revision+1 })), selectModel: (selected: string) => setModelPicker(previous=>({ ...previous, selected, revision: previous.revision+1 })), confirmModel: () => { if (modelPicker.selected) { const value = modelPicker.selected === API_DEFAULT_MODEL_SENTINEL ? '' : modelPicker.selected; field(modelPicker.target,value); closeModel(); if (modelPicker.target === 'embedding' && value) void testEmbedding(value); } }, handleSave, resetAdvanced, testConnection };
 }
 const Context = createContext<ReturnType<typeof useApiState> | null>(null);
 export function ApiProvider({ children }: { children: ReactNode }) { const value = useApiState(); return <Context.Provider value={value}>{children}</Context.Provider>; }

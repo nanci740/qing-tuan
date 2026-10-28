@@ -9,6 +9,7 @@ import { personaOf } from './friendRequests';
 import { readMe } from './meStorage';
 import { addMemories, isKind, readMemories, updateMemories } from './memoryStorage';
 import type { MemoryItem, MemoryKind } from './memoryStorage';
+import { fillVectors, rankByMeaning } from './memoryVectors';
 
 export const KIND_NAME: Record<MemoryKind, string> = { you: '关于你', event: '发生过', promise: '约定' };
 const str = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -26,8 +27,9 @@ function whoOf(group: ChatCharacter, name: unknown) {
 }
 
 /** 他这次能想起的：私聊是跟你的记忆，加上他在的群里他记得的；群聊是群里的记忆，加上每个成员私下记得关于你的事。
-    钉住的、关于你、约定都带上（新的在前，最多十五条）；发生过的带最近六条，再加跟这次聊天对得上字眼的最多四条。 */
-function recall(chatKey: string, recentText: string) {
+    钉住的、关于你、约定都带上（新的在前，最多十五条）；发生过的带最近几条，再加跟这次聊天相关的：
+    设了向量模型就照意思挑（最近三条加最接近的六条），没设或算不出来就照字眼（最近六条加对得上字眼的四条）。 */
+async function recall(chatKey: string, recentText: string) {
   const { items } = readMemories(), chat = find(chatKey), all = characters();
   const groups = isGroup(chat) ? [] : all.filter(item => isGroup(item) && item.group?.members.includes(chatKey)).map(item => item.archiveId);
   const memberKeys = isGroup(chat) ? groupMembers(chat, all).map(item => item.archiveId) : [];
@@ -38,6 +40,11 @@ function recall(chatKey: string, recentText: string) {
   const pinned = mine.filter(item => item.pinned), steady = newest(mine.filter(item => !item.pinned && item.kind !== 'event')).slice(0, 15);
   const events = newest(mine.filter(item => !item.pinned && item.kind === 'event'));
   const tail = recentText.slice(-600), hit = (item: MemoryItem) => { for (let i = 0; i + 2 <= item.text.length; i++) if (tail.includes(item.text.slice(i, i + 2))) return true; return false; };
+  const ranked = events.length > 3 ? await rankByMeaning(recentText, events.slice(3).map(item => item.id)) : null;
+  if (ranked) {
+    const close = events.slice(3).filter(item => (ranked.get(item.id) ?? 0) > .3).sort((a, b) => (ranked.get(b.id) ?? 0) - (ranked.get(a.id) ?? 0)).slice(0, 6);
+    return [...pinned, ...steady, ...events.slice(0, 3), ...close];
+  }
   const recent = events.slice(0, 6), matched = events.slice(6).filter(hit).slice(0, 4);
   return [...pinned, ...steady, ...recent, ...matched];
 }
@@ -45,9 +52,9 @@ const groupName = (key: string) => String(find(key)?.name || '群聊');
 const nameOfKey = (key: string) => { const item = find(key); return item ? memberName(item) : ''; };
 
 /** 接在系统提示词后面：他记得的事，加上他可以悄悄记下新的事的说明。 */
-export function memoryPrompt(chatKey: string, recentText: string) {
+export async function memoryPrompt(chatKey: string, recentText: string) {
   const chat = find(chatKey), group = isGroup(chat), you = userName();
-  const lines = recall(chatKey, recentText).map(item => {
+  const lines = (await recall(chatKey, recentText)).map(item => {
     const where = item.chat !== chatKey ? (find(item.chat)?.group ? `（在「${groupName(item.chat)}」里）` : `（${nameOfKey(item.chat)}私下记得）`) : '';
     const who = group && item.chat === chatKey && item.who?.length ? `（${item.who.map(nameOfKey).filter(Boolean).join('、')}记得）` : '';
     return `- [${KIND_NAME[item.kind]}] ${item.text}${where}${who}（${day(item.at)}）`;
@@ -139,6 +146,7 @@ export async function sweepChat(chatKey: string, all = false) {
 }
 /** 他回完话以后：自动整理开着，挤出上下文的还没整理的攒到二十条，就在背后整理。 */
 export function memoryAfterReply(chatKey: string) {
+  void fillVectors();
   if (!readMemories().auto || busy.has(chatKey) || pending(chatKey, false).length < 20) return;
   void sweepChat(chatKey).catch(() => { /* 下次回话再试 */ });
 }
