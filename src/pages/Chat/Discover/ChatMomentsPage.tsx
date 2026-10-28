@@ -180,7 +180,7 @@ export function ChatMomentsPage() {
               <button type="button" onClick={() => { setTyping({ post: post.id, text: '' }); setMenu(''); }}>评论</button>
               {mine ? <button type="button" onClick={() => { patchPost(post.id, { pinned: !post.pinned }); setMenu(''); }}>{post.pinned ? '取消置顶' : '置顶'}</button> : null}
             </span> : null}
-            <button type="button" className="chat-moment-act" aria-label="点赞、评论" onClick={() => setMenu(menu === post.id ? '' : post.id)}><i /><i /></button>
+            <PressedButton type="button" className="chat-moment-act" aria-label="点赞、评论" onClick={() => setMenu(menu === post.id ? '' : post.id)}><i /><i /></PressedButton>
           </span>
         </div>
         {post.likes.length || post.comments.length ? <div className="chat-moment-box">
@@ -205,7 +205,7 @@ export function ChatMomentsPage() {
         {notesOpen ? <>
           <div className="chat-moments-notes-top">
             <button type="button" className="chat-moments-back" onClick={() => setNotesOpen(false)}>‹ 新消息</button>
-            {moments.notes.length ? <button type="button" className="chat-moments-clear" onClick={() => updateMoments({ notes: [] })}>清空</button> : null}
+            {moments.notes.length ? <PressedButton type="button" className="chat-moments-clear" onClick={() => updateMoments({ notes: [] })}>清空</PressedButton> : null}
           </div>
           {moments.notes.slice().reverse().map(item => {
             const post = moments.posts.find(one => one.id === item.post), comment = post?.comments.find(one => one.id === item.comment);
@@ -223,13 +223,13 @@ export function ChatMomentsPage() {
         </> : <>
         <div className="chat-moments-cover">
           <button type="button" className="chat-moments-cover-pic" aria-label="换封面" onClick={() => cover.current?.click()}>{coverUrl ? <img alt="" src={coverUrl} /> : <small>MOMENTS · 点一下换封面</small>}</button>
-          <button type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photos: [], place: '', mode: 'all', keys: [] })}>＋</button>
+          <PressedButton type="button" className="chat-moments-write" aria-label="发动态" onClick={() => setDraft({ text: '', photos: [], place: '', mode: 'all', keys: [] })}>＋</PressedButton>
           <span className="chat-moments-me"><b>{me.name || '我'}</b><img alt="" src={avatar.api.sidebarAvatar()} /></span>
           <input ref={cover} type="file" accept="image/*" hidden onChange={event => { void changeCover(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
         </div>
         <p className="chat-moments-sign">{me.signature}</p>
-        {unreadNotes() ? (() => { const last = moments.notes[moments.notes.length - 1]; return <button type="button" className="chat-moments-pill" onClick={() => setNotesOpen(true)}>
-          <img alt="" src={photoOf(last.by)} />{unreadNotes()} 条新消息</button>; })() : null}
+        {unreadNotes() ? (() => { const last = moments.notes[moments.notes.length - 1]; return <PressedButton type="button" className="chat-moments-pill" onClick={() => setNotesOpen(true)}>
+          <img alt="" src={photoOf(last.by)} />{unreadNotes()} 条新消息</PressedButton>; })() : null}
         {pinned.length ? <div className="chat-moments-pinned">
           <span>置顶</span>
           <div>{pinned.slice(0, 3).map(post => <button type="button" key={post.id} onClick={() => list.current?.querySelector(`[data-moment="${post.id}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' })}>
@@ -247,11 +247,11 @@ export function ChatMomentsPage() {
         </span></div> : null}
         <input autoFocus maxLength={300} placeholder={typing.to ? `回复 ${momentName(typing.to)}` : '评论'} value={typing.text}
           onChange={event => setTyping({ ...typing, text: event.currentTarget.value })} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) void sendComment(); if (event.key === 'Escape') setTyping(null); }} />
-        <button type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => setTyping(current => current && { ...current, sticker, image: undefined }))}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></svg></button>
-        <button type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg></button>
+        <PressedButton type="button" className="chat-moments-reply-tool" aria-label="表情" onClick={() => pickSticker(sticker => setTyping(current => current && { ...current, sticker, image: undefined }))}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></svg></PressedButton>
+        <PressedButton type="button" className="chat-moments-reply-tool" aria-label="图片" onClick={() => commentFile.current?.click()}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg></PressedButton>
         <input ref={commentFile} type="file" accept="image/*" hidden onChange={event => { void commentPhoto(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} />
-        <button type="button" onClick={() => setTyping(null)}>取消</button>
-        <button type="button" className="is-primary" onClick={() => void sendComment()}>发送</button>
+        <PressedButton type="button" onClick={() => setTyping(null)}>取消</PressedButton>
+        <PressedButton type="button" className="is-primary" onClick={() => void sendComment()}>发送</PressedButton>
       </div> : null}
     </section>, host) : null}
 
@@ -283,7 +283,7 @@ export function ChatMomentsPage() {
           <input id="momentPlace" maxLength={40} placeholder="例如：厦门 · 曾厝垵" value={draft.place} onChange={event => setDraft({ ...draft, place: event.currentTarget.value })} />
           <label>谁可以看<small>拉黑和删掉的人本来就看不到</small></label>
           <span className="chat-moments-choices" role="radiogroup">
-            {([['all', '所有人'], ['only', '选人看'], ['except', '不给谁看']] as const).map(([mode, label]) => <button type="button" role="radio" key={mode} aria-checked={draft.mode === mode} onClick={() => setDraft({ ...draft, mode })}>{label}</button>)}
+            {([['all', '所有人'], ['only', '选人看'], ['except', '不给谁看']] as const).map(([mode, label]) => <PressedButton type="button" role="radio" key={mode} aria-checked={draft.mode === mode} onClick={() => setDraft({ ...draft, mode })}>{label}</PressedButton>)}
           </span>
           {draft.mode !== 'all' ? <div className="chat-group-pick">
             {people.map(item => { const on = draft.keys.includes(item.archiveId); return <button type="button" key={item.archiveId} role="checkbox" aria-checked={on}
