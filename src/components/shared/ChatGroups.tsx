@@ -117,7 +117,10 @@ export function ChatGroups() {
 
   const isNew = !!draft && !readChatCharacters().some(item => item.archiveId === draft.id);
   const group = mention ? activeGroup() : null, members = group ? groupMembers(group, people()) : [];
-  const options = members.filter(item => !mention?.query || shownName(item).includes(mention.query) || memberName(item).includes(mention.query));
+  // @ 名单：正式成员在前，陌生人在后，都照打的字筛
+  const options = [...members.map(item => ({ key: item.archiveId, name: shownName(item), alias: memberName(item), photo: item.photoUrl })),
+    ...groupStrangers(group).map(item => ({ key: item.key, name: item.name, alias: item.name, photo: item.photoUrl }))]
+    .filter(item => !mention?.query || item.name.includes(mention.query) || item.alias.includes(mention.query));
   return <>
     {menu ? createPortal(<div className="chat-add-menu" role="menu" style={{ top: menu.top, right: menu.right }} onPointerDown={event => event.stopPropagation()}>
       <button type="button" role="menuitem" onClick={() => { setMenu(null); (window as Bridge).smallphoneOpenCharacterCard?.(); }}><span aria-hidden="true">＋</span>新增角色</button>
@@ -126,7 +129,7 @@ export function ChatGroups() {
 
     {mention && group && (options.length || !mention.query) ? createPortal(<div className="chat-mention" role="listbox" aria-label="提醒谁看" style={{ left: mention.left, bottom: mention.bottom }} onPointerDown={event => event.preventDefault()}>
       <small>提醒谁看</small>
-      {options.map(item => <button type="button" role="option" key={item.archiveId} onClick={() => pick(shownName(item))}><img alt="" src={item.photoUrl || DEFAULT_AVATAR} />{shownName(item)}</button>)}
+      {options.map(item => <button type="button" role="option" key={item.key} onClick={() => pick(item.name)}><img alt="" src={item.photo || DEFAULT_AVATAR} />{item.name}</button>)}
       {!mention.query ? <button type="button" role="option" onClick={() => pick(MENTION_ALL)}><span className="chat-mention-all" aria-hidden="true">@</span>{MENTION_ALL}</button> : null}
     </div>, document.body) : null}
 
