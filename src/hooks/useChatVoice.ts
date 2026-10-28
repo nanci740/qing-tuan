@@ -7,7 +7,7 @@ import {getSavedConfig} from '../utils/apiStorage';
 import {extractChatAiReply} from '../utils/chatReplyParser';
 import type {MessageNodesApi,MessageVoice} from '../types/chatMessages';
 export interface ChatVoiceServices {send():void;resize():void;text(row:HTMLElement):string;input():void;}
-export interface ChatVoiceApi {translateText(source:string):Promise<string>;voiceConfig():{baseUrl?:string;apiKey?:string;model?:string;provider?:string};recording():boolean;draft():MessageVoice|null;reset():void;cancel():void;toggle():Promise<void>;play(pill:HTMLElement):void;transcribe(row:HTMLElement,options?:{showResult?:boolean}):Promise<string>;translate(row:HTMLElement):Promise<string>;prepare(text:string):Promise<MessageVoice|null>;wav(row:HTMLElement):Promise<string>;}
+export interface ChatVoiceApi {translateText(source:string):Promise<string>;voiceConfig():{baseUrl?:string;apiKey?:string;model?:string;provider?:string};recording():boolean;draft():MessageVoice|null;reset():void;cancel():void;toggle():Promise<void>;play(pill:HTMLElement):void;transcribe(row:HTMLElement,options?:{showResult?:boolean}):Promise<string>;translate(row:HTMLElement):Promise<string>;prepare(text:string,voiceName?:string):Promise<MessageVoice|null>;wav(row:HTMLElement):Promise<string>;}
 interface RecorderState {voiceTextAbort:AbortController|null;voiceTextEpoch:number;voiceRecorder:MediaRecorder|null;voiceStream:MediaStream|null;voiceChunks:Blob[];voiceDataUrl:string;voiceTimer:ReturnType<typeof setTimeout>|null;recordingCancelled:boolean;voiceRecordStartedAt:number;voiceDurationSec:number;}
 export function useChatVoice(messages:MessageNodesApi){
  const [view,setView]=useState({recording:false,label:'录制语音'});
@@ -15,8 +15,8 @@ export function useChatVoice(messages:MessageNodesApi){
  const media=useRef<RecorderState>({voiceTextAbort:null,voiceTextEpoch:0,voiceRecorder:null,voiceStream:null,voiceChunks:[],voiceDataUrl:'',voiceTimer:null,recordingCancelled:false,voiceRecordStartedAt:0,voiceDurationSec:0});
  const update=(patch:Partial<typeof view>)=>flushSync(()=>setView(previous=>({...previous,...patch})));
  const notice=(detail:string)=>window.dispatchEvent(new CustomEvent('qingtuan:toast',{detail}));
-    async function prepareAiVoiceAudio(text:string) {
-        const blob = await window.smallphoneSynthesizeSpeech?.(text);
+    async function prepareAiVoiceAudio(text:string, voiceName?:string) {
+        const blob = await window.smallphoneSynthesizeSpeech?.(text, voiceName);
         if (!blob || !blob.size) return null;
         let seconds = 0;
         try {

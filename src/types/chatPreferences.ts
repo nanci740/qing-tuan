@@ -5,6 +5,8 @@ export interface ChatPreferences {
   /** 这个聊天另选的预设；空字符串就用预设 App 里的默认预设。 */
   presetId: string;
   timeAware: boolean; voiceTranscribe: boolean; voiceDirect: boolean; aiVoice: boolean;
+  /** 他发语音用的音色（MiniMax 的 Voice ID、OpenAI 的 alloy 这类）；空的就发不了语音。 */
+  voiceName: string;
   /** 家机可以发照片（用「语音与生图设置」的生图服务）。 */
   aiPhoto: boolean;
   /** 聊到见面互动时多常发你们两个人的画面：rare 少、normal 适中、often 多。 */
@@ -23,7 +25,7 @@ export interface ChatPreferences {
 }
 export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback' | 'pat' | 'patSuffix' | 'avatars';
 export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware' | 'photoInteraction';
-export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'aiPhoto' | 'voiceAutoText' | 'voiceAutoTranslate';
+export type VoiceChatSetting = 'voiceTranscribe' | 'voiceDirect' | 'aiVoice' | 'voiceName' | 'aiPhoto' | 'voiceAutoText' | 'voiceAutoTranslate';
 export type MigratedChatSetting = BasicChatSetting | ReplyChatSetting | VoiceChatSetting | 'openingText' | 'fontSize' | 'wallpaperFade' | 'wallpaperBlur' | 'linkedWorldBooks' | 'worldBookLimit';
 export type BooleanChatSetting = { [K in MigratedChatSetting]: ChatPreferences[K] extends boolean ? K : never }[MigratedChatSetting];
 export type BasicChatSettings = Pick<ChatPreferences, BasicChatSetting>;

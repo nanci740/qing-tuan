@@ -4,6 +4,10 @@ import { readPresetStore, subscribePresets } from '../../../utils/presetStorage'
 import type { ReactNode } from 'react';
 import { useChatPreferences } from '../../../providers/ChatPreferencesProvider';
 import type { ChatPreferences } from '../../../types/chatPreferences';
+import { PressedButton } from '../../../components/shared/PressedButton';
+import { showToast } from '../../../utils/toast';
+import { loadVoiceImageSettings } from '../../../utils/voiceImageServices';
+import { applyVoiceProviderPreset } from '../../../utils/voiceImagePresets';
 
 export function ChatReplySelect({ id, setting, children }: {
   id: string; setting: 'replyLength' | 'quotePolicy' | 'photoInteraction'; children: ReactNode;
@@ -63,4 +67,36 @@ export function ChatReplyModel() {
   return <input className="chat-setting-input" id="chatSettingCustomModel" type="text" autoComplete="off" placeholder="默认模型"
     ref={input} onInput={event => setDraft(event.currentTarget.value)}
     onBlur={commit} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) commit(); }} />;
+}
+
+/** 他发语音用的音色：每个聊天自己填，旁边可以试听一句。提示照「语音与生图设置」选的服务写。 */
+export function ChatVoiceName() {
+  const { values, syncVersion, change } = useChatPreferences();
+  const input = useRef<HTMLInputElement | null>(null), [busy, setBusy] = useState(false);
+  useLayoutEffect(() => { if (input.current) input.current.value = values.voiceName; }, [values.voiceName, syncVersion]);
+  const provider = loadVoiceImageSettings().voice.provider, placeholder = applyVoiceProviderPreset(loadVoiceImageSettings().voice, provider).meta.voicePlaceholder || '音色';
+  function commit() {
+    const next = input.current?.value.trim().slice(0, 120) || '';
+    if (next !== values.voiceName) change('voiceName', next);
+    return next;
+  }
+  async function listen() {
+    const name = commit();
+    if (!name) { showToast('先填音色'); return; }
+    if (!window.smallphoneVoiceReady?.()) { showToast('请先在「语音与生图设置」开启语音并填好服务'); return; }
+    setBusy(true);
+    try {
+      const blob = await window.smallphoneSynthesizeSpeech?.('你好，这是我的声音。', name);
+      if (!blob?.size) throw new Error('没有念出来');
+      const url = URL.createObjectURL(blob), audio = new Audio(url);
+      audio.onended = () => URL.revokeObjectURL(url);
+      await audio.play();
+    } catch (error) { showToast(String((error as Error)?.message || error).slice(0, 60)); }
+    finally { setBusy(false); }
+  }
+  return <span className="chat-setting-voice-name">
+    <input className="chat-setting-input" id="chatSettingVoiceName" type="text" autoComplete="off" placeholder={placeholder} ref={input} onBlur={commit}
+      onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) commit(); }} />
+    <PressedButton type="button" className="chat-setting-action" disabled={busy} onClick={() => void listen()}>{busy ? '念…' : '试听'}</PressedButton>
+  </span>;
 }

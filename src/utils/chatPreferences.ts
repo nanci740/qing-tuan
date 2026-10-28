@@ -2,6 +2,10 @@ import { kv } from './kvStorage';
 import type { ChatPreferences } from '../types/chatPreferences';
 export const CHAT_PREFERENCES_KEY = 'smallphone_chat_preferences_v1';
 export const CHAT_PREFERENCES_BY_CHAT_KEY = 'smallphone_chat_preferences_by_chat_v2';
+/** 音色原本只有一个，填在「语音与生图设置」；还没自己设过音色的聊天先沿用它。 */
+function legacyVoiceName() {
+  try { return String(JSON.parse(kv.getItem('smallphone_voice_image_settings_v1') || 'null')?.voice?.voice || '').trim().slice(0, 120); } catch { return ''; }
+}
 export function getChatPreferenceDefaults(): ChatPreferences {
         return {
             readReceipt: true,
@@ -17,6 +21,7 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             voiceTranscribe: true,
             voiceDirect: false,
             aiVoice: false,
+            voiceName: '',
             aiPhoto: false,
             photoInteraction: 'normal',
             voiceAutoText: false,
@@ -59,6 +64,7 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 voiceTranscribe: saved.voiceTranscribe !== false,
                 voiceDirect: saved.voiceDirect === true,
                 aiVoice: saved.aiVoice === true,
+                voiceName: typeof saved.voiceName === 'string' ? saved.voiceName.trim().slice(0, 120) : legacyVoiceName(),
                 aiPhoto: saved.aiPhoto === true,
                 photoInteraction: ['rare','normal','often'].includes(saved.photoInteraction as string) ? saved.photoInteraction as ChatPreferences['photoInteraction'] : defaults.photoInteraction,
                 voiceAutoText: saved.voiceAutoText === true,

@@ -396,7 +396,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             : '（暂无可引用的较早消息）';
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
-        const aiVoiceAllowed = !groupInfo && !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.();
+        const aiVoiceAllowed = !groupInfo && !!requestPreferences.aiVoice && !!requestPreferences.voiceName && !!window.smallphoneVoiceReady?.();
         // 照片随时都能发；「家机照片生图」开着、生图也设定好了才真的画出来，不然就放预设照片，点开看画面描述。
         const aiPhotoDraw = !!requestPreferences.aiPhoto && chatPhotoReady();
         let trailingUserMessages = 0;
@@ -632,7 +632,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
                     if (segmentVoices[index] && !willRecall && !photo && !location && !sticker && !pay) {
-                        try { voiceAudio = await voice.prepare(reply); } catch (error) { voiceAudio = null; }
+                        try { voiceAudio = await voice.prepare(reply, requestPreferences.voiceName); } catch (error) { voiceAudio = null; }
                     }
                     const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : reply);
                     pendingRows.push(pending.row);
@@ -656,7 +656,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     let backgroundTranslation = '';
                     if (segmentVoices[index] && !photo && !location && !sticker && !pay) {
                         try {
-                            const voiceAudio = await voice.prepare(reply);
+                            const voiceAudio = await voice.prepare(reply, requestPreferences.voiceName);
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
                             if (backgroundVoice) notifyVoiceLength = backgroundVoice.lengthText;
                         } catch (error) { backgroundVoice = null; }

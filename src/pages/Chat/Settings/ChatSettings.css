@@ -984,3 +984,7 @@
 /* 群聊的聊天设置：群里用不上的藏起来——拍他的后缀（各成员用自己私聊里设的）、家机发语音（群里还没开语音） */
 #chatSettingsPage[data-group] .chat-setting-row:has(#chatSettingAiVoice),
 #chatSettingsPage[data-group] .chat-setting-field-row:has(#chatSettingPatSuffix) { display: none; }
+
+/* 音色：输入框加试听 */
+.chat-setting-voice-name { flex: none; display: flex; align-items: center; gap: 6px; }
+.chat-setting-voice-name .chat-setting-input { width: 120px; }
