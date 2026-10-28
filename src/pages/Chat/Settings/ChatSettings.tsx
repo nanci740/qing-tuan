@@ -405,13 +405,13 @@ export function ChatSettings() {
                     {"家机发语音"}
                   </OriginalElement>
                   <OriginalElement tag="span" attributes={[]}>
-                    {"开启后家机会自己决定哪几条用语音发（用「语音与生图设置」的语音服务）；关闭时只发文字。群聊里每个成员用自己私聊设的音色，没设的只会打字。"}
+                    {"他会自己挑几条用语音发。群聊里没设音色的成员只会打字。"}
                   </OriginalElement>
                 </OriginalElement>
                 <ChatSettingCheckbox id="chatSettingAiVoice" setting="aiVoice" />
               </OriginalElement>
               <div className="chat-setting-field-row">
-                <span className="chat-setting-field-label"><strong>{"音色"}</strong><span>{"他发语音用的声音，每个角色各填各的。MiniMax 填 Voice ID，OpenAI 填 alloy 这类名字；空着就发不了语音。"}</span></span>
+                <span className="chat-setting-field-label"><strong>{"音色"}</strong><span>{"他发语音的声音，空着就发不了。"}</span></span>
                 <ChatVoiceName />
               </div>
               {"\n                        "}
