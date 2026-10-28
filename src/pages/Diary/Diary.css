@@ -71,6 +71,22 @@
 .diary-form label small { margin-left: 6px; color: var(--color-muted); font-size: 10px; }
 .diary-form input, .diary-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--dy-line); background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: inherit; font-size: 12px; outline: 0; }
 .diary-form textarea { resize: vertical; line-height: 1.6; }
+/* 日期：长得跟输入框一样的按钮，点了跳出选日期的小窗 */
+.diary-day-field { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border: 1px solid var(--dy-line); background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font-size: 12px !important; text-align: left; }
+.diary-day-field svg { width: 15px; height: 15px; fill: none; stroke: var(--color-muted); stroke-width: 1.8; }
+.diary-picker .sp-confirm { overflow: hidden; }
+.diary-picker-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 6px; }
+.diary-picker-nav strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-text); }
+.diary-picker-nav .diary-btn { display: grid; place-items: center; width: 28px; padding: 0; }
+.diary-picker-nav svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.diary-picker-week, .diary-picker-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 12px; text-align: center; }
+.diary-picker-week { color: var(--color-muted); font-size: 10px; }
+.diary-picker-week span { padding: 4px 0; }
+.diary-picker-days { gap: 2px; padding-top: 2px; padding-bottom: 4px; }
+.diary-picker-days button { height: 32px; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--color-text); font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.diary-picker-days button[aria-current="date"] { color: var(--color-accent-strong); font-weight: 700; }
+.diary-picker-days button[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
+.diary-picker-actions { display: flex; justify-content: flex-end; padding: 8px 14px 14px; }
 .diary-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .diary-chips button { padding: 2px 9px; border: 1px solid var(--dy-edge); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow); font-size: 11px; }
 .diary-chips button[aria-pressed="true"] { background: var(--theme-color); box-shadow: var(--effect-sunken); font-weight: 700; }

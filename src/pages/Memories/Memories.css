@@ -55,8 +55,9 @@
 .mx-check { position: relative; display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; }
 .mx-pane .mx-check { margin: 18px 2px 0; padding-top: 10px; border-top: 1px dashed var(--mx-soft); }
 .mx-check input { position: absolute; opacity: 0; pointer-events: none; }
-.mx-check i { flex: none; width: 12px; height: 12px; border: 1px solid var(--mx-ink); background: var(--color-surface); box-shadow: var(--effect-sunken); }
-.mx-check input:checked + i { background: var(--color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%23333' stroke-width='1.8'/%3E%3C/svg%3E") center / 10px no-repeat; }
+.mx-check i { position: relative; flex: none; width: 12px; height: 12px; border: 1px solid var(--mx-ink); background: var(--color-surface); box-shadow: var(--effect-sunken); }
+/* 勾是主题色 */
+.mx-check input:checked + i::after { content: ''; position: absolute; left: 3px; top: 0; width: 4px; height: 7px; border: solid var(--color-accent-strong); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .mx-check input:focus-visible + i { outline: 1px dotted var(--mx-ink); outline-offset: 1px; }
 
 /* 一个人的记忆：一行一个折角的小文件 */
@@ -85,7 +86,8 @@
 .mx-kinds button { flex: 1; padding: 5px 0; border: 1px solid var(--spc-line); border-radius: 2px; background: var(--spc-btn-face); box-shadow: var(--spc-btn-shadow); color: var(--spc-title); font: inherit; font-size: 11.5px; cursor: pointer; }
 .mx-kinds button { display: flex; align-items: center; justify-content: center; gap: 5px; }
 .mx-kinds svg { width: 11px; height: 11px; }
-.mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); font-weight: 700; }
+/* 选中的类型是按下去凹进去的样子 */
+.mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); box-shadow: var(--effect-sunken), inset 1px 1px 0 color-mix(in srgb, var(--spc-line) 60%, transparent); font-weight: 700; transform: translateY(1px); }
 .mx-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; font-size: 12px; line-height: 1.5; resize: none; }
 .mx-form .mx-check { margin-top: 4px; color: var(--spc-title); --mx-ink: var(--spc-title); }
 .mx-delete { align-self: flex-start; margin-top: 2px; padding: 0; border: 0; border-bottom: 1px dashed currentColor; background: none; color: var(--color-danger-ink); font: inherit; font-size: 11.5px; cursor: pointer; }
