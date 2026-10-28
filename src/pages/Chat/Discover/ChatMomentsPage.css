@@ -83,7 +83,8 @@
 .chat-moments-choices button { flex: 1; padding: 3px 0; border: 1px solid var(--color-muted); border-left-width: 0; background: var(--effect-face-white); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
 .chat-moments-choices button:first-child { border-left-width: 1px; border-radius: 3px 0 0 3px; }
 .chat-moments-choices button:last-child { border-radius: 0 3px 3px 0; }
-.chat-moments-choices button[aria-checked="true"] { background: var(--win-bar); box-shadow: var(--chat-sunken); font-weight: 700; }
+/* 选中的凹下去（弹窗在页面最外层，用弹窗自己的颜色） */
+.chat-moments-choices button[aria-checked="true"] { background: var(--spc-face-tint, var(--color-accent-soft)); box-shadow: var(--effect-sunken), inset 1px 1px 0 color-mix(in srgb, var(--color-muted) 60%, transparent); font-weight: 700; }
 
 .chat-moments-viewer { display: flex; align-items: center; justify-content: center; }
 .chat-moments-viewer img { max-width: 92%; max-height: 86%; border: 1px solid var(--win-line); box-shadow: var(--chat-raised); }

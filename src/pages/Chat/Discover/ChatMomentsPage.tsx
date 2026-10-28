@@ -173,12 +173,12 @@ export function ChatMomentsPage() {
         <div className="chat-moment-meta">
           <span>{ago(post.at)}</span>
           {mine && post.see.mode !== 'all' ? <span title={post.see.mode === 'only' ? '部分可见' : '不给谁看'}>{post.see.mode === 'only' ? '部分可见' : '部分不可见'}</span> : null}
-          {mine ? <button type="button" className="chat-moment-del" onClick={() => void dropPost(post)}>删除</button> : null}
+          {mine ? <PressedButton type="button" className="chat-moment-del" onClick={() => void dropPost(post)}>删除</PressedButton> : null}
           <span className="chat-moment-tools">
             {menu === post.id ? <span className="chat-moment-menu" onPointerDown={event => event.stopPropagation()}>
-              <button type="button" onClick={() => { toggleLike(post.id, 'me'); setMenu(''); }}>{liked ? '取消' : '♡ 赞'}</button>
-              <button type="button" onClick={() => { setTyping({ post: post.id, text: '' }); setMenu(''); }}>评论</button>
-              {mine ? <button type="button" onClick={() => { patchPost(post.id, { pinned: !post.pinned }); setMenu(''); }}>{post.pinned ? '取消置顶' : '置顶'}</button> : null}
+              <PressedButton type="button" onClick={() => { toggleLike(post.id, 'me'); setMenu(''); }}>{liked ? '取消' : '♡ 赞'}</PressedButton>
+              <PressedButton type="button" onClick={() => { setTyping({ post: post.id, text: '' }); setMenu(''); }}>评论</PressedButton>
+              {mine ? <PressedButton type="button" onClick={() => { patchPost(post.id, { pinned: !post.pinned }); setMenu(''); }}>{post.pinned ? '取消置顶' : '置顶'}</PressedButton> : null}
             </span> : null}
             <PressedButton type="button" className="chat-moment-act" aria-label="点赞、评论" onClick={() => setMenu(menu === post.id ? '' : post.id)}><i /><i /></PressedButton>
           </span>
@@ -204,7 +204,7 @@ export function ChatMomentsPage() {
       <div className="chat-moments-card" ref={list}>
         {notesOpen ? <>
           <div className="chat-moments-notes-top">
-            <button type="button" className="chat-moments-back" onClick={() => setNotesOpen(false)}>‹ 新消息</button>
+            <PressedButton type="button" className="chat-moments-back" onClick={() => setNotesOpen(false)}>‹ 新消息</PressedButton>
             {moments.notes.length ? <PressedButton type="button" className="chat-moments-clear" onClick={() => updateMoments({ notes: [] })}>清空</PressedButton> : null}
           </div>
           {moments.notes.slice().reverse().map(item => {
@@ -257,12 +257,12 @@ export function ChatMomentsPage() {
 
     {pop ? createPortal(<div className="sp-confirm-overlay chat-moments-pop-mask" onPointerDown={event => { if (event.target === event.currentTarget) setPop(null); }}>
       <div className="chat-moments-pop" role="menu" style={{ left: pop.x, top: pop.y }}>
-        {(pop.comment ? pop.comment.text : pop.post.text) ? <button type="button" role="menuitem" onClick={() => { void navigator.clipboard?.writeText(pop.comment ? pop.comment.text : pop.post.text).then(() => showToast('复制好了'), () => showToast('复制不了')); setPop(null); }}>复制</button> : null}
-        {(pop.comment ? pop.comment.by : pop.post.by) !== 'me' && (pop.comment ? pop.comment.text : pop.post.text) ? <button type="button" role="menuitem" onClick={() => { const { post, comment } = pop; setPop(null);
+        {(pop.comment ? pop.comment.text : pop.post.text) ? <PressedButton type="button" role="menuitem" onClick={() => { void navigator.clipboard?.writeText(pop.comment ? pop.comment.text : pop.post.text).then(() => showToast('复制好了'), () => showToast('复制不了')); setPop(null); }}>复制</PressedButton> : null}
+        {(pop.comment ? pop.comment.by : pop.post.by) !== 'me' && (pop.comment ? pop.comment.text : pop.post.text) ? <PressedButton type="button" role="menuitem" onClick={() => { const { post, comment } = pop; setPop(null);
           if (comment?.translation) patchComment(post.id, comment.id, { translation: undefined }); else if (!comment && post.translation) patchPost(post.id, { translation: undefined }); else void translate(post, comment); }}>
-          {(pop.comment ? pop.comment.translation : pop.post.translation) ? '收起翻译' : '翻译'}</button> : null}
-        {pop.comment && pop.comment.by !== 'me' ? <button type="button" role="menuitem" onClick={() => { setTyping({ post: pop.post.id, to: pop.comment!.by, text: '' }); setPop(null); }}>回复</button> : null}
-        {pop.comment && (pop.comment.by === 'me' || pop.post.by === 'me') ? <button type="button" role="menuitem" className="is-danger" onClick={() => { dropComment(pop.post, pop.comment!.id); setPop(null); }}>删除</button> : null}
+          {(pop.comment ? pop.comment.translation : pop.post.translation) ? '收起翻译' : '翻译'}</PressedButton> : null}
+        {pop.comment && pop.comment.by !== 'me' ? <PressedButton type="button" role="menuitem" onClick={() => { setTyping({ post: pop.post.id, to: pop.comment!.by, text: '' }); setPop(null); }}>回复</PressedButton> : null}
+        {pop.comment && (pop.comment.by === 'me' || pop.post.by === 'me') ? <PressedButton type="button" role="menuitem" className="is-danger" onClick={() => { dropComment(pop.post, pop.comment!.id); setPop(null); }}>删除</PressedButton> : null}
       </div>
     </div>, document.body) : null}
 
@@ -283,7 +283,7 @@ export function ChatMomentsPage() {
           <input id="momentPlace" maxLength={40} placeholder="例如：厦门 · 曾厝垵" value={draft.place} onChange={event => setDraft({ ...draft, place: event.currentTarget.value })} />
           <label>谁可以看<small>拉黑和删掉的人本来就看不到</small></label>
           <span className="chat-moments-choices" role="radiogroup">
-            {([['all', '所有人'], ['only', '选人看'], ['except', '不给谁看']] as const).map(([mode, label]) => <PressedButton type="button" role="radio" key={mode} aria-checked={draft.mode === mode} onClick={() => setDraft({ ...draft, mode })}>{label}</PressedButton>)}
+            {([['all', '所有人'], ['only', '选人看'], ['except', '不给谁看']] as const).map(([mode, label]) => <button type="button" role="radio" key={mode} aria-checked={draft.mode === mode} onClick={() => setDraft({ ...draft, mode })}>{label}</button>)}
           </span>
           {draft.mode !== 'all' ? <div className="chat-group-pick">
             {people.map(item => { const on = draft.keys.includes(item.archiveId); return <button type="button" key={item.archiveId} role="checkbox" aria-checked={on}

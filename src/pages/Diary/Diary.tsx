@@ -263,8 +263,8 @@ export function Diary() {
           </label>
           <p className={'diary-lock-note' + (/不对|不一样|没撬开|错误/.test(lock.note) ? ' is-error' : '')}>{lock.note || (lock.mode === 'open' ? '猜错的话，他可能会知道。' : ' ')}</p>
           {lock.mode === 'open' ? <div className="diary-lock-more">
-            <button type="button" disabled={lock.busy} onClick={() => { askCode(lock.key); setLock(null); showToast('去聊天里问他了'); }}>跟他要密码</button>
-            <button type="button" className="is-danger" disabled={lock.busy} onClick={() => void crack(lock.key)}>强行撬开</button>
+            <PressedButton type="button" disabled={lock.busy} onClick={() => { askCode(lock.key); setLock(null); showToast('去聊天里问他了'); }}>跟他要密码</PressedButton>
+            <PressedButton type="button" className="is-danger" disabled={lock.busy} onClick={() => void crack(lock.key)}>强行撬开</PressedButton>
           </div> : null}
         </div>
         <div className="sp-confirm-actions chat-me-form-actions">
