@@ -94,10 +94,10 @@ export function MeSettings() {
       {schedules.map(item => <div className={'chat-me-set-row chat-me-sched' + (item.enabled ? '' : ' is-off')} key={item.id}>
         <span><b>{item.time}</b>{nameOf(item.chatKey)}<small>{daysText(item.days)}{item.note ? ` · ${item.note}` : ''}</small></span>
         <span className="chat-me-sched-tools"><Toggle on={item.enabled} label={`${item.time} ${nameOf(item.chatKey)}`} onChange={enabled => patchSchedule(item.id, { enabled })} />
-          <button type="button" className="chat-me-sched-more" aria-label="编辑" onClick={() => setEditing({ ...item })}>⋯</button></span>
+          <PressedButton type="button" className="chat-me-sched-more" aria-label="编辑" onClick={() => setEditing({ ...item })}>⋯</PressedButton></span>
       </div>)}
-      <div className="chat-me-set-row is-center"><button type="button" className="chat-me-st-btn"
-        onClick={() => setEditing({ id: `s${Date.now().toString(36)}`, chatKey: characters.length === 1 ? characters[0].archiveId : '', time: '08:00', days: [1, 2, 3, 4, 5, 6, 7], note: '', enabled: true })}>＋ 新增定时</button></div>
+      <div className="chat-me-set-row is-center"><PressedButton type="button" className="chat-me-st-btn"
+        onClick={() => setEditing({ id: `s${Date.now().toString(36)}`, chatKey: characters.length === 1 ? characters[0].archiveId : '', time: '08:00', days: [1, 2, 3, 4, 5, 6, 7], note: '', enabled: true })}>＋ 新增定时</PressedButton></div>
     </div>
     <p className="chat-me-set-note">到了时间他就来找你，不管有没有在聊。</p>
 
@@ -139,9 +139,9 @@ export function MeSettings() {
 
     <div className="chat-me-group-head">资料</div>
     <div className="chat-me-set-box">
-      <div className="chat-me-set-row"><span>备份「我」的资料<small>人设、头像、表情、钱包存成一个文件</small></span><button type="button" className="chat-me-st-btn" onClick={download}>导出</button></div>
-      <div className="chat-me-set-row"><span>还原<small>选之前导出的文件</small></span><button type="button" className="chat-me-st-btn" onClick={() => file.current?.click()}>选文件</button></div>
-      <div className="chat-me-set-row"><span>清空账单<small>余额和卡不动，只清掉账单纪录</small></span><button type="button" className="chat-me-st-btn is-danger" onClick={wipeBills}>清空</button></div>
+      <div className="chat-me-set-row"><span>备份「我」的资料<small>人设、头像、表情、钱包存成一个文件</small></span><PressedButton type="button" className="chat-me-st-btn" onClick={download}>导出</PressedButton></div>
+      <div className="chat-me-set-row"><span>还原<small>选之前导出的文件</small></span><PressedButton type="button" className="chat-me-st-btn" onClick={() => file.current?.click()}>选文件</PressedButton></div>
+      <div className="chat-me-set-row"><span>清空账单<small>余额和卡不动，只清掉账单纪录</small></span><PressedButton type="button" className="chat-me-st-btn is-danger" onClick={wipeBills}>清空</PressedButton></div>
     </div>
     <input ref={file} type="file" accept="application/json,.json" hidden onChange={event => void restore(event.currentTarget)} />
 

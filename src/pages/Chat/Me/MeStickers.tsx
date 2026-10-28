@@ -119,11 +119,11 @@ export function MeStickers() {
   return <>
     {picked ? <div className="chat-me-st-tools is-picking">
       <span>已选 {picked.size} 张</span>
-      <button type="button" className="chat-me-st-btn is-danger" onClick={removePicked}>删除</button>
-      <button type="button" className="chat-me-st-btn" onClick={() => setPicked(null)}>取消</button>
+      <PressedButton type="button" className="chat-me-st-btn is-danger" onClick={removePicked}>删除</PressedButton>
+      <PressedButton type="button" className="chat-me-st-btn" onClick={() => setPicked(null)}>取消</PressedButton>
     </div> : <div className="chat-me-st-tools">
       <small>点表情改标签，长按多选删除。<br />他照标签挑表情，标签写准一点。</small>
-      <button type="button" className="chat-me-st-btn" onClick={() => setGroupDraft({ id: newStickerGroup('', true).id, name: '', ai: true, isNew: true })}>＋ 新分组</button>
+      <PressedButton type="button" className="chat-me-st-btn" onClick={() => setGroupDraft({ id: newStickerGroup('', true).id, name: '', ai: true, isNew: true })}>＋ 新分组</PressedButton>
     </div>}
 
     {groups.length ? groups.map(group => <div className="chat-me-group" key={group.id}>
@@ -132,7 +132,7 @@ export function MeStickers() {
           <span className="chat-me-chev" aria-hidden="true">{folded[group.id] ? '▶' : '▼'}</span>{group.name}<small>({group.items.length})</small>
         </button>
         <label className="chat-me-st-ai"><input type="checkbox" checked={group.ai} onChange={event => { const ai = event.currentTarget.checked; update(group.id, item => ({ ...item, ai })); }} />家机能用</label>
-        <button type="button" className="chat-me-st-more" aria-label={`编辑分组「${group.name}」`} onClick={() => setGroupDraft({ id: group.id, name: group.name, ai: group.ai, isNew: false })}>⋯</button>
+        <PressedButton type="button" className="chat-me-st-more" aria-label={`编辑分组「${group.name}」`} onClick={() => setGroupDraft({ id: group.id, name: group.name, ai: group.ai, isNew: false })}>⋯</PressedButton>
       </div>
       {folded[group.id] ? null : <div className="chat-me-st-grid">
         {group.items.map(sticker => {
@@ -200,9 +200,9 @@ export function MeStickers() {
             {adding.files.map((item, index) => <div className="chat-me-st-row" key={index}>
               <span className="chat-me-st-pic"><img src={item.data} alt="" /></span>
               <input maxLength={20} placeholder="标签，例如：摸摸头" aria-label={`第 ${index + 1} 张的标签`} value={item.tag} onChange={event => { const tag = event.currentTarget.value; setAdding(current => current && { ...current, files: current.files.map((file, at) => at === index ? { ...file, tag } : file) }); }} />
-              <button type="button" className="chat-me-st-x" aria-label="不要这张" onClick={() => setAdding(current => current && { ...current, files: current.files.filter((_, at) => at !== index) })}>×</button>
+              <PressedButton type="button" className="chat-me-st-x" aria-label="不要这张" onClick={() => setAdding(current => current && { ...current, files: current.files.filter((_, at) => at !== index) })}>×</PressedButton>
             </div>)}
-            <button type="button" className="chat-me-st-btn chat-me-st-choose" onClick={() => file.current?.click()}>{adding.files.length ? '再选几张' : '选图片'}</button>
+            <PressedButton type="button" className="chat-me-st-btn chat-me-st-choose" onClick={() => file.current?.click()}>{adding.files.length ? '再选几张' : '选图片'}</PressedButton>
             <input ref={file} type="file" accept="image/*" multiple hidden onChange={event => pickFiles(event.currentTarget)} />
             <small className="chat-me-st-hint">图片会缩小到 200px 存在小手机里；动图原样保存，超过 1MB 放不进来。</small>
           </> : <>
