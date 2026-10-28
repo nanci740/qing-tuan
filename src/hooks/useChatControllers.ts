@@ -17,7 +17,7 @@ import {momentsMemory} from '../utils/momentsEngine';
 import {diaryMemory} from '../utils/diaryEngine';
 import {contactName,dueUnblockChecks,isBlocked,isBlockedBy,isDeleted,setBlocked,setDeleted,subscribeContacts} from '../utils/contactsStorage';
 import {buildCharacterPrompt} from '../utils/characterPrompt';
-import {groupMembers,groupPersona,isGroup,memberName} from '../utils/chatGroups';
+import {groupMembers,groupPersona,groupStrangers,isGroup,memberName} from '../utils/chatGroups';
 import {payFromData,payLabel,payText} from '../utils/chatMessageNodes';
 import type {ChatVoiceApi,ChatVoiceServices} from './useChatVoice';
 import type {ChatReplyEngineApi,ChatReplyEngineServices,ChatContextItem} from './useChatReplyEngine';
@@ -392,7 +392,7 @@ function initChatApplication(){
     function patChat(chatKey:string,by:'user'|'self'|'assistant',aiSuffix='',who:{from?:string;target?:string}={}){
         const preferences=readPreferences(chatKey);if(!chatKey||!preferences.pat||by==='assistant'&&isBlocked(chatKey))return '';
         // 群聊：拍谁、谁拍的照成员算；你拍成员用的是那个成员私聊设定里「拍他的后缀」
-        const group=!!groupService(chatKey),shown=(key:string)=>contactName(key,getCharacterLook(key).name);
+        const group=!!groupService(chatKey),shown=(key:string)=>key.startsWith('stranger-')?memberLooks(chatKey)?.[key]?.name||'陌生人':contactName(key,getCharacterLook(key).name);
         if(group&&by!=='self'&&!(by==='user'?who.target:who.from&&who.target))return '';
         const name=group?'':contactName(chatKey,getCharacterLook(chatKey).name||getCurrentChatRoomName());
         const suffix=by==='user'?(group?readPreferences(who.target!).patSuffix:preferences.patSuffix):by==='assistant'?aiSuffix:'';
@@ -471,7 +471,8 @@ function initChatApplication(){
     function getCharacterPersona(chatKey:string){const characters=characterStore?.read()||[],character=characters.find(item => item.archiveId === chatKey) || null;return isGroup(character)?groupPersona(character,characters):buildCharacterPrompt(character);}
     /** 群聊：成员给你看的名字、头像（消息照 data-speaker 换）；不是群就没有。 */
     function memberLooks(chatKey:string){let characters:ChatCharacter[]=[];try{characters=characterStore?.read()||[];}catch{/* 开机时角色清单还没接上，先当不是群 */}const group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return undefined;
-        return Object.fromEntries(groupMembers(group,characters).map(member=>[member.archiveId,{name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR}]));}
+        return Object.fromEntries([...groupMembers(group,characters).map(member=>[member.archiveId,{name:contactName(member.archiveId,memberName(member)),avatar:member.photoUrl||DEFAULT_AVATAR}]),
+            ...groupStrangers(group).map(item=>[item.key,{name:item.name,avatar:item.photoUrl||DEFAULT_AVATAR}])]);}
     /** 私聊时，他也在的群最近两天的对话（每个群最后 12 句）：让他记得群里发生的事。 */
     /** 私聊时接在提示词后面：他也在的群最近的对话、你们最近的朋友圈、他最近的日记（还有你给他看的日记）。 */
     function groupMemory(chatKey:string){
@@ -491,7 +492,8 @@ function initChatApplication(){
         return [blocks.length?`你也在下面这些群聊里，以下是最近群里的对话。这些是在群里发生的，不是这个私聊；你记得这些事，可以自然地提起，但不用刻意提，也不要照抄这个格式：\n${blocks.join('\n\n')}`:'',moments,diary].filter(Boolean).join('\n\n');
     }
     function groupService(chatKey:string){const characters=characterStore?.read()||[],group=characters.find(item=>item.archiveId===chatKey);if(!isGroup(group))return null;
-        return {members:groupMembers(group,characters).map(member=>({key:member.archiveId,name:memberName(member),shown:contactName(member.archiveId,memberName(member))})),nick:group.group.nick};}
+        return {members:[...groupMembers(group,characters).map(member=>({key:member.archiveId,name:memberName(member),shown:contactName(member.archiveId,memberName(member))})),
+            ...groupStrangers(group).map(item=>({key:item.key,name:item.name,shown:item.name}))],nick:group.group.nick};}
     function triggerChatFeedback(kind:'send'|'receive') { preferenceBridge.feedback(kind, state.current.preferences); }
     function loadChatPreferences() { return preferenceBridge.load(getCurrentChatPreferenceKey()); }
     function applyChatRoomPreferences() {

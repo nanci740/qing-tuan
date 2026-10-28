@@ -4,7 +4,7 @@ import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/Cha
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
 import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft } from './ChatAppearanceControls';
 import { ChatOpeningInput, ChatRestartButton } from './ChatOpeningControls';
-import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect } from './ChatReplyControls';
+import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect, ChatVoiceName } from './ChatReplyControls';
 import { ChatSettingCheckbox } from './ChatSettingCheckbox';
 import { ChatPatSuffix } from './ChatPatControls';
 import { ChatSettingTimeDisplay } from './ChatSettingTimeDisplay';
@@ -405,11 +405,15 @@ export function ChatSettings() {
                     {"家机发语音"}
                   </OriginalElement>
                   <OriginalElement tag="span" attributes={[]}>
-                    {"开启后家机会自己决定哪几条用语音发（用「语音与生图设置」的语音服务和音色）；关闭时只发文字。"}
+                    {"开启后家机会自己决定哪几条用语音发（用「语音与生图设置」的语音服务）；关闭时只发文字。群聊里每个成员用自己私聊设的音色，没设的只会打字。"}
                   </OriginalElement>
                 </OriginalElement>
                 <ChatSettingCheckbox id="chatSettingAiVoice" setting="aiVoice" />
               </OriginalElement>
+              <div className="chat-setting-field-row">
+                <span className="chat-setting-field-label"><strong>{"音色"}</strong><span>{"他发语音用的声音，每个角色各填各的。MiniMax 填 Voice ID，OpenAI 填 alloy 这类名字；空着就发不了语音。"}</span></span>
+                <ChatVoiceName />
+              </div>
               {"\n                        "}
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-copy"}]}>

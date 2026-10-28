@@ -61,9 +61,13 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
       // 勾选世界书仅保存，不重新构造其他设置控件。
     } else if (key === 'linkedWorldBooks') {
       // 勾选世界书仅保存，不重新构造其他设置控件。
+    } else if (key === 'voiceName') {
+      // 音色只是存起来，发语音时才用
     } else if (key === 'openingText' || key === 'voiceTranscribe' || key === 'voiceDirect' || key === 'aiVoice' || key === 'aiPhoto' || key === 'voiceAutoText' || key === 'voiceAutoTranslate') {
       if (key === 'aiVoice' && value && !window.smallphoneVoiceReady?.()) {
         showToast('请先在「语音与生图设置」开启语音并填好服务，家机才发得出语音');
+      } else if (key === 'aiVoice' && value && !(window as Window & { smallphoneGetActiveCharacterProfile?: () => { group?: unknown } | null }).smallphoneGetActiveCharacterProfile?.()?.group && !preferences.voiceName) {
+        showToast('在下面填好他的音色，家机才发得出语音');
       }
       if (key === 'aiPhoto' && value && !chatPhotoReady()) {
         showToast('请先在「语音与生图设置」开启生图并填好服务，照片才画得出来');

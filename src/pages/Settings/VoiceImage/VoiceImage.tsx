@@ -185,15 +185,6 @@ export function VoiceImage() {
               <span className="vi-row-label">转写模型</span>
               <input className="vi-input" placeholder="服务支持的转写模型（非 TTS 模型）" value={vi.voice.transcriptionModel || ''} onChange={event => vi.setVoiceField('transcriptionModel', event.currentTarget.value)} />
             </div>
-            <div className="vi-row">
-              {"\n                        "}
-              <span className="vi-row-label">
-                {"音色"}
-              </span>
-              {"\n                        "}
-              <input className="vi-input" id="voiceName" type="text" value={vi.voice.voice} onChange={event => vi.setVoiceField('voice', event.currentTarget.value)} placeholder={vi.voiceMeta.voicePlaceholder} />
-              {"\n                    "}
-            </div>
             {"\n                    "}
             <div className="vi-row">
               {"\n                        "}
@@ -226,7 +217,7 @@ export function VoiceImage() {
           </div>
           {"\n                "}
           <div className="vi-note">
-            {"API Key 只保存在当前浏览器的本地储存中。若选择 MiniMax，音色一栏请填写 Voice ID。模型可手动输入，也可以点右侧箭头拉取。"}
+            {"API Key 只保存在当前浏览器的本地储存中。每个角色的音色在各自的聊天设置里填（MiniMax 填 Voice ID）；这里的测试用服务自带的声音。模型可手动输入，也可以点右侧箭头拉取。"}
           </div>
           {"\n                "}
           <div id="voicePreview" className={'vi-preview' + (vi.audioSrc ? ' show' : '')}>
