@@ -86,7 +86,8 @@
 .mx-kinds button { flex: 1; padding: 5px 0; border: 1px solid var(--spc-line); border-radius: 2px; background: var(--spc-btn-face); box-shadow: var(--spc-btn-shadow); color: var(--spc-title); font: inherit; font-size: 11.5px; cursor: pointer; }
 .mx-kinds button { display: flex; align-items: center; justify-content: center; gap: 5px; }
 .mx-kinds svg { width: 11px; height: 11px; }
-.mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); font-weight: 700; }
+/* 选中的类型是按下去凹进去的样子 */
+.mx-kinds button[aria-pressed="true"] { background: var(--spc-face-tint); box-shadow: var(--effect-sunken), inset 1px 1px 0 color-mix(in srgb, var(--spc-line) 60%, transparent); font-weight: 700; transform: translateY(1px); }
 .mx-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); color: var(--spc-title); font: inherit; font-size: 12px; line-height: 1.5; resize: none; }
 .mx-form .mx-check { margin-top: 4px; color: var(--spc-title); --mx-ink: var(--spc-title); }
 .mx-delete { align-self: flex-start; margin-top: 2px; padding: 0; border: 0; border-bottom: 1px dashed currentColor; background: none; color: var(--color-danger-ink); font: inherit; font-size: 11.5px; cursor: pointer; }

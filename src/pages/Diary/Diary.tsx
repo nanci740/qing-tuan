@@ -52,6 +52,31 @@ function ago(at: number) {
   return days <= 0 ? '今天' : days === 1 ? '昨天' : `${days} 天前`;
 }
 
+/** 选日期的小窗：跟其他弹窗同一种窗口，不用系统的日期选择器；左右切月份，选中的那天是主题色，今天的字是主题色。 */
+function DayPicker({ value, onPick, onClose }: { value: string; onPick: (day: string) => void; onClose: () => void }) {
+  const [month, setMonth] = useState(() => { const [y, m] = value.split('-').map(Number); return new Date(y, m - 1, 1); });
+  const today = dayOf(Date.now()), year = month.getFullYear(), index = month.getMonth();
+  const lead = month.getDay(), count = new Date(year, index + 1, 0).getDate(), pad = (n: number) => String(n).padStart(2, '0');
+  const arrow = (points: string) => <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points={points} /></svg>;
+  return createPortal(<div className="sp-confirm-overlay diary-picker" onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="选择日期">
+      <div className="sp-confirm-bar"><span className="sp-confirm-title">选择日期</span></div>
+      <div className="diary-picker-nav">
+        <button type="button" className="diary-btn" aria-label="上个月" onClick={() => setMonth(new Date(year, index - 1, 1))}>{arrow('15 18 9 12 15 6')}</button>
+        <strong aria-live="polite">{year}年{index + 1}月</strong>
+        <button type="button" className="diary-btn" aria-label="下个月" onClick={() => setMonth(new Date(year, index + 1, 1))}>{arrow('9 18 15 12 9 6')}</button>
+      </div>
+      <div className="diary-picker-week" aria-hidden="true">{[...WEEK].map(day => <span key={day}>{day}</span>)}</div>
+      <div className="diary-picker-days">
+        {Array.from({ length: lead }, (_, i) => <span key={'blank' + i} />)}
+        {Array.from({ length: count }, (_, i) => { const day = `${year}-${pad(index + 1)}-${pad(i + 1)}`;
+          return <button type="button" key={day} aria-pressed={day === value} aria-current={day === today ? 'date' : undefined} aria-label={`${year}年${index + 1}月${i + 1}日`} onClick={() => onPick(day)}>{i + 1}</button>; })}
+      </div>
+      <div className="diary-picker-actions"><button type="button" className="diary-btn" onClick={() => onPick(today)}>今天</button></div>
+    </div>
+  </div>, document.body);
+}
+
 /** 底栏的「Diary」：一整页日记 App。书架上每人一本（第一本是你的），点进去照日期排；他的日记他不知道你在看，你的日记可以勾给谁看。 */
 export function Diary() {
   const [open, setOpen] = useState(false), [view, setView] = useState<View>({ kind: 'shelf' }), [busy, setBusy] = useState('');
@@ -60,6 +85,8 @@ export function Diary() {
   const [lock, setLock] = useState<Lock | null>(null), [mineOpen, setMineOpen] = useState(false), digitsRef = useRef<HTMLInputElement>(null);
   // visitAt 这次点开他本子的时间（这之后被他发现，本子里写「他发现你在看了」）
   const visitAt = useRef(0);
+  // picking 写日记时选日期的小窗开着
+  const [picking, setPicking] = useState(false);
   useLayoutEffect(() => {
     const show = () => { relockCracked(); setView({ kind: 'shelf' }); setMineOpen(false); setOpen(true); };
     window.addEventListener('qingtuan:open-diary', show);
@@ -184,7 +211,9 @@ export function Diary() {
     title = draft.id ? '改日记' : '写日记';
     body = <div className="diary-form">
       <label htmlFor="diaryDay">日期</label>
-      <input id="diaryDay" type="date" value={draft.day} onChange={event => set({ day: event.currentTarget.value || draft.day })} />
+      <button type="button" id="diaryDay" className="diary-day-field" aria-haspopup="dialog" onClick={() => setPicking(true)}>{dateParts(draft.day).full}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5" /></svg></button>
+      {picking ? <DayPicker value={draft.day} onPick={day => { set({ day }); setPicking(false); }} onClose={() => setPicking(false)} /> : null}
       <label>天气</label>
       <div className="diary-chips">{WEATHER.map(item => <button type="button" key={item} aria-pressed={draft.weather === item} onClick={() => set({ weather: draft.weather === item ? '' : item })}>{item}</button>)}</div>
       <label htmlFor="diaryMood">心情</label>
