@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import { addMemories, patchMemory, readMemories, removeMemory, subscribeMemories, updateMemories } from '../../utils/memoryStorage';
 import type { MemoryItem, MemoryKind } from '../../utils/memoryStorage';
 import { KIND_NAME, sweepChat } from '../../utils/memoryEngine';
+import { fillVectors, vectorModel } from '../../utils/memoryVectors';
 
 type View = { kind: 'home' } | { kind: 'chat'; key: string };
 interface Draft { id?: string; kind: MemoryKind; text: string; pinned: boolean }
@@ -68,7 +69,7 @@ export function Memories() {
   const [tab, setTab] = useState<MemoryKind | ''>(''), [draft, setDraft] = useState<Draft | null>(null), [sweeping, setSweeping] = useState('');
   const memories = useSyncExternalStore(subscribeMemories, readMemories);
   useLayoutEffect(() => {
-    const show = () => { setView({ kind: 'home' }); setOpen(true); };
+    const show = () => { setView({ kind: 'home' }); setOpen(true); void fillVectors(); };
     window.addEventListener('qingtuan:open-memories', show);
     return () => window.removeEventListener('qingtuan:open-memories', show);
   }, []);
@@ -140,6 +141,8 @@ export function Memories() {
           <input type="checkbox" checked={memories.auto} onChange={event => updateMemories({ auto: event.currentTarget.checked })} />
           <i aria-hidden="true" />自动整理：聊天挤出上下文时，整理成记忆
         </label>
+        <p className="mx-vector">{vectorModel() ? <>向量召回：<b>{vectorModel()}</b>　按意思想起相关的记忆</> : '向量召回：没设，照字眼比对'}
+          <small>在「API 设置 → 向量模型」换</small></p>
       </>}
     </div>
     {inside ? <div className="mx-tools">

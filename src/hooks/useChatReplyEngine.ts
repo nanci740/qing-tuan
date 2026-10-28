@@ -441,7 +441,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 记忆（Memories App）：他记得的事，私聊、群聊都带；还有他可以悄悄记下新的事
         if (groupInfo && aiVoiceAllowed) prompt.system += `\n群里的语音：每一条 replies 还可以加上 "voice":true，表示这个成员这条用语音发（大家会收到一条可以播放的语音消息）。能发语音的成员只有：${voiceMembers.map(member => member.name).join('、')}；其他成员只能打字。要不要用语音，照各自的人设和当下气氛决定，不要每条都用。`;
-        { const remembered = memoryPrompt(requestChatKey, recent.map(item => String(item.content || '')).join('\n')); if (remembered) prompt.system += '\n' + remembered; }
+        { const remembered = await memoryPrompt(requestChatKey, recent.map(item => String(item.content || '')).join('\n')); if (remembered) prompt.system += '\n' + remembered; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
         const messages:ApiMessage[] = [
