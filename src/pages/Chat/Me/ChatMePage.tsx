@@ -150,14 +150,14 @@ export function ChatMePage() {
           <button type="button" className="chat-me-avatar" aria-label="换头像" onClick={() => file.current?.click()} style={{ backgroundImage: `url("${avatar || DEFAULT_BIRD_AVATAR}")` }} />
           <input ref={file} type="file" accept="image/*" hidden onChange={event => pickAvatar(event.currentTarget)} />
           <div className="chat-me-info">
-            <button type="button" className="chat-me-mood" aria-label="换表情" onClick={() => save({ mood: MOODS[(MOODS.indexOf(mood) + 1) % MOODS.length] })}><MePixelIcon name={mood} size={20} /></button>
-            <button type="button" className="chat-me-edit" aria-label="编辑资料" onClick={editProfile}>
+            <PressedButton type="button" className="chat-me-mood" aria-label="换表情" onClick={() => save({ mood: MOODS[(MOODS.indexOf(mood) + 1) % MOODS.length] })}><MePixelIcon name={mood} size={20} /></PressedButton>
+            <PressedButton type="button" className="chat-me-edit" aria-label="编辑资料" onClick={editProfile}>
               <span className="chat-me-name">[{me.name || '你的名字'}]</span>
               <span className="chat-me-handle">@{me.handle || 'your_id'}</span>
               <span className="chat-me-signature">{me.signature || '写一句个性签名…'}</span>
-            </button>
+            </PressedButton>
           </div>
-          <button type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="personPlus" size={24} /></button>
+          <PressedButton type="button" className="chat-me-round" aria-label="新增人设" onClick={() => setEditing(newPersona())}><MePixelIcon name="personPlus" size={24} /></PressedButton>
         </div>
       </div>
 
@@ -188,10 +188,10 @@ export function ChatMePage() {
                       <MePixelIcon name="folder" size={22} />
                       <span>{persona.name || '未命名人设'}</span>
                     </button>
-                    <button type="button" className="chat-me-row-state" onClick={() => save({ activeId: using ? '' : persona.id })}>{using ? '✓ 使用中' : '使用'}</button>
+                    <PressedButton type="button" className="chat-me-row-state" onClick={() => save({ activeId: using ? '' : persona.id })}>{using ? '✓ 使用中' : '使用'}</PressedButton>
                   </div>;
                 })}
-                <button type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</button>
+                <PressedButton type="button" className="chat-me-row-add" onClick={() => setEditing(newPersona())}>＋ 新增人设</PressedButton>
               </div>
             </Group>
           </> : tab === 'stickers' ? <MeStickers /> : tab === 'wallet' ? <MeWallet /> : tab === 'settings' ? <MeSettings /> : favorites.length ? favorites.map(group => <Group key={group.key} title={group.name} count={group.items.length} open={!folded['fav:' + group.key]} onToggle={() => fold('fav:' + group.key)}>
