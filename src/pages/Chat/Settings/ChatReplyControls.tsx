@@ -8,11 +8,6 @@ import { PressedButton } from '../../../components/shared/PressedButton';
 import { showToast } from '../../../utils/toast';
 import { loadVoiceImageSettings } from '../../../utils/voiceImageServices';
 import { applyVoiceProviderPreset } from '../../../utils/voiceImagePresets';
-import { loadChatPreferences, saveChatPreferences } from '../../../utils/chatPreferences';
-import { readChatCharacters } from '../../../utils/chatCharacterStorage';
-import { groupMembers, isGroup, memberName } from '../../../utils/chatGroups';
-import { contactName } from '../../../utils/contactsStorage';
-import type { ChatCharacter } from '../../../types/chatCharacters';
 
 export function ChatReplySelect({ id, setting, children }: {
   id: string; setting: 'replyLength' | 'quotePolicy' | 'photoInteraction'; children: ReactNode;
@@ -108,17 +103,4 @@ function VoiceNameInput({ id, value, version, onCommit }: { id?: string; value: 
 export function ChatVoiceName() {
   const { values, syncVersion, change } = useChatPreferences();
   return <VoiceNameInput id="chatSettingVoiceName" value={values.voiceName} version={syncVersion} onCommit={next => change('voiceName', next)} />;
-}
-/** 群聊：每个成员一栏音色，存在成员自己的私聊设置里（私聊、群聊用同一个声音）。 */
-export function ChatGroupVoices() {
-  const { values, syncVersion } = useChatPreferences(), [, refresh] = useState(0);
-  const group = (window as Window & { smallphoneGetActiveCharacterProfile?: () => ChatCharacter | null }).smallphoneGetActiveCharacterProfile?.() || null;
-  void values;
-  if (!isGroup(group)) return null;
-  const characters = readChatCharacters();
-  return <>{groupMembers(group, characters).map(member => <div className="chat-setting-field-row chat-setting-member-voice" key={member.archiveId}>
-    <span className="chat-setting-field-label"><strong>{contactName(member.archiveId, memberName(member))}</strong><span>{'跟他私聊用的是同一个音色'}</span></span>
-    <VoiceNameInput value={loadChatPreferences(member.archiveId).voiceName} version={syncVersion}
-      onCommit={next => { saveChatPreferences(member.archiveId, { ...loadChatPreferences(member.archiveId), voiceName: next }); refresh(n => n + 1); }} />
-  </div>)}</>;
 }

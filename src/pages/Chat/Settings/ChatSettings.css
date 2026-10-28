@@ -981,7 +981,7 @@
         }
 
 
-/* 群聊的聊天设置：群里用不上的藏起来——拍他的后缀（各成员用自己私聊里设的）、单一的音色（群里每个成员一栏） */
+/* 群聊的聊天设置：群里用不上的藏起来——拍他的后缀（各成员用自己私聊里设的）、音色（成员固定用自己私聊设的） */
 #chatSettingsPage[data-group] .chat-setting-field-row:has(#chatSettingVoiceName),
 #chatSettingsPage[data-group] .chat-setting-field-row:has(#chatSettingPatSuffix) { display: none; }
 
