@@ -398,7 +398,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
         // 语音：私聊用这个聊天设的音色；群聊每个成员用自己聊天设置里的音色，没设音色的成员只能打字
-        const voiceOf = (key?: string) => groupInfo ? (key ? loadChatPreferences(key).voiceName : '') : requestPreferences.voiceName;
+        const voiceOf = (key?: string) => groupInfo ? (key && !key.startsWith('stranger-') ? loadChatPreferences(key).voiceName : '') : requestPreferences.voiceName;
         const voiceMembers = groupInfo ? groupInfo.members.filter(member => voiceOf(member.key)) : [];
         const aiVoiceAllowed = !!requestPreferences.aiVoice && !!window.smallphoneVoiceReady?.() && (groupInfo ? voiceMembers.length > 0 : !!requestPreferences.voiceName);
         // 照片随时都能发；「家机照片生图」开着、生图也设定好了才真的画出来，不然就放预设照片，点开看画面描述。

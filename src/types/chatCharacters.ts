@@ -1,7 +1,10 @@
 import type { CharacterDossier } from './characterDossier';
 import type { ChatConfirmationOptions } from './chatCharacterActions';
 /** 群聊：members 是成员的 archiveId，notice 群公告，nick 你在群里的昵称，know 成员认不认识彼此（照档案里的关系）。 */
-export interface ChatGroup { members: string[]; notice: string; nick: string; know: boolean }
+/** 群里的陌生人：只在这个群里，不在通讯录、没有私聊、不发语音；key 是 stranger- 开头。 */
+export interface GroupStranger { key: string; name: string; persona: string; photoUrl?: string }
+/** strangers 群里的陌生人，strangerJoin 陌生人会不会自己加入，strangerNext 下一个什么时候来。 */
+export interface ChatGroup { members: string[]; notice: string; nick: string; know: boolean; strangers?: GroupStranger[]; strangerJoin?: boolean; strangerNext?: number }
 export interface ChatCharacter extends CharacterDossier {
   archiveId: string;
   dossierId: string;

@@ -36,3 +36,16 @@
 .chat-group-grid img { width: 100%; height: 100%; min-width: 0; min-height: 0; display: block; object-fit: cover; }
 .chat-group-grid[data-count="2"] img { grid-row: span 2; }
 .chat-group-photo-btn { margin: 0; padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; }
+
+/* 群里的陌生人：一行一个（头像、名字、一句人设、改、踢），改的时候换成输入框 */
+.chat-group-strangers { display: flex; flex-direction: column; border: 1px solid var(--spc-line); border-radius: 3px; background: var(--color-surface); }
+.chat-group-stranger { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px dotted var(--spc-line); }
+.chat-group-stranger:last-child { border-bottom: 0; }
+.chat-group-stranger img { flex: none; width: 28px; height: 28px; border: 1px solid var(--spc-line); border-radius: 3px; object-fit: cover; }
+.chat-group-stranger > span { flex: 1; min-width: 0; font-size: 12px; color: var(--spc-title); }
+.chat-group-stranger b { font-weight: 600; }
+.chat-group-stranger small { display: block; overflow: hidden; color: var(--color-muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+.chat-group-stranger-act { flex: none; padding: 2px 4px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 14px; cursor: pointer; }
+.chat-group-stranger.is-editing { flex-direction: column; align-items: stretch; }
+.chat-group-stranger.is-editing .chat-group-photo-btn { align-self: flex-end; }
+.chat-group-stranger-add { align-self: flex-start; }

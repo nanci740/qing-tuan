@@ -15,6 +15,9 @@ export function newGroup(name: string, members: string[]): ChatCharacter {
 export function groupMembers(group: ChatCharacter, characters: ChatCharacter[]) {
   return (group.group?.members || []).map(key => characters.find(item => item.archiveId === key && !item.group)).filter((item): item is ChatCharacter => !!item);
 }
+/** 群里的陌生人（没有就是空的）。 */
+export const groupStrangers = (group: ChatCharacter | null | undefined) => group?.group?.strangers || [];
+export const isStrangerKey = (key: string) => key.startsWith('stranger-');
 /** 成员的本名（给模型看、他们在群里说话用的名字）。 */
 export const memberName = (member: ChatCharacter) => String(member.name || member.nickname || '未命名角色').trim();
 
@@ -27,7 +30,8 @@ export function groupPersona(group: ChatCharacter, characters: ChatCharacter[]) 
     const target = members.find(other => other !== member && (String(other.dossierId) === String(link.targetDossierId) || memberName(other) === String(link.targetName || '').trim()));
     if (target && link.relationType) relations.push(`${memberName(member)} 是 ${memberName(target)} 的${link.relationType}${link.note ? `（${link.note}）` : ''}`);
   }
-  return [blocks.join('\n\n'),
+  const strangers = groupStrangers(group).map(item => `【${item.name}】（群里的陌生人，跟其他人不熟，是在这个群里才认识的）\n${item.persona || '普通人，照名字和群的气氛自然说话。'}`);
+  return [[...blocks, ...strangers].join('\n\n'),
     info.know ? (relations.length ? `成员之间的关系：\n${relations.join('\n')}` : '成员之间互相认识，但档案里没写具体关系，照各自的人设自然相处。') : '成员之间原本互不认识，是在这个群里才碰到的。',
     info.notice.trim() ? `群公告：${info.notice.trim()}` : ''].filter(Boolean).join('\n\n');
 }
