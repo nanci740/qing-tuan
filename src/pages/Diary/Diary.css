@@ -75,18 +75,24 @@
 .diary-day-field { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border: 1px solid var(--dy-line); background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font-size: 12px !important; text-align: left; }
 .diary-day-field svg { width: 15px; height: 15px; fill: none; stroke: var(--color-muted); stroke-width: 1.8; }
 .diary-picker .sp-confirm { overflow: hidden; }
+/* 小窗搬到 body 底下，不在日记页里面，按钮的样子自己写：跟其他弹窗的按钮同一款 */
+.diary-picker :is(.diary-picker-nav, .diary-picker-actions) button { display: grid; place-items: center; height: 26px; padding: 0 12px; border: 1px solid var(--spc-line); border-radius: 2px;
+  background: var(--spc-btn-face); box-shadow: var(--spc-btn-shadow); color: var(--spc-title); font: inherit; font-size: 11.5px; cursor: pointer; }
 .diary-picker-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 6px; }
-.diary-picker-nav strong { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-text); }
-.diary-picker-nav .diary-btn { display: grid; place-items: center; width: 28px; padding: 0; }
-.diary-picker-nav svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.diary-picker-nav strong { color: var(--spc-title); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.diary-picker-nav button { width: 30px; padding: 0 !important; }
+.diary-picker-nav svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .diary-picker-week, .diary-picker-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 12px; text-align: center; }
 .diary-picker-week { color: var(--color-muted); font-size: 10px; }
 .diary-picker-week span { padding: 4px 0; }
 .diary-picker-days { gap: 2px; padding-top: 2px; padding-bottom: 4px; }
-.diary-picker-days button { height: 32px; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--color-text); font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer; }
-.diary-picker-days button[aria-current="date"] { color: var(--color-accent-strong); font-weight: 700; }
+.diary-picker-days button { position: relative; height: 30px; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--spc-title); font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer; }
+/* 今天：字加粗，底下一个主题色小点 */
+.diary-picker-days button[aria-current="date"] { font-weight: 700; }
+.diary-picker-days button[aria-current="date"]::after { content: ''; position: absolute; left: 50%; bottom: 3px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--color-accent-strong); }
 .diary-picker-days button[aria-pressed="true"] { background: var(--color-accent-strong); color: var(--color-surface); text-shadow: var(--effect-text-white); }
-.diary-picker-actions { display: flex; justify-content: flex-end; padding: 8px 14px 14px; }
+.diary-picker-days button[aria-pressed="true"]::after { background: var(--color-surface); }
+.diary-picker-actions { display: flex; justify-content: flex-end; padding: 6px 14px 12px; }
 .diary-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .diary-chips button { padding: 2px 9px; border: 1px solid var(--dy-edge); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow); font-size: 11px; }
 .diary-chips button[aria-pressed="true"] { background: var(--theme-color); box-shadow: var(--effect-sunken); font-weight: 700; }

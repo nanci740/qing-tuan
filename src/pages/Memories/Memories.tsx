@@ -118,7 +118,7 @@ export function Memories() {
       <span>Address</span><code>{address}</code>
     </div>
     {inside ? <div className="mx-tabs" role="tablist">
-      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <button type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</button>)}
+      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <PressedButton type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</PressedButton>)}
     </div> : null}
     <div className={'mx-pane' + (inside ? ' is-list' : '')}>
       {inside ? <>
@@ -156,7 +156,7 @@ export function Memories() {
         <div className="sp-confirm-bar"><span className="sp-confirm-title">{draft.id ? '改这条记忆' : '新增记忆'}</span></div>
         <div className="sp-confirm-body mx-form">
           <b>类型</b>
-          <div className="mx-kinds">{KINDS.map(kind => <button type="button" key={kind} aria-pressed={draft.kind === kind} onClick={() => setDraft({ ...draft, kind })}><svg viewBox="0 0 7 7" shapeRendering="crispEdges" aria-hidden="true"><PixelIcon kind={kind} /></svg>{KIND_NAME[kind]}</button>)}</div>
+          <div className="mx-kinds">{KINDS.map(kind => <PressedButton type="button" key={kind} aria-pressed={draft.kind === kind} onClick={() => setDraft({ ...draft, kind })}><svg viewBox="0 0 7 7" shapeRendering="crispEdges" aria-hidden="true"><PixelIcon kind={kind} /></svg>{KIND_NAME[kind]}</PressedButton>)}</div>
           <b>内容</b>
           <textarea rows={3} maxLength={200} value={draft.text} placeholder={group ? '例如：说好周末一起去吃火锅' : '例如：她不吃香菜'} onChange={event => setDraft({ ...draft, text: event.currentTarget.value })} />
           <label className="mx-check"><input type="checkbox" checked={draft.pinned} onChange={event => setDraft({ ...draft, pinned: event.currentTarget.checked })} /><i aria-hidden="true" />钉住，每次都记得</label>
