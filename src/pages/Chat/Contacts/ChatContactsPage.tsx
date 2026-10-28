@@ -175,7 +175,7 @@ export function ChatContactsPage() {
       <span aria-hidden="true">{folded[key] ? '▶' : '▼'}</span>{label}<small>({count})</small>
     </button>{tools}
   </div>;
-  const back = (title: string) => <button type="button" className="chat-contacts-back" onClick={() => setView('all')}>‹ {title}</button>;
+  const back = (title: string) => <PressedButton type="button" className="chat-contacts-back" onClick={() => setView('all')}>‹ {title}</PressedButton>;
   // 新的朋友一行：别人来加你写「他：留言」，你去加别人写「我：留言」，右边是查看或状态（你发的前面一个小箭头）
   const requestRow = (item: FriendRequest) => {
     const who = lookup(item.chatKey), name = item.chatKey ? contacts.remarks[item.chatKey] || item.name : item.name, out = item.kind === 'out';
@@ -303,9 +303,9 @@ export function ChatContactsPage() {
         <PressedButton type="button" className="sp-confirm-btn is-primary" onClick={() => goChat(person.key)}>发消息</PressedButton>
       </div>
       <div className="chat-contacts-cut">
-        {contacts.blocked[person.key] ? <button type="button" className="chat-contacts-block" onClick={() => { (window as Bridge).smallphoneBlockContact?.(person.key, false); showToast(`${person.shown} 放出来了`); }}>移出黑名单</button>
-          : <button type="button" className="chat-contacts-block is-danger" onClick={() => void block(person)}>加入黑名单</button>}
-        <button type="button" className="chat-contacts-block is-danger" onClick={() => void remove(person)}>删除好友</button>
+        {contacts.blocked[person.key] ? <PressedButton type="button" className="chat-contacts-block" onClick={() => { (window as Bridge).smallphoneBlockContact?.(person.key, false); showToast(`${person.shown} 放出来了`); }}>移出黑名单</PressedButton>
+          : <PressedButton type="button" className="chat-contacts-block is-danger" onClick={() => void block(person)}>加入黑名单</PressedButton>}
+        <PressedButton type="button" className="chat-contacts-block is-danger" onClick={() => void remove(person)}>删除好友</PressedButton>
       </div>
     </div>
   </div>, document.body) : null}

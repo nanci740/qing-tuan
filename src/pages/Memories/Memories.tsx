@@ -160,7 +160,7 @@ export function Memories() {
           <b>内容</b>
           <textarea rows={3} maxLength={200} value={draft.text} placeholder={group ? '例如：说好周末一起去吃火锅' : '例如：她不吃香菜'} onChange={event => setDraft({ ...draft, text: event.currentTarget.value })} />
           <label className="mx-check"><input type="checkbox" checked={draft.pinned} onChange={event => setDraft({ ...draft, pinned: event.currentTarget.checked })} /><i aria-hidden="true" />钉住，每次都记得</label>
-          {draft.id ? <button type="button" className="mx-delete" onClick={() => { removeMemory(draft.id!); setDraft(null); }}>删掉这条</button> : null}
+          {draft.id ? <PressedButton type="button" className="mx-delete" onClick={() => { removeMemory(draft.id!); setDraft(null); }}>删掉这条</PressedButton> : null}
         </div>
         <div className="sp-confirm-actions">
           <PressedButton type="button" className="sp-confirm-btn" onClick={() => setDraft(null)}>取消</PressedButton>
