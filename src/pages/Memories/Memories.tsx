@@ -1,5 +1,5 @@
 import './Memories.css';
-import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { readChatCharacters } from '../../utils/chatCharacterStorage';
@@ -10,7 +10,7 @@ import { showToast } from '../../utils/toast';
 import { addMemories, patchMemory, readMemories, removeMemory, subscribeMemories, updateMemories } from '../../utils/memoryStorage';
 import type { MemoryItem, MemoryKind } from '../../utils/memoryStorage';
 import { KIND_NAME, sweepChat } from '../../utils/memoryEngine';
-import { fillVectors, rankByMeaning, vectorModel } from '../../utils/memoryVectors';
+import { fillVectors, vectorModel } from '../../utils/memoryVectors';
 
 type View = { kind: 'home' } | { kind: 'chat'; key: string };
 interface Draft { id?: string; kind: MemoryKind; text: string; pinned: boolean }
@@ -73,22 +73,8 @@ export function Memories() {
     window.addEventListener('qingtuan:open-memories', show);
     return () => window.removeEventListener('qingtuan:open-memories', show);
   }, []);
-  // 搜索：停手 0.4 秒后找。字面包含的排前面，再照意思排（设了向量模型才有），found 是找到的记忆编号（照顺序）
-  const [search, setSearch] = useState(''), [found, setFound] = useState<string[] | null>(null);
-  const searchKey = view.kind === 'chat' ? view.key : '';
-  useEffect(() => {
-    const query = search.trim();
-    setFound(null);
-    if (!query || !searchKey) return;
-    let stale = false;
-    const timer = setTimeout(async () => {
-      const items = readMemories().items.filter(item => item.chat === searchKey), literal = items.filter(item => item.text.includes(query)).map(item => item.id);
-      const ranked = await rankByMeaning(query, items.map(item => item.id));
-      const close = ranked ? [...ranked].filter(([id, score]) => score > .3 && !literal.includes(id)).sort((a, b) => b[1] - a[1]).map(([id]) => id) : [];
-      if (!stale) setFound([...literal, ...close]);
-    }, 400);
-    return () => { stale = true; clearTimeout(timer); };
-  }, [search, searchKey, memories.items.length]);
+  // 搜索：只在手机里找包含这些字的记忆，不用 API
+  const [search, setSearch] = useState('');
   if (!open) return null;
 
   const characters = readChatCharacters();
@@ -120,7 +106,7 @@ export function Memories() {
   const title = inside ? `${nameOf(key)} - memories.exe` : 'memories.exe', address = inside ? `C:\\My Memories\\${nameOf(key)}\\` : 'C:\\My Memories\\';
   const searching = inside && !!search.trim();
   const list = !inside ? [] : searching
-    ? (found || []).map(id => itemsOf(key).find(item => item.id === id)).filter((item): item is MemoryItem => !!item && (!tab || item.kind === tab))
+    ? itemsOf(key).filter(item => item.text.includes(search.trim()) && (!tab || item.kind === tab)).sort((a, b) => b.at - a.at)
     : itemsOf(key).filter(item => !tab || item.kind === tab).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.at - a.at);
   const whoText = (item: MemoryItem) => group ? (item.who?.length ? `${item.who.map(nameOf).filter(Boolean).join('、')}记得` : '大家都记得') : FROM[item.from];
 
@@ -138,7 +124,7 @@ export function Memories() {
       <span>Address</span><code>{address}</code>
     </div>
     {inside ? <div className="mx-address mx-search">
-      <span>Search</span><input type="search" value={search} placeholder={vectorModel() ? '照意思找，例如：考试' : '找包含这些字的'} aria-label="搜索记忆" onChange={event => setSearch(event.currentTarget.value)} />
+      <span>Search</span><input type="search" value={search} placeholder="找包含这些字的" aria-label="搜索记忆" onChange={event => setSearch(event.currentTarget.value)} />
       {search ? <PressedButton type="button" className="mx-btn mx-up" aria-label="清掉" onClick={() => setSearch('')}>✕</PressedButton> : null}
     </div> : null}
     {inside ? <div className="mx-tabs" role="tablist">
@@ -146,7 +132,7 @@ export function Memories() {
     </div> : null}
     <div className={'mx-pane' + (inside ? ' is-list' : '')}>
       {inside ? <>
-        {searching ? <p className="mx-found">{found === null ? '找…' : `${vectorModel() ? '照意思' : '照字面'}找到 ${list.length} 条${vectorModel() ? '（最接近的在前）' : ''}`}</p> : null}
+        {searching ? <p className="mx-found">{`找到 ${list.length} 条`}</p> : null}
         {list.map(item => <button type="button" className="mx-row" key={item.id} onClick={() => setDraft({ id: item.id, kind: item.kind, text: item.text, pinned: !!item.pinned })}>
           <FileIcon kind={item.kind} />
           <span className="mx-row-text">{item.text}<small>{KIND_NAME[item.kind]} · {day(item.at)} · {whoText(item)}</small></span>
