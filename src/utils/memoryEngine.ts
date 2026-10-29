@@ -9,7 +9,7 @@ import { personaOf } from './friendRequests';
 import { readMe } from './meStorage';
 import { addMemories, isKind, readMemories, updateMemories } from './memoryStorage';
 import type { MemoryItem, MemoryKind } from './memoryStorage';
-import { fillVectors, rankByMeaning } from './memoryVectors';
+import { fillVectors, rankByMeaning, similarPairs, vectorModel } from './memoryVectors';
 
 export const KIND_NAME: Record<MemoryKind, string> = { you: '关于你', event: '发生过', promise: '约定' };
 const str = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -51,6 +51,20 @@ async function recall(chatKey: string, recentText: string) {
 const groupName = (key: string) => String(find(key)?.name || '群聊');
 const nameOfKey = (key: string) => { const item = find(key); return item ? memberName(item) : ''; };
 
+/** 主动提起旧事（私聊，开着「他会主动提起旧事」才有）：一天最多一次，每次回话两成机会；
+    挑三天前、两周内没提过的发生过或约定，设了向量模型就挑跟这次聊天最接近的，没有就随便挑一条（约定优先）。回传那条，没挑到回传 null。 */
+async function pickOld(chatKey: string, recentText: string) {
+  const { items, recallOld, nudged } = readMemories(), now = Date.now(), DAY = 86400000;
+  if (!recallOld || now - (nudged[chatKey] || 0) < DAY || Math.random() >= .2) return null;
+  const pool = items.filter(item => item.chat === chatKey && item.kind !== 'you' && now - item.at > 3 * DAY && now - (item.mentioned || 0) > 14 * DAY);
+  if (!pool.length) return null;
+  const ranked = await rankByMeaning(recentText, pool.map(item => item.id));
+  const close = ranked ? pool.filter(item => (ranked.get(item.id) ?? 0) > .25).sort((a, b) => (ranked.get(b.id) ?? 0) - (ranked.get(a.id) ?? 0))[0] : null;
+  const promises = pool.filter(item => item.kind === 'promise'), pick = close || (promises.length ? promises : pool)[Math.floor(Math.random() * (promises.length || pool.length))];
+  if (!pick) return null;
+  updateMemories({ nudged: { ...readMemories().nudged, [chatKey]: now }, items: readMemories().items.map(item => item.id === pick.id ? { ...item, mentioned: now } : item) });
+  return pick;
+}
 /** 接在系统提示词后面：他记得的事，加上他可以悄悄记下新的事的说明。 */
 export async function memoryPrompt(chatKey: string, recentText: string) {
   const chat = find(chatKey), group = isGroup(chat), you = userName();
@@ -64,7 +78,9 @@ export async function memoryPrompt(chatKey: string, recentText: string) {
   const remember = group
     ? `聊天里出现以后还用得上的事（${you}的喜好、习惯、近况，发生的事，说好的约定），成员可以悄悄记下：在 JSON 最外层加 "remember":[{"kind":"you 或 event 或 promise","text":"一句话，二十字上下","who":"记得的成员名字，大家都记得就写大家"}]。不用每次都记，记过的不要重复，也不要在聊天里提到你在记。`
     : `聊天里出现以后还用得上的事（${you}的喜好、习惯、近况，你们之间发生的事，说好的约定），你可以悄悄记下：在 JSON 最外层加 "remember":[{"kind":"you 或 event 或 promise","text":"一句话，用你的口吻，二十字上下"}]。不用每次都记，记过的不要重复，也不要在聊天里提到你在记。`;
-  return [text ? `${group ? '群里大家记得的事' : '你记得的事'}（长期记忆，自然地带进聊天，不要一条条念出来，也不要说「我记得你说过」这种话太多次）：\n${text}` : '', remember].filter(Boolean).join('\n');
+  const old = group ? null : await pickOld(chatKey, recentText);
+  const nudge = old ? `这次如果接得上，可以自然地主动提起一件以前的事（像真人突然想起来那样，例如「对了，你上次说的…」；接不上就别硬提）：「${old.text}」（${day(old.at)}）` : '';
+  return [text ? `${group ? '群里大家记得的事' : '你记得的事'}（长期记忆，自然地带进聊天，不要一条条念出来，也不要说「我记得你说过」这种话太多次）：\n${text}` : '', nudge, remember].filter(Boolean).join('\n');
 }
 
 /** 他回话里悄悄记下的（"remember":[…]）。 */
@@ -145,8 +161,47 @@ export async function sweepChat(chatKey: string, all = false) {
   } finally { busy.delete(chatKey); }
 }
 /** 他回完话以后：自动整理开着，挤出上下文的还没整理的攒到二十条，就在背后整理。 */
+let merging = false;
+/** 合并重复的记忆：先补算向量，挑出意思很像的两条（新的跟旧的），交给总结模型判断是不是同一件事；是的话合成一条（留旧的那条，字换成合并后的说法，时间换成新的，钉住的照留），不是就都留着。比过的打勾，之后不再比。 */
+export async function mergeDuplicates() {
+  if (merging || !vectorModel()) return 0;
+  merging = true;
+  try {
+    await fillVectors();
+    const { pairs, considered } = similarPairs();
+    let merged = 0;
+    for (let start = 0; start < pairs.length; start += 10) {
+      const batch = pairs.slice(start, start + 10), byId = new Map(readMemories().items.map(item => [item.id, item]));
+      const groups = batch.map(pair => [byId.get(pair.old), byId.get(pair.fresh)] as const).filter((pair): pair is readonly [MemoryItem, MemoryItem] => !!pair[0] && !!pair[1]);
+      if (!groups.length) continue;
+      const data = await api().requestChat([{ role: 'user', content: [
+        '下面每组是同一个聊天里记下的两条记忆。判断每组是不是在说同一件事（意思一样，或一条已经包含另一条）。',
+        '是的话写一句合并后的（保留比较新、比较完整的说法，口吻跟原本一样，二十字上下）；意思相反、或是不同的事，就不是。',
+        groups.map(([old, fresh], index) => `${index + 1}. 旧：${old.text}\n   新：${fresh.text}`).join('\n'),
+        '只输出一个 JSON，照组的顺序：{"groups":[{"same":true,"text":"合并后的一句"},{"same":false}]}',
+      ].join('\n\n') }], { feature: 'summary', temperature: .2 });
+      const raw = extractChatAiReply(data), from = raw.indexOf('{'), to = raw.lastIndexOf('}');
+      let answers: { same?: unknown; text?: unknown }[] = [];
+      try { answers = JSON.parse(raw.slice(from, to + 1)).groups || []; } catch { continue; }
+      const drop = new Set<string>(), patch = new Map<string, Partial<MemoryItem>>();
+      groups.forEach(([old, fresh], index) => {
+        const answer = answers[index], text = str(answer?.text, 80);
+        if (answer?.same !== true || !text) return;
+        drop.add(fresh.id);
+        patch.set(old.id, { text, at: Math.max(old.at, fresh.at), ...(old.pinned || fresh.pinned ? { pinned: true } : {}), checked: true });
+      });
+      if (!drop.size) continue;
+      merged += drop.size;
+      updateMemories({ items: readMemories().items.filter(item => !drop.has(item.id)).map(item => patch.has(item.id) ? { ...item, ...patch.get(item.id) } : item) });
+    }
+    const done = new Set(considered);
+    if (done.size) updateMemories({ items: readMemories().items.map(item => done.has(item.id) ? { ...item, checked: true } : item) });
+    return merged;
+  } catch { return 0; }
+  finally { merging = false; }
+}
 export function memoryAfterReply(chatKey: string) {
-  void fillVectors();
+  void mergeDuplicates();
   if (!readMemories().auto || busy.has(chatKey) || pending(chatKey, false).length < 20) return;
   void sweepChat(chatKey).catch(() => { /* 下次回话再试 */ });
 }

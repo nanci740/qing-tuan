@@ -16,7 +16,8 @@ import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsSto
 import {peerApply} from '../utils/friendRequests';
 import {diaryAction,diaryHeard,diaryRoll} from '../utils/diaryEngine';
 import {memoryAction,memoryAfterReply,memoryPrompt} from '../utils/memoryEngine';
-import {aiStickers,findAiSticker,stickerDataUrl} from '../utils/stickerStorage';
+import {meaningRecall} from '../utils/meaningRecall';
+import {aiStickers,findAiStickerByMeaning,stickerDataUrl} from '../utils/stickerStorage';
 import type {WorldInjection,WorldMessage} from '../utils/chatWorldContext';
 import {buildChatSystemPrompt} from '../utils/chatPromptSections';
 import {resolvePreset} from '../utils/presetStorage';
@@ -441,6 +442,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 记忆（Memories App）：他记得的事，私聊、群聊都带；还有他可以悄悄记下新的事
         if (groupInfo && aiVoiceAllowed) prompt.system += `\n群里的语音：每一条 replies 还可以加上 "voice":true，表示这个成员这条用语音发（大家会收到一条可以播放的语音消息）。能发语音的成员只有：${voiceMembers.map(member => member.name).join('、')}；其他成员只能打字。要不要用语音，照各自的人设和当下气氛决定，不要每条都用。`;
+        // 私聊：照意思想起以前的日记、朋友圈（设了向量模型才有）
+        if (!groupInfo) { const older = await meaningRecall(requestChatKey, recent.slice(-6).map(item => String(item.content || '')).join('\n')); if (older) prompt.system += '\n' + older; }
         { const remembered = await memoryPrompt(requestChatKey, recent.map(item => String(item.content || '')).join('\n')); if (remembered) prompt.system += '\n' + remembered; }
         // 单独成一条消息的：世界书条目和预设里自己写的条目。
         const injected = [...world.messages, ...prompt.messages];
@@ -562,12 +565,13 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             if (replyPhotos.some(Boolean) && requestPreferences.aiPhoto && !chatPhotoReady()) say('生图还没设定好，照片先放预设图');
             const replyLocations = parsedReply.locations || [];
             // 表情：照标签从家机能用的表情里找一张；他学着上下文打「[表情] 生气」也一样。找不到就当没发表情，那句只是「表情」两个字的就不发了。
-            const replyStickers:(MessageSticker|null)[] = parsedReply.segments.map((text, index) => {
+            // 标签对不上的，设了向量模型就照意思挑最接近的那一类
+            const replyStickers:(MessageSticker|null)[] = await Promise.all(parsedReply.segments.map(async (text, index) => {
                 if (replyPhotos[index] || replyLocations[index]) return null;
                 const tag = (parsedReply.stickers || [])[index] || looseStickerTag(text);
-                const found = tag ? findAiSticker(tag) : null;
+                const found = tag ? await findAiStickerByMeaning(tag, text === '表情' ? '' : text) : null;
                 return found ? { tag: found.tag, image: found.image } : null;
-            });
+            }));
             // 转账、红包：transfer、packet 栏位，或他打的「[转账] ¥200」
             const loosePays = parsedReply.segments.map(text => loosePay(text));
             const replyPays:(Omit<MessagePay,'id'>|null)[] = parsedReply.segments.map((_, index) => replyPhotos[index] || replyLocations[index] || replyStickers[index] ? null
