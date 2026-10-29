@@ -1,5 +1,5 @@
 import './Memories.css';
-import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { PressedButton } from '../../components/shared/PressedButton';
 import { readChatCharacters } from '../../utils/chatCharacterStorage';
@@ -10,7 +10,7 @@ import { showToast } from '../../utils/toast';
 import { addMemories, patchMemory, readMemories, removeMemory, subscribeMemories, updateMemories } from '../../utils/memoryStorage';
 import type { MemoryItem, MemoryKind } from '../../utils/memoryStorage';
 import { KIND_NAME, sweepChat } from '../../utils/memoryEngine';
-import { fillVectors, vectorModel } from '../../utils/memoryVectors';
+import { fillVectors, rankByMeaning, vectorModel } from '../../utils/memoryVectors';
 
 type View = { kind: 'home' } | { kind: 'chat'; key: string };
 interface Draft { id?: string; kind: MemoryKind; text: string; pinned: boolean }
@@ -73,6 +73,22 @@ export function Memories() {
     window.addEventListener('qingtuan:open-memories', show);
     return () => window.removeEventListener('qingtuan:open-memories', show);
   }, []);
+  // 搜索：停手 0.4 秒后找。字面包含的排前面，再照意思排（设了向量模型才有），found 是找到的记忆编号（照顺序）
+  const [search, setSearch] = useState(''), [found, setFound] = useState<string[] | null>(null);
+  const searchKey = view.kind === 'chat' ? view.key : '';
+  useEffect(() => {
+    const query = search.trim();
+    setFound(null);
+    if (!query || !searchKey) return;
+    let stale = false;
+    const timer = setTimeout(async () => {
+      const items = readMemories().items.filter(item => item.chat === searchKey), literal = items.filter(item => item.text.includes(query)).map(item => item.id);
+      const ranked = await rankByMeaning(query, items.map(item => item.id));
+      const close = ranked ? [...ranked].filter(([id, score]) => score > .3 && !literal.includes(id)).sort((a, b) => b[1] - a[1]).map(([id]) => id) : [];
+      if (!stale) setFound([...literal, ...close]);
+    }, 400);
+    return () => { stale = true; clearTimeout(timer); };
+  }, [search, searchKey, memories.items.length]);
   if (!open) return null;
 
   const characters = readChatCharacters();
@@ -84,7 +100,7 @@ export function Memories() {
   };
   const itemsOf = (key: string) => memories.items.filter(item => item.chat === key);
   const chats = characters.filter(item => item.archiveId && (isGroup(item) || !item.group));
-  const openChat = (key: string) => { setView({ kind: 'chat', key }); setTab(''); };
+  const openChat = (key: string) => { setView({ kind: 'chat', key }); setTab(''); setSearch(''); };
   async function sweep(key: string) {
     setSweeping(key);
     try { const count = await sweepChat(key, true); showToast(count ? `记下了 ${count} 条` : '没有新的可以记'); }
@@ -102,7 +118,10 @@ export function Memories() {
 
   const inside = view.kind === 'chat', key = inside ? view.key : '', group = inside && isGroup(characters.find(one => one.archiveId === key));
   const title = inside ? `${nameOf(key)} - memories.exe` : 'memories.exe', address = inside ? `C:\\My Memories\\${nameOf(key)}\\` : 'C:\\My Memories\\';
-  const list = inside ? itemsOf(key).filter(item => !tab || item.kind === tab).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.at - a.at) : [];
+  const searching = inside && !!search.trim();
+  const list = !inside ? [] : searching
+    ? (found || []).map(id => itemsOf(key).find(item => item.id === id)).filter((item): item is MemoryItem => !!item && (!tab || item.kind === tab))
+    : itemsOf(key).filter(item => !tab || item.kind === tab).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.at - a.at);
   const whoText = (item: MemoryItem) => group ? (item.who?.length ? `${item.who.map(nameOf).filter(Boolean).join('、')}记得` : '大家都记得') : FROM[item.from];
 
   return <section className="mx-page" role="dialog" aria-modal="true" aria-label="Memories">
@@ -118,17 +137,22 @@ export function Memories() {
       {inside ? <PressedButton type="button" className="mx-btn mx-up" onClick={() => setView({ kind: 'home' })}>↑ 上一层</PressedButton> : null}
       <span>Address</span><code>{address}</code>
     </div>
+    {inside ? <div className="mx-address mx-search">
+      <span>Search</span><input type="search" value={search} placeholder={vectorModel() ? '照意思找，例如：考试' : '找包含这些字的'} aria-label="搜索记忆" onChange={event => setSearch(event.currentTarget.value)} />
+      {search ? <PressedButton type="button" className="mx-btn mx-up" aria-label="清掉" onClick={() => setSearch('')}>✕</PressedButton> : null}
+    </div> : null}
     {inside ? <div className="mx-tabs" role="tablist">
-      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <PressedButton type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</PressedButton>)}
+      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <button type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</button>)}
     </div> : null}
     <div className={'mx-pane' + (inside ? ' is-list' : '')}>
       {inside ? <>
+        {searching ? <p className="mx-found">{found === null ? '找…' : `${vectorModel() ? '照意思' : '照字面'}找到 ${list.length} 条${vectorModel() ? '（最接近的在前）' : ''}`}</p> : null}
         {list.map(item => <button type="button" className="mx-row" key={item.id} onClick={() => setDraft({ id: item.id, kind: item.kind, text: item.text, pinned: !!item.pinned })}>
           <FileIcon kind={item.kind} />
           <span className="mx-row-text">{item.text}<small>{KIND_NAME[item.kind]} · {day(item.at)} · {whoText(item)}</small></span>
           {item.pinned ? <Pin /> : null}
         </button>)}
-        {!list.length ? <p className="mx-empty">{tab ? '这一类还没有。' : group ? '群里还没记下什么。聊一阵子会自己记，也可以按「整理一次」。' : '他还没记下什么。聊一阵子会自己记，也可以按「整理一次」。'}</p> : null}
+        {!list.length && !searching ? <p className="mx-empty">{tab ? '这一类还没有。' : group ? '群里还没记下什么。聊一阵子会自己记，也可以按「整理一次」。' : '他还没记下什么。聊一阵子会自己记，也可以按「整理一次」。'}</p> : null}
       </> : <>
         <div className="mx-grid">
           {chats.map(item => <button type="button" key={item.archiveId} className="mx-folder-item" onClick={() => openChat(item.archiveId)}>

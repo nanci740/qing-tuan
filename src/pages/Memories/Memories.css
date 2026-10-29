@@ -29,6 +29,9 @@
 .mx-address { flex: none; display: flex; align-items: center; gap: 6px; margin: 5px 6px; font-size: 10px; }
 .mx-address code { flex: 1; min-width: 0; overflow: hidden; padding: 3px 6px; border: 1px solid var(--mx-line); background: var(--color-surface); box-shadow: var(--effect-sunken);
   font: 10.5px ui-monospace, Menlo, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.mx-search input { flex: 1; min-width: 0; padding: 3px 6px; border: 1px solid var(--mx-line); border-radius: 0; background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--mx-ink); font: inherit; font-size: 11px; outline: 0; -webkit-appearance: none; appearance: none; }
+.mx-search input::-webkit-search-cancel-button { display: none; }
+.mx-found { margin: 2px 0 4px; color: var(--color-muted); font-size: 10px; }
 .mx-btn { padding: 5px 10px; border: 1px solid var(--mx-line); border-radius: 0; background: var(--mx-face); box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--mx-soft); font-size: 11px !important; white-space: nowrap; }
 .mx-btn:disabled { opacity: .6; }
 .mx-up { flex: none; padding: 2px 7px; font-size: 10px !important; }

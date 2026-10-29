@@ -79,3 +79,32 @@ export async function rankByMeaning(text: string, ids: string[]) {
     return new Map(ids.filter(id => store.vectors[id]).map(id => [id, cosine(target, unpack(store.vectors[id]))]));
   } catch { return null; }
 }
+
+/** 其他要照意思比的文字（世界书条目这类）：算过的向量照文字记着（换了模型就清掉），最多留五百段。 */
+interface TextStore { model: string; vectors: Record<string, string> }
+const TEXT_KEY = 'qingtuan_text_vectors_v1';
+let texts: TextStore | null = null;
+function readTexts(): TextStore {
+  if (!texts) { try { const row = JSON.parse(kv.getItem(TEXT_KEY) || '{}'); texts = { model: String(row.model || ''), vectors: row.vectors && typeof row.vectors === 'object' ? row.vectors : {} }; } catch { texts = { model: '', vectors: {} }; } }
+  return texts;
+}
+const hashText = (text: string) => { let a = 5381, b = 52711; for (let i = 0; i < text.length; i++) { const c = text.charCodeAt(i); a = (a * 33) ^ c; b = (b * 33) ^ c; } return (a >>> 0).toString(36) + (b >>> 0).toString(36) + text.length.toString(36); };
+/** query 跟每一段文字有多接近（0 到 1）；没设向量模型或算不出来回传 null。 */
+export async function meaningScores(query: string, list: string[]) {
+  const model = vectorModel(), api = connection();
+  if (!model || !api || !query.trim() || !list.length) return null;
+  try {
+    let store = readTexts();
+    if (store.model !== model) store = { model, vectors: {} };
+    const keys = list.map(hashText), missing = [...new Set(list.filter((_, index) => !store.vectors[keys[index]]))];
+    const vectors = await embed(api, model, [query.slice(-600), ...missing], 8000);
+    const next = { ...store.vectors };
+    missing.forEach((text, index) => { next[hashText(text)] = pack(vectors[index + 1]); });
+    const names = Object.keys(next);
+    if (names.length > 500) for (const name of names.slice(0, names.length - 500)) if (!keys.includes(name)) delete next[name];
+    texts = { model, vectors: next };
+    kv.setItem(TEXT_KEY, JSON.stringify(texts));
+    const target = new Float32Array(vectors[0]);
+    return keys.map(key => cosine(target, unpack(next[key])));
+  } catch { return null; }
+}
