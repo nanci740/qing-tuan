@@ -3,12 +3,13 @@ import { kv } from './kvStorage';
 /** 记忆（Memories App）：
     items 一条条记忆：chat 是哪个聊天的（私聊是他的 archiveId，群聊是群的），kind 类型（you 关于你、event 发生过、promise 约定），
       from 怎么来的（chat 聊天时他自己悄悄记下、sweep 整理聊天记录、mine 你加的），pinned 钉住（每次都带上），
-      who 群聊里谁记得（成员的 archiveId；空的是大家都记得）；
-    auto 自动整理（聊天挤出上下文的部分攒够了就整理成记忆），swept 每个聊天整理到哪一条消息（消息编号）。 */
+      who 群聊里谁记得（成员的 archiveId；空的是大家都记得），checked 已经跟同一个聊天的其他记忆比过重不重复，mentioned 上次提醒他主动提起的时间；
+    auto 自动整理（聊天挤出上下文的部分攒够了就整理成记忆），swept 每个聊天整理到哪一条消息（消息编号）；
+    recallOld 他会不会偶尔主动提起旧事，nudged 每个聊天上次提醒他提起旧事的时间。 */
 export type MemoryKind = 'you' | 'event' | 'promise';
 export type MemoryFrom = 'chat' | 'sweep' | 'mine';
-export interface MemoryItem { id: string; chat: string; kind: MemoryKind; text: string; at: number; from: MemoryFrom; pinned?: boolean; who?: string[] }
-interface Memories { items: MemoryItem[]; auto: boolean; swept: Record<string, string> }
+export interface MemoryItem { id: string; chat: string; kind: MemoryKind; text: string; at: number; from: MemoryFrom; pinned?: boolean; who?: string[]; checked?: boolean; mentioned?: number }
+interface Memories { items: MemoryItem[]; auto: boolean; swept: Record<string, string>; recallOld: boolean; nudged: Record<string, number> }
 const KEY = 'qingtuan_memories_v1', EVENT = 'qingtuan:memories-changed';
 let cache: Memories | null = null;
 const text = (value: unknown, max: number) => String(value ?? '').trim().slice(0, max);
@@ -19,10 +20,11 @@ function clean(value: unknown): Memories {
     if (!item?.id || !item.chat || !text(item.text, 200)) return [];
     const who = Array.isArray(item.who) ? item.who.map(String) : [];
     return [{ id: String(item.id), chat: String(item.chat), kind: isKind(item.kind) ? item.kind : 'event', text: text(item.text, 200), at: Number(item.at) || 0,
-      from: item.from === 'sweep' || item.from === 'mine' ? item.from : 'chat', ...(item.pinned ? { pinned: true } : {}), ...(who.length ? { who } : {}) }];
+      from: item.from === 'sweep' || item.from === 'mine' ? item.from : 'chat', ...(item.pinned ? { pinned: true } : {}), ...(who.length ? { who } : {}), ...(item.checked ? { checked: true } : {}), ...(Number(item.mentioned) ? { mentioned: Number(item.mentioned) } : {}) }];
   }).slice(-1000);
   const swept = row.swept && typeof row.swept === 'object' ? Object.fromEntries(Object.entries(row.swept as Record<string, unknown>).map(([key, id]) => [key, String(id)])) : {};
-  return { items, auto: row.auto !== false, swept };
+  const nudged = row.nudged && typeof row.nudged === 'object' ? Object.fromEntries(Object.entries(row.nudged as Record<string, unknown>).map(([key, at]) => [key, Number(at) || 0])) : {};
+  return { items, auto: row.auto !== false, swept, recallOld: row.recallOld !== false, nudged };
 }
 export function readMemories(): Memories {
   if (!cache) { try { cache = clean(JSON.parse(kv.getItem(KEY) || '{}')); } catch { cache = clean({}); } }

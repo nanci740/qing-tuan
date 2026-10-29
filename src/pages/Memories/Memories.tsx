@@ -9,7 +9,7 @@ import { DEFAULT_AVATAR } from '../../utils/defaultAvatar';
 import { showToast } from '../../utils/toast';
 import { addMemories, patchMemory, readMemories, removeMemory, subscribeMemories, updateMemories } from '../../utils/memoryStorage';
 import type { MemoryItem, MemoryKind } from '../../utils/memoryStorage';
-import { KIND_NAME, sweepChat } from '../../utils/memoryEngine';
+import { KIND_NAME, mergeDuplicates, sweepChat } from '../../utils/memoryEngine';
 import { fillVectors, vectorModel } from '../../utils/memoryVectors';
 
 type View = { kind: 'home' } | { kind: 'chat'; key: string };
@@ -69,7 +69,7 @@ export function Memories() {
   const [tab, setTab] = useState<MemoryKind | ''>(''), [draft, setDraft] = useState<Draft | null>(null), [sweeping, setSweeping] = useState('');
   const memories = useSyncExternalStore(subscribeMemories, readMemories);
   useLayoutEffect(() => {
-    const show = () => { setView({ kind: 'home' }); setOpen(true); void fillVectors(); };
+    const show = () => { setView({ kind: 'home' }); setOpen(true); void mergeDuplicates().then(() => fillVectors()); };
     window.addEventListener('qingtuan:open-memories', show);
     return () => window.removeEventListener('qingtuan:open-memories', show);
   }, []);
@@ -89,7 +89,7 @@ export function Memories() {
   const openChat = (key: string) => { setView({ kind: 'chat', key }); setTab(''); setSearch(''); };
   async function sweep(key: string) {
     setSweeping(key);
-    try { const count = await sweepChat(key, true); showToast(count ? `记下了 ${count} 条` : '没有新的可以记'); }
+    try { const count = await sweepChat(key, true); showToast(count ? `记下了 ${count} 条` : '没有新的可以记'); void mergeDuplicates(); }
     catch (error) { showToast(String((error as Error)?.message || error).slice(0, 60)); }
     finally { setSweeping(''); }
   }
@@ -150,6 +150,10 @@ export function Memories() {
         <label className="mx-check">
           <input type="checkbox" checked={memories.auto} onChange={event => updateMemories({ auto: event.currentTarget.checked })} />
           <i aria-hidden="true" />自动整理：聊天挤出上下文时，整理成记忆
+        </label>
+        <label className="mx-check">
+          <input type="checkbox" checked={memories.recallOld} onChange={event => updateMemories({ recallOld: event.currentTarget.checked })} />
+          <i aria-hidden="true" />主动提起旧事：聊着聊着，他偶尔会自己想起以前的事
         </label>
         <p className="mx-vector">{vectorModel() ? <>向量召回：<b>{vectorModel()}</b>　按意思想起相关的记忆</> : '向量召回：没设，照字眼比对'}
           <small>在「API 设置 → 向量模型」换</small></p>

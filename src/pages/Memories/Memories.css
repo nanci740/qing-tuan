@@ -57,6 +57,7 @@
 .mx-folder-item small { color: var(--color-muted); font: 9.5px ui-monospace, Menlo, monospace; }
 .mx-check { position: relative; display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; }
 .mx-pane .mx-check { margin: 18px 2px 0; padding-top: 10px; border-top: 1px dashed var(--mx-soft); }
+.mx-pane .mx-check + .mx-check { margin-top: 8px; padding-top: 0; border-top: 0; }
 .mx-vector { margin: 10px 2px 0; color: var(--color-muted); font-size: 10.5px; line-height: 1.6; }
 .mx-vector b { color: var(--mx-ink); font-weight: 600; }
 .mx-vector small { display: block; font-size: 9.5px; }
