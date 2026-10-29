@@ -1,3 +1,4 @@
+import { meaningScores } from './memoryVectors';
 import { kv } from './kvStorage';
 import { blobDataUrl, prepareImage, resolveImage, restoreImageReferences, storeImage } from './imageAssets';
 
@@ -89,6 +90,19 @@ export function findAiSticker(tag: string): Sticker | null {
   const list = aiStickers(), exact = list.filter(item => item.tag === want);
   const pool = exact.length ? exact : list.filter(item => item.tag.includes(want) || want.includes(item.tag));
   return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+}
+/** 标签对不上时照意思挑（要设向量模型）：拿他写的标签加那句话，跟每个标签比，最接近的（0.5 以上）那一类里随机一张。 */
+export async function findAiStickerByMeaning(tag: string, said: string): Promise<Sticker | null> {
+  const found = findAiSticker(tag);
+  if (found) return found;
+  const want = tag.trim().replace(/^[\[【(（]|[\]】)）]$/g, '').trim(), list = aiStickers(), tags = [...new Set(list.map(item => item.tag))];
+  if (!want || !tags.length) return null;
+  const scores = await meaningScores(`${want} ${said}`.trim(), tags);
+  if (!scores) return null;
+  const best = Math.max(...scores);
+  if (best < .5) return null;
+  const pool = list.filter(item => scores[tags.indexOf(item.tag)] >= best - .03);
+  return pool[Math.floor(Math.random() * pool.length)] || null;
 }
 /** 上传的一张图：缩到 200px（动图原样，太大不收），存进图片库，回传编号。 */
 export async function prepareStickerFile(file: File) {
