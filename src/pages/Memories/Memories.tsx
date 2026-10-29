@@ -73,6 +73,8 @@ export function Memories() {
     window.addEventListener('qingtuan:open-memories', show);
     return () => window.removeEventListener('qingtuan:open-memories', show);
   }, []);
+  // 搜索：只在手机里找包含这些字的记忆，不用 API
+  const [search, setSearch] = useState('');
   if (!open) return null;
 
   const characters = readChatCharacters();
@@ -84,7 +86,7 @@ export function Memories() {
   };
   const itemsOf = (key: string) => memories.items.filter(item => item.chat === key);
   const chats = characters.filter(item => item.archiveId && (isGroup(item) || !item.group));
-  const openChat = (key: string) => { setView({ kind: 'chat', key }); setTab(''); };
+  const openChat = (key: string) => { setView({ kind: 'chat', key }); setTab(''); setSearch(''); };
   async function sweep(key: string) {
     setSweeping(key);
     try { const count = await sweepChat(key, true); showToast(count ? `记下了 ${count} 条` : '没有新的可以记'); }
@@ -102,7 +104,10 @@ export function Memories() {
 
   const inside = view.kind === 'chat', key = inside ? view.key : '', group = inside && isGroup(characters.find(one => one.archiveId === key));
   const title = inside ? `${nameOf(key)} - memories.exe` : 'memories.exe', address = inside ? `C:\\My Memories\\${nameOf(key)}\\` : 'C:\\My Memories\\';
-  const list = inside ? itemsOf(key).filter(item => !tab || item.kind === tab).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.at - a.at) : [];
+  const searching = inside && !!search.trim();
+  const list = !inside ? [] : searching
+    ? itemsOf(key).filter(item => item.text.includes(search.trim()) && (!tab || item.kind === tab)).sort((a, b) => b.at - a.at)
+    : itemsOf(key).filter(item => !tab || item.kind === tab).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.at - a.at);
   const whoText = (item: MemoryItem) => group ? (item.who?.length ? `${item.who.map(nameOf).filter(Boolean).join('、')}记得` : '大家都记得') : FROM[item.from];
 
   return <section className="mx-page" role="dialog" aria-modal="true" aria-label="Memories">
@@ -118,17 +123,22 @@ export function Memories() {
       {inside ? <PressedButton type="button" className="mx-btn mx-up" onClick={() => setView({ kind: 'home' })}>↑ 上一层</PressedButton> : null}
       <span>Address</span><code>{address}</code>
     </div>
+    {inside ? <div className="mx-address mx-search">
+      <span>Search</span><input type="search" value={search} placeholder="找包含这些字的" aria-label="搜索记忆" onChange={event => setSearch(event.currentTarget.value)} />
+      {search ? <PressedButton type="button" className="mx-btn mx-up" aria-label="清掉" onClick={() => setSearch('')}>✕</PressedButton> : null}
+    </div> : null}
     {inside ? <div className="mx-tabs" role="tablist">
-      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <PressedButton type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</PressedButton>)}
+      {(['', ...KINDS] as (MemoryKind | '')[]).map(kind => <button type="button" role="tab" key={kind || 'all'} aria-selected={tab === kind} onClick={() => setTab(kind)}>{kind ? KIND_NAME[kind] : '全部'}</button>)}
     </div> : null}
     <div className={'mx-pane' + (inside ? ' is-list' : '')}>
       {inside ? <>
+        {searching ? <p className="mx-found">{`找到 ${list.length} 条`}</p> : null}
         {list.map(item => <button type="button" className="mx-row" key={item.id} onClick={() => setDraft({ id: item.id, kind: item.kind, text: item.text, pinned: !!item.pinned })}>
           <FileIcon kind={item.kind} />
           <span className="mx-row-text">{item.text}<small>{KIND_NAME[item.kind]} · {day(item.at)} · {whoText(item)}</small></span>
           {item.pinned ? <Pin /> : null}
         </button>)}
-        {!list.length ? <p className="mx-empty">{tab ? '这一类还没有。' : group ? '群里还没记下什么。聊一阵子会自己记，也可以按「整理一次」。' : '他还没记下什么。聊一阵子会自己记，也可以按「整理一次」。'}</p> : null}
+        {!list.length && !searching ? <p className="mx-empty">{tab ? '这一类还没有。' : group ? '群里还没记下什么。聊一阵子会自己记，也可以按「整理一次」。' : '他还没记下什么。聊一阵子会自己记，也可以按「整理一次」。'}</p> : null}
       </> : <>
         <div className="mx-grid">
           {chats.map(item => <button type="button" key={item.archiveId} className="mx-folder-item" onClick={() => openChat(item.archiveId)}>

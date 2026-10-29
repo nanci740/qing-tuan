@@ -1,5 +1,6 @@
 import { kv } from './kvStorage';
 import { readWorldBooks, worldBookBoundTo } from './worldStorage';
+import { meaningScores } from './memoryVectors';
 interface ChatWorldEntry {id?:unknown;enabled?:boolean;keys?:unknown;secondaryKeys?:unknown;trigger?:unknown;match?:unknown;caseSensitive?:boolean;content?:unknown;priority?:unknown;title?:unknown;probability?:unknown;position?:unknown;role?:unknown;depth?:unknown;insertDepth?:unknown;sticky?:unknown;recursive?:boolean;}
 interface ChatWorldBook {id?:unknown;name?:unknown;enabled?:boolean;bindId?:unknown;bindIds?:unknown;entries?:ChatWorldEntry[];}
 export type WorldPosition = 'head'|'before'|'after'|'middle'|'tail';
@@ -55,10 +56,11 @@ function writeSticky(value:Record<string,Record<string,number>>) { try { kv.setI
 
 /** 每次回复前调用：挑出这次要带上的世界书条目。
  * 带上的书：聊天设置里勾选的，加上「关联角色」是全部角色或这个角色的；书本身要开着。
- * 条目：常驻的一定带；关键词的在最近「扫描深度」条消息里命中才带，再按概率决定；触发后按「持续轮数」再带几轮。 */
-export function collectWorldInjection(options:{selectedIds:string[];characterId:string;chatKey:string;recentMessages:{content?:unknown}[];
+ * 条目：常驻的一定带；关键词的在最近「扫描深度」条消息里命中才带；按意思的拿最近的话跟条目比，够接近才带（一次最多三条，要设向量模型）；
+ * 都再按概率决定；触发后按「持续轮数」再带几轮。 */
+export async function collectWorldInjection(options:{selectedIds:string[];characterId:string;chatKey:string;recentMessages:{content?:unknown}[];
     /** 每次最多带多少字，按优先级从高到低装；0 表示不限，没给就用 DEFAULT_WORLD_LIMIT。 */
-    limit?:number}):WorldInjection {
+    limit?:number}):Promise<WorldInjection> {
     const selected = new Set((options.selectedIds || []).map(String));
     const books = readChatWorldBooks().filter(book => book && book.enabled !== false && (selected.has(String(book.id)) || worldBookBoundTo(book, options.characterId)));
     const entries = books.flatMap(book => (Array.isArray(book.entries) ? book.entries : []).filter(entry => entry && entry.enabled !== false && String(entry.content || '').trim()));
@@ -70,8 +72,25 @@ export function collectWorldInjection(options:{selectedIds:string[];characterId:
     const idOf = (entry:ChatWorldEntry, index:number) => String(entry.id || index);
     // 值是带上的原因，给「上次读到的」看。
     const active = new Map<ChatWorldEntry, string>();
+    const lucky = (entry:ChatWorldEntry) => { const probability = Number(entry.probability); return !(Number.isFinite(probability) && probability < 100 && Math.random() * 100 >= Math.max(0, probability)); };
+    const odds = (entry:ChatWorldEntry) => { const probability = Number(entry.probability); return Number.isFinite(probability) && probability < 100 ? `（机率 ${probability}% 抽中）` : ''; };
+    // 按意思：每条拿它自己扫描深度里的话（没设就看最近四条）跟标题加内容比
+    const meaning = entries.filter(entry => entry.trigger === 'meaning');
+    if (meaning.length) {
+        const scanOf = (entry:ChatWorldEntry) => { const depth = Math.floor(Number(entry.depth)); return texts.slice(-(depth > 0 ? depth : 4)).join('\n'); };
+        const groups = new Map<string, ChatWorldEntry[]>();
+        for (const entry of meaning) { const scan = scanOf(entry); groups.set(scan, [...(groups.get(scan) || []), entry]); }
+        const scored:{entry:ChatWorldEntry;score:number}[] = [];
+        for (const [scan, list] of groups) {
+            const scores = await meaningScores(scan, list.map(entry => `${String(entry.title || '')}\n${String(entry.content || '').slice(0, 500)}`));
+            if (scores) list.forEach((entry, index) => scored.push({ entry, score: scores[index] }));
+        }
+        scored.filter(item => item.score >= .45).sort((a, b) => b.score - a.score).slice(0, 3)
+            .forEach(({ entry, score }) => { if (lucky(entry)) active.set(entry, `意思接近（${score.toFixed(2)}）${odds(entry)}`); });
+    }
     entries.forEach(entry => {
         if (entry.trigger === 'always') { active.set(entry, '常驻'); return; }
+        if (entry.trigger === 'meaning') return;
         const reason = keywordActive(entry, scanText(entry));
         if (reason) {
             const probability = Number(entry.probability);

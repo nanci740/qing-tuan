@@ -52,7 +52,7 @@ export interface ChatContextItem {role:string;content:string;messageId:string;qu
  photoId?:string;
  /** 表情的图（qt-image: 编号或网址）：最近几张也附上图，他才知道表情长什么样。 */
  stickerImage?:string;}
-export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):WorldInjection;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};
+export interface ChatReplyEngineServices {currentKey():string;preferences():ChatPreferences;identity():{name:string;avatar:string};worldContext(recent:ChatContextItem[],chatKey:string,selectedIds:string[],limit:number):Promise<WorldInjection>;persona(chatKey:string):string;myPresence():string;refreshPins():void;roomVisible():boolean;viewed():boolean;background(detail:PeerMessageDetail):void;recallStored(detail:PeerMessageDetail&{messageId:string}):unknown;notify(detail:{chatKey:string;title:string;body:string;avatar:string;unreadCount:number;viewed:boolean}):void;feedback(kind:'receive'):void;character(chatKey:string):{name:string;appearance:string};
  /** 没开着的聊天用：那个聊天的设定、名字和头像、存着的聊天记录（一行一个元素）。 */
  preferencesFor(chatKey:string):ChatPreferences;identityFor(chatKey:string):{name:string;avatar:string};historyRows(chatKey:string):HTMLElement[];pat(chatKey:string,suffix:string,who?:{from:string;target:string}):string;notice(chatKey:string,text:string):void;
  /** 群聊：成员（key、本名、给你看的名字）和你在群里的昵称；不是群就是 null。 */
@@ -284,7 +284,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         if (!api?.requestChat || !config?.baseUrl || !config?.apiKey) throw new Error('先在 API 设置填好聊天模型，才能补充描写');
         const characterName = services.current!.identity().name;
         const recent = collectCurrentChatContext().slice(-Math.max(1, Number(requestPreferences.contextMessages) || 30));
-        const world = services.current!.worldContext(recent, chatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
+        const world = await services.current!.worldContext(recent, chatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(chatKey);
         const preset = resolvePreset(requestPreferences.presetId);
         const prompt = buildChatSystemPrompt({
@@ -395,7 +395,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         const choicesText = quoteChoices.length
             ? quoteChoices.map(item => `${item.id} [${item.role === 'assistant' ? '你自己' : '用户'}]: ${JSON.stringify(item.text)}`).join('\n')
             : '（暂无可引用的较早消息）';
-        const world = services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
+        const world = await services.current!.worldContext(recent, requestChatKey, requestPreferences.linkedWorldBooks || [], requestPreferences.worldBookLimit ?? 10000);
         const currentPresence = getChatPresence(requestChatKey);
         // 语音：私聊用这个聊天设的音色；群聊每个成员用自己聊天设置里的音色，没设音色的成员只能打字
         const voiceOf = (key?: string) => groupInfo ? (key && !key.startsWith('stranger-') ? loadChatPreferences(key).voiceName : '') : requestPreferences.voiceName;
