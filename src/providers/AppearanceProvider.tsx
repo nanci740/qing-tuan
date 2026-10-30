@@ -22,12 +22,12 @@ function initialAppearance(){let color=DEFAULT_THEME_COLOR,wallpaper='',opacity=
  // 旧的淡青 #C0D6D8 已换成新的淡青 #DDF2F4，之前存的旧值自动换成新色。
  if(color.toUpperCase()==='#C0D6D8'){color=DEFAULT_THEME_COLOR;kv.setItem('smallphone_theme_color',color);}wallpaper=readImageSlot('smallphone_main_wallpaper');opacity=Number(kv.getItem('smallphone_wallpaper_opacity'))||100;}catch{}
  let glass=50;try{const value=Number(kv.getItem('smallphone_glass_strength'));if(Number.isFinite(value))glass=value;}catch{}
- const splash=read('smallphone_splash_mode','always');return{tone:normalizeThemeTone(read('smallphone_theme_tone')),color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
+ const splash=read('smallphone_splash_mode','always');return{charm:read('smallphone_home_charm','on')!=='off',tone:normalizeThemeTone(read('smallphone_theme_tone')),color:normalizeThemeColor(color),savedColor:color,wallpaper,opacity:Math.min(100,Math.max(20,opacity)),glass:Math.min(100,Math.max(0,glass||0)),splash:['always','daily','off'].includes(splash)?splash:'always'};}
 function useAppearanceState(){
  const navigation=useSettingsNavigation(),home=useHomeTexts(),music=useMusic();
  const [initial]=useState(initialAppearance),[color,setColor]=useState(initial.color),[hex,setHex]=useState(initial.color),savedColor=useRef(initial.savedColor);
  const [tone,setToneState]=useState<ThemeTone>(initial.tone);
- const [wallpaper,setWallpaper]=useState(initial.wallpaper),[opacity,setOpacityState]=useState(initial.opacity),opacityRef=useRef(opacity),[glass,setGlassState]=useState(initial.glass),[splash,setSplashState]=useState(initial.splash);
+ const [wallpaper,setWallpaper]=useState(initial.wallpaper),[opacity,setOpacityState]=useState(initial.opacity),opacityRef=useRef(opacity),[glass,setGlassState]=useState(initial.glass),[splash,setSplashState]=useState(initial.splash),[charm,setCharmState]=useState(initial.charm);
  const [pageOpen,setPageOpen]=useState(false),pageRef=useRef<HTMLDivElement>(null),modalRef=useRef<HTMLDivElement>(null),[modalOpen,setModalOpen]=useState(false),[previous,setPrevious]=useState(DEFAULT_THEME_COLOR),[draftColor,setDraftColor]=useState(DEFAULT_THEME_COLOR),[modalHex,setModalHex]=useState(''),[hsv,setHsv]=useState<number[]>([0,0,0]),[modalReady,setModalReady]=useState(false);
  const [texts,setTexts]=useState<HomeTextValues>(()=>Object.fromEntries(Object.keys(defaultHomeTexts).map(key=>[key,''])) as HomeTextValues);
  const [icons,setIcons]=useState(readIcons),[iconDrafts,setIconDrafts]=useState(readIcons),pendingIcon=useRef<{kind:IconKind;key:string}|null>(null);
@@ -60,6 +60,7 @@ function useAppearanceState(){
  function setRange(index:number,value:number){const next=hsv.map((v,i)=>i===index?value:v),nextColor=hsvToHex(next[0],next[1],next[2]);setHsv(next);setDraftColor(nextColor);setModalHex(nextColor);setModalReady(true);}
  function setGlass(value:number){const safe=Math.min(100,Math.max(0,value||0));if(persist({'smallphone_glass_strength':String(safe)}))setGlassState(safe);}
  function setSplash(value:string){const safe=['always','daily','off'].includes(value)?value:'always';const values:Record<string,string|null>={'smallphone_splash_mode':safe};if(safe==='daily')values.smallphone_splash_last_shown=null;if(persist(values))setSplashState(safe);}
+ function setCharm(on:boolean){if(persist({'smallphone_home_charm':on?'on':'off'}))setCharmState(on);}
  function setOpacity(value:number){const safe=Math.min(100,Math.max(20,Number.isFinite(value)?value:100));if(persist({'smallphone_wallpaper_opacity':String(safe)})){opacityRef.current=safe;setOpacityState(safe);}}
  const veil=Math.max(0,Math.min(.8,1-opacity/100)).toFixed(2),wallpaperLayers=wallpaper?`linear-gradient(rgba(250, 249, 246, ${veil}), rgba(250, 249, 246, ${veil})), url("${wallpaper}")`:'';
  const wallpaperRevision=useRef(0);
@@ -107,7 +108,7 @@ function useAppearanceState(){
   try{await commitFont(null,{smallphone_custom_font_type:null,smallphone_custom_font_url:null,smallphone_custom_font_name:null});deactivateFont();showToast('已恢复默认字体');}
   catch(error){showToast((error as Error).message||'字体恢复失败');}finally{fontBusy.current=false;}
  }
- return{pageOpen,pageRef,closePage,tone,setTone,color,hex,setHex,applyColor,applyHex,glass,setGlass,splash,setSplash,wallpaper,wallpaperLayers,opacity,setOpacity,wallpaperInput,onWallpaper,removeWallpaper,modalRef,modalOpen,previous,draftColor,modalHex,setModalHex,hsv,modalReady,openModal,closeModal,modalApplyHex,setRange,confirmModal:()=>{if(applyColor(draftColor)){closeModal(false);showToast('主题颜色已保存');}},texts,setTexts,saveTexts,resetTexts:()=>saveTexts(defaultHomeTexts),icons,iconDrafts,chooseIcon,onIcon,resetIcons,saveIcons,iconInput,font,fontUrl,setFontUrl,fontInput,onFont,applyFontUrl,resetFont};
+ return{pageOpen,pageRef,closePage,tone,setTone,color,hex,setHex,applyColor,applyHex,glass,setGlass,splash,setSplash,charm,setCharm,wallpaper,wallpaperLayers,opacity,setOpacity,wallpaperInput,onWallpaper,removeWallpaper,modalRef,modalOpen,previous,draftColor,modalHex,setModalHex,hsv,modalReady,openModal,closeModal,modalApplyHex,setRange,confirmModal:()=>{if(applyColor(draftColor)){closeModal(false);showToast('主题颜色已保存');}},texts,setTexts,saveTexts,resetTexts:()=>saveTexts(defaultHomeTexts),icons,iconDrafts,chooseIcon,onIcon,resetIcons,saveIcons,iconInput,font,fontUrl,setFontUrl,fontInput,onFont,applyFontUrl,resetFont};
 }
 const Context=createContext<ReturnType<typeof useAppearanceState>|null>(null);
 export function AppearanceProvider({children}:{children:ReactNode}){const value=useAppearanceState();return <Context.Provider value={value}>{children}</Context.Provider>;}

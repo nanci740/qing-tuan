@@ -15,6 +15,7 @@ import { HomeAvatar } from './components/HomeAvatar';
 import { useBoot } from '../../providers/BootProvider';
 import { useHomePagination } from '../../hooks/useHomePagination';
 import { TamaPet } from './components/TamaPet';
+import { PhoneCharm } from './components/PhoneCharm';
 import { OriginalComment } from "../../components/shared/OriginalComment";
 import { World } from "../World/World";
 import { Chat } from "../Chat/Chat";
@@ -48,6 +49,7 @@ export function Home() {
       <OriginalComment text={" 顶部状态栏 "} />
       {"\n        "}
       <DeviceStatusBar />
+      {appearance.charm && !navigation.spaceOpen && <PhoneCharm page={pagination.page} />}
       {"\n"}
       <div className="widget-card" inert={navigation.spaceOpen}>
         {"\n"}

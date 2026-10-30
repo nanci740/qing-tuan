@@ -3043,3 +3043,22 @@
                 10px -12px 0 -1px var(--color-surface),
                 10px -12px 0 0 var(--win-deep) !important;
         }
+
+        /* 右上角的手机挂链：从挂绳孔垂下来，跟着内容一起卷动；只有挂坠那段点得到。 */
+        #main-content > .phone-charm {
+            position: absolute;
+            top: 20px;
+            right: max(4px, calc(50% - 191px));
+            width: 70px;
+            height: 232px;
+            z-index: 5;
+            overflow: visible;
+            pointer-events: none;
+            transform-origin: 52px 0;
+            filter: drop-shadow(0 1.5px 1.5px rgba(120, 100, 160, .25));
+        }
+        #main-content > .phone-charm .phone-charm-hit {
+            fill: transparent;
+            pointer-events: all;
+            cursor: pointer;
+        }
