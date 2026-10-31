@@ -3044,17 +3044,17 @@
                 10px -12px 0 0 var(--win-deep) !important;
         }
 
-        /* 右上角的手机挂链：从挂绳孔垂下来，跟着内容一起卷动；只有挂坠那段点得到。 */
+        /* 右上角的手机挂链：扣子扣在电池右边，跟着内容一起卷动；整串都点得到。 */
         #main-content > .phone-charm {
             position: absolute;
-            top: 20px;
+            top: 6px;
             right: max(4px, calc(50% - 191px));
-            width: 50px;
-            height: 166px;
+            width: 36px;
+            height: 160px;
             z-index: 5;
             overflow: visible;
             pointer-events: none;
-            transform-origin: 37px 0;
+            transform-origin: 18px 11px;
             filter: drop-shadow(0 1px 1px rgba(120, 100, 160, .25));
             animation: phone-charm-idle 4.2s ease-in-out infinite alternate;
         }
@@ -3065,6 +3065,10 @@
         }
         @media (prefers-reduced-motion: reduce) {
             #main-content > .phone-charm { animation: none; }
+        }
+        /* 扣子跟着主题色：同一个色相，调亮成糖果色（不支持的浏览器用粉色）。 */
+        #main-content > .phone-charm .phone-charm-clasp {
+            stroke: oklch(from var(--theme-color) 0.8 0.095 h);
         }
         #main-content > .phone-charm .phone-charm-hit {
             fill: transparent;
