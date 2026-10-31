@@ -3049,13 +3049,22 @@
             position: absolute;
             top: 20px;
             right: max(4px, calc(50% - 191px));
-            width: 70px;
-            height: 232px;
+            width: 50px;
+            height: 166px;
             z-index: 5;
             overflow: visible;
             pointer-events: none;
-            transform-origin: 52px 0;
-            filter: drop-shadow(0 1.5px 1.5px rgba(120, 100, 160, .25));
+            transform-origin: 37px 0;
+            filter: drop-shadow(0 1px 1px rgba(120, 100, 160, .25));
+            animation: phone-charm-idle 4.2s ease-in-out infinite alternate;
+        }
+        /* 没碰它的时候也微微地左右摆（往右的空间少，往左多摆一点）。 */
+        @keyframes phone-charm-idle {
+            from { transform: rotate(-1deg); }
+            to { transform: rotate(2.5deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #main-content > .phone-charm { animation: none; }
         }
         #main-content > .phone-charm .phone-charm-hit {
             fill: transparent;

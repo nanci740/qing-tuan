@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-/** 主画面右上角的手机挂链：糖果星星、像素爱心、小翻盖机。点一下会晃，换页时轻轻摆一下。 */
+/** 主画面右上角的手机挂链：糖果星星、像素爱心、小翻盖机。平常微微地摆，点一下会晃，换页时轻轻摆一下。 */
 const STARS = ['#ffe08a', '#ffc4dc', '#c4dcff', '#d9f5c4', '#dccbff'];
 function starPoints(x: number, y: number, r: number) {
   return Array.from({ length: 10 }, (_, k) => {
