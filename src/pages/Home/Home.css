@@ -3049,12 +3049,12 @@
             position: absolute;
             top: 6px;
             right: max(4px, calc(50% - 191px));
-            width: 43px;
+            width: 36px;
             height: 160px;
             z-index: 5;
             overflow: visible;
             pointer-events: none;
-            transform-origin: 25px 11px;
+            transform-origin: 18px 11px;
             filter: drop-shadow(0 1px 1px rgba(120, 100, 160, .25));
             animation: phone-charm-idle 4.2s ease-in-out infinite alternate;
         }
@@ -3070,47 +3070,11 @@
         #main-content > .phone-charm .phone-charm-clasp {
             stroke: oklch(from var(--theme-color) 0.8 0.095 h);
         }
-        /* 他送的挂件：整个挂件都点得到 */
-        #main-content > .phone-charm .phone-charm-gift {
-            pointer-events: all;
-            cursor: pointer;
-        }
         /* 有没看的消息：小翻盖机外面一圈淡淡的粉光 */
         #main-content > .phone-charm .phone-charm-glow {
             fill: #ffc4dc;
             opacity: .55;
             filter: blur(2px);
-        }
-        /* 点他送的挂件跳出的小卡：名字、谁送的、哪天，底下一个「摘下」 */
-        #main-content > .phone-charm-tag {
-            position: absolute;
-            right: calc(max(4px, 50% - 191px) + 40px);
-            z-index: 6;
-            width: 104px;
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            padding: 7px 9px 8px;
-            box-sizing: border-box;
-            border: 1px solid var(--win-deep);
-            background: var(--color-surface);
-            box-shadow: var(--effect-raised);
-            font-size: 11px;
-            line-height: 1.45;
-            color: var(--color-text);
-        }
-        #main-content > .phone-charm-tag b { font-size: 12.5px; }
-        #main-content > .phone-charm-tag small { font-size: 10px; color: var(--color-muted); }
-        #main-content > .phone-charm-tag .phone-charm-tag-btn {
-            margin-top: 6px;
-            padding: 3px 0;
-            border: 1px solid var(--win-deep);
-            background: var(--color-surface);
-            box-shadow: var(--effect-raised);
-            font: inherit;
-            font-size: 11px;
-            color: var(--color-text);
-            cursor: pointer;
         }
         #main-content > .phone-charm .phone-charm-hit {
             fill: transparent;
