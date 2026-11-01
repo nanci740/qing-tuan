@@ -8951,6 +8951,7 @@
             line-height: 1.65;
             color: var(--spc-title);
             word-break: break-word;
+            white-space: pre-line;
         }
 
 /* @qingtuan-order:003980 */
