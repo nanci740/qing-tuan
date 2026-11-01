@@ -8,21 +8,11 @@ import * as model from '../utils/chatMessageNodes';
 import { measureChatBubbleShape } from '../utils/chatBubbleGeometry';
 import { DEFAULT_AVATAR, DEFAULT_BIRD_AVATAR } from '../utils/defaultAvatar';
 import { subscribeWallet } from '../utils/walletStorage';
-import { charmById, setCharmHung, subscribeCharms } from '../utils/charmStorage';
-import { showToast } from '../utils/toast';
 import { CHAT_INITIAL_MESSAGES, CHAT_MORE_MESSAGES, isHistoryRow, messageWindow, shareMessageNodes } from '../utils/chatMessageWindow';
 interface MessagesView { nodes: MessageNode[]; hidden: number; loadMore(): void; register(node: MessageElement, element: Element | null): void; list(element: HTMLDivElement | null): void; audio(element: HTMLAudioElement, playing: boolean, ended?: boolean): void; api: MessageNodesApi; }
 const Context = createContext<MessagesView | null>(null);
 const BindingsContext = createContext<Pick<MessagesView, 'register' | 'audio'> | null>(null);
 /** 完整消息树由 React 状态持有；旧 HTML 只作为历史文件格式在边界编解码。 */
-/** 点聊天里他送的挂件卡片：挂到主画面的挂链上（挂满三件就先请你摘一件）。 */
-function hangCharm(id: string) {
-  const gift = charmById(id);
-  if (!gift) { showToast('这个挂件找不到了'); return; }
-  if (gift.hung) { showToast('已经挂在手机上了'); return; }
-  if (gift.hungAt) { showToast('在挂件盒里，去「美化」挂回去吧'); return; }
-  showToast(setCharmHung(id, true) ? '挂上了' : '挂链挂满了，先在「美化 → 挂件盒」摘下一个');
-}
 export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   const [nodes, setNodes] = useState<MessageNode[]>([]);
   const current = useRef<MessageNode[]>([]);
@@ -190,7 +180,6 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       const transcript=el.closest<HTMLElement>('.chat-voice-text-result');if(transcript){event.preventDefault();const row=transcript.closest<HTMLElement>('.chat-message-row');if(row&&!transcript.classList.contains('is-collapsed'))apiRef.current!.toggleTranscript(row);return;}
       const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill){event.preventDefault();sources.current?.play(pill);return;}
       const pay=el.closest<HTMLElement>('.chat-pay');const payRow=pay?.closest<HTMLElement>('.chat-message-row');if(payRow?.dataset.payId){event.preventDefault();window.dispatchEvent(new CustomEvent('qingtuan:chat-pay-open',{detail:{id:payRow.dataset.payId}}));return;}
-      const charm=el.closest<HTMLElement>('.chat-charm');const charmRow=charm?.closest<HTMLElement>('.chat-message-row');if(charmRow?.dataset.charmId){event.preventDefault();hangCharm(charmRow.dataset.charmId);return;}
       const photo=el.closest<HTMLElement>('.chat-photo');const photoRow=photo?.closest<HTMLElement>('.chat-message-row');if(photoRow){event.preventDefault();sources.current?.photo(photoRow);}
     },
     keyDown(event){const el=event.target;if(!(el instanceof Element))return;const pill=el.closest<HTMLElement>('.chat-voice-control');if(pill&&(event.key==='Enter'||event.key===' ')){event.preventDefault();sources.current?.play(pill);}},
@@ -219,7 +208,6 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
       if(detail.location)model.setLocation(node,detail.location,factory);
       if(detail.sticker)model.setSticker(node,detail.sticker,factory);
       if(detail.pay)model.setPay(node,detail.pay,factory);
-      if(detail.charm)model.setCharm(node,detail.charm,factory);
       if(detail.quote){const caption=bubble.children.find(n=>n.kind==='element'&&n.tag==='div'&&!model.hasClass(n,'chat-quoted-message'));const quote=model.quoteNode(detail.quote,detail.quoteTargetId||'',factory);if(caption)model.insertBeforeKey(bubble.children,caption.key,quote);else bubble.children.push(quote);}
       const selectionStyle=model.attr(node,'style');model.removeAttr(node,'style');
       // 群聊：这一则是哪个成员说的，名字和头像马上换成他的
@@ -256,7 +244,6 @@ export function ChatMessagesProvider({ children }: { children: ReactNode }) {
   useEffect(()=>{ready.current=true;return()=>{ready.current=false;cancelAnimationFrame(scrollFrame.current);cancelAnimationFrame(resizeFrame.current);observed.current.forEach(v=>v.observer.disconnect());listeners.current.clear();for(const timer of timers.current)clearTimeout(timer);};},[]);
   // 钱包变了（收下、退回、过期）：卡片跟着换状态，送给他的文字也一起更新。
   useEffect(()=>subscribeWallet(()=>mutate(next=>normalized(next))),[]);
-  useEffect(()=>subscribeCharms(()=>mutate(next=>normalized(next))),[]);
   useLayoutEffect(()=>{const connect=(event:Event)=>{const detail=(event as CustomEvent<MessagesConnection>).detail;sources.current=detail;detail.accept(api);};window.addEventListener('qingtuan:chat-messages-connect',connect);return()=>window.removeEventListener('qingtuan:chat-messages-connect',connect);},[api]);
   useLayoutEffect(()=>{
     // React 不插入额外包裹；旧 HTML 中的注释通过组件效果保留原位置。

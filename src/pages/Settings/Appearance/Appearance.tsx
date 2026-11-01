@@ -1,5 +1,4 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
-import { CharmBox } from './components/CharmBox';
 import type { CSSProperties } from 'react';
 import { useAppearance } from '../../../providers/AppearanceProvider';
 import { hsvToHex } from '../../../utils/appearanceColors';
@@ -263,32 +262,6 @@ export function Appearance() {
             {"\n                "}
           </div>
           {"\n            "}
-        </section>
-        {"\n\n            "}
-        <section className="theme-setting-group">
-          <div className="theme-setting-label">
-            {"手机挂链"}
-          </div>
-          <div className="theme-setting-card">
-            <div className="theme-option-title">
-              <span>
-                {"主画面挂链"}
-              </span>
-              <span className="theme-option-value">{appearance.charm ? '挂着' : '收起'}</span>
-            </div>
-            <div className="theme-segmented" aria-label="主画面挂链">
-              <PressedButton type="button" className={'theme-segment-btn' + (appearance.charm ? ' active' : '')} onClick={() => appearance.setCharm(true)}>
-                {"挂着"}
-              </PressedButton>
-              <PressedButton type="button" className={'theme-segment-btn' + (!appearance.charm ? ' active' : '')} onClick={() => appearance.setCharm(false)}>
-                {"收起"}
-              </PressedButton>
-            </div>
-            <span className="theme-setting-note">
-              {"点一下挂坠会晃。他送的挂件点一下，可以看是谁送的、摘下来。"}
-            </span>
-            <CharmBox />
-          </div>
         </section>
         {"\n\n            "}
         <section className="theme-setting-group">

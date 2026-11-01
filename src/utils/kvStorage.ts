@@ -14,6 +14,8 @@ let db: IDBDatabase | null = null;
 let fallback = false;
 let flushing = false;
 let warned = false;
+/** 还原整机备份时停住：之后的写入都不再存进数据库（马上就会重新开启）。 */
+let frozen = false;
 
 function legacyStorage(): Storage | null { try { return globalThis.localStorage ?? null; } catch { return null; } }
 
@@ -38,7 +40,7 @@ function done(transaction: IDBTransaction) {
 }
 
 function scheduleFlush() {
-  if (flushing || !db || !pending.size) return;
+  if (frozen || flushing || !db || !pending.size) return;
   flushing = true;
   queueMicrotask(() => {
     const batch = new Map(pending);
@@ -94,6 +96,23 @@ export async function initializeKvStorage() {
     for (const key of moved) try { legacy.removeItem(key); } catch { /* 留着也不影响，下次开机会略过。 */ }
   } catch { /* 这次没搬成，内存里已经有了；下次开机再搬。 */ }
   return '';
+}
+
+/** 整机备份：等排队中的写入都存好。 */
+export async function flushKv() {
+  for (let i = 0; i < 50 && (flushing || pending.size); i++) await new Promise(resolve => setTimeout(resolve, 20));
+}
+/** 整机还原：整份换成 entries，之后不再写入（接着会重新开启）。 */
+export async function replaceKv(entries: Record<string, string>) {
+  frozen = true; pending.clear();
+  if (fallback || !db) {
+    const legacy = legacyStorage(); if (!legacy) return;
+    legacy.clear(); for (const [key, value] of Object.entries(entries)) legacy.setItem(key, value);
+    return;
+  }
+  const transaction = db.transaction(STORE, 'readwrite'), store = transaction.objectStore(STORE);
+  store.clear(); for (const [key, value] of Object.entries(entries)) store.put(value, key);
+  await done(transaction);
 }
 
 /** 跟 localStorage 一样用法的同步存取。 */
