@@ -3,6 +3,7 @@ import {PressedButton} from '../../../components/shared/PressedButton';
 import {useSettingsNavigation} from '../../../providers/SettingsNavigationProvider';
 import {ImageStorageSettings} from './ImageStorageSettings';
 import {BackupSettings} from './BackupSettings';
+import {StorageSettings} from './StorageSettings';
 import {backupDue,updateBackupMeta} from '../../../utils/fullBackup';
 import {confirmChat} from '../../../utils/chatConfirm';
 export function DataManagement(){
@@ -32,6 +33,6 @@ export function DataManagement(){
       <span className="retro-address-label">地址</span>
       <span className="retro-address-field"><span className="retro-address-icon"/>{'C:\\青团\\设置\\数据管理\\'}</span>
     </div>
-    <div className="theme-settings-content"><BackupSettings open={open}/><ImageStorageSettings open={open} onClose={()=>setOpen(false)}/></div>
+    <div className="theme-settings-content"><BackupSettings open={open}/><StorageSettings open={open}/><ImageStorageSettings open={open} onClose={()=>setOpen(false)}/></div>
   </div>;
 }
