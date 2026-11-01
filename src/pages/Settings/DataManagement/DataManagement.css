@@ -43,3 +43,7 @@ button.backup-row { cursor: pointer; }
 .backup-seg { display: flex; border: 1px solid var(--color-muted); background: var(--color-surface); }
 .backup-seg button { padding: 4px 10px; border: 0; background: none; box-shadow: none; color: var(--color-muted); font: inherit; font-size: 10.5px; cursor: pointer; }
 .backup-seg button.active { box-shadow: var(--effect-sunken); background: color-mix(in srgb, var(--theme-color) 45%, var(--color-surface)); color: var(--color-text); }
+.backup-remind small { display: block; color: var(--color-muted); font-size: 9.5px; }
+.backup-kept { color: var(--color-text); font-size: 10.5px; white-space: nowrap; }
+.backup-kept.is-off { color: var(--color-muted); }
+.backup-protect-btn { flex: none; padding: 4px 10px; border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; font-size: 10.5px; cursor: pointer; }

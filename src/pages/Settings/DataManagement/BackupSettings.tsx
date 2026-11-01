@@ -8,8 +8,8 @@ import type { BackupInclude, BackupMeta, BackupPart } from '../../../utils/fullB
 
 const size = (bytes: number) => `${Math.max(.1, bytes / 1024 / 1024).toFixed(1)} MB`;
 const when = (at: number) => { const d = new Date(at); return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
-const PARTS: [BackupPart, string, string][] = [['images', '图片和表情', '头像、聊天照片、表情包、壁纸'], ['voice', '语音', '聊天里的语音消息'], ['music', '音乐', '播放器里的歌']];
-const PART_NAME: Record<BackupPart, string> = { images: '图片和表情', voice: '语音', music: '音乐' };
+const PARTS: [BackupPart, string, string][] = [['images', '图片和表情', '头像、聊天照片、表情包、壁纸'], ['voice', '语音', '聊天里的语音消息'], ['music', '音乐', '播放器里的歌'], ['keys', 'API Key', '勾了的话，这个文件不要传给别人']];
+const PART_NAME: Record<BackupPart, string> = { images: '图片和表情', voice: '语音', music: '音乐', keys: 'API Key' };
 
 function Check({ on }: { on: boolean }) {
   return <span className="backup-check" aria-hidden="true">{on && <svg viewBox="0 0 10 10" shapeRendering="crispEdges"><path d="M1 5h2v1h1v1h1V6h1V5h1V4h1V3h1v2H8v1H7v1H6v1H5v1H4V8H3V7H2V6H1z" /></svg>}</span>;
@@ -18,16 +18,26 @@ function Check({ on }: { on: boolean }) {
 /** 整机备份：勾要带哪些、备份到文件、从文件还原，还有多久提醒一次。 */
 export function BackupSettings({ open }: { open: boolean }) {
   const [sizes, setSizes] = useState<Awaited<ReturnType<typeof scanBackup>> | null>(null);
-  const [include, setInclude] = useState<BackupInclude>({ images: true, voice: true, music: false });
+  const [include, setInclude] = useState<BackupInclude>({ images: true, voice: true, music: false, keys: false });
   const [meta, setMeta] = useState<BackupMeta>(readBackupMeta), [busy, setBusy] = useState(''), file = useRef<HTMLInputElement>(null);
+  // 浏览器保护（持久化储存）：on 已开启、off 没开、none 这个浏览器不支持
+  const [kept, setKept] = useState<'on' | 'off' | 'none' | ''>('');
   useEffect(() => {
     if (!open) return;
     let live = true; setSizes(null); setMeta(readBackupMeta());
-    scanBackup().then(next => { if (live) setSizes(next); }).catch(() => { if (live) setSizes({ core: 0, images: 0, voice: 0, music: 0 }); });
+    if (!navigator.storage?.persisted) setKept('none'); else navigator.storage.persisted().then(on => { if (live) setKept(on ? 'on' : 'off'); }).catch(() => { if (live) setKept('none'); });
+    scanBackup().then(next => { if (live) setSizes(next); }).catch(() => { if (live) setSizes({ core: 0, images: 0, voice: 0, music: 0, keys: 0 }); });
     return () => { live = false; };
   }, [open]);
   const total = sizes ? sizes.core + PARTS.reduce((sum, [part]) => sum + (include[part] ? sizes[part] : 0), 0) : 0;
   function remind(value: BackupMeta['remind']) { updateBackupMeta({ remind: value }); setMeta(readBackupMeta()); }
+  async function protect() {
+    try {
+      const on = await navigator.storage.persist();
+      setKept(on ? 'on' : 'off');
+      showToast(on ? '已开启浏览器保护' : '浏览器没有同意，记得常备份；把青团机加到主画面再试，比较容易成功');
+    } catch { setKept('none'); }
+  }
   async function backup() {
     if (busy) return;
     setBusy('正在备份…');
@@ -44,10 +54,10 @@ export function BackupSettings({ open }: { open: boolean }) {
     if (!picked || busy) return;
     try {
       const backup = await readBackup(picked), { at, stats, include: had } = backup.header, d = new Date(at);
-      const missing = PARTS.filter(([part]) => !had[part]).map(([part]) => PART_NAME[part]);
+      const missing = PARTS.filter(([part]) => part !== 'keys' && !had[part]).map(([part]) => PART_NAME[part]);
       const message = `备份时间：${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}\n` +
         `${stats.characters} 个角色、${stats.messages} 条聊天${had.images ? `、图片 ${stats.images} 张` : ''}${had.music ? `、音乐 ${stats.tracks} 首` : ''}\n` +
-        (missing.length ? `没有备份${missing.join('、')}（现在手机里的也会清掉）\n` : '') + '\n现在手机里的资料会整份换成这份备份，没办法复原。还原完会自动重新开启。';
+        (missing.length ? `没有备份${missing.join('、')}（现在手机里的也会清掉）\n` : '') + (had.keys === false ? '没有备份 API Key（会沿用这台手机现在的）\n' : '') + '\n现在手机里的资料会整份换成这份备份，没办法复原。还原完会自动重新开启。';
       if (!await confirmChat({ title: '还原这份备份？', message, confirmText: '还原', danger: true })) return;
       setBusy('正在还原…');
       await restoreBackup(backup);
@@ -67,7 +77,7 @@ export function BackupSettings({ open }: { open: boolean }) {
         <div className="backup-row is-locked"><Check on /><span>记忆、日记、朋友圈<small>还有账本、备忘录、钱包</small></span></div>
         <div className="backup-row is-locked"><Check on /><span>设置和美化<small>模型、预设、世界书、主题、字体</small></span></div>
         {PARTS.map(([part, title, note]) => <button type="button" role="checkbox" aria-checked={include[part]} key={part} className={'backup-row' + (include[part] ? '' : ' is-off')} onClick={() => setInclude(value => ({ ...value, [part]: !value[part] }))}>
-          <Check on={include[part]} /><span>{title}<small>{note}</small></span><span className="backup-size">{sizes ? size(sizes[part]) : '…'}</span>
+          <Check on={include[part]} /><span>{title}<small>{note}</small></span><span className="backup-size">{part === 'keys' ? '' : sizes ? size(sizes[part]) : '…'}</span>
         </button>)}
       </div>
       <p className="image-storage-status" role="status">{busy || (sizes ? `备份文件约 ${size(total)}` : '正在计算大小…')}</p>
@@ -76,7 +86,11 @@ export function BackupSettings({ open }: { open: boolean }) {
           {([['week', '每周'], ['month', '每月'], ['off', '不提醒']] as const).map(([value, label]) => <button type="button" role="radio" key={value} aria-checked={meta.remind === value} className={meta.remind === value ? 'active' : ''} onClick={() => remind(value)}>{label}</button>)}
         </span>
       </div>
-      <div className="image-storage-scope"><p className="image-storage-note">前三项一定会备份。还原会把现在手机里的资料整份换掉，没带进备份的那几类也会清空，还原前会先问你。</p></div>
+      <div className="backup-remind"><span>浏览器保护<small>降低浏览器自己清掉资料的机率，不能代替备份</small></span>
+        {kept === 'on' ? <span className="backup-kept">已开启</span> : kept === 'none' ? <span className="backup-kept is-off">这个浏览器不支持</span>
+          : kept === 'off' ? <PressedButton type="button" className="backup-protect-btn" onClick={() => void protect()}>申请保护</PressedButton> : null}
+      </div>
+      <div className="image-storage-scope"><p className="image-storage-note">前三项一定会备份。还原会把现在手机里的资料整份换掉，没带进备份的那几类也会清空，还原前会先问你；没带 API Key 的话，还原后沿用这台手机现在的。</p></div>
       <div className="theme-icon-bottom-actions">
         <PressedButton type="button" className="theme-icon-bottom-btn" disabled={!!busy} onClick={() => file.current?.click()}>从文件还原</PressedButton>
         <PressedButton type="button" className="theme-icon-bottom-btn primary ui-cyan-btn" disabled={!!busy || !sizes} onClick={() => void backup()}>备份到文件</PressedButton>
