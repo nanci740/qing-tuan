@@ -1,9 +1,9 @@
 import { flushKv, kv, replaceKv } from './kvStorage';
 
 /** 整机备份：kv 里的小设定加上各个 IndexedDB 资料库，存成一个 JSON 文件。
-    前面那些（聊天、角色、记忆、日记、设置、美化……）一定会带；图片和表情、语音、音乐可以选。
-    还原时整份换掉：没带进备份的那几类也会清空。 */
-export type BackupPart = 'images' | 'voice' | 'music';
+    前面那些（聊天、角色、记忆、日记、设置、美化……）一定会带；图片和表情、语音、音乐、API Key 可以选。
+    还原时整份换掉：没带进备份的那几类也会清空；只有 API Key 例外，没带的话沿用这台手机现在的。 */
+export type BackupPart = 'images' | 'voice' | 'music' | 'keys';
 export type BackupInclude = Record<BackupPart, boolean>;
 export interface BackupStats { characters: number; messages: number; images: number; tracks: number }
 interface StoreInfo { name: string; keyPath: string | string[] | null; autoIncrement: boolean }
@@ -17,6 +17,24 @@ const DBS: { name: string; part?: BackupPart }[] = [
   { name: 'smallphone_music_db', part: 'music' },
 ];
 const META = 'qingtuan_backup_v1', VOICE = /(<audio\b[^>]*?\ssrc=")data:audio\/[^"]*(")/g;
+/** API Key、MCP 的 token 这类金钥：照栏位名认。 */
+const SECRET = /api_?key$|^token$|secret|password|^authorization$/i;
+const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
+function scrub(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(scrub);
+  if (isRecord(value)) return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, SECRET.test(key) && typeof item === 'string' ? '' : scrub(item)]));
+  return value;
+}
+/** 备份里空着的金钥，照同一个位置补上这台手机现在的。 */
+function keepSecrets(current: unknown, restored: unknown): unknown {
+  if (Array.isArray(restored)) return restored.map((item, index) => keepSecrets(Array.isArray(current) ? current[index] : undefined, item));
+  if (isRecord(restored)) return Object.fromEntries(Object.entries(restored).map(([key, item]) => {
+    const mine = isRecord(current) ? current[key] : undefined;
+    return [key, SECRET.test(key) && item === '' && typeof mine === 'string' && mine ? mine : keepSecrets(mine, item)];
+  }));
+  return restored;
+}
+const parse = (text: string | null) => { try { return text ? JSON.parse(text) as unknown : undefined; } catch { return undefined; } };
 
 /** 备份提醒：last 上次备份，remind 多久提醒一次，since 开始算的时间，snooze 上次按「下次再说」。 */
 export interface BackupMeta { last: number; remind: 'week' | 'month' | 'off'; since: number; snooze: number }
@@ -82,7 +100,7 @@ const stripVoice = (value: unknown): unknown => typeof value === 'string' ? valu
 /** 各类大概占多少（给勾选清单看）。 */
 export async function scanBackup() {
   await flushKv();
-  const sizes = { core: 0, images: 0, voice: 0, music: 0 };
+  const sizes = { core: 0, images: 0, voice: 0, music: 0, keys: 0 };
   for (let index = 0; index < kv.length; index++) { const key = kv.key(index); if (key) sizes.core += key.length + (kv.getItem(key)?.length || 0); }
   for (const { name, part } of DBS) {
     const read = await readDb(name);
@@ -122,7 +140,11 @@ function decode(value: unknown): unknown {
 export async function createBackup(include: BackupInclude) {
   await flushKv();
   const kvData: Record<string, string> = {};
-  for (let index = 0; index < kv.length; index++) { const key = kv.key(index); if (key !== null) kvData[key] = kv.getItem(key) ?? ''; }
+  for (let index = 0; index < kv.length; index++) {
+    const key = kv.key(index); if (key === null) continue;
+    const text = kv.getItem(key) ?? '', value = include.keys ? undefined : parse(text);
+    kvData[key] = value && typeof value === 'object' ? JSON.stringify(scrub(value)) : text;
+  }
   const dbs: DbInfo[] = [], parts: string[] = [], stats: BackupStats = { characters: 0, messages: 0, images: 0, tracks: 0 };
   for (const { name, part } of DBS) {
     if (part && !include[part]) continue;
@@ -193,5 +215,10 @@ export async function restoreBackup(backup: BackupFile) {
     } finally { db.close(); }
   }
   // 备份提醒的设定跟着这台机器，不换成备份里的旧时间
-  await replaceKv({ ...backup.kv, ...(meta ? { [META]: meta } : {}) });
+  const entries = { ...backup.kv };
+  if (backup.header.include.keys === false) for (const [key, text] of Object.entries(entries)) {
+    const restored = parse(text), current = parse(kv.getItem(key));
+    if (restored && typeof restored === 'object' && current !== undefined) entries[key] = JSON.stringify(keepSecrets(current, restored));
+  }
+  await replaceKv({ ...entries, ...(meta ? { [META]: meta } : {}) });
 }
