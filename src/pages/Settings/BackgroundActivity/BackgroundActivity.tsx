@@ -142,6 +142,17 @@ export function BackgroundActivity() {
               <input className="vi-switch" id="backgroundNotificationVibration" checked={!!settings.notificationVibration} onChange={event => { void background.change('notificationVibration', event.currentTarget.checked); }} disabled={!settings.replyNotification} type="checkbox" />
               {"\n                    "}
             </label>
+            <div className={`background-activity-row${settings.replyNotification ? '' : ' is-disabled'}`} id="backgroundTestNotificationRow">
+              <span className="background-activity-copy">
+                <strong>
+                  {"测试通知"}
+                </strong>
+                <span>
+                  {"发一则试试，看收不收得到、有没有声音和震动"}
+                </span>
+              </span>
+              <PressedButton type="button" id="backgroundTestNotificationBtn" className="background-test-btn" disabled={!settings.replyNotification} onClick={() => void background.testNotification()}>试一下</PressedButton>
+            </div>
             {"\n                "}
           </div>
           {"\n            "}

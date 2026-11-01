@@ -174,5 +174,12 @@ export function useBackgroundActivity() {
     }
     if (key === 'screenAwake') { await applyWakeLock(); if ('wakeLock' in navigator) showToast(value ? '屏幕常亮已开启' : '屏幕常亮已关闭'); }
   }
-  return { settings, open, close: () => setOpen(false), change, audioUrl, audioRef, notifyReply };
+  /** 测试通知：照现在的设定（提示音、震动）发一则。 */
+  async function testNotification() {
+    if (!current.current.replyNotification) { showToast('先打开回复通知'); return; }
+    const sent = await notifyReply({ title: '青团机', body: '这是一则测试通知 ♪', tag: 'smallphone-test' });
+    if (sent) showToast('发出去了；没看到的话，检查手机里这个浏览器的通知设定');
+    else showToast('没发出去：浏览器没有允许通知，请到浏览器或手机设定里打开');
+  }
+  return { settings, open, close: () => setOpen(false), change, audioUrl, audioRef, notifyReply, testNotification };
 }
