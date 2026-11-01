@@ -136,6 +136,28 @@ function decode(value: unknown): unknown {
   return value;
 }
 
+const DB_LABEL: Record<string, string> = {
+  qingtuan_chat_records_v1: '聊天记录', QingTuanDB: '角色、世界书、账本、备忘录', QingTuanSpaceDB: '小窝', smallphone_custom_font_db: '字体',
+  qingtuan_image_assets_v1: '图片和表情', qingtuan_chat_photos_v1: '聊天照片', smallphone_chat_assets_v1: '聊天壁纸', smallphone_music_db: '音乐',
+};
+/** 备份前检查：有资料库读不到、或有角色却一条聊天都没有，就列出来（不让你带着一份缺东西的备份走）。 */
+export async function checkBackup(include: BackupInclude) {
+  const problems: string[] = [];
+  if (!kv.length) problems.push('设定读出来是空的');
+  let characters = 0, chats = -1;
+  for (const { name, part } of DBS) {
+    if (part && !include[part]) continue;
+    try {
+      const read = await readDb(name);
+      if (name === 'QingTuanDB') characters = read?.rows.filter(row => row.store === 'chatCharacters').length || 0;
+      if (name === 'qingtuan_chat_records_v1') chats = read?.rows.filter(row => row.store === 'chats').length || 0;
+    } catch (error) { problems.push(`${DB_LABEL[name] || name}读不到（${String((error as Error)?.message || error).slice(0, 40)}）`); }
+  }
+  // 收过他的回覆（主画面的消息小窗有纪录）却一条聊天都读不到，才算有问题；刚建角色还没聊过的不算
+  if (characters > 0 && chats === 0 && kv.getItem('qt_home_notice_v1')) problems.push(`有 ${characters} 个角色，但聊天记录读出来是空的`);
+  return problems;
+}
+
 /** 做一份备份文件（一段一段接起来，不拼成一整串大字）。 */
 export async function createBackup(include: BackupInclude) {
   await flushKv();
@@ -148,7 +170,8 @@ export async function createBackup(include: BackupInclude) {
   const dbs: DbInfo[] = [], parts: string[] = [], stats: BackupStats = { characters: 0, messages: 0, images: 0, tracks: 0 };
   for (const { name, part } of DBS) {
     if (part && !include[part]) continue;
-    const read = await readDb(name);
+    // 读不到的跳过（备份前检查已经告诉过你）
+    const read = await readDb(name).catch(() => null);
     if (!read) continue;
     const index = dbs.push(read.info) - 1;
     for (const row of read.rows) {

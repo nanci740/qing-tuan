@@ -3,7 +3,7 @@ import type { ChangeEvent } from 'react';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { confirmChat } from '../../../utils/chatConfirm';
 import { showToast } from '../../../utils/toast';
-import { createBackup, readBackup, readBackupMeta, restoreBackup, scanBackup, updateBackupMeta } from '../../../utils/fullBackup';
+import { checkBackup, createBackup, readBackup, readBackupMeta, restoreBackup, scanBackup, updateBackupMeta } from '../../../utils/fullBackup';
 import type { BackupInclude, BackupMeta, BackupPart } from '../../../utils/fullBackup';
 
 const size = (bytes: number) => `${Math.max(.1, bytes / 1024 / 1024).toFixed(1)} MB`;
@@ -40,6 +40,9 @@ export function BackupSettings({ open }: { open: boolean }) {
   }
   async function backup() {
     if (busy) return;
+    setBusy('正在检查…');
+    const problems = await checkBackup(include).catch(error => [String((error as Error)?.message || error)]);
+    if (problems.length && !await confirmChat({ title: '备份可能不完整', message: problems.join('\n') + '\n\n照这样备份，这些东西不会在文件里。建议先重新开启青团机再备份。', confirmText: '还是备份', cancelText: '先不要' })) { setBusy(''); return; }
     setBusy('正在备份…');
     try {
       const blob = await createBackup(include), url = URL.createObjectURL(blob), link = document.createElement('a'), d = new Date();

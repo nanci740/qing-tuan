@@ -722,3 +722,12 @@
         #backgroundActivityPage#backgroundActivityPage .background-activity-group:nth-of-type(3) .background-activity-label::before {
             background: var(--theme-color) !important;
         }
+
+        /* 测试通知：右边一颗小按钮，样式跟语音、生图设置的「测试」按钮一样 */
+        .background-test-btn {
+            flex: none;
+            padding: 5px 14px;
+            font: inherit;
+            font-size: 11px;
+            cursor: pointer;
+        }
