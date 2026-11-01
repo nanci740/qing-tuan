@@ -3172,40 +3172,48 @@
 /* @qingtuan-order:001178 */
 
 
+        /* Hi~ 贴纸：白边星芒、里面一层浅主题色，往右下偏一点影子，像真的贴上去的 */
         #aboutAppModal .about-sticker {
             position: absolute;
-            top: -8px;
-            right: -4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 46px;
-            height: 46px;
+            top: -14px;
+            right: -8px;
+            width: 58px;
+            height: 58px;
             transform: rotate(14deg);
-            background: var(--set-fill, var(--win-deep));
-            clip-path: polygon(50% 0, 61% 18%, 82% 10%, 80% 32%, 100% 40%, 85% 56%, 96% 76%, 74% 78%, 68% 100%, 50% 87%, 32% 100%, 26% 78%, 4% 76%, 15% 56%, 0 40%, 20% 32%, 18% 10%, 39% 18%);
+            filter: drop-shadow(1.5px 2px 0 color-mix(in srgb, var(--win-deep) 55%, transparent));
         }
 
 /* @qingtuan-order:001179 */
 
 
-        #aboutAppModal .about-sticker::before {
-            content: '';
-            position: absolute;
-            inset: 2px;
-            background: var(--theme-light-40);
-            clip-path: inherit;
+        #aboutAppModal .about-sticker svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
         }
+        #aboutAppModal .about-sticker-edge {
+            fill: var(--color-surface);
+            stroke: var(--win-deep);
+            stroke-width: .8;
+            stroke-linejoin: round;
+        }
+        #aboutAppModal .about-sticker-face { fill: var(--theme-light-40); }
+        #aboutAppModal .about-sticker-spark { fill: var(--win-deep); }
+        #aboutAppModal .about-sticker-spark.is-back { fill: var(--color-surface); }
 
 /* @qingtuan-order:001180 */
 
 
-        #aboutAppModal .about-sticker span {
-            position: relative;
-            color: var(--win-deep);
-            font-size: 10px;
+        #aboutAppModal .about-sticker text {
+            fill: var(--win-deep);
+            stroke: var(--color-surface);
+            stroke-width: 2.4px;
+            paint-order: stroke;
+            font-family: Georgia, serif;
+            font-style: italic;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 14px;
         }
 
 /* @qingtuan-order:001181 */
