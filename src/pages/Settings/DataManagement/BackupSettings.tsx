@@ -81,17 +81,14 @@ export function BackupSettings({ open }: { open: boolean }) {
         </button>)}
       </div>
       <p className="image-storage-status" role="status">{busy || (sizes ? `备份文件约 ${size(total)}` : '正在计算大小…')}</p>
-      <div className="backup-option">
-        <div className="theme-option-title"><span>提醒我备份</span><span className="theme-option-value">{({ week: '每周', month: '每月', off: '不提醒' })[meta.remind]}</span></div>
-        <div className="theme-segmented" role="radiogroup" aria-label="提醒我备份">
+      <div className="backup-remind"><span>提醒我备份</span>
+        <span className="theme-segmented" role="radiogroup" aria-label="提醒我备份">
           {([['week', '每周'], ['month', '每月'], ['off', '不提醒']] as const).map(([value, label]) => <button type="button" role="radio" key={value} aria-checked={meta.remind === value} className={'theme-segment-btn' + (meta.remind === value ? ' active' : '')} onClick={() => remind(value)}>{label}</button>)}
-        </div>
-        <span className="theme-setting-note">时间到了，打开设置时会问你一次。</span>
+        </span>
       </div>
-      <div className="backup-option">
-        <div className="theme-option-title"><span>浏览器保护</span><span className="theme-option-value">{kept === 'on' ? '已开启' : kept === 'none' ? '不支持' : kept === 'off' ? '没开' : ''}</span></div>
-        {kept === 'off' && <PressedButton type="button" className="theme-icon-bottom-btn backup-protect-btn" onClick={() => void protect()}>申请保护</PressedButton>}
-        <span className="theme-setting-note">{kept === 'none' ? '这个浏览器不支持，记得常备份。' : '降低浏览器自己清掉资料的机率，不能代替备份。'}</span>
+      <div className="backup-remind"><span>浏览器保护<small>降低浏览器自己清掉资料的机率，不能代替备份</small></span>
+        {kept === 'on' ? <span className="backup-kept">已开启</span> : kept === 'none' ? <span className="backup-kept is-off">这个浏览器不支持</span>
+          : kept === 'off' ? <PressedButton type="button" className="theme-icon-bottom-btn backup-protect-btn" onClick={() => void protect()}>申请保护</PressedButton> : null}
       </div>
       <div className="image-storage-scope"><p className="image-storage-note">前三项一定会备份。还原会把现在手机里的资料整份换掉，没带进备份的那几类也会清空，还原前会先问你；没带 API Key 的话，还原后沿用这台手机现在的。</p></div>
       <div className="theme-icon-bottom-actions">

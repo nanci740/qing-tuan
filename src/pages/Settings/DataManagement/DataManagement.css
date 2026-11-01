@@ -39,5 +39,11 @@ button.backup-row { cursor: pointer; }
 .backup-check { position: relative; flex: none; width: 12px; height: 12px; border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-sunken); }
 /* 勾跟 Memories 一样：主题色的细勾 */
 .backup-check.is-on::after { content: ''; position: absolute; left: 50%; top: 45%; width: 3px; height: 6px; border: solid var(--color-accent-strong); border-width: 0 1.6px 1.6px 0; transform: translate(-50%, -50%) rotate(45deg); }
-.backup-option { display: flex; flex-direction: column; gap: 8px; margin: 0 0 14px; }
-.backup-protect-btn { width: 100%; }
+.backup-remind { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 14px; font-size: 11px; color: var(--color-text); }
+.backup-remind small { display: block; color: var(--color-muted); font-size: 9.5px; }
+/* 提醒、保护：样式跟美化设置的分段选择、视窗底下的按钮一样，只是收成一行里的小尺寸 */
+.backup-remind .theme-segmented { flex: none; grid-template-columns: repeat(3, auto); gap: 2px; margin: 0; padding: 2px; }
+.backup-remind .theme-segment-btn { height: 24px; padding: 0 10px; font-size: 10.5px; }
+.backup-kept { color: var(--color-text); font-size: 10.5px; white-space: nowrap; }
+.backup-kept.is-off { color: var(--color-muted); }
+.backup-protect-btn { flex: none; min-height: 0; padding: 5px 12px; }
