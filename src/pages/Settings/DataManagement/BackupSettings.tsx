@@ -12,7 +12,7 @@ const PARTS: [BackupPart, string, string][] = [['images', '图片和表情', '�
 const PART_NAME: Record<BackupPart, string> = { images: '图片和表情', voice: '语音', music: '音乐', keys: 'API Key' };
 
 function Check({ on }: { on: boolean }) {
-  return <span className="backup-check" aria-hidden="true">{on && <svg viewBox="0 0 10 10" shapeRendering="crispEdges"><path d="M1 5h2v1h1v1h1V6h1V5h1V4h1V3h1v2H8v1H7v1H6v1H5v1H4V8H3V7H2V6H1z" /></svg>}</span>;
+  return <i className={'backup-check' + (on ? ' is-on' : '')} aria-hidden="true" />;
 }
 
 /** 整机备份：勾要带哪些、备份到文件、从文件还原，还有多久提醒一次。 */
@@ -82,13 +82,13 @@ export function BackupSettings({ open }: { open: boolean }) {
       </div>
       <p className="image-storage-status" role="status">{busy || (sizes ? `备份文件约 ${size(total)}` : '正在计算大小…')}</p>
       <div className="backup-remind"><span>提醒我备份</span>
-        <span className="backup-seg" role="radiogroup" aria-label="提醒我备份">
-          {([['week', '每周'], ['month', '每月'], ['off', '不提醒']] as const).map(([value, label]) => <button type="button" role="radio" key={value} aria-checked={meta.remind === value} className={meta.remind === value ? 'active' : ''} onClick={() => remind(value)}>{label}</button>)}
+        <span className="theme-segmented" role="radiogroup" aria-label="提醒我备份">
+          {([['week', '每周'], ['month', '每月'], ['off', '不提醒']] as const).map(([value, label]) => <button type="button" role="radio" key={value} aria-checked={meta.remind === value} className={'theme-segment-btn' + (meta.remind === value ? ' active' : '')} onClick={() => remind(value)}>{label}</button>)}
         </span>
       </div>
       <div className="backup-remind"><span>浏览器保护<small>降低浏览器自己清掉资料的机率，不能代替备份</small></span>
         {kept === 'on' ? <span className="backup-kept">已开启</span> : kept === 'none' ? <span className="backup-kept is-off">这个浏览器不支持</span>
-          : kept === 'off' ? <PressedButton type="button" className="backup-protect-btn" onClick={() => void protect()}>申请保护</PressedButton> : null}
+          : kept === 'off' ? <PressedButton type="button" className="theme-icon-bottom-btn backup-protect-btn" onClick={() => void protect()}>申请保护</PressedButton> : null}
       </div>
       <div className="image-storage-scope"><p className="image-storage-note">前三项一定会备份。还原会把现在手机里的资料整份换掉，没带进备份的那几类也会清空，还原前会先问你；没带 API Key 的话，还原后沿用这台手机现在的。</p></div>
       <div className="theme-icon-bottom-actions">

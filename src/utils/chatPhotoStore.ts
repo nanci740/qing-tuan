@@ -7,6 +7,7 @@ const DB_NAME = 'qingtuan_chat_photos_v1';
 const STORE = 'photos';
 const urls = new Map<string, string>();
 let db: Promise<IDBDatabase> | null = null;
+let ready = false;
 
 function open() {
   return db ??= new Promise((resolve, reject) => {
@@ -31,8 +32,18 @@ export async function initializeChatPhotos() {
   try {
     const [keys, values] = await Promise.all([run('readonly', store => store.getAllKeys()), run('readonly', store => store.getAll())]);
     keys.forEach((key, index) => { if (typeof key === 'string' && values[index] instanceof Blob) urls.set(key, URL.createObjectURL(values[index])); });
+    ready = true;
   } catch { /* 照片库打不开：聊天照常用。 */ }
   return '';
+}
+
+/** 照片库这次开机读成功了（读不到时不把照片当成被清掉）。 */
+export const chatPhotosReady = () => ready;
+/** 存储空间清理：删掉这些照片（聊天里会变成文字照片）。 */
+export async function deleteChatPhotos(ids: string[]) {
+  if (!ids.length) return;
+  await run('readwrite', store => { ids.forEach(id => store.delete(id)); return store.count(); });
+  ids.forEach(id => { const url = urls.get(id); if (url) URL.revokeObjectURL(url); urls.delete(id); });
 }
 
 /** 这张照片这次开机的网址；没存过就回传空字符串。 */

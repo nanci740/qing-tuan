@@ -1,4 +1,5 @@
 import { DEFAULT_PHOTO } from './defaultPhoto';
+import { chatPhotosReady } from './chatPhotoStore';
 import type { NativeAttribute } from '../types/dom';
 import type { MessageComment, MessageElement, MessageFactory, MessageIdentity, MessageLocation, MessageNode, MessagePay, MessagePhoto, MessageSticker, MessageVoice, PeerMessageDetail } from '../types/chatMessages';
 import { stickerImageUrl } from './stickerStorage';
@@ -237,6 +238,17 @@ export function normalizeMessages(nodes: MessageNode[], identity: MessageIdentit
     if (photoId && photoImg) {
       const url = chatPhotoUrl(photoId), src = attr(photoImg, 'src');
       if (url && src !== url) setAttr(photoImg, 'src', url); else if (!url) adoptInlinePhoto(photoId, src);
+      // 照片库里已经没有这张（清理掉了，或还原的备份没带图片）：换成文字照片，点开看他写的画面描述
+      if (!url && chatPhotosReady() && src.startsWith('blob:') && attr(findClass(row, 'chat-photo') || row, 'data-photo-state') === 'done')
+        setPhoto(row, { id: photoId, caption: attr(row, 'data-photo-caption'), prompt: attr(row, 'data-photo-prompt'), ...(attr(row, 'data-photo-scene') ? { scene: attr(row, 'data-photo-scene') } : {}), state: 'text' }, factory);
+    }
+    // 语音的音档清掉了（存储清理，或还原的备份没带语音）：换成普通文字，内容就是转写的那段
+    const voiceAudio = findClass(row, 'chat-voice-audio'), voiceBubble = voiceAudio && findClass(row, 'chat-bubble');
+    if (voiceAudio && voiceBubble && !attr(voiceAudio, 'src') && attr(row, 'data-voice-transcript')) {
+      voiceBubble.children = voiceBubble.children.filter(n => !(n.kind === 'element' && (hasClass(n, 'chat-voice-control') || hasClass(n, 'chat-voice-text-result'))));
+      voiceBubble.children.push(factory.element('div', {}, [factory.text(attr(row, 'data-voice-transcript'))]));
+      toggleClass(voiceBubble, 'chat-bubble--voice', false); toggleClass(voiceBubble, 'has-message-result', false);
+      removeAttr(row, 'data-voice-transcript');
     }
     // 表情按图片编号换成这次开机的网址（上传的表情是 blob: 短网址，不把整张图写进聊天记录）
     const stickerImage = attr(row, 'data-sticker-image'), stickerImg = stickerImage ? findClass(row, 'chat-sticker-img') : undefined;

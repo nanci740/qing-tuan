@@ -66,7 +66,7 @@ function openExisting(name: string): Promise<IDBDatabase | null> {
 const wait = <T,>(request: IDBRequest<T>) => new Promise<T>((resolve, reject) => { request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); });
 const done = (transaction: IDBTransaction) => new Promise<void>((resolve, reject) => { transaction.oncomplete = () => resolve(); transaction.onerror = () => reject(transaction.error); transaction.onabort = () => reject(transaction.error || new Error('写入中断')); });
 
-async function readDb(name: string) {
+export async function readDb(name: string) {
   const db = await openExisting(name);
   if (!db) return null;
   try {
@@ -85,7 +85,7 @@ async function readDb(name: string) {
 }
 
 /** 大概多大：Blob 照实际大小，文字照字数。 */
-function sizeOf(value: unknown): number {
+export function sizeOf(value: unknown): number {
   if (value instanceof Blob) return value.size;
   if (typeof value === 'string') return value.length;
   if (Array.isArray(value)) return value.reduce((sum: number, item) => sum + sizeOf(item), 0);
