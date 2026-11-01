@@ -1,4 +1,4 @@
-import type { MessageLocation, MessagePay } from './chatMessages';
+import type { MessageCharm, MessageLocation, MessagePay } from './chatMessages';
 export interface ChatQuoteChoice { id: string; text: string; targetId?: string }
 export interface ChatQuotedReply { reply: string; quote: string; quoteTargetId?: string }
 export interface ChatReplyQuote { quote: string; quoteTargetId: string }
@@ -20,6 +20,8 @@ export interface ChatSegmentedReply {
   pays?: (Omit<MessagePay, 'id'> | null)[];
   /** 他对你还没收的转账、红包表态：accept 收下（拆开）、return 退回；没表态是空字符串。 */
   receive?: '' | 'accept' | 'return';
+  /** 每一条送的手机挂件（还没有编号）；没有就是 null。 */
+  charms?: (Omit<MessageCharm, 'id'> | null)[];
   /** 每一条发的定位；没有就是 null。 */
   locations?: (MessageLocation | null)[];
   /** 群聊：每一条是哪个成员说的（名字），没写是空字符串。 */

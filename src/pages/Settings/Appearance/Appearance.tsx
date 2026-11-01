@@ -1,4 +1,5 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
+import { CharmBox } from './components/CharmBox';
 import type { CSSProperties } from 'react';
 import { useAppearance } from '../../../providers/AppearanceProvider';
 import { hsvToHex } from '../../../utils/appearanceColors';
@@ -284,8 +285,9 @@ export function Appearance() {
               </PressedButton>
             </div>
             <span className="theme-setting-note">
-              {"点一下挂坠会晃。"}
+              {"点一下挂坠会晃。他送的挂件点一下，可以看是谁送的、摘下来。"}
             </span>
+            <CharmBox />
           </div>
         </section>
         {"\n\n            "}
