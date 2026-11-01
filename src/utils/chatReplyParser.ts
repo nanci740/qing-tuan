@@ -1,4 +1,5 @@
 import type { ChatQuoteChoice, ChatQuotedReply, ChatSegmentedReply } from '../types/chatReplyParser';
+import { isCharmKind } from './charmStorage';
 
 interface Envelope { [key: string]: unknown; replies?: unknown[]; quote_id?: unknown; presence?: unknown }
 // 属性读取保留原接口对非标准数据的兼容；解析结果在使用处收窄类型。
@@ -318,6 +319,12 @@ function readReplyLocation(value: unknown): { place: string; address?: string; d
     return { place: place.slice(0, 60), ...(text('address') ? { address: text('address').slice(0, 80) } : {}), ...(text('distance') ? { distance: text('distance').slice(0, 20) } : {}) };
 }
 /** 回复里的 "transfer"、"packet"：{"amount":520,"note":"…"}，也可以只写金额；"family_card"：{"limit":5000,"note":"…"}（每月额度）。金额是元，记成分。 */
+/** 送挂件：{"kind":"cherry","note":"…"}，kind 不认得就当没送。 */
+function readReplyCharm(value: unknown): { kind: string; note: string } | null {
+    if (!value || typeof value !== 'object') return null;
+    const row = value as Record<string, unknown>, kind = String(row.kind ?? row.type ?? '').trim();
+    return isCharmKind(kind) ? { kind, note: String(row.note ?? row.text ?? '').trim().slice(0, 40) } : null;
+}
 function readReplyPay(value: unknown, kind: 'transfer' | 'packet' | 'family'): { kind: 'transfer' | 'packet' | 'family'; amount: number; note: string; count?: number; split?: 'lucky' | 'even' } | null {
     if (value === undefined || value === null || value === false || value === '') return null;
     const item = value && typeof value === 'object' ? value as Record<string, unknown> : { amount: value };
@@ -351,6 +358,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     scene: String(fields(item).scene ?? fields(item).photo_desc ?? '').trim(),
                     sticker: String(fields(item).sticker ?? fields(item).emoji ?? '').trim(),
                     pay: readReplyPay(fields(item).transfer, 'transfer') || readReplyPay(fields(item).packet ?? fields(item).red_packet ?? fields(item).hongbao, 'packet') || readReplyPay(fields(item).family_card ?? fields(item).familyCard, 'family'),
+                    charm: readReplyCharm(fields(item).charm),
                     receive: readReceive(fields(item).receive),
                     location: readReplyLocation(fields(item).location),
                     speaker: String(fields(item).speaker ?? fields(item).name ?? fields(item).from ?? '').trim(),
@@ -359,8 +367,8 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
                     presence: fields(item).presence && typeof fields(item).presence === 'object' ? fields(item).presence as object : null
                 };
             }
-            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, receive: '' as const, location: null, speaker: '', grab: false, pat: null, presence: null };
-        }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.pay!.kind === 'packet' ? '红包' : item.pay!.kind === 'family' ? '亲属卡' : '转账' } : item)
+            return { text: String(item || '').trim(), quoteId: '', recall: false, voice: false, photo: '', scene: '', sticker: '', pay: null, charm: null, receive: '' as const, location: null, speaker: '', grab: false, pat: null, presence: null };
+        }).map(item => !item.text && (item.photo || item.location || item.sticker || item.pay || item.charm) ? { ...item, text: item.photo ? '照片' : item.location ? '位置' : item.sticker ? '表情' : item.charm ? '挂件' : item.pay!.kind === 'packet' ? '红包' : item.pay!.kind === 'family' ? '亲属卡' : '转账' } : item)
         : [];
     // receive 可以写在最外层，也可以写在某一条里（那一条只有 receive 也算）
     const receive = readReceive(parsedObject?.receive) || structuredAll.find(item => item.receive)?.receive || '';
@@ -384,6 +392,7 @@ export function parseChatAiSegmentedReply(raw: unknown, quoteChoices: unknown = 
             scenes: structuredItems.map(item => item.scene),
             stickers: structuredItems.map(item => item.sticker),
             pays: structuredItems.map(item => item.pay),
+            charms: structuredItems.map(item => item.charm),
             receive,
             locations: structuredItems.map(item => item.location),
             speakers: structuredItems.map(item => item.speaker),

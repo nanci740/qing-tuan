@@ -1,7 +1,7 @@
 import { kv } from '../utils/kvStorage';
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import type {MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,PeerMessageDetail} from '../types/chatMessages';
+import type {MessageCharm,MessageLocation,MessageNodesApi,MessagePay,MessagePhoto,MessageSticker,PeerMessageDetail} from '../types/chatMessages';
 import {chatPhotoLook,chatPhotoReady,generateChatPhoto} from '../utils/chatPhoto';
 import {chatPhotoDataUrl,saveChatPhoto} from '../utils/chatPhotoStore';
 import type {ChatVoiceApi} from './useChatVoice';
@@ -9,7 +9,9 @@ import type {ChatPreferences} from '../types/chatPreferences';
 import {loadChatPreferences} from '../utils/chatPreferences';
 import type {ApiMessage,ApiService} from '../types/api';
 import {extractChatAiReply,emptyChatReplyReason,stripLeakedToolCalls,parseChatAiSegmentedReply,parseChatAiQuotedReply} from '../utils/chatReplyParser';
-import {locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {charmLabel,charmText,locationText,patContext,payFromData,payLabel,payText,stickerText,voiceLength} from '../utils/chatMessageNodes';
+import {addCharm} from '../utils/charmStorage';
+import {charmPrompt} from '../utils/charmPrompt';
 import {claimPacket,familyCardText,readWallet,receivePay,settlePendingFromMe} from '../utils/walletStorage';
 import {inQuietHours,personaAllowed,readMeSettings} from '../utils/meSettingsStorage';
 import {isBlocked,isBlockedBy,isDeleted,setBlockedBy} from '../utils/contactsStorage';
@@ -439,6 +441,8 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
         // 私聊：他也在的群最近聊了什么，接在系统提示词后面
         // 日记：他这次可能起念头想撬你的日记（有机率），撬不撬他自己决定
         if (!groupInfo) diaryRoll(requestChatKey);
+        // 手机挂件：他送过什么、可以送；你摘下或挂回他送的，他有机率注意到
+        if (!groupInfo) { const charms = charmPrompt(requestChatKey); if (charms) prompt.system += '\n' + charms; }
         if (!groupInfo) { const memory = services.current!.groupMemory(requestChatKey); if (memory) prompt.system += '\n' + memory; }
         // 记忆（Memories App）：他记得的事，私聊、群聊都带；还有他可以悄悄记下新的事
         if (groupInfo && aiVoiceAllowed) prompt.system += `\n群里的语音：每一条 replies 还可以加上 "voice":true，表示这个成员这条用语音发（大家会收到一条可以播放的语音消息）。能发语音的成员只有：${voiceMembers.map(member => member.name).join('、')}；其他成员只能打字。要不要用语音，照各自的人设和当下气氛决定，不要每条都用。`;
@@ -576,9 +580,11 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const loosePays = parsedReply.segments.map(text => loosePay(text));
             const replyPays:(Omit<MessagePay,'id'>|null)[] = parsedReply.segments.map((_, index) => replyPhotos[index] || replyLocations[index] || replyStickers[index] ? null
                 : (parsedReply.pays || [])[index] || loosePays[index] || null);
+            // 送挂件（私聊才有）：charm 栏位
+            const replyCharms = parsedReply.segments.map((_, index) => groupInfo || replyPhotos[index] || replyLocations[index] || replyStickers[index] || replyPays[index] ? null : (parsedReply.charms || [])[index] || null);
             const dropped = parsedReply.segments.map((text, index) => !replyStickers[index] && (!!(parsedReply.stickers || [])[index] && text === '表情' || looseStickerTag(text) !== null) || !replyPays[index] && loosePays[index] === false);
-            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index] || replyPays[index]);
-            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index] && !replyStickers[index] && !replyPays[index] && !dropped[index]);
+            const cardIndexes = parsedReply.segments.map((_, index) => index).filter(index => replyPhotos[index] || replyLocations[index] || replyStickers[index] || replyPays[index] || replyCharms[index]);
+            const textOnly = parsedReply.segments.filter((_, index) => !replyPhotos[index] && !replyLocations[index] && !replyStickers[index] && !replyPays[index] && !replyCharms[index] && !dropped[index]);
             const segments = requestPreferences.segmented
                 ? parsedReply.segments.map((text, index) => dropped[index] ? '' : text)
                 : [...(textOnly.length ? [textOnly.join('\n')] : []), ...cardIndexes.map(index => parsedReply.segments[index])];
@@ -598,6 +604,9 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
             const segmentPays:(Omit<MessagePay,'id'>|null)[] = requestPreferences.segmented
                 ? replyPays
                 : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyPays[index] || null)];
+            const segmentCharms = requestPreferences.segmented
+                ? replyCharms
+                : [...(textOnly.length ? [null] : []), ...cardIndexes.map(index => replyCharms[index] || null)];
             // 他对你还没收的转账、红包表态（收下、退回）：先照办，卡片会跟着换状态
             if (parsedReply.receive && !groupInfo) settlePendingFromMe(requestChatKey, parsedReply.receive);
             // 每则自己的引用；没分段时整则用第一个引用
@@ -620,18 +629,20 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 const sticker = photo || location ? null : segmentStickers[index] || null;
                 const payDraft = photo || location || sticker ? null : segmentPays[index] || null;
                 const pay:MessagePay|null = payDraft ? { ...payDraft, id: 'pay_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), ...(speaker ? { by: speaker.key } : {}) } : null;
+                const charmDraft = photo || location || sticker || pay || blockedByUser ? null : segmentCharms[index] || null;
+                const charm:MessageCharm|null = charmDraft ? { ...charmDraft, id: addCharm(charmDraft.kind, requestChatKey, charmDraft.note).id } : null;
                 // 找不到表情的那一则（只剩「表情」两个字）不发
-                if (!photo && !location && !sticker && !pay && !segments[index]) continue;
+                if (!photo && !location && !sticker && !pay && !charm && !segments[index]) continue;
                 // 你把他拉黑了：他说的照样出现，标上被你拒收（转账、红包不发）
                 if (blockedByUser && pay) continue;
                 // 他发的转账、红包先记进钱包（还没收），卡片才看得到状态
                 if (pay) receivePay(pay, requestChatKey, speaker ? speaker.name : characterName);
-                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : segments[index];
+                const reply = photo ? '[照片] ' + photo.caption : location ? locationText(location) : sticker ? stickerText(sticker) : pay ? payText(pay, false) : charm ? charmText(charm) : segments[index];
                 let notifyVoiceLength = '';
                 const quote = segmentQuotes[index]?.quote || '';
                 const quoteTargetId = segmentQuotes[index]?.quoteTargetId || '';
                 // 转账、红包不撤回
-                const willRecall = !!segmentRecalls[index] && !pay;
+                const willRecall = !!segmentRecalls[index] && !pay && !charm;
                 if (willRecall && !isActiveReplyChat(requestChatKey)) {
                     services.current?.background({ chatKey: requestChatKey, reply, recalled: true, recallNotice: recallNoticeText, sentAt: Date.now(), speaker: speaker?.key });
                     if (index < segments.length - 1) await new Promise<void>(resolve => later(resolve, requestPreferences.segmentDelay));
@@ -640,12 +651,12 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (isActiveReplyChat(requestChatKey)) {
                     // 这一则要用语音：先合成（还在「正在输入」的时候），合成不出来就照样发文字
                     let voiceAudio = null;
-                    if (segmentVoices[index] && voiceOf(speaker?.key) && !willRecall && !photo && !location && !sticker && !pay) {
+                    if (segmentVoices[index] && voiceOf(speaker?.key) && !willRecall && !photo && !location && !sticker && !pay && !charm) {
                         try { voiceAudio = await voice.prepare(reply, voiceOf(speaker?.key)); } catch (error) { voiceAudio = null; }
                     }
-                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : reply);
+                    const pending = appendChatAiReplyBubble(photo ? photo.caption : location ? location.place : sticker ? sticker.tag : pay ? payLabel(pay) : charm ? charmLabel(charm) : reply);
                     pendingRows.push(pending.row);
-                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker, pay, speaker: speaker?.key, rejected: blockedByUser,
+                    nodes.finishPeer(pending.row, { reply, sentAt: Date.now(), quote, quoteTargetId, photo, location, sticker, pay, charm, speaker: speaker?.key, rejected: blockedByUser,
                         voice: voiceAudio, voiceAutoText: !!(voiceAudio && requestPreferences.voiceAutoText) });
                     if (voiceAudio) {
                         notifyVoiceLength = voiceLength(Number(voiceAudio.seconds));
@@ -663,7 +674,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                     // 不在看这个聊天：语音照样合成好，跟着消息一起存进那个聊天
                     let backgroundVoice = null;
                     let backgroundTranslation = '';
-                    if (segmentVoices[index] && voiceOf(speaker?.key) && !photo && !location && !sticker && !pay) {
+                    if (segmentVoices[index] && voiceOf(speaker?.key) && !photo && !location && !sticker && !pay && !charm) {
                         try {
                             const voiceAudio = await voice.prepare(reply, voiceOf(speaker?.key));
                             if (voiceAudio) backgroundVoice = { dataUrl: voiceAudio.dataUrl, lengthText: voiceLength(Number(voiceAudio.seconds)) };
@@ -682,6 +693,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                         location,
                         sticker,
                         pay,
+                        charm,
                         quote,
                         quoteTargetId,
                         sentAt: Date.now(),
@@ -700,7 +712,7 @@ export function useChatReplyEngine(nodes:MessageNodesApi,voice:ChatVoiceApi){
                 if (!willRecall) services.current?.notify({
                     chatKey: requestChatKey,
                     title: characterName,
-                    body: (speaker ? speaker.shown + '：' : '') + (notifyVoiceLength ? '[语音] ' + notifyVoiceLength : pay ? payLabel(pay) : (reply || '收到一条新回复')),
+                    body: (speaker ? speaker.shown + '：' : '') + (notifyVoiceLength ? '[语音] ' + notifyVoiceLength : pay ? payLabel(pay) : charm ? charmLabel(charm) : (reply || '收到一条新回复')),
                     avatar: characterAvatar,
                     unreadCount: 1,
                     viewed: segmentWasViewed
