@@ -8091,7 +8091,7 @@
         #musicSettingsPage label,
         #themeSettingsPage .theme-palette-caption,
         #themeSettingsPage .theme-custom-color-title,
-        #themeSettingsPage .theme-segment-btn,
+        :is(#themeSettingsPage, #dataManagementPage) .theme-segment-btn,
         #themeSettingsPage .theme-icon-section-title,
         #themeSettingsPage #themeHexInput,
         #personalProfilePage .pp2-torn-note-text {

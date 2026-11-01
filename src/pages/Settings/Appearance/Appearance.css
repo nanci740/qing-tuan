@@ -1057,14 +1057,14 @@
 
 /* @qingtuan-order:000951 */
 
-        #themeSettingsPage .theme-segmented {
+        :is(#themeSettingsPage, #dataManagementPage) .theme-segmented {
             background: var(--color-page);
         }
 
 /* @qingtuan-order:000952 */
 
 
-        #themeSettingsPage .theme-segment-btn {
+        :is(#themeSettingsPage, #dataManagementPage) .theme-segment-btn {
             border-radius: 2px !important;
         }
 
@@ -2036,7 +2036,7 @@
 
 /* @qingtuan-order:002803 */
 
-        #themeSettingsPage .theme-segmented {
+        :is(#themeSettingsPage, #dataManagementPage) .theme-segmented {
             border: 1px solid var(--win-deep);
             border-radius: 2px !important;
             background: var(--win-face);
@@ -2046,7 +2046,7 @@
 /* @qingtuan-order:002804 */
 
 
-        #themeSettingsPage .theme-segment-btn.active {
+        :is(#themeSettingsPage, #dataManagementPage) .theme-segment-btn.active {
             border: 1px solid var(--win-deep);
             border-radius: 1px !important;
             background: var(--effect-face-white);
