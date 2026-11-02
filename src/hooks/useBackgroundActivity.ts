@@ -23,9 +23,11 @@ function loadSettings(): BackgroundSettings {
   catch { return { ...defaults }; }
 }
 
-// 轻量保活 WAV 与原文件使用相同的采样率、时长和音量。
+// 保活用的「听不到的音频」：±1 的微小噪声（全零会被 Chrome 当成没在放声音）。
+// 采样率用 48kHz：iPhone 整个声音会跟着正在播的音频走，8kHz 会把他的语音消息压得闷闷的。
+// 长度 6 秒：安卓 Chrome 要 5 秒以上的音频，通知栏才会出现媒体控制卡。
 function createQuietWavBlob() {
-  const sampleRate = 8000, sampleCount = sampleRate * 4;
+  const sampleRate = 48000, sampleCount = sampleRate * 6;
   const view = new DataView(new ArrayBuffer(44 + sampleCount * 2));
   function writeText(offset: number, text: string) {
     for (let i = 0; i < text.length; i++) view.setUint8(offset + i, text.charCodeAt(i));
@@ -85,6 +87,34 @@ async function notifyWorker() {
   } catch { return null; }
 }
 
+/** 媒体控制卡上的小图：一颗青团，用主题色画。 */
+let artwork = '';
+function charmArtwork() {
+  if (artwork) return artwork;
+  try {
+    const canvas = document.createElement('canvas'), size = 256; canvas.width = canvas.height = size;
+    const context = canvas.getContext('2d')!, theme = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim() || '#DDF2F4';
+    context.fillStyle = theme; context.fillRect(0, 0, size, size);
+    context.fillStyle = '#8fbf7f'; context.beginPath(); context.ellipse(128, 142, 78, 70, 0, 0, Math.PI * 2); context.fill();
+    context.fillStyle = 'rgba(255,255,255,.55)'; context.beginPath(); context.ellipse(102, 112, 22, 14, -0.5, 0, Math.PI * 2); context.fill();
+    context.fillStyle = '#4f6f47'; context.beginPath(); context.arc(108, 148, 6, 0, Math.PI * 2); context.arc(148, 148, 6, 0, Math.PI * 2); context.fill();
+    context.fillStyle = 'rgba(255,170,190,.7)'; context.beginPath(); context.arc(94, 164, 9, 0, Math.PI * 2); context.arc(162, 164, 9, 0, Math.PI * 2); context.fill();
+    artwork = canvas.toDataURL('image/png');
+  } catch { artwork = ''; }
+  return artwork;
+}
+/** 保活在跑时，通知栏、锁屏的媒体控制卡写「青团机」；关掉就收起来。 */
+function showMediaCard(on: boolean, audio: HTMLAudioElement | null) {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    if (!on) { navigator.mediaSession.metadata = null; return; }
+    const src = charmArtwork();
+    navigator.mediaSession.metadata = new MediaMetadata({ title: '青团机', artist: '后台保活中', ...(src ? { artwork: [{ src, sizes: '256x256', type: 'image/png' }] } : {}) });
+    navigator.mediaSession.setActionHandler('play', () => { void audio?.play().catch(() => {}); });
+    navigator.mediaSession.setActionHandler('pause', () => { audio?.pause(); });
+  } catch { /* 不支持就算了 */ }
+}
+
 export function useBackgroundActivity() {
   const { registerDestination } = useSettingsNavigation();
   const [settings, setSettings] = useState(loadSettings);
@@ -114,6 +144,7 @@ export function useBackgroundActivity() {
     }
     try {
       await audioRef.current?.play();
+      showMediaCard(true, audioRef.current);
       if (feedback) showToast('后台活动已开启');
       return true;
     } catch {
@@ -127,6 +158,7 @@ export function useBackgroundActivity() {
   }, []);
   const stopKeepAlive = useCallback((feedback = false) => {
     if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; }
+    showMediaCard(false, null);
     if (feedback) showToast('后台活动已关闭');
   }, []);
   const applyWakeLock = useCallback(async () => {
