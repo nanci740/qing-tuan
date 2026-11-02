@@ -12,10 +12,12 @@ export interface BackgroundSettings {
   screenAwake: boolean;
   /** 强力保活：除了无声音频，再开一个背景计时器（Worker）定时叫醒网页。 */
   strong: boolean;
+  /** 提示音是哪一种（NOTIFICATION_SOUNDS）。 */
+  sound: string;
 }
 export interface ReplyNotification { title?: string; body?: string; tag?: string; url?: string }
 const STORAGE_KEY = 'smallphone_background_activity_v1';
-const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false, strong: false };
+const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false, strong: false, sound: 'ding' };
 function loadSettings(): BackgroundSettings {
   try { return { ...defaults, ...(JSON.parse(kv.getItem(STORAGE_KEY) || 'null') || {}) }; }
   catch { return { ...defaults }; }
@@ -38,18 +40,37 @@ function createQuietWavBlob() {
   return new Blob([view.buffer], { type: 'audio/wav' });
 }
 
-function playNotificationCue() {
+/** 提示音：都是当场合成的，音量跟原本的「叮」差不多。 */
+export const NOTIFICATION_SOUNDS = [['ding', '叮'], ['pop', '啵'], ['bell', '铃铛'], ['drop', '水滴'], ['call', '来电'], ['musicbox', '八音盒'], ['chime', '风铃']] as const;
+export type NotificationSound = typeof NOTIFICATION_SOUNDS[number][0];
+interface Tone { freq: number; to?: number; at?: number; dur: number; type?: OscillatorType; gain?: number }
+const CUES: Record<NotificationSound, Tone[]> = {
+  ding: [{ freq: 660, dur: .2 }],
+  pop: [{ freq: 900, to: 280, dur: .09, gain: .07 }],
+  bell: [{ freq: 1320, dur: .35, type: 'triangle' }, { freq: 1760, at: .13, dur: .4, type: 'triangle' }],
+  drop: [{ freq: 1400, to: 520, dur: .13 }, { freq: 900, to: 700, at: .16, dur: .06, gain: .025 }],
+  call: [0, .15, .3].map(at => ({ freq: 1000, at, dur: .08, type: 'square' as const, gain: .02 })),
+  musicbox: [1319, 1568, 2093, 1568].map((freq, index) => ({ freq, at: index * .13, dur: .3, type: 'triangle' as const, gain: .045 })),
+  chime: [2093, 2637, 2349, 3136].map((freq, index) => ({ freq, at: index * .09 + (index % 2) * .02, dur: .7, gain: .03 })),
+};
+export function playNotificationCue(sound: string = 'ding') {
   try {
     const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
-    const context = new AudioContextClass(), oscillator = context.createOscillator(), gain = context.createGain();
-    oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(660, context.currentTime);
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.055, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.18);
-    oscillator.connect(gain); gain.connect(context.destination);
-    oscillator.start(); oscillator.stop(context.currentTime + 0.2);
-    oscillator.addEventListener('ended', () => { void context.close().catch(() => {}); }, { once: true });
+    const context = new AudioContextClass(), tones = CUES[sound as NotificationSound] || CUES.ding, now = context.currentTime;
+    let end = 0;
+    for (const { freq, to, at = 0, dur, type = 'sine', gain: peak = .055 } of tones) {
+      const oscillator = context.createOscillator(), gain = context.createGain(), start = now + at;
+      oscillator.type = type; oscillator.frequency.setValueAtTime(freq, start);
+      if (to) oscillator.frequency.exponentialRampToValueAtTime(to, start + dur);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(peak, start + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      oscillator.connect(gain); gain.connect(context.destination);
+      oscillator.start(start); oscillator.stop(start + dur + .02);
+      end = Math.max(end, at + dur);
+    }
+    setTimeout(() => { void context.close().catch(() => {}); }, (end + .3) * 1000);
   } catch { /* 原浏览器不支持时保持静默。 */ }
 }
 
@@ -129,7 +150,7 @@ export function useBackgroundActivity() {
   const notifyReply = useCallback(async ({ title = '小手机', body = '收到一条新回复', tag = 'smallphone-reply', url = location.href }: ReplyNotification = {}) => {
     const latest = loadSettings(); current.current = latest; setSettings(latest);
     if (!latest.replyNotification) return false;
-    if (latest.notificationSound) playNotificationCue();
+    if (latest.notificationSound) playNotificationCue(latest.sound);
     if (latest.notificationVibration && navigator.vibrate) navigator.vibrate([120, 70, 120]);
     if (!('Notification' in window) || Notification.permission !== 'granted') return false;
     const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound };
@@ -214,5 +235,7 @@ export function useBackgroundActivity() {
     const timer = setInterval(checkAlive, 3000);
     return () => clearInterval(timer);
   }, [open, checkAlive]);
-  return { settings, open, close: () => setOpen(false), change, audioUrl, audioRef, notifyReply, testNotification, alive, paused, playing: checkAlive };
+  /** 换提示音：存起来，顺便试听一次。 */
+  function setSound(sound: string) { if (save({ ...current.current, sound })) playNotificationCue(sound); }
+  return { settings, open, close: () => setOpen(false), change, setSound, audioUrl, audioRef, notifyReply, testNotification, alive, paused, playing: checkAlive };
 }

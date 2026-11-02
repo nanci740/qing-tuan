@@ -761,3 +761,20 @@
             background: #e0a65a;
         }
         .background-alive.is-on i { background: #8fc98f; }
+        /* 提示音：标题底下一排七个，选中的凹下去、前面一个 ♪ */
+        .background-activity-row.background-sound-row {
+            display: block;
+        }
+        .background-sounds {
+            grid-template-columns: repeat(7, auto);
+            justify-content: start;
+            gap: 4px;
+            margin: 8px 0 2px;
+            padding: 3px;
+        }
+        .background-sounds .theme-segment-btn {
+            height: 26px;
+            padding: 0 9px;
+            font-size: 10.5px;
+            white-space: nowrap;
+        }

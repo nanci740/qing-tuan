@@ -1,6 +1,6 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { createPortal } from 'react-dom';
-import { useBackgroundActivity } from '../../../hooks/useBackgroundActivity';
+import { NOTIFICATION_SOUNDS, useBackgroundActivity } from '../../../hooks/useBackgroundActivity';
 export function BackgroundActivity() {
   const background = useBackgroundActivity();
   const { settings } = background;
@@ -142,6 +142,15 @@ export function BackgroundActivity() {
               <input className="vi-switch" id="backgroundNotificationSound" checked={!!settings.notificationSound} onChange={event => { void background.change('notificationSound', event.currentTarget.checked); }} disabled={!settings.replyNotification} type="checkbox" />
               {"\n                    "}
             </label>
+            {settings.replyNotification && settings.notificationSound && <div className="background-activity-row background-sound-row" id="backgroundSoundPickRow">
+              <span className="background-activity-copy">
+                <strong>{"提示音"}</strong>
+                <span>{"点一下会试听"}</span>
+              </span>
+              <span className="theme-segmented background-sounds" role="radiogroup" aria-label="提示音">
+                {NOTIFICATION_SOUNDS.map(([id, label]) => <button type="button" role="radio" key={id} aria-checked={settings.sound === id} className={'theme-segment-btn' + (settings.sound === id ? ' active' : '')} onClick={() => background.setSound(id)}>{settings.sound === id ? '♪ ' + label : label}</button>)}
+              </span>
+            </div>}
             {"\n                    "}
             <label className={`background-activity-row${settings.replyNotification ? '' : ' is-disabled'}`} id="backgroundNotificationVibrationRow">
               {"\n                        "}
