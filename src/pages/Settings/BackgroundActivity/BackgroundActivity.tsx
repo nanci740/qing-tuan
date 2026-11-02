@@ -148,7 +148,7 @@ export function BackgroundActivity() {
                 <span>{"点一下会试听"}</span>
               </span>
               <span className="theme-segmented background-sounds" role="radiogroup" aria-label="提示音">
-                {NOTIFICATION_SOUNDS.map(([id, label]) => <button type="button" role="radio" key={id} aria-checked={settings.sound === id} className={'theme-segment-btn' + (settings.sound === id ? ' active' : '')} onClick={() => background.setSound(id)}>{settings.sound === id ? '♪ ' + label : label}</button>)}
+                {NOTIFICATION_SOUNDS.map(([id, label]) => <button type="button" role="radio" key={id} aria-checked={settings.sound === id} className={'theme-segment-btn' + (settings.sound === id ? ' active' : '')} onClick={() => background.setSound(id)}>{settings.sound === id && <i className="background-sound-mark" aria-hidden="true">♪</i>}{label}</button>)}
               </span>
             </div>}
             {"\n                    "}
