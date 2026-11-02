@@ -67,8 +67,8 @@ button.backup-row { cursor: pointer; }
 .storage-compress-last { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: var(--color-muted); font-size: 10px; }
 .storage-compress-btn { flex: none; min-height: 0; padding: 3px 10px; font-size: 10px; }
 /* 聊天照片只带最近几天：缩在图片那一行底下 */
-.backup-row.backup-sub { justify-content: space-between; padding: 2px 10px 9px 33px; }
-.backup-sub small { font-size: 10px; }
+.backup-row.backup-sub { justify-content: space-between; align-items: center; padding: 6px 10px 6px 33px; }
+.backup-sub small { display: block; padding-top: 2px; font-size: 10px; line-height: 1; } /* 这个字体的中文字偏上，往下挪一点才看起来跟右边对齐 */
 .backup-sub .theme-segmented { flex: none; grid-template-columns: repeat(3, auto); gap: 2px; margin: 0; padding: 2px; }
 .backup-sub .theme-segment-btn { height: 18px; padding: 0 6px; font-size: 9.5px; }
 /* 怎么还原：两种方式，跟转账弹窗的「付款方式」同一种样子（选中的凹下去），只拿回某几样时下面一张勾选清单 */
