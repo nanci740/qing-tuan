@@ -27,12 +27,16 @@ export function InstallGuide() {
           <li><span>点下面的分享键 <i className="background-install-key">⇧</i>，往下滑选<b>「加入主画面」</b></span></li>
           <li><span>从<b>主画面的青团机图示</b>打开，再来这里打开「回复通知」</span></li>
         </ol> : <ol>
-          <li><span>{canPrompt ? '按下面「安装到主画面」，或' : ''}点 Chrome 右上角 <i className="background-install-key">⋮</i>，选<b>「加到主画面」</b>／<b>「安装应用」</b></span></li>
+          <li><span>{canPrompt ? '按下面「安装到主画面」，或' : ''}点 Chrome 右上角 <i className="background-install-key">⋮</i>，选<b>「安装应用」</b>（没有的话才选「加到主画面」）</span></li>
           <li><span>之后都从<b>主画面的青团机图示</b>打开</span></li>
         </ol>}
         {!ios && canPrompt && <PressedButton type="button" id="backgroundInstallBtn" className="background-install-btn" onClick={() => void install()}>安装到主画面</PressedButton>}
+        {!ios && <p className="background-install-note">{'通知栏一直挂着 Chrome 的「轻触即可复制这个应用程式的网址」，代表装成的是捷径：把主画面上的青团机删掉，改用「安装应用」再装一次。'}</p>}
         <p className="background-install-note">{ios ? '从主画面打开的青团机，资料是另外一份。要搬过去的话，先在这里用「整机备份」存一份，再到主画面那边还原。' : '你的资料存在浏览器里，装好之后打开的还是同一份，不会不见。'}</p>
       </div>}
+      <div className="background-activity-row background-install-steps">
+        <p className="background-install-note">{ios ? '通知没有从上面弹出来的话：到「设置 → 通知 → 青团机」，把「横幅」打开。' : `通知没有从上面弹出来的话：到手机「设定 → 通知 → 青团机（或 Chrome）」，找到 ${location.host}，打开「横幅」或「悬浮通知」。各家手机的名称有点不一样。`}</p>
+      </div>
     </div>
   </div>;
 }
