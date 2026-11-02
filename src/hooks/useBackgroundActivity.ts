@@ -196,7 +196,8 @@ export function useBackgroundActivity() {
     if (latest.notificationSound) playNotificationCue(latest.sound);
     if (latest.notificationVibration && navigator.vibrate) navigator.vibrate([120, 70, 120]);
     if (!('Notification' in window) || Notification.permission !== 'granted') return false;
-    const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound };
+    // icon 通知上的青团机图示；badge 状态栏那排的小青团（安卓只看轮廓）
+    const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound, icon: import.meta.env.BASE_URL + 'icons/icon-192.png', badge: import.meta.env.BASE_URL + 'icons/badge-96.png' };
     if (latest.notificationVibration) options.vibrate = [120, 70, 120];
     try {
       // 安卓的 Chrome 只能用 Service Worker 跳通知；电脑上没有的话才直接 new Notification
