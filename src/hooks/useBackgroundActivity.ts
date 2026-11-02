@@ -10,10 +10,12 @@ export interface BackgroundSettings {
   notificationSound: boolean;
   notificationVibration: boolean;
   screenAwake: boolean;
+  /** 强力保活：除了无声音频，再开一个背景计时器（Worker）定时叫醒网页。 */
+  strong: boolean;
 }
 export interface ReplyNotification { title?: string; body?: string; tag?: string; url?: string }
 const STORAGE_KEY = 'smallphone_background_activity_v1';
-const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false };
+const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false, strong: false };
 function loadSettings(): BackgroundSettings {
   try { return { ...defaults, ...(JSON.parse(kv.getItem(STORAGE_KEY) || 'null') || {}) }; }
   catch { return { ...defaults }; }
@@ -62,6 +64,10 @@ export function useBackgroundActivity() {
   const wakeLock = useRef<WakeLockSentinel | null>(null);
   const resumePending = useRef(false);
   const resumeRef = useRef<() => void>(() => {});
+  const heartbeat = useRef<Worker | null>(null);
+  // 保活状态：无声音频真的在播就是在跑；被手机拦住就是被暂停了
+  const [alive, setAlive] = useState(false);
+  const checkAlive = useCallback(() => setAlive(!!audioRef.current && !audioRef.current.paused), []);
 
   const save = useCallback((next: BackgroundSettings) => {
     try {kv.setItem(STORAGE_KEY, JSON.stringify(next));}
@@ -104,10 +110,22 @@ export function useBackgroundActivity() {
       sentinel.addEventListener('release', () => { wakeLock.current = null; }, { once: true });
     } catch { wakeLock.current = null; }
   }, []);
+  /** 强力保活的背景计时器：每 20 秒叫醒一次网页，顺手把被暂停的无声音频接着播。 */
+  const applyHeartbeat = useCallback(() => {
+    if (current.current.enabled && current.current.strong) {
+      if (heartbeat.current || typeof Worker === 'undefined') return;
+      try {
+        const url = URL.createObjectURL(new Blob(['setInterval(() => postMessage(0), 20000);'], { type: 'text/javascript' }));
+        heartbeat.current = new Worker(url); URL.revokeObjectURL(url);
+        heartbeat.current.onmessage = () => { const audio = audioRef.current; if (current.current.enabled && audio?.paused) void audio.play().catch(() => {}); checkAlive(); };
+      } catch { heartbeat.current = null; }
+    } else { heartbeat.current?.terminate(); heartbeat.current = null; }
+  }, [checkAlive]);
   const applyRuntime = useCallback(async (feedback = false) => {
     if (current.current.enabled) await startKeepAlive(feedback); else stopKeepAlive(feedback);
+    applyHeartbeat(); checkAlive();
     await applyWakeLock();
-  }, [startKeepAlive, stopKeepAlive, applyWakeLock]);
+  }, [startKeepAlive, stopKeepAlive, applyWakeLock, applyHeartbeat, checkAlive]);
   const notifyReply = useCallback(async ({ title = '小手机', body = '收到一条新回复', tag = 'smallphone-reply', url = location.href }: ReplyNotification = {}) => {
     const latest = loadSettings(); current.current = latest; setSettings(latest);
     if (!latest.replyNotification) return false;
@@ -125,7 +143,7 @@ export function useBackgroundActivity() {
     } catch { return false; }
   }, []);
   useEffect(() => {
-    const resume = () => { resumePending.current = false; if (current.current.enabled) void startKeepAlive(); };
+    const resume = () => { resumePending.current = false; if (current.current.enabled) void startKeepAlive().then(checkAlive); };
     resumeRef.current = resume;
     const visibility = () => { if (document.visibilityState === 'visible') void applyWakeLock(); };
     const revoke = () => { if (urlRef.current) URL.revokeObjectURL(urlRef.current); };
@@ -142,9 +160,9 @@ export function useBackgroundActivity() {
       document.removeEventListener('pointerdown', resume, true);
       window.removeEventListener('beforeunload', revoke); window.removeEventListener('qingtuan:notify-reply', notification);
       unregister();
-      stopKeepAlive(); void wakeLock.current?.release().catch(() => {}); revoke();
+      stopKeepAlive(); heartbeat.current?.terminate(); heartbeat.current = null; void wakeLock.current?.release().catch(() => {}); revoke();
     };
-  }, [startKeepAlive, stopKeepAlive, applyWakeLock, applyRuntime, notifyReply, registerDestination]);
+  }, [startKeepAlive, stopKeepAlive, applyWakeLock, applyRuntime, notifyReply, registerDestination, checkAlive]);
 
   const changeVersions=useRef<Partial<Record<keyof BackgroundSettings,number>>>({});
   async function change(key: keyof BackgroundSettings, value: boolean) {
@@ -163,6 +181,7 @@ export function useBackgroundActivity() {
     if (key === 'screenAwake' && value && !('wakeLock' in navigator)) { value = false; showToast('当前浏览器不支持屏幕常亮'); }
     if (!save({ ...current.current, [key]: value })) return;
     if (key === 'enabled') await applyRuntime(true);
+    if (key === 'strong') { await applyRuntime(); showToast(value ? '已换成强力保活' : '已换成轻量保活'); }
     if (key === 'replyNotification') {
       if (value) showToast('回复通知已开启');
       else if ('Notification' in window && Notification.permission === 'granted') showToast('回复通知已关闭');
@@ -181,5 +200,19 @@ export function useBackgroundActivity() {
     if (sent) showToast('发出去了；没看到的话，检查手机里这个浏览器的通知设定');
     else showToast('没发出去：浏览器没有允许通知，请到浏览器或手机设定里打开');
   }
-  return { settings, open, close: () => setOpen(false), change, audioUrl, audioRef, notifyReply, testNotification };
+  /** 无声音频被手机暂停了：等你下一次轻触页面就接着播。 */
+  const paused = useCallback(() => {
+    checkAlive();
+    if (!current.current.enabled || resumePending.current) return;
+    resumePending.current = true;
+    document.addEventListener('pointerdown', resumeRef.current, { once: true, capture: true });
+  }, [checkAlive]);
+  // 打开这页时每几秒看一次保活还在不在跑
+  useEffect(() => {
+    if (!open) return;
+    checkAlive();
+    const timer = setInterval(checkAlive, 3000);
+    return () => clearInterval(timer);
+  }, [open, checkAlive]);
+  return { settings, open, close: () => setOpen(false), change, audioUrl, audioRef, notifyReply, testNotification, alive, paused, playing: checkAlive };
 }
