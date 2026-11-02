@@ -5,6 +5,7 @@ import {ImageStorageSettings} from './ImageStorageSettings';
 import {BackupSettings} from './BackupSettings';
 import {StorageSettings} from './StorageSettings';
 import {backupDue,updateBackupMeta} from '../../../utils/fullBackup';
+import {compressDue,compressOldPhotos} from '../../../utils/photoCompress';
 import {confirmChat} from '../../../utils/chatConfirm';
 export function DataManagement(){
   const [open,setOpen]=useState(false);
@@ -15,6 +16,8 @@ export function DataManagement(){
     window.addEventListener('qingtuan:close-settings',close);
     return()=>{unregister();window.removeEventListener('qingtuan:close-settings',close);};
   },[registerDestination]);
+  // 自动压缩旧照片：开机二十秒后，一天最多跑一次，在背景慢慢压
+  useEffect(()=>{const timer=setTimeout(()=>{if(compressDue())void compressOldPhotos().catch(()=>{});},20000);return()=>clearTimeout(timer);},[]);
   // 打开设置时，照选的周期跳一次「备份一下吧」；按「下次再说」就等下一个周期
   useEffect(()=>{
     if(!settingsOpen||!backupDue())return;

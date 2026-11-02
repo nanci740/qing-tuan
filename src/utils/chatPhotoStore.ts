@@ -52,13 +52,14 @@ export function chatPhotoUrl(id: string) { return urls.get(id) || ''; }
 async function toBlob(source: Blob | string) { return source instanceof Blob ? source : (await fetch(source)).blob(); }
 
 /** 存一张照片，回传可以放进 <img> 的 blob: 网址。 */
-export async function saveChatPhoto(id: string, source: Blob | string) {
+export async function saveChatPhoto(id: string, source: Blob | string, revokeOld = true) {
   const blob = await toBlob(source);
   await run('readwrite', store => store.put(blob, id));
   const old = urls.get(id);
   const url = URL.createObjectURL(blob);
   urls.set(id, url);
-  if (old) URL.revokeObjectURL(old);
+  // 压缩旧照片时不收回旧网址：聊天里可能正显示着，下次整理消息会换成新的
+  if (old && revokeOld) URL.revokeObjectURL(old);
   return url;
 }
 

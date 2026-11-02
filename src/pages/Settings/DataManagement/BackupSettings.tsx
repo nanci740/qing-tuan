@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { ChangeEvent } from 'react';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { confirmChat } from '../../../utils/chatConfirm';
 import { showToast } from '../../../utils/toast';
-import { checkBackup, createBackup, readBackup, readBackupMeta, restoreBackup, scanBackup, updateBackupMeta } from '../../../utils/fullBackup';
-import type { BackupInclude, BackupMeta, BackupPart } from '../../../utils/fullBackup';
+import { checkBackup, createBackup, mergeBackup, mergeChoices, readBackup, readBackupMeta, restoreBackup, scanBackup, updateBackupMeta } from '../../../utils/fullBackup';
+import type { BackupFile, BackupInclude, BackupMeta, BackupPart, MergePick } from '../../../utils/fullBackup';
 
 const size = (bytes: number) => `${Math.max(.1, bytes / 1024 / 1024).toFixed(1)} MB`;
 const when = (at: number) => { const d = new Date(at); return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
@@ -22,14 +23,18 @@ export function BackupSettings({ open }: { open: boolean }) {
   const [meta, setMeta] = useState<BackupMeta>(readBackupMeta), [busy, setBusy] = useState(''), file = useRef<HTMLInputElement>(null);
   // 浏览器保护（持久化储存）：on 已开启、off 没开、none 这个浏览器不支持
   const [kept, setKept] = useState<'on' | 'off' | 'none' | ''>('');
+  const [restoring, setRestoring] = useState<{ backup: BackupFile; mode: 'all' | 'pick'; choices: ReturnType<typeof mergeChoices>; pick: MergePick } | null>(null);
   useEffect(() => {
     if (!open) return;
     let live = true; setSizes(null); setMeta(readBackupMeta());
     if (!navigator.storage?.persisted) setKept('none'); else navigator.storage.persisted().then(on => { if (live) setKept(on ? 'on' : 'off'); }).catch(() => { if (live) setKept('none'); });
-    scanBackup().then(next => { if (live) setSizes(next); }).catch(() => { if (live) setSizes({ core: 0, images: 0, voice: 0, music: 0, keys: 0 }); });
+    scanBackup().then(next => { if (live) setSizes(next); }).catch(() => { if (live) setSizes({ core: 0, images: 0, voice: 0, music: 0, keys: 0, photos: [] }); });
     return () => { live = false; };
   }, [open]);
-  const total = sizes ? sizes.core + PARTS.reduce((sum, [part]) => sum + (include[part] ? sizes[part] : 0), 0) : 0;
+  // 聊天照片只带最近几天：图片那一项扣掉更早的照片
+  const older = sizes && include.photoDays ? sizes.photos.filter(photo => photo.at < Date.now() - include.photoDays! * 86400000).reduce((sum, photo) => sum + photo.size, 0) : 0;
+  const partSize = (part: BackupPart) => sizes ? (part === 'images' ? sizes.images - older : sizes[part]) : 0;
+  const total = sizes ? sizes.core + PARTS.reduce((sum, [part]) => sum + (include[part] ? partSize(part) : 0), 0) : 0;
   function remind(value: BackupMeta['remind']) { updateBackupMeta({ remind: value }); setMeta(readBackupMeta()); }
   async function protect() {
     try {
@@ -56,17 +61,29 @@ export function BackupSettings({ open }: { open: boolean }) {
     const picked = event.currentTarget.files?.[0]; event.currentTarget.value = '';
     if (!picked || busy) return;
     try {
-      const backup = await readBackup(picked), { at, stats, include: had } = backup.header, d = new Date(at);
-      const missing = PARTS.filter(([part]) => part !== 'keys' && !had[part]).map(([part]) => PART_NAME[part]);
-      const message = `备份时间：${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}\n` +
-        `${stats.characters} 个角色、${stats.messages} 条聊天${had.images ? `、图片 ${stats.images} 张` : ''}${had.music ? `、音乐 ${stats.tracks} 首` : ''}\n` +
-        (missing.length ? `没有备份${missing.join('、')}（现在手机里的也会清掉）\n` : '') + (had.keys === false ? '没有备份 API Key（会沿用这台手机现在的）\n' : '') + '\n现在手机里的资料会整份换成这份备份，没办法复原。还原完会自动重新开启。';
-      if (!await confirmChat({ title: '还原这份备份？', message, confirmText: '还原', danger: true })) return;
-      setBusy('正在还原…');
-      await restoreBackup(backup);
-      location.reload();
+      const backup = await readBackup(picked);
+      setRestoring({ backup, mode: 'all', choices: mergeChoices(backup), pick: { chats: [], memories: false, diary: false, moments: false, worlds: false } });
+    } catch (error) { showToast(String((error as Error)?.message || error).slice(0, 80)); }
+  }
+  async function confirmRestore() {
+    if (!restoring || busy) return;
+    setBusy(restoring.mode === 'all' ? '正在还原…' : '正在拿回来…');
+    try {
+      if (restoring.mode === 'all') await restoreBackup(restoring.backup);
+      else { await mergeBackup(restoring.backup, restoring.pick); showToast('拿回来了，重新开启中…'); }
+      setTimeout(() => location.reload(), restoring.mode === 'all' ? 0 : 600);
     } catch (error) { setBusy(''); showToast(String((error as Error)?.message || error).slice(0, 80)); }
   }
+  /** 整份换掉之前写给你看的：几个角色、几条聊天、没带哪些。 */
+  function summary(header: BackupFile['header']) {
+    const { stats, include: had } = header, missing = PARTS.filter(([part]) => part !== 'keys' && !had[part]).map(([part]) => PART_NAME[part]);
+    return `${stats.characters} 个角色、${stats.messages} 条聊天${had.images ? `、图片 ${stats.images} 张` : ''}${had.music ? `、音乐 ${stats.tracks} 首` : ''}\n` +
+      (missing.length ? `没有备份${missing.join('、')}（现在手机里的也会清掉）\n` : '') + (had.keys === false ? '没有备份 API Key（会沿用这台手机现在的）\n' : '') +
+      (had.images && had.photoDays ? `聊天照片只有最近 ${had.photoDays} 天的（更早的会变成文字照片）\n` : '') + '现在手机里的资料会整份换成这份备份，没办法复原。还原完会自动重新开启。';
+  }
+  const pickCount = restoring ? restoring.pick.chats.length + (['memories', 'diary', 'moments', 'worlds'] as const).filter(kind => restoring.pick[kind]).length : 0;
+  const setPick = (patch: Partial<MergePick>) => setRestoring(value => value && { ...value, pick: { ...value.pick, ...patch } });
+  const when2 = (at: number) => { const d = new Date(at); return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
   return <section className="image-storage-tool backup-tool" id="backupSection" aria-labelledby="backupTitle">
     <div className="image-storage-titlebar"><h3 id="backupTitle">整机备份</h3><div className="image-storage-title-tools" /></div>
     <div className="image-storage-content" aria-busy={!!busy}>
@@ -80,8 +97,11 @@ export function BackupSettings({ open }: { open: boolean }) {
         <div className="backup-row is-locked"><Check on /><span>记忆、日记、朋友圈<small>还有账本、备忘录、钱包</small></span></div>
         <div className="backup-row is-locked"><Check on /><span>设置和美化<small>模型、预设、世界书、主题、字体</small></span></div>
         {PARTS.map(([part, title, note]) => <button type="button" role="checkbox" aria-checked={include[part]} key={part} className={'backup-row' + (include[part] ? '' : ' is-off')} onClick={() => setInclude(value => ({ ...value, [part]: !value[part] }))}>
-          <Check on={include[part]} /><span>{title}<small>{note}</small></span><span className="backup-size">{part === 'keys' ? '' : sizes ? size(sizes[part]) : '…'}</span>
-        </button>)}
+          <Check on={include[part]} /><span>{title}<small>{note}</small></span><span className="backup-size">{part === 'keys' ? '' : sizes ? size(partSize(part)) : '…'}</span>
+        </button>).flatMap((button, index) => PARTS[index][0] === 'images' && include.images ? [button, <div className="backup-row backup-sub" key="photoDays"><small>聊天照片只带</small>
+          <span className="theme-segmented" role="radiogroup" aria-label="聊天照片只带">
+            {([[0, '全部'], [7, '最近 7 天'], [3, '最近 3 天']] as const).map(([days, label]) => <button type="button" role="radio" key={days} aria-checked={(include.photoDays || 0) === days} className={'theme-segment-btn' + ((include.photoDays || 0) === days ? ' active' : '')} onClick={() => setInclude(value => ({ ...value, photoDays: days }))}>{label}</button>)}
+          </span></div>] : [button])}
       </div>
       <p className="image-storage-status" role="status">{busy || (sizes ? `备份文件约 ${size(total)}` : '正在计算大小…')}</p>
       <div className="backup-remind"><span>提醒我备份</span>
@@ -100,5 +120,33 @@ export function BackupSettings({ open }: { open: boolean }) {
       </div>
       <input ref={file} type="file" accept="application/json,.json" hidden onChange={event => void restore(event)} />
     </div>
+    {restoring ? createPortal(<div className="sp-confirm-overlay" onClick={event => { if (event.target === event.currentTarget && !busy) setRestoring(null); }}>
+      <div className="sp-confirm" role="dialog" aria-modal="true" aria-label="怎么还原">
+        <div className="sp-confirm-bar"><span className="sp-confirm-title">怎么还原？</span></div>
+        <div className="sp-confirm-body"><div className="sp-confirm-msg">
+          {'备份时间：' + when2(restoring.backup.header.at)}
+          <div className="restore-modes" role="radiogroup" aria-label="还原方式">
+            {([['all', '整份换掉', '手机里的资料整份换成这份备份'], ['pick', '只拿回某几样', '勾的那几样合并回来，其他的不动']] as const).map(([mode, title, note]) =>
+              <button type="button" role="radio" key={mode} aria-checked={restoring.mode === mode} className={'restore-mode' + (restoring.mode === mode ? ' active' : '')} onClick={() => setRestoring({ ...restoring, mode })}><span>{title}</span><small>{note}</small></button>)}
+          </div>
+          {restoring.mode === 'all' ? <p className="restore-note">{summary(restoring.backup.header)}</p> : <>
+            <div className="backup-list restore-list">
+              {restoring.choices.chats.length ? <button type="button" role="checkbox" aria-checked={restoring.pick.chats.length === restoring.choices.chats.length} className="backup-row" onClick={() => setPick({ chats: restoring.pick.chats.length === restoring.choices.chats.length ? [] : restoring.choices.chats.map(chat => chat.key) })}>
+                <Check on={restoring.pick.chats.length === restoring.choices.chats.length} /><span>聊天记录</span><span className="backup-size">{restoring.choices.chats.length} 个聊天</span></button> : null}
+              {restoring.choices.chats.map(chat => { const on = restoring.pick.chats.includes(chat.key); return <button type="button" role="checkbox" aria-checked={on} key={chat.key} className="backup-row restore-sub" onClick={() => setPick({ chats: on ? restoring.pick.chats.filter(key => key !== chat.key) : [...restoring.pick.chats, chat.key] })}>
+                <Check on={on} /><span>{chat.name}</span><span className="backup-size">{chat.count} 条</span></button>; })}
+              {([['memories', '记忆', '条'], ['diary', '日记', '篇'], ['moments', '朋友圈', '条'], ['worlds', '世界书', '本']] as const).filter(([kind]) => restoring.choices[kind]).map(([kind, title, unit]) =>
+                <button type="button" role="checkbox" aria-checked={restoring.pick[kind]} key={kind} className="backup-row" onClick={() => setPick({ [kind]: !restoring.pick[kind] })}>
+                  <Check on={restoring.pick[kind]} /><span>{title}</span><span className="backup-size">{restoring.choices[kind]} {unit}</span></button>)}
+            </div>
+            <p className="restore-note">同一笔用备份里的，手机里多出来的会留着。勾了的聊天会整段换成备份里的那段。拿回来后会重新开启。</p>
+          </>}
+        </div></div>
+        <div className="sp-confirm-actions">
+          <PressedButton type="button" className="sp-confirm-btn" disabled={!!busy} onClick={() => setRestoring(null)}>取消</PressedButton>
+          <PressedButton type="button" className={'sp-confirm-btn is-primary' + (restoring.mode === 'all' ? ' is-danger' : '')} disabled={!!busy || restoring.mode === 'pick' && !pickCount} onClick={() => void confirmRestore()}>{busy || (restoring.mode === 'all' ? '还原' : '拿回来')}</PressedButton>
+        </div>
+      </div>
+    </div>, document.body) : null}
   </section>;
 }

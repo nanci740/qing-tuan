@@ -4,6 +4,8 @@ import { PressedButton } from '../../../components/shared/PressedButton';
 import { showToast } from '../../../utils/toast';
 import { cleanPhotos, cleanVoice, photoItems, scanStorage, voiceItems } from '../../../utils/storageUsage';
 import type { AgedItem, StorageUsage } from '../../../utils/storageUsage';
+import { compressOldPhotos, readCompressMeta, updateCompressMeta } from '../../../utils/photoCompress';
+import type { CompressMeta } from '../../../utils/photoCompress';
 
 const DAY = 86400000;
 const mb = (bytes: number) => bytes >= 1024 * 1024 * 1024 ? `${(bytes / 1024 ** 3).toFixed(1)} GB` : `${Math.max(.1, bytes / 1024 / 1024).toFixed(1)} MB`;
@@ -17,10 +19,11 @@ const KIND: Record<Kind, { title: string; unit: string; note: string }> = {
 /** 存储空间：浏览器空间用了多少，各类占多少；聊天照片和语音可以按时间清。 */
 export function StorageSettings({ open }: { open: boolean }) {
   const [usage, setUsage] = useState<StorageUsage | null>(null);
+  const [compress, setCompress] = useState<CompressMeta>(readCompressMeta), [squeezing, setSqueezing] = useState(false);
   const [cleaning, setCleaning] = useState<{ kind: Kind; items: AgedItem[]; days: number } | null>(null), [busy, setBusy] = useState(false);
   useEffect(() => {
     if (!open) return;
-    let live = true; setUsage(null);
+    let live = true; setUsage(null); setCompress(readCompressMeta());
     scanStorage().then(next => { if (live) setUsage(next); }).catch(() => {});
     return () => { live = false; };
   }, [open]);
@@ -41,6 +44,18 @@ export function StorageSettings({ open }: { open: boolean }) {
       setTimeout(() => location.reload(), 600);
     } catch (error) { setBusy(false); showToast('清理失败：' + String((error as Error)?.message || error).slice(0, 60)); }
   }
+  function compressDays(days: CompressMeta['days']) { updateCompressMeta({ days }); setCompress(readCompressMeta()); }
+  async function compressNow() {
+    if (squeezing || !compress.days) return;
+    setSqueezing(true);
+    try {
+      const result = await compressOldPhotos();
+      setCompress(readCompressMeta());
+      if (result) { showToast(result.count ? `压了 ${result.count} 张，省下 ${mb(result.saved)}` : '没有需要压的照片'); setUsage(await scanStorage()); }
+    } catch (error) { showToast('压缩失败：' + String((error as Error)?.message || error).slice(0, 60)); }
+    finally { setSqueezing(false); }
+  }
+  const lastRun = compress.last ? (() => { const d = new Date(compress.last), today = new Date().toDateString() === d.toDateString(); return `上次：${today ? '今天' : `${d.getMonth() + 1}月${d.getDate()}日`} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}，${compress.count ? `压了 ${compress.count} 张，省下 ${mb(compress.saved)}` : '没有需要压的'}`; })() : '还没压过';
   const ratio = usage?.quota ? usage.used / usage.quota : 0;
   const row = (title: string, note: string, size: number | undefined, action?: Kind | string) => <div className="storage-row">
     <dt>{title}<small>{note}</small></dt><dd>{size === undefined ? '…' : mb(size)}</dd>
@@ -60,7 +75,18 @@ export function StorageSettings({ open }: { open: boolean }) {
         {row('音乐', '播放器里的歌', usage?.music, '在音乐\n设置管理')}
         {row('其他', '记忆、日记、朋友圈、设置', usage?.other)}
       </dl>
-      <p className="image-storage-status">{ratio > .8 ? '空间快用满了，浏览器可能会自己清掉资料，先备份再清理。' : '快用满时，浏览器可能会自己清掉资料，记得先备份。'}</p>
+      <p className="image-storage-status storage-status">{ratio > .8 ? '空间快用满了，浏览器可能会自己清掉资料，先备份再清理。' : '快用满时，浏览器可能会自己清掉资料，记得先备份。'}</p>
+      <div className="image-storage-scope storage-compress">
+        <div className="backup-remind"><span>自动压缩旧照片<small>每天一次，把旧的聊天照片压小</small></span>
+          <span className="theme-segmented" role="radiogroup" aria-label="自动压缩旧照片">
+            {([[0, '不压缩'], [3, '3 天前'], [7, '7 天前']] as const).map(([days, label]) => <button type="button" role="radio" key={days} aria-checked={compress.days === days} className={'theme-segment-btn' + (compress.days === days ? ' active' : '')} onClick={() => compressDays(days)}>{label}</button>)}
+          </span>
+        </div>
+        <div className="storage-compress-last"><span>{squeezing ? '压缩中…' : lastRun}</span>
+          <PressedButton type="button" className="theme-icon-bottom-btn storage-compress-btn" disabled={squeezing || !compress.days} onClick={() => void compressNow()}>现在压一次</PressedButton>
+        </div>
+        <p className="image-storage-note">大约能省下一半到三分之二，画面会稍微糊一点，压过的不会再压，原图不会留着。头像、表情、壁纸不会动。</p>
+      </div>
     </div>
     {cleaning ? createPortal(<div className="sp-confirm-overlay" onClick={event => { if (event.target === event.currentTarget && !busy) setCleaning(null); }}>
       <div className="sp-confirm" role="dialog" aria-modal="true" aria-label={'清理' + KIND[cleaning.kind].title}>

@@ -4,7 +4,8 @@ import { flushKv, kv, replaceKv } from './kvStorage';
     前面那些（聊天、角色、记忆、日记、设置、美化……）一定会带；图片和表情、语音、音乐、API Key 可以选。
     还原时整份换掉：没带进备份的那几类也会清空；只有 API Key 例外，没带的话沿用这台手机现在的。 */
 export type BackupPart = 'images' | 'voice' | 'music' | 'keys';
-export type BackupInclude = Record<BackupPart, boolean>;
+/** photoDays：聊天照片只带最近几天的（0 或没写是全部）；头像、表情、壁纸一定整份带。 */
+export type BackupInclude = Record<BackupPart, boolean> & { photoDays?: 0 | 3 | 7 };
 export interface BackupStats { characters: number; messages: number; images: number; tracks: number }
 interface StoreInfo { name: string; keyPath: string | string[] | null; autoIncrement: boolean }
 interface DbInfo { name: string; version: number; stores: StoreInfo[] }
@@ -97,19 +98,22 @@ const voiceBytes = (value: unknown): number => typeof value === 'string' ? [...v
 const stripVoice = (value: unknown): unknown => typeof value === 'string' ? value.replace(VOICE, '$1$2')
   : Array.isArray(value) ? value.map(stripVoice) : value && typeof value === 'object' && !(value instanceof Blob) ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, stripVoice(item)])) : value;
 
+/** 聊天照片的编号里带着时间（photo_时间_xxx）。 */
+export const photoTime = (key: unknown) => Number(String(key).split('_')[1]) || 0;
 /** 各类大概占多少（给勾选清单看）。 */
 export async function scanBackup() {
   await flushKv();
-  const sizes = { core: 0, images: 0, voice: 0, music: 0, keys: 0 };
+  const sizes = { core: 0, images: 0, voice: 0, music: 0, keys: 0 }, photos: { at: number; size: number }[] = [];
   for (let index = 0; index < kv.length; index++) { const key = kv.key(index); if (key) sizes.core += key.length + (kv.getItem(key)?.length || 0); }
   for (const { name, part } of DBS) {
     const read = await readDb(name);
     for (const row of read?.rows || []) {
       const size = sizeOf(row.value), voice = name === 'qingtuan_chat_records_v1' ? voiceBytes(row.value) : 0;
       sizes[part || 'core'] += size - voice; sizes.voice += voice;
+      if (name === 'qingtuan_chat_photos_v1') photos.push({ at: photoTime(row.key), size });
     }
   }
-  return sizes;
+  return { ...sizes, photos };
 }
 
 function blobToBase64(blob: Blob) {
@@ -175,6 +179,7 @@ export async function createBackup(include: BackupInclude) {
     if (!read) continue;
     const index = dbs.push(read.info) - 1;
     for (const row of read.rows) {
+      if (name === 'qingtuan_chat_photos_v1' && include.photoDays && photoTime(row.key) < Date.now() - include.photoDays * 86400000) continue;
       let value = row.value;
       if (name === 'qingtuan_chat_records_v1') { if (!include.voice) value = stripVoice(value); if (row.store === 'chats') stats.messages += (JSON.stringify(value).match(/chat-message-row/g) || []).length; }
       if (name === 'QingTuanDB' && row.store === 'chatCharacters') stats.characters++;
@@ -244,4 +249,59 @@ export async function restoreBackup(backup: BackupFile) {
     if (restored && typeof restored === 'object' && current !== undefined) entries[key] = JSON.stringify(keepSecrets(current, restored));
   }
   await replaceKv({ ...entries, ...(meta ? { [META]: meta } : {}) });
+}
+
+/** 只拿回某几样：哪些聊天（聊天的 key）、记忆、日记、朋友圈、世界书。 */
+export interface MergePick { chats: string[]; memories: boolean; diary: boolean; moments: boolean; worlds: boolean }
+const KV_LISTS = { memories: ['qingtuan_memories_v1', 'items'], diary: ['qingtuan_diary_v1', 'entries'], moments: ['qingtuan_moments_v1', 'posts'] } as const;
+const kvList = (text: string | null | undefined, field: string) => { const value = parse(text ?? null); return isRecord(value) && Array.isArray(value[field]) ? value[field] as Record<string, unknown>[] : []; };
+const dbRows = (backup: BackupFile, db: string, store: string) => { const index = backup.header.dbs.findIndex(info => info.name === db); return backup.rows.filter(([dbIndex, storeName]) => dbIndex === index && storeName === store); };
+
+/** 备份里有哪些可以单独拿回来的。 */
+export function mergeChoices(backup: BackupFile) {
+  const names = new Map(dbRows(backup, 'QingTuanDB', 'chatCharacters').map(([, , , value]) => [String((value as Record<string, unknown>).archiveId), String((value as Record<string, unknown>).name || '')]));
+  return {
+    chats: dbRows(backup, 'qingtuan_chat_records_v1', 'chats').map(([, , key, value]) => ({ key: String(decode(key)), name: names.get(String(decode(key))) || String(decode(key)), count: (String((value as Record<string, unknown>)?.html || '').match(/chat-message-row/g) || []).length })),
+    memories: kvList(backup.kv[KV_LISTS.memories[0]], 'items').length, diary: kvList(backup.kv[KV_LISTS.diary[0]], 'entries').length,
+    moments: kvList(backup.kv[KV_LISTS.moments[0]], 'posts').length, worlds: dbRows(backup, 'QingTuanDB', 'worldBooks').length,
+  };
+}
+
+/** 合并：同一笔（同一个编号、同一个聊天）用备份里的，手机里多出来的留着。之后要马上重新开启。 */
+export async function mergeBackup(backup: BackupFile, pick: MergePick) {
+  const put = async (name: string, rows: [string, unknown, unknown][]) => {
+    const info = backup.header.dbs.find(item => item.name === name);
+    if (!info || !rows.length) return;
+    const db = await openForRestore(info);
+    try {
+      const names = [...db.objectStoreNames], transaction = db.transaction(names, 'readwrite');
+      for (const [storeName, key, value] of rows) {
+        if (!names.includes(storeName)) continue;
+        const store = transaction.objectStore(storeName);
+        if (store.keyPath) store.put(decode(value)); else store.put(decode(value), decode(key) as IDBValidKey);
+      }
+      await done(transaction);
+    } finally { db.close(); }
+  };
+  const chats = new Set(pick.chats);
+  await put('qingtuan_chat_records_v1', dbRows(backup, 'qingtuan_chat_records_v1', 'chats').filter(([, , key]) => chats.has(String(decode(key)))).map(([, store, key, value]) => [store, key, value]));
+  // 拿回的聊天里用到的照片（备份里有的话）一起拿回来
+  const photoIds = new Set(dbRows(backup, 'qingtuan_chat_records_v1', 'chats').filter(([, , key]) => chats.has(String(decode(key))))
+    .flatMap(([, , , value]) => [...String((value as Record<string, unknown>)?.html || '').matchAll(/data-photo-id="([^"]+)"/g)].map(match => match[1])));
+  await put('qingtuan_chat_photos_v1', dbRows(backup, 'qingtuan_chat_photos_v1', 'photos').filter(([, , key]) => photoIds.has(String(decode(key)))).map(([, store, key, value]) => [store, key, value]));
+  // 拿回的聊天，角色在手机里已经删掉的话一起拿回来，不然打不开
+  const local = await readDb('QingTuanDB').catch(() => null), have = new Set((local?.rows || []).map(row => `${row.store}:${String((row.value as Record<string, unknown>)?.id)}`));
+  const characters = dbRows(backup, 'QingTuanDB', 'chatCharacters').filter(([, , , value]) => chats.has(String((value as Record<string, unknown>).archiveId)));
+  const dossiers = new Set(characters.map(([, , , value]) => String((value as Record<string, unknown>).dossierId)));
+  const missing = [...characters, ...dbRows(backup, 'QingTuanDB', 'characterRecords').filter(([, , , value]) => dossiers.has(String((value as Record<string, unknown>).id)))]
+    .filter(([, store, , value]) => !have.has(`${store}:${String((value as Record<string, unknown>).id)}`));
+  await put('QingTuanDB', [...missing, ...(pick.worlds ? dbRows(backup, 'QingTuanDB', 'worldBooks') : [])].map(([, store, key, value]) => [store, key, value]));
+  for (const kind of ['memories', 'diary', 'moments'] as const) {
+    if (!pick[kind]) continue;
+    const [key, field] = KV_LISTS[kind], mine = parse(kv.getItem(key)), theirs = kvList(backup.kv[key], field);
+    const ids = new Set(theirs.map(item => String(item.id)));
+    const merged = [...kvList(kv.getItem(key), field).filter(item => !ids.has(String(item.id))), ...theirs].sort((a, b) => (Number(a.at) || 0) - (Number(b.at) || 0));
+    kv.setItem(key, JSON.stringify({ ...(isRecord(mine) ? mine : parse(backup.kv[key]) as object), [field]: merged }));
+  }
+  await flushKv();
 }
