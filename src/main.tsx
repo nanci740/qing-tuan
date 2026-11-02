@@ -9,6 +9,7 @@ import { initializeImageAssets } from './utils/imageAssets';
 import { initializeCatalogStorage } from './utils/catalogStorage';
 import { APP_DATABASE_BLOCKED_MESSAGE } from './utils/appDatabase';
 import { showToast } from './utils/toast';
+import './utils/installApp';
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { App } from './App';

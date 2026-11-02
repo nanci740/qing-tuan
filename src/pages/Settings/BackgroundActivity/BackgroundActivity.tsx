@@ -1,5 +1,6 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { createPortal } from 'react-dom';
+import { InstallGuide } from './InstallGuide';
 import { NOTIFICATION_SOUNDS, useBackgroundActivity } from '../../../hooks/useBackgroundActivity';
 export function BackgroundActivity() {
   const background = useBackgroundActivity();
@@ -47,6 +48,7 @@ export function BackgroundActivity() {
       {"\n\n        "}
       <div className="background-activity-content">
         {"\n            "}
+        <InstallGuide />
         <section className="background-activity-group">
           {"\n                "}
           <div className="background-activity-label">
