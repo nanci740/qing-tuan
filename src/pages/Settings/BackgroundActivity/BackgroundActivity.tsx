@@ -1,6 +1,6 @@
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { createPortal } from 'react-dom';
-import { useBackgroundActivity } from '../../../hooks/useBackgroundActivity';
+import { NOTIFICATION_SOUNDS, useBackgroundActivity } from '../../../hooks/useBackgroundActivity';
 export function BackgroundActivity() {
   const background = useBackgroundActivity();
   const { settings } = background;
@@ -72,11 +72,29 @@ export function BackgroundActivity() {
               <input className="vi-switch" id="backgroundActivityEnabled" checked={!!settings.enabled} onChange={event => { void background.change('enabled', event.currentTarget.checked); }} type="checkbox" />
               {"\n                    "}
             </label>
+            {settings.enabled && <>
+              <div className="background-activity-row" id="backgroundKeepAliveModeRow">
+                <span className="background-activity-copy">
+                  <strong>{"保活方式"}</strong>
+                  <span>{"强力：多开一个背景计时器，比较不容易被暂停，也比较耗电"}</span>
+                </span>
+                <span className="theme-segmented background-segmented" role="radiogroup" aria-label="保活方式">
+                  {([[false, '轻量'], [true, '强力']] as const).map(([strong, label]) => <button type="button" role="radio" key={label} aria-checked={!!settings.strong === strong} className={'theme-segment-btn' + (!!settings.strong === strong ? ' active' : '')} onClick={() => { if (!!settings.strong !== strong) void background.change('strong', strong); }}>{label}</button>)}
+                </span>
+              </div>
+              <div className="background-activity-row" id="backgroundKeepAliveStatusRow">
+                <span className="background-activity-copy">
+                  <strong>{"保活状态"}</strong>
+                  <span>{background.alive ? '无声音频在播，网页不容易被暂停' : '手机拦住了播放，轻触页面任何地方就会恢复'}</span>
+                </span>
+                <span className={'background-alive' + (background.alive ? ' is-on' : '')}><i aria-hidden="true" />{background.alive ? '运行中' : '被暂停了'}</span>
+              </div>
+            </>}
             {"\n                "}
           </div>
           {"\n                "}
           <div className="background-activity-note">
-            {"网页后台运行会受到手机系统与省电策略影响；开启后会使用轻量保活方式，尽量减少生成任务被暂停。"}
+            {"网页后台运行会受到手机系统与省电策略影响；开启后会用无声音频保活（强力会再加一个背景计时器），尽量减少生成任务被暂停。"}
           </div>
           {"\n            "}
         </section>
@@ -124,6 +142,15 @@ export function BackgroundActivity() {
               <input className="vi-switch" id="backgroundNotificationSound" checked={!!settings.notificationSound} onChange={event => { void background.change('notificationSound', event.currentTarget.checked); }} disabled={!settings.replyNotification} type="checkbox" />
               {"\n                    "}
             </label>
+            {settings.replyNotification && settings.notificationSound && <div className="background-activity-row background-sound-row" id="backgroundSoundPickRow">
+              <span className="background-activity-copy">
+                <strong>{"提示音"}</strong>
+                <span>{"点一下会试听"}</span>
+              </span>
+              <span className="theme-segmented background-sounds" role="radiogroup" aria-label="提示音">
+                {NOTIFICATION_SOUNDS.map(([id, label]) => <button type="button" role="radio" key={id} aria-checked={settings.sound === id} className={'theme-segment-btn' + (settings.sound === id ? ' active' : '')} onClick={() => background.setSound(id)}>{settings.sound === id ? '♪ ' + label : label}</button>)}
+              </span>
+            </div>}
             {"\n                    "}
             <label className={`background-activity-row${settings.replyNotification ? '' : ' is-disabled'}`} id="backgroundNotificationVibrationRow">
               {"\n                        "}
@@ -194,5 +221,5 @@ export function BackgroundActivity() {
         {"\n        "}
       </div>
       {"\n    "}
-    </div>{background.audioUrl && createPortal(<audio ref={background.audioRef} id="smallphoneBackgroundKeepAliveAudio" loop preload="auto" aria-hidden="true" style={{ display: 'none' }} src={background.audioUrl} />, document.body)}</>;
+    </div>{background.audioUrl && createPortal(<audio ref={background.audioRef} id="smallphoneBackgroundKeepAliveAudio" onPause={background.paused} onPlay={background.playing} loop preload="auto" aria-hidden="true" style={{ display: 'none' }} src={background.audioUrl} />, document.body)}</>;
 }

@@ -731,3 +731,50 @@
             font-size: 11px;
             cursor: pointer;
         }
+
+        /* 保活方式：右边一组小小的分段选择（样式跟美化设置的一样，只是收小） */
+        .background-segmented {
+            flex: none;
+            grid-template-columns: repeat(2, auto);
+            gap: 2px;
+            margin: 0;
+            padding: 2px;
+        }
+        .background-segmented .theme-segment-btn {
+            height: 24px;
+            padding: 0 12px;
+            font-size: 10.5px;
+        }
+        /* 保活状态：绿点运行中，橘点被暂停了 */
+        .background-alive {
+            flex: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--color-text);
+        }
+        .background-alive i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #e0a65a;
+        }
+        .background-alive.is-on i { background: #8fc98f; }
+        /* 提示音：标题底下一排七个，选中的凹下去、前面一个 ♪ */
+        .background-activity-row.background-sound-row {
+            display: block;
+        }
+        .background-sounds {
+            grid-template-columns: repeat(7, auto);
+            justify-content: start;
+            gap: 4px;
+            margin: 8px 0 2px;
+            padding: 3px;
+        }
+        .background-sounds .theme-segment-btn {
+            height: 26px;
+            padding: 0 9px;
+            font-size: 10.5px;
+            white-space: nowrap;
+        }
