@@ -74,6 +74,17 @@ export function playNotificationCue(sound: string = 'ding') {
   } catch { /* 原浏览器不支持时保持静默。 */ }
 }
 
+/** 跳系统通知要用的 Service Worker（public/notify-sw.js）；还没登记就登记，等它可以用。 */
+async function notifyWorker() {
+  if (!('serviceWorker' in navigator)) return null;
+  try {
+    const scope = import.meta.env.BASE_URL;
+    const found = await navigator.serviceWorker.getRegistration(scope);
+    if (!found?.active) { await navigator.serviceWorker.register(scope + 'notify-sw.js', { scope }); }
+    return await Promise.race([navigator.serviceWorker.ready, new Promise<null>(resolve => setTimeout(() => resolve(null), 5000))]);
+  } catch { return null; }
+}
+
 export function useBackgroundActivity() {
   const { registerDestination } = useSettingsNavigation();
   const [settings, setSettings] = useState(loadSettings);
@@ -156,10 +167,9 @@ export function useBackgroundActivity() {
     const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound };
     if (latest.notificationVibration) options.vibrate = [120, 70, 120];
     try {
-      if ('serviceWorker' in navigator) {
-        const registration = await navigator.serviceWorker.getRegistration();
-        if (registration) { await registration.showNotification(title, options); return true; }
-      }
+      // 安卓的 Chrome 只能用 Service Worker 跳通知；电脑上没有的话才直接 new Notification
+      const registration = await notifyWorker();
+      if (registration) { await registration.showNotification(title, options); return true; }
       new Notification(title, options); return true;
     } catch { return false; }
   }, []);
@@ -174,6 +184,8 @@ export function useBackgroundActivity() {
     document.addEventListener('visibilitychange', visibility);
     window.addEventListener('beforeunload', revoke);
     window.addEventListener('qingtuan:notify-reply', notification);
+    // 开着回复通知就先把 Service Worker 登记好，第一则通知才不会慢
+    if (current.current.replyNotification) void notifyWorker();
     // 首次开启保活需要等 React 完成隐藏 audio 的挂载。
     const initial = setTimeout(() => { void applyRuntime(); }, 0);
     return () => {
@@ -204,7 +216,7 @@ export function useBackgroundActivity() {
     if (key === 'enabled') await applyRuntime(true);
     if (key === 'strong') { await applyRuntime(); showToast(value ? '已换成强力保活' : '已换成轻量保活'); }
     if (key === 'replyNotification') {
-      if (value) showToast('回复通知已开启');
+      if (value) { showToast('回复通知已开启'); void notifyWorker(); }
       else if ('Notification' in window && Notification.permission === 'granted') showToast('回复通知已关闭');
     }
     if (key === 'notificationSound') showToast(value ? '回复通知提示音已开启' : '回复通知提示音已关闭');
@@ -219,7 +231,8 @@ export function useBackgroundActivity() {
     if (!current.current.replyNotification) { showToast('先打开回复通知'); return; }
     const sent = await notifyReply({ title: '青团机', body: '这是一则测试通知 ♪', tag: 'smallphone-test' });
     if (sent) showToast('发出去了；没看到的话，检查手机里这个浏览器的通知设定');
-    else showToast('没发出去：浏览器没有允许通知，请到浏览器或手机设定里打开');
+    else if (!('Notification' in window) || Notification.permission !== 'granted') showToast('没发出去：浏览器没有允许通知，请到浏览器或手机设定里打开');
+    else showToast('提示音和震动有，但这个浏览器跳不出系统通知');
   }
   /** 无声音频被手机暂停了：等你下一次轻触页面就接着播。 */
   const paused = useCallback(() => {
