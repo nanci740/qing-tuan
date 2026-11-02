@@ -216,8 +216,8 @@ export function useBackgroundActivity() {
     document.addEventListener('visibilitychange', visibility);
     window.addEventListener('beforeunload', revoke);
     window.addEventListener('qingtuan:notify-reply', notification);
-    // 开着回复通知就先把 Service Worker 登记好，第一则通知才不会慢
-    if (current.current.replyNotification) void notifyWorker();
+    // 开机就把 Service Worker 登记好：第一则通知才不会慢，安卓也才能装到主画面
+    void notifyWorker();
     // 首次开启保活需要等 React 完成隐藏 audio 的挂载。
     const initial = setTimeout(() => { void applyRuntime(); }, 0);
     return () => {
