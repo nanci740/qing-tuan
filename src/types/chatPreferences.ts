@@ -1,3 +1,4 @@
+import type { ChatStyleOwn } from '../utils/chatTheme';
 export interface ChatPreferences {
   readReceipt: boolean; timeDisplay: 'all' | 'group' | 'hidden';
   segmented: boolean; segmentDelay: number; customModel: string; contextMessages: number;
@@ -22,6 +23,8 @@ export interface ChatPreferences {
   pat: boolean; patSuffix: string;
   /** 消息旁边显示头像。 */
   avatars: boolean;
+  /** 聊天个性化哪几块是这个聊天自己设的；没设的跟着全部聊天的预设样式。 */
+  styleOwn: ChatStyleOwn;
 }
 export type BasicChatSetting = 'readReceipt' | 'timeDisplay' | 'typingIndicator' | 'soundFeedback' | 'vibrationFeedback' | 'pat' | 'patSuffix' | 'avatars';
 export type ReplyChatSetting = 'segmented' | 'segmentDelay' | 'customModel' | 'contextMessages' | 'replyLength' | 'quotePolicy' | 'presetId' | 'timeAware' | 'photoInteraction';

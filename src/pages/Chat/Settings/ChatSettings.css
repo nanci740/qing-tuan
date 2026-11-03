@@ -988,3 +988,13 @@
 /* 音色：输入框加试听 */
 .chat-setting-voice-name { flex: none; display: flex; align-items: center; gap: 6px; }
 .chat-setting-voice-name .chat-setting-input { width: 120px; }
+
+/* 聊天个性化：每一块标出跟着方案还是这个角色自订 */
+.chat-style-source {display:inline-flex;align-items:center;gap:5px;margin-left:6px;vertical-align:1px;}
+#chatSettingsPage#chatSettingsPage .chat-style-tag {padding:0 5px;border:.5px solid var(--color-divider);border-radius:3px;color:var(--cs-muted);font-size:8px;font-weight:400;line-height:14px;letter-spacing:0;}
+#chatSettingsPage#chatSettingsPage .chat-style-tag.is-own {border-color:var(--cs-title);color:var(--cs-title);}
+#chatSettingsPage#chatSettingsPage .chat-style-back {padding:0;border:0;background:none;color:var(--cs-muted);font:inherit;font-size:8px;font-weight:400;text-decoration:underline;cursor:pointer;}
+.chat-style-head {display:flex;align-items:center;margin-bottom:8px;}
+#chatSettingsPage#chatSettingsPage .chat-style-head strong {color:var(--cs-title);font-size:10.5px;font-weight:600;}
+.chat-style-share {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 2px;border-top:.5px solid color-mix(in srgb, var(--color-muted) 12%, transparent);margin-top:10px;}
+.chat-style-share .chat-setting-action {flex:none;}

@@ -7,6 +7,9 @@ const Context = createContext<BootContextValue | null>(null);
 function initialBoot(): BootState {
   let play = true;
   try {
+    // 刚换完主题方案重新开启：这次不放开屏
+    if (sessionStorage.getItem('qingtuan_after_theme')) play = false;
+    else {
     const mode = kv.getItem('smallphone_splash_mode') || 'always';
     if (mode === 'off') play = false;
     else if (mode === 'daily') {
@@ -14,6 +17,7 @@ function initialBoot(): BootState {
       const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
       play = (kv.getItem('smallphone_splash_last_shown') || '') !== today;
       if (play) kv.setItem('smallphone_splash_last_shown', today);
+    }
     }
   } catch { play = true; }
   return { run: play, ready: false, fading: false, hidden: !play, mainVisible: !play, mainOpaque: !play };

@@ -2,7 +2,7 @@ import { ChatPixelIcon } from '../../../components/shared/ChatPixelIcon';
 import {ChatWorldBooks,ChatWorldBookLimit} from './ChatWorldBooks';
 import {ChatIdentityField,ChatDetailButton} from '../../../components/shared/ChatIdentityField';
 import { ChatDataButton, ChatDataInput } from './ChatDataControls';
-import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft } from './ChatAppearanceControls';
+import { ChatAppearanceText, ChatAppearanceRangeRow, ChatAppearanceRange, ChatAppearanceAction, ChatAppearanceFile, ChatAppearanceDraft, ChatStyleSource, ChatStyleShare } from './ChatAppearanceControls';
 import { ChatOpeningInput, ChatRestartButton } from './ChatOpeningControls';
 import { ChatReplySelect, ChatReplyRangeRow, ChatReplyRangeValue, ChatReplyRange, ChatReplyModel, ChatPresetSelect, ChatVoiceName } from './ChatReplyControls';
 import { ChatSettingCheckbox } from './ChatSettingCheckbox';
@@ -540,7 +540,8 @@ export function ChatSettings() {
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-setting-field-row"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-field-label"}]}>
                   <OriginalElement tag="strong" attributes={[]}>
-                    {"独立聊天壁纸"}
+                    {"聊天壁纸"}
+                    <ChatStyleSource group="wallpaper" />
                   </OriginalElement>
                   <ChatAppearanceText id="chatWallpaperState" tag="span" />
                 </OriginalElement>
@@ -579,6 +580,7 @@ export function ChatSettings() {
                 <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-setting-range-head"}]}>
                   <OriginalElement tag="span" attributes={[]}>
                     {"对话字号"}
+                    <ChatStyleSource group="size" />
                   </OriginalElement>
                   <ChatAppearanceText id="chatFontSizeValue" tag="span" className="chat-setting-range-value" />
                 </OriginalElement>
@@ -586,6 +588,10 @@ export function ChatSettings() {
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-font-card"}]}>
+                <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-style-head"}]}>
+                  <OriginalElement tag="strong" attributes={[]}>{"聊天字体"}</OriginalElement>
+                  <ChatStyleSource group="font" />
+                </OriginalElement>
                 {"\n                            "}
                 <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-current"}]}>
                   <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-current-copy"}]}>
@@ -622,6 +628,7 @@ export function ChatSettings() {
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-block"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-block-title"}]}>
                   {"专属气泡 CSS"}
+                  <ChatStyleSource group="bubble" />
                 </OriginalElement>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-hint"}]}>
                   {"可修改 .chat-bubble 与气泡 SVG；只套用当前聊天室。"}
@@ -636,6 +643,10 @@ export function ChatSettings() {
                 <ChatAppearanceAction id="chatBubbleApply" className="chat-setting-action primary">
                   {"应用样式"}
                 </ChatAppearanceAction>
+              </OriginalElement>
+              <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-style-share"}]}>
+                <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-hint"}]}>{"把这个聊天现在的壁纸、字号、字体、气泡，套到所有没自己设过的聊天；主题方案存的也是这一套。"}</OriginalElement>
+                <ChatStyleShare />
               </OriginalElement>
               {"\n                    "}
             </OriginalElement>

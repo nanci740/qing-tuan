@@ -50,3 +50,9 @@ export function ChatMessageWallpaper() {
  return <div ref={layer} className="chat-message-wallpaper" aria-hidden="true">{source&&<img src={source} alt="" decoding="sync"/>}</div>;
 }
 export function ChatWallpaperMessageList() {const operations=useMessageOperations();const selection=useChatSelection();const messages=useChatMessages();return <div ref={messages.list} onClickCapture={selection.clickCapture} onKeyDown={event=>messages.api.keyDown(event.nativeEvent)} onClick={event=>{messages.api.click(event.nativeEvent);const card=(event.target as Element).closest('[data-forward-record-id]');const id=card?.getAttribute('data-forward-record-id');if(id)window.dispatchEvent(new CustomEvent('qingtuan:record-detail-open',{detail:id}));}} onPointerDown={operations.pointerDown} onPointerMove={operations.pointerMove} onPointerUp={operations.cancelLongPress} onPointerCancel={operations.cancelLongPress} onContextMenu={operations.contextMenu} onScroll={operations.closeMenu} className="chat-message-list" id="chatMessageList" aria-live="polite"><ChatMessageContent/></div>;}
+/** 标出这一块跟着方案，还是这个角色自己设的；自己设的可以一键改回。 */
+export function ChatStyleSource({group}:{group:'wallpaper'|'size'|'font'|'bubble'}) {
+ const {values,followTheme,appearance:{view}}=useChatPreferences(),own=values.styleOwn[group]||view.own[group];
+ return <span className="chat-style-source"><span className={'chat-style-tag'+(own?' is-own':'')}>{own?'这个角色自订':'跟着方案'}</span>{own?<PressedButton type="button" className="chat-style-back" onClick={()=>void followTheme(group)}>改回方案</PressedButton>:null}</span>;
+}
+export function ChatStyleShare() {const {shareStyle}=useChatPreferences();return <PressedButton type="button" className="chat-setting-action" id="chatStyleShare" onClick={()=>void shareStyle()}>设成全部聊天的样式</PressedButton>;}

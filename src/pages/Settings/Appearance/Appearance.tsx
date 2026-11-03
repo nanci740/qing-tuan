@@ -4,6 +4,7 @@ import { useAppearance } from '../../../providers/AppearanceProvider';
 import { hsvToHex } from '../../../utils/appearanceColors';
 import { showToast } from '../../../utils/toast';
 import { IconEditor } from './components/IconEditor';
+import { ThemeSchemes } from './ThemeSchemes';
 /** 原页面的静态结构；所有页面保持挂载，由原脚本切换显示状态。 */
 export function Appearance() {
   const appearance = useAppearance();
@@ -54,6 +55,7 @@ export function Appearance() {
       </div>
       {"\n\n        "}
       <div className="theme-settings-content">
+        <ThemeSchemes />
         {"\n            "}
         <section className="theme-setting-group">
           {"\n                "}
