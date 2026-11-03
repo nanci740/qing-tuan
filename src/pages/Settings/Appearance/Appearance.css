@@ -1091,7 +1091,7 @@
 
 /* @qingtuan-order:000957 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label {
             justify-content: flex-start;
             gap: 7px;
         }
@@ -1099,7 +1099,7 @@
 /* @qingtuan-order:000958 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::before {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::before {
             content: '';
             flex: 0 0 13px;
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2022a1%201%200%200%201%200-20%2010%209%200%200%201%2010%209%205%205%200%200%201-5%205h-2.25a1.75%201.75%200%200%200-1.4%202.8l.3.4a1.75%201.75%200%200%201-1.4%202.8z%27/%3E%3Ccircle%20cx%3D%2713.5%27%20cy%3D%276.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%2717.5%27%20cy%3D%2710.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%276.5%27%20cy%3D%2712.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Ccircle%20cx%3D%278.5%27%20cy%3D%277.5%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3C/svg%3E") no-repeat center / 13px 13px;
@@ -1109,7 +1109,7 @@
 /* @qingtuan-order:000959 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::after {
             margin-left: auto;
         }
 
@@ -1120,7 +1120,7 @@
 
 /* @qingtuan-order:000961 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label {
             justify-content: center;
             position: relative;
             background: var(--win-face);
@@ -1131,7 +1131,7 @@
 /* @qingtuan-order:000962 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label::after {
             position: absolute;
             left: 10px;
             top: 50%;
@@ -1150,7 +1150,7 @@
 
 /* @qingtuan-order:000964 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label {
             padding-top: 4px;
             padding-bottom: 4px;
             background: var(--win-face);
@@ -1165,7 +1165,7 @@
 /* @qingtuan-order:000965 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(3) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label::after {
             flex-basis: 34px;
             height: 10px;
             background: var(--win-line);
@@ -1180,7 +1180,7 @@
 
 /* @qingtuan-order:000967 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) {
             position: relative;
             overflow: visible;
             margin-top: 26px;
@@ -1192,14 +1192,14 @@
 /* @qingtuan-order:000968 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-card {
             background: var(--color-surface);
         }
 
 /* @qingtuan-order:000969 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label {
             position: absolute;
             top: 0;
             left: 0;
@@ -1217,14 +1217,14 @@
 /* @qingtuan-order:000970 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label::after {
             display: none;
         }
 
 /* @qingtuan-order:000971 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(4) .theme-setting-card {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-card {
             padding-top: 20px;
         }
 
@@ -1235,14 +1235,14 @@
 
 /* @qingtuan-order:000973 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) {
             box-shadow: inset 0 0 0 3px var(--effect-highlight), inset 0 0 0 4px var(--effect-inner-shade), var(--effect-drop);
         }
 
 /* @qingtuan-order:000974 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-label {
             margin: 4px 4px 0;
             border: 1px solid var(--win-line);
         }
@@ -1250,7 +1250,7 @@
 /* @qingtuan-order:000975 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(5) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-label::after {
             flex-basis: 29px;
             -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
             mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2729%27%20height%3D%2712%27%20viewBox%3D%270%200%2029%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M4.2%204.3a1.8%201.8%200%201%201%202.6%201.6c-.6.3-.8.6-.8%201.2%27%20/%3E%3Ccircle%20cx%3D%276%27%20cy%3D%279%27%20r%3D%27.5%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27/%3E%3Cpath%20d%3D%27M20.5%203.5l5%205M25.5%203.5l-5%205%27/%3E%3C/svg%3E") no-repeat center / 29px 12px;
@@ -1263,7 +1263,7 @@
 
 /* @qingtuan-order:000977 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-card {
             position: relative;
             padding-bottom: 34px;
         }
@@ -1271,7 +1271,7 @@
 /* @qingtuan-order:000978 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-card::after {
             content: '';
             position: absolute;
             left: 0;
@@ -1293,7 +1293,7 @@
 
 /* @qingtuan-order:000980 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-label {
             justify-content: flex-start;
             gap: 7px;
         }
@@ -1301,7 +1301,7 @@
 /* @qingtuan-order:000981 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-label::before {
             content: '';
             flex: 0 0 14px;
             height: 11px;
@@ -1313,7 +1313,7 @@
 /* @qingtuan-order:000982 */
 
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-label::after {
             margin-left: auto;
         }
 
@@ -2157,7 +2157,7 @@
 
 /* @qingtuan-order:002819 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(1) .theme-setting-label::before {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(2) .theme-setting-label::before {
             flex: 0 0 15px;
             width: 9px;
             height: 9px;
@@ -2177,7 +2177,7 @@
 
 /* @qingtuan-order:002821 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(6) .theme-setting-card::after {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-card::after {
             content: '主画面背景.bmp';
             padding-left: 8px;
             color: var(--win-ink);
@@ -2195,7 +2195,7 @@
 
 /* @qingtuan-order:002823 */
 
-        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-card::before {
+        #themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-card::before {
             content: 'C:\\青团\\图标\\';
             display: block;
             margin: -15px -15px 14px;
@@ -2482,4 +2482,43 @@
 
 /* @qingtuan-order:003688 */
 
-        #themeSettingsPage#themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(7) .theme-setting-label::before { background: var(--sb-title) !important; }
+        #themeSettingsPage#themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-label::before { background: var(--sb-title) !important; }
+
+
+/* 主题方案：最上面那扇。标题前一个资料夹，右边 ◂ ▸ ×（翻方案的意思） */
+#themeSettingsPage .theme-settings-content > .theme-scheme-group .theme-setting-label { justify-content: flex-start; gap: 7px; }
+#themeSettingsPage .theme-settings-content > .theme-scheme-group .theme-setting-label::before { content: ''; flex: 0 0 12px; height: 12px; background: var(--set-fill, var(--win-deep)); -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%207h7l2%202h9v11H3z%27%2F%3E%3Cpath%20d%3D%27M3%207V4h6l2%203%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 12px 12px; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%207h7l2%202h9v11H3z%27%2F%3E%3Cpath%20d%3D%27M3%207V4h6l2%203%27%2F%3E%3C%2Fsvg%3E") no-repeat center / 12px 12px; }
+#themeSettingsPage .theme-settings-content > .theme-scheme-group .theme-setting-label::after { margin-left: auto; -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M7.5%203.5L4%206l3.5%202.5z%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M21.5%203.5L25%206l-3.5%202.5z%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%20width%3D%2746%27%20height%3D%2712%27%20viewBox%3D%270%200%2046%2012%27%3E%3Crect%20x%3D%270.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M7.5%203.5L4%206l3.5%202.5z%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2717.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M21.5%203.5L25%206l-3.5%202.5z%27%20fill%3D%27black%27%2F%3E%3Crect%20x%3D%2734.5%27%20y%3D%270.5%27%20width%3D%2711%27%20height%3D%2711%27%2F%3E%3Cpath%20d%3D%27M37.5%203.5l5%205M42.5%203.5l-5%205%27%2F%3E%3C%2Fsvg%3E"); }
+.theme-scheme-now { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.theme-scheme-now strong { color: var(--color-text); font-size: 13px; font-weight: 600; }
+.theme-scheme-now span { flex: none; color: var(--color-muted); font-size: 10px; }
+.theme-scheme-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 10px; }
+.theme-scheme-card { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-width: 0; padding: 5px 5px 6px; border: 1px solid var(--win-line); border-radius: 2px; background: var(--color-surface); box-shadow: 2px 2px 0 color-mix(in srgb, var(--win-line) 45%, transparent); color: var(--color-text); font: inherit; cursor: pointer; -webkit-touch-callout: none; user-select: none; }
+.theme-scheme-card.is-current { outline: 1px dashed var(--win-deep); outline-offset: 3px; }
+.theme-scheme-flag { position: absolute; top: -7px; right: -5px; z-index: 1; padding: 0 4px; background: var(--win-deep); color: var(--color-surface); font-size: 8.5px; line-height: 13px; }
+.theme-scheme-name { overflow: hidden; color: var(--color-text); font-size: 10.5px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.theme-scheme-date { color: var(--color-muted); font-size: 8.5px; text-align: center; }
+.theme-scheme-add { align-items: center; justify-content: center; min-height: 120px; border-style: dashed; box-shadow: none; color: var(--color-muted); font-size: 10.5px; }
+.theme-scheme-add b { font-size: 20px; font-weight: 400; line-height: 1.1; }
+/* 迷你手机 */
+.theme-scheme-shot { --shot-ink: color-mix(in srgb, var(--shot-tc) 45%, #6f7f84); position: relative; display: block; height: 86px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--win-line) 70%, transparent); background: color-mix(in srgb, var(--shot-tc) 22%, #fbfdfd); }
+.theme-scheme-shot .shot-wp { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+.theme-scheme-shot i { display: block; }
+.theme-scheme-shot .shot-bar { position: absolute; left: 4px; right: 4px; top: 3px; height: 2px; border-left: 9px solid var(--shot-ink); border-right: 9px solid var(--shot-ink); }
+.theme-scheme-shot .shot-widget { position: absolute; left: 5px; right: 5px; top: 10px; height: 17px; border: 1px solid var(--shot-ink); background: color-mix(in srgb, var(--shot-tc) 70%, #fff); }
+.theme-scheme-shot .shot-icons { position: absolute; left: 6px; right: 6px; top: 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.theme-scheme-shot .shot-icons > * { width: 100%; aspect-ratio: 1; border: 1px solid var(--shot-ink); border-radius: 2px; background: #ffffffaa; object-fit: cover; box-sizing: border-box; }
+.theme-scheme-shot .shot-chat { position: absolute; left: 5px; right: 5px; bottom: 4px; height: 26px; border: 1px solid color-mix(in srgb, var(--shot-ink) 60%, transparent); background: #ffffffcc center / cover; }
+.theme-scheme-shot .shot-chat i { position: absolute; height: 6px; border: 1px solid var(--shot-ink); border-radius: 3px; }
+.theme-scheme-shot .shot-chat i:first-child { left: 3px; top: 3px; width: 45%; background: #fff; }
+.theme-scheme-shot .shot-chat i:last-child { right: 3px; bottom: 3px; width: 38%; background: var(--shot-tc); }
+.theme-scheme-group .theme-font-actions { margin-top: 14px; }
+.theme-scheme-note { margin: 8px 0 0; color: var(--color-muted); font-size: 10.5px; line-height: 1.6; }
+.theme-scheme-input { width: 100%; height: 30px; box-sizing: border-box; padding: 0 8px; border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: inherit; font-size: 12px; }
+.theme-scheme-parts { margin-top: 10px; }
+.theme-scheme-parts .backup-row span small { margin-top: 1px; }
+.theme-scheme-menu { display: flex; flex-direction: column; padding: 4px 0; }
+.theme-scheme-menu button { padding: 10px 14px; border: 0; border-bottom: 1px dotted var(--color-divider); background: none; color: var(--color-text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.theme-scheme-menu button:last-child { border-bottom: 0; }
+.theme-scheme-menu button.is-danger { color: #c27c7c; }
+.theme-scheme-menu button:active { opacity: .6; }

@@ -1,5 +1,6 @@
 import { kv } from './kvStorage';
 import type { ChatPreferences } from '../types/chatPreferences';
+import { readChatTheme, readStyleOwn } from './chatTheme';
 export const CHAT_PREFERENCES_KEY = 'smallphone_chat_preferences_v1';
 export const CHAT_PREFERENCES_BY_CHAT_KEY = 'smallphone_chat_preferences_by_chat_v2';
 /** 音色原本只有一个，填在「语音与生图设置」；还没自己设过音色的聊天先沿用它。 */
@@ -41,8 +42,18 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             vibrationFeedback: false,
             pat: true,
             patSuffix: '',
-            avatars: true
+            avatars: true,
+            styleOwn: { wallpaper: false, size: false, font: false, bubble: false }
         };
+    }
+/** 没有自己设的那几块，换成全部聊天的预设样式（主题方案会换它）。 */
+export function withChatTheme(preferences: ChatPreferences): ChatPreferences {
+        const theme = readChatTheme(), own = preferences.styleOwn, next = { ...preferences };
+        if (!own.wallpaper) { next.wallpaperFade = theme.wallpaperFade; next.wallpaperBlur = theme.wallpaperBlur; }
+        if (!own.size) next.fontSize = theme.fontSize;
+        if (!own.font) { next.fontType = theme.fontType; next.fontName = theme.fontName; next.fontUrl = theme.fontUrl; }
+        if (!own.bubble) next.bubbleCss = theme.bubbleCss;
+        return next;
     }
 export function loadChatPreferences(key: string): ChatPreferences {
         const defaults = getChatPreferenceDefaults();
@@ -50,7 +61,8 @@ export function loadChatPreferences(key: string): ChatPreferences {
             const store = JSON.parse(kv.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}') as Record<string, Record<string, unknown>> | null;
             const legacy = JSON.parse(kv.getItem(CHAT_PREFERENCES_KEY) || '{}') as Record<string, unknown>;
             const saved = store?.[key] || (key === 'moon' ? legacy : {});
-            return {
+            const existed = Boolean(store?.[key]) || key === 'moon' && Object.keys(legacy || {}).length > 0;
+            return withChatTheme({
                 readReceipt: saved.readReceipt !== false,
                 timeDisplay: ['all','group','hidden'].includes(saved.timeDisplay as string) ? saved.timeDisplay as ChatPreferences['timeDisplay'] : defaults.timeDisplay,
                 segmented: saved.segmented !== false,
@@ -84,8 +96,9 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 vibrationFeedback: saved.vibrationFeedback === true,
                 pat: saved.pat !== false,
                 patSuffix: String(saved.patSuffix || '').trim().slice(0, 20),
-                avatars: saved.avatars !== false
-            };
+                avatars: saved.avatars !== false,
+                styleOwn: readStyleOwn(saved, existed)
+            });
         } catch (error) {
             return defaults;
         }
