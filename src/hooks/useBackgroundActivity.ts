@@ -15,7 +15,7 @@ export interface BackgroundSettings {
   /** 提示音是哪一种（NOTIFICATION_SOUNDS）。 */
   sound: string;
 }
-export interface ReplyNotification { title?: string; body?: string; tag?: string; url?: string }
+export interface ReplyNotification { title?: string; body?: string; tag?: string; url?: string; avatar?: string }
 const STORAGE_KEY = 'smallphone_background_activity_v1';
 const defaults: BackgroundSettings = { enabled: false, replyNotification: false, notificationSound: true, notificationVibration: true, screenAwake: false, strong: false, sound: 'ding' };
 function loadSettings(): BackgroundSettings {
@@ -87,29 +87,40 @@ async function notifyWorker() {
   } catch { return null; }
 }
 
-/** 媒体控制卡上的小图：一颗青团，用主题色画。 */
-let artwork = '';
-function charmArtwork() {
-  if (artwork) return artwork;
-  try {
-    const canvas = document.createElement('canvas'), size = 256; canvas.width = canvas.height = size;
-    const context = canvas.getContext('2d')!, theme = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim() || '#DDF2F4';
-    context.fillStyle = theme; context.fillRect(0, 0, size, size);
-    context.fillStyle = '#8fbf7f'; context.beginPath(); context.ellipse(128, 142, 78, 70, 0, 0, Math.PI * 2); context.fill();
-    context.fillStyle = 'rgba(255,255,255,.55)'; context.beginPath(); context.ellipse(102, 112, 22, 14, -0.5, 0, Math.PI * 2); context.fill();
-    context.fillStyle = '#4f6f47'; context.beginPath(); context.arc(108, 148, 6, 0, Math.PI * 2); context.arc(148, 148, 6, 0, Math.PI * 2); context.fill();
-    context.fillStyle = 'rgba(255,170,190,.7)'; context.beginPath(); context.arc(94, 164, 9, 0, Math.PI * 2); context.arc(162, 164, 9, 0, Math.PI * 2); context.fill();
-    artwork = canvas.toDataURL('image/png');
-  } catch { artwork = ''; }
-  return artwork;
+/** 角色头像转成通知用的小图（128 方图）。blob、跨网域读不到或太慢就回传空字串，改用青团。 */
+const avatarIcons = new Map<string, string>();
+function avatarIcon(src: string) {
+  const cached = avatarIcons.get(src);
+  if (cached !== undefined) return Promise.resolve(cached);
+  return new Promise<string>(resolve => {
+    const image = new Image(), timer = window.setTimeout(() => done(''), 2000);
+    function done(result: string) {
+      window.clearTimeout(timer); image.onload = image.onerror = null;
+      if (avatarIcons.size > 50) avatarIcons.clear();
+      avatarIcons.set(src, result); resolve(result);
+    }
+    if (/^https?:/i.test(src)) image.crossOrigin = 'anonymous';
+    image.onload = () => {
+      try {
+        const size = 128, canvas = document.createElement('canvas'); canvas.width = canvas.height = size;
+        const side = Math.min(image.naturalWidth, image.naturalHeight);
+        if (!side) { done(''); return; }
+        canvas.getContext('2d')!.drawImage(image, (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side, 0, 0, size, size);
+        done(canvas.toDataURL('image/png'));
+      } catch { done(''); }
+    };
+    image.onerror = () => done('');
+    image.src = src;
+  });
 }
 /** 保活在跑时，通知栏、锁屏的媒体控制卡写「青团机」；关掉就收起来。 */
 function showMediaCard(on: boolean, audio: HTMLAudioElement | null) {
   if (!('mediaSession' in navigator)) return;
   try {
     if (!on) { navigator.mediaSession.metadata = null; return; }
-    const src = charmArtwork();
-    navigator.mediaSession.metadata = new MediaMetadata({ title: '青团机', artist: '后台保活中', ...(src ? { artwork: [{ src, sizes: '256x256', type: 'image/png' }] } : {}) });
+    // 小图用开屏那颗像素青团
+    const src = new URL(import.meta.env.BASE_URL + 'icons/media-512.png', location.href).href;
+    navigator.mediaSession.metadata = new MediaMetadata({ title: '青团机', artist: '后台保活中', artwork: [{ src, sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => { void audio?.play().catch(() => {}); });
     navigator.mediaSession.setActionHandler('pause', () => { audio?.pause(); });
   } catch { /* 不支持就算了 */ }
@@ -190,14 +201,15 @@ export function useBackgroundActivity() {
     applyHeartbeat(); checkAlive();
     await applyWakeLock();
   }, [startKeepAlive, stopKeepAlive, applyWakeLock, applyHeartbeat, checkAlive]);
-  const notifyReply = useCallback(async ({ title = '小手机', body = '收到一条新回复', tag = 'smallphone-reply', url = location.href }: ReplyNotification = {}) => {
+  const notifyReply = useCallback(async ({ title = '小手机', body = '收到一条新回复', tag = 'smallphone-reply', url = location.href, avatar = '' }: ReplyNotification = {}) => {
     const latest = loadSettings(); current.current = latest; setSettings(latest);
     if (!latest.replyNotification) return false;
     if (latest.notificationSound) playNotificationCue(latest.sound);
     if (latest.notificationVibration && navigator.vibrate) navigator.vibrate([120, 70, 120]);
     if (!('Notification' in window) || Notification.permission !== 'granted') return false;
-    // icon 通知上的青团机图示；badge 状态栏那排的小青团（安卓只看轮廓）
-    const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound, icon: import.meta.env.BASE_URL + 'icons/icon-192.png', badge: import.meta.env.BASE_URL + 'icons/badge-96.png' };
+    // icon：角色发的用角色头像，读不到或不是角色（测试通知）就用青团；badge 状态栏那排的小青团（安卓只看轮廓）
+    const icon = (avatar && await avatarIcon(avatar)) || import.meta.env.BASE_URL + 'icons/icon-192.png';
+    const options: NotificationOptions & { vibrate?: number[] } = { body, tag, data: { url }, silent: !latest.notificationSound, icon, badge: import.meta.env.BASE_URL + 'icons/badge-96.png' };
     if (latest.notificationVibration) options.vibrate = [120, 70, 120];
     try {
       // 安卓的 Chrome 只能用 Service Worker 跳通知；电脑上没有的话才直接 new Notification
