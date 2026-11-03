@@ -100,6 +100,8 @@ export function useReplyNotification() {
       detail: {
         title: detail?.title || '小手机',
         body: previewText(detail?.body),
+        // 系统通知旁边放角色头像，跟画面里的横幅同一张
+        avatar: String(detail?.avatar || api.current?.find(key)?.photoUrl || DEFAULT_AVATAR),
         // 每一句一则（跟一般聊天 App 一样叠起来），不会被同一个人的下一句盖掉
         tag: `smallphone-reply-${key}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
       }
