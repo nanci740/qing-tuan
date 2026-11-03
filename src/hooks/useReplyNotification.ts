@@ -78,8 +78,11 @@ export function useReplyNotification() {
       setReset(false);
     });
     void element.current.offsetWidth;
-    frame.current = window.requestAnimationFrame(() => flushSync(() => setShown(true)));
-    timer.current = window.setTimeout(() => flushSync(() => setShown(false)), 4500);
+    // 收起的计时要等真的滑下来才开始：App 在背景时画面不会更新，先计时的话回来横幅就会一直挂着
+    frame.current = window.requestAnimationFrame(() => {
+      flushSync(() => setShown(true));
+      timer.current = window.setTimeout(() => flushSync(() => setShown(false)), 4500);
+    });
   }
   function complete(detail?: ReplyDetail) {
     const key = String(detail?.chatKey || '');
