@@ -87,29 +87,14 @@ async function notifyWorker() {
   } catch { return null; }
 }
 
-/** 媒体控制卡上的小图：一颗青团，用主题色画。 */
-let artwork = '';
-function charmArtwork() {
-  if (artwork) return artwork;
-  try {
-    const canvas = document.createElement('canvas'), size = 256; canvas.width = canvas.height = size;
-    const context = canvas.getContext('2d')!, theme = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim() || '#DDF2F4';
-    context.fillStyle = theme; context.fillRect(0, 0, size, size);
-    context.fillStyle = '#8fbf7f'; context.beginPath(); context.ellipse(128, 142, 78, 70, 0, 0, Math.PI * 2); context.fill();
-    context.fillStyle = 'rgba(255,255,255,.55)'; context.beginPath(); context.ellipse(102, 112, 22, 14, -0.5, 0, Math.PI * 2); context.fill();
-    context.fillStyle = '#4f6f47'; context.beginPath(); context.arc(108, 148, 6, 0, Math.PI * 2); context.arc(148, 148, 6, 0, Math.PI * 2); context.fill();
-    context.fillStyle = 'rgba(255,170,190,.7)'; context.beginPath(); context.arc(94, 164, 9, 0, Math.PI * 2); context.arc(162, 164, 9, 0, Math.PI * 2); context.fill();
-    artwork = canvas.toDataURL('image/png');
-  } catch { artwork = ''; }
-  return artwork;
-}
 /** 保活在跑时，通知栏、锁屏的媒体控制卡写「青团机」；关掉就收起来。 */
 function showMediaCard(on: boolean, audio: HTMLAudioElement | null) {
   if (!('mediaSession' in navigator)) return;
   try {
     if (!on) { navigator.mediaSession.metadata = null; return; }
-    const src = charmArtwork();
-    navigator.mediaSession.metadata = new MediaMetadata({ title: '青团机', artist: '后台保活中', ...(src ? { artwork: [{ src, sizes: '256x256', type: 'image/png' }] } : {}) });
+    // 小图用开屏那颗像素青团
+    const src = new URL(import.meta.env.BASE_URL + 'icons/media-512.png', location.href).href;
+    navigator.mediaSession.metadata = new MediaMetadata({ title: '青团机', artist: '后台保活中', artwork: [{ src, sizes: '512x512', type: 'image/png' }] });
     navigator.mediaSession.setActionHandler('play', () => { void audio?.play().catch(() => {}); });
     navigator.mediaSession.setActionHandler('pause', () => { audio?.pause(); });
   } catch { /* 不支持就算了 */ }
