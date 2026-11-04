@@ -8263,7 +8263,7 @@
         #backgroundActivityPage#backgroundActivityPage#backgroundActivityPage .background-activity-group:is(:nth-of-type(1), :nth-of-type(2)) .background-activity-label::before,
         #mcpSettingsPage#mcpSettingsPage#mcpSettingsPage .mcp-setting-group .mcp-setting-label::before,
         #apiSettingsPage#apiSettingsPage#apiSettingsPage .api-settings-content > .api-setting-group:is(:nth-child(1), :nth-child(6)) .api-setting-label::before,
-        #themeSettingsPage#themeSettingsPage#themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(8) .theme-setting-label::before,
+        #themeSettingsPage#themeSettingsPage#themeSettingsPage .theme-settings-content > .theme-setting-group:nth-child(9) .theme-setting-label::before,
         #musicSettingsPage#musicSettingsPage#musicSettingsPage .music-setting-group .music-setting-label::before {
             background: var(--set-fill, var(--win-deep)) !important;
         }
@@ -9777,5 +9777,5 @@ button.retro-select-trigger{cursor:pointer}
 #viChoiceModal#viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item.choice-box .api-model-check::after { display: block !important; width: 3.5px; height: 7px; border: solid var(--set-fill, var(--win-deep)); border-width: 0 1.7px 1.7px 0; transform: translateY(-1px) rotate(45deg); opacity: 0; }
 #viChoiceModal#viChoiceModal#viChoiceModal#viChoiceModal.settings-choice .api-model-item.choice-box.selected .api-model-check::after { opacity: 1; }
 /* 只有提示文字、没有清单的：不要撑出一大块空白 */
-#viChoiceModal .api-model-list:has(> .choice-content) { flex: none; min-height: 0; }
+#viChoiceModal .api-model-list:has(> .choice-content) { flex: none; min-height: 0; max-height: min(62vh, 520px); overflow-y: auto; }
 #viChoiceModal#viChoiceModal.settings-choice .api-model-item.choice-box .api-model-name small { display: block; margin-top: 2px; color: var(--color-muted); font-size: 10px; font-weight: 400; }

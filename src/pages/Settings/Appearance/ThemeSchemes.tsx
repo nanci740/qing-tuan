@@ -4,11 +4,12 @@ import { PressedButton } from '../../../components/shared/PressedButton';
 import { useAppearance } from '../../../providers/AppearanceProvider';
 import { useSettingsNavigation } from '../../../providers/SettingsNavigationProvider';
 import { useChoice } from '../../../providers/ChoiceProvider';
+import { CHAT_CSS_EVENT } from '../../../utils/chatCss';
 import { showToast } from '../../../utils/toast';
 import { AFTER_THEME_FLAG, SCHEME_LIMIT, applyScheme, currentPrints, deleteScheme, exportCurrent, exportScheme, importScheme, listSchemes, matches, overwrite, renameScheme, resetLook, saveCurrent } from '../../../utils/themeSchemes';
 import type { SchemePart, ThemeScheme } from '../../../utils/themeSchemes';
 
-const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
+const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['css', '聊天美化', '下面「聊天美化 CSS」写的样式'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
 const day = (at: number) => { const d = new Date(at); return `${d.getMonth() + 1}/${String(d.getDate()).padStart(2, '0')}`; };
 type Prints = ThemeScheme['prints'];
 
@@ -58,6 +59,12 @@ export function ThemeSchemes() {
     const timer = window.setTimeout(() => { void currentPrints().then(setPrints, () => setPrints(null)); }, 600);
     return () => window.clearTimeout(timer);
   }, [appearance.color, appearance.tone, appearance.glass, appearance.wallpaper, appearance.opacity, appearance.splash, appearance.icons, appearance.texts, appearance.font]);
+  // 聊天美化 CSS 套用以后，「目前」也重新认
+  useEffect(() => {
+    const update = () => { void currentPrints().then(setPrints, () => setPrints(null)); };
+    window.addEventListener(CHAT_CSS_EVENT, update);
+    return () => window.removeEventListener(CHAT_CSS_EVENT, update);
+  }, []);
   // 换完方案重新开启后回到美化设置
   useEffect(() => {
     let flag = '';
@@ -80,7 +87,7 @@ export function ThemeSchemes() {
   /** 关掉一个弹窗以后再开下一个（不然会一起被关掉）。 */
   const next = (action: () => void) => window.setTimeout(action, 280);
   function naming(scheme?: ThemeScheme, then?: () => void) {
-    const store = { name: scheme?.name || '', parts: ['home'] as SchemePart[] };
+    const store = { name: scheme?.name || '', parts: ['home', 'css'] as SchemePart[] };
     choice.openChoice({ style: 'settings', title: scheme ? '改名' : '存成方案', options: [], selected: '', confirmText: scheme ? '改好了' : '存起来',
       content: <SchemeForm key={Date.now()} store={store} withParts={!scheme} />,
       confirm: async () => {
