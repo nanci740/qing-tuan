@@ -1,6 +1,5 @@
 import { kv } from './kvStorage';
 import type { ChatPreferences } from '../types/chatPreferences';
-import { readChatTheme, readStyleOwn } from './chatTheme';
 export const CHAT_PREFERENCES_KEY = 'smallphone_chat_preferences_v1';
 export const CHAT_PREFERENCES_BY_CHAT_KEY = 'smallphone_chat_preferences_by_chat_v2';
 /** 音色原本只有一个，填在「语音与生图设置」；还没自己设过音色的聊天先沿用它。 */
@@ -42,18 +41,8 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             vibrationFeedback: false,
             pat: true,
             patSuffix: '',
-            avatars: true,
-            styleOwn: { wallpaper: false, size: false, font: false, bubble: false }
+            avatars: true
         };
-    }
-/** 没有自己设的那几块，换成全部聊天的预设样式（主题方案会换它）。 */
-export function withChatTheme(preferences: ChatPreferences): ChatPreferences {
-        const theme = readChatTheme(), own = preferences.styleOwn, next = { ...preferences };
-        if (!own.wallpaper) { next.wallpaperFade = theme.wallpaperFade; next.wallpaperBlur = theme.wallpaperBlur; }
-        if (!own.size) next.fontSize = theme.fontSize;
-        if (!own.font) { next.fontType = theme.fontType; next.fontName = theme.fontName; next.fontUrl = theme.fontUrl; }
-        if (!own.bubble) next.bubbleCss = theme.bubbleCss;
-        return next;
     }
 export function loadChatPreferences(key: string): ChatPreferences {
         const defaults = getChatPreferenceDefaults();
@@ -61,8 +50,7 @@ export function loadChatPreferences(key: string): ChatPreferences {
             const store = JSON.parse(kv.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}') as Record<string, Record<string, unknown>> | null;
             const legacy = JSON.parse(kv.getItem(CHAT_PREFERENCES_KEY) || '{}') as Record<string, unknown>;
             const saved = store?.[key] || (key === 'moon' ? legacy : {});
-            const existed = Boolean(store?.[key]) || key === 'moon' && Object.keys(legacy || {}).length > 0;
-            return withChatTheme({
+            return {
                 readReceipt: saved.readReceipt !== false,
                 timeDisplay: ['all','group','hidden'].includes(saved.timeDisplay as string) ? saved.timeDisplay as ChatPreferences['timeDisplay'] : defaults.timeDisplay,
                 segmented: saved.segmented !== false,
@@ -88,17 +76,17 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 wallpaperFade: Math.min(85, Math.max(0, Number.isFinite(Number(saved.wallpaperFade)) ? Number(saved.wallpaperFade) : defaults.wallpaperFade)),
                 wallpaperBlur: Math.min(8, Math.max(0, Number.isFinite(Number(saved.wallpaperBlur)) ? Number(saved.wallpaperBlur) : defaults.wallpaperBlur)),
                 fontSize: Math.min(16, Math.max(9, Number(saved.fontSize) || defaults.fontSize)),
-                fontType: ['inherit','file','url'].includes(saved.fontType as string) ? saved.fontType as ChatPreferences['fontType'] : defaults.fontType,
-                fontName: String(saved.fontName || '').slice(0, 160),
-                fontUrl: String(saved.fontUrl || '').slice(0, 1800),
+                // 聊天室不再单独换字体，一律跟着美化设置的全站字体
+                fontType: 'inherit',
+                fontName: '',
+                fontUrl: '',
                 bubbleCss: String(saved.bubbleCss || '').slice(0, 5000),
                 soundFeedback: saved.soundFeedback === true,
                 vibrationFeedback: saved.vibrationFeedback === true,
                 pat: saved.pat !== false,
                 patSuffix: String(saved.patSuffix || '').trim().slice(0, 20),
-                avatars: saved.avatars !== false,
-                styleOwn: readStyleOwn(saved, existed)
-            });
+                avatars: saved.avatars !== false
+            };
         } catch (error) {
             return defaults;
         }

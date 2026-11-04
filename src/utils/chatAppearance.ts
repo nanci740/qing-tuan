@@ -1,3 +1,4 @@
+import { strengthen } from './chatCss';
 // Keep the existing database and keys so previously saved chat assets remain readable.
 function openChatAssetDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
@@ -48,6 +49,8 @@ export const deleteChatWallpaper = (key: string) => updateChatAssets(key, {wallp
 export const writeChatFont = (key: string, file: Blob) => updateChatAssets(key, {font: file});
 export const readChatFont = (key: string) => readChatAsset('fonts', key);
 export const deleteChatFont = (key: string) => updateChatAssets(key, {font: null});
+/** 聊天室不再单独换字体：把以前存的字体文件全部清掉。 */
+export const clearChatFonts = () => chatAssetTransaction<void>(['fonts'], 'readwrite', tx => { tx.objectStore('fonts').clear(); });
     export function scopeChatBubbleCss(source: string) {
         const css = String(source || '').trim();
         if (!css) return '';
@@ -61,8 +64,9 @@ export const deleteChatFont = (key: string) => updateChatAssets(key, {font: null
             );
             if (!selectors.length) return '';
             count += 1;
-            const safeBody = body.replace(/position\s*:\s*fixed\s*;?/gi, '').replace(/z-index\s*:\s*\d+\s*;?/gi, '');
-            return selectors.map(item => `#chatAppPage.chat-custom-bubble-active ${item}`).join(',') + `{${safeBody}}`;
+            const safeBody = strengthen(body.replace(/z-index\s*:\s*\d+\s*;?/gi, ''));
+            // 四个 #chatAppPage：盖得过美化设置的聊天美化 CSS（三个）
+            return selectors.map(item => `#chatAppPage#chatAppPage#chatAppPage#chatAppPage.chat-custom-bubble-active ${item}`).join(',') + `{${safeBody}}`;
         });
         if (!count) throw new Error('请使用 .chat-bubble 或 .chat-message-row 作为选择器');
         return scoped;

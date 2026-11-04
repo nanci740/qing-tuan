@@ -1,3 +1,4 @@
+import { ChatGlobalCss } from './components/shared/ChatGlobalCss';
 import {ProfileAvatarProvider} from './providers/ProfileAvatarProvider';
 import {ChatControllers} from './pages/Chat/ChatControllers';
 import {ChatMemoryProvider} from './providers/ChatMemoryProvider';
@@ -74,7 +75,7 @@ import { WorldPickerModal } from "./components/shared/WorldPickerModal";
 
 export function App() {
   return (
-    <ProfileAvatarProvider><ChatMemoryProvider><NativeRefsProvider><SettingsNavigationProvider><ChatNavigationProvider><ChatPreferencesProvider><ChatMessageOperationsProvider><ChatSelectionProvider><ChatComposerProvider><ChatReplyTriggersProvider><ChatMessagesProvider><ChatVoiceProvider><ChatReplyEngineProvider><ChatRoomToolsProvider><ChatIdentityProvider><ChatPinsProvider><ChatPinnedIndicators /><ChatClipboardFallback /><ChatBubbleStyle /><ChatDataDownload /><ChoiceProvider><ApiProvider><McpProvider><HomeTextsProvider><MusicProvider><AppearanceProvider><VoiceImageProvider><WorldProvider><ChatSidebarProvider><BootProvider>
+    <ProfileAvatarProvider><ChatMemoryProvider><NativeRefsProvider><SettingsNavigationProvider><ChatNavigationProvider><ChatPreferencesProvider><ChatMessageOperationsProvider><ChatSelectionProvider><ChatComposerProvider><ChatReplyTriggersProvider><ChatMessagesProvider><ChatVoiceProvider><ChatReplyEngineProvider><ChatRoomToolsProvider><ChatIdentityProvider><ChatPinsProvider><ChatPinnedIndicators /><ChatClipboardFallback /><ChatGlobalCss /><ChatBubbleStyle /><ChatDataDownload /><ChoiceProvider><ApiProvider><McpProvider><HomeTextsProvider><MusicProvider><AppearanceProvider><VoiceImageProvider><WorldProvider><ChatSidebarProvider><BootProvider>
       {"\n    "}
       <OriginalComment text={" 设置页面 "} />
       {"\n    "}

@@ -2,12 +2,9 @@ import { kv, flushKv } from './kvStorage';
 import { writeSettingsBatch } from './settingsPersistence';
 import { readImageSlot, saveImageSlots, blobDataUrl } from './imageAssets';
 import { readLocalFontRecord, writeLocalFontRecord } from './appearanceStorage';
-import { CHAT_THEME_KEY, normalizeChatTheme, readChatTheme, readStyleOwn, writeChatTheme } from './chatTheme';
-import type { ChatThemeStyle } from './chatTheme';
-import { readChatFont, readChatWallpaper, updateChatAssets } from './chatAppearance';
-import { CHAT_PREFERENCES_BY_CHAT_KEY } from './chatPreferences';
+import { readChatCss, scopeChatCss, writeChatCss } from './chatCss';
 
-/** 主题方案：主画面（配色、质感、字体、文字、背景、图标）、全部聊天的样式、开屏，存成一套随时换。 */
+/** 主题方案：主画面（配色、质感、字体、文字、背景、图标）、聊天美化 CSS、开屏，存成一套随时换。 */
 const DB_NAME = 'qingtuan_theme_schemes_v1', STORE = 'schemes';
 export const SCHEME_LIMIT = 20;
 const HOME_KEYS = ['smallphone_theme_color', 'smallphone_theme_tone', 'smallphone_glass_strength', 'smallphone_wallpaper_opacity',
@@ -19,16 +16,17 @@ const SPLASH_KEY = 'smallphone_splash_mode';
 /** 换方案后重新开启：这次不放开屏，开好后回到美化设置。 */
 export const AFTER_THEME_FLAG = 'qingtuan_after_theme';
 
-export type SchemePart = 'home' | 'chat' | 'splash';
+/** css：美化设置写的聊天美化 CSS（以前的「聊天样式」拿掉了，换成这个）。 */
+export type SchemePart = 'home' | 'css' | 'splash';
+const PART_KEYS: SchemePart[] = ['home', 'css', 'splash'];
 export interface HomeData { kv: Record<string, string | null>; images: Record<string, Blob | null>; font: { name: string; type: string; blob: Blob } | null }
-export interface ChatData { style: ChatThemeStyle; wallpaper: Blob | null; font: Blob | null }
 export interface SchemePreview { color: string; wallpaper: string; icons: string[]; chatWallpaper: string; radius: number }
 export interface ThemeScheme {
   id: string; name: string; createdAt: number; updatedAt: number; imported?: boolean;
-  home?: HomeData; chat?: ChatData; splash?: string | null;
+  home?: HomeData; css?: string; splash?: string | null;
   prints: Partial<Record<SchemePart, string>>; preview: SchemePreview;
 }
-type SchemeData = Pick<ThemeScheme, 'home' | 'chat' | 'splash'>;
+type SchemeData = Pick<ThemeScheme, 'home' | 'css' | 'splash'>;
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -80,11 +78,7 @@ async function captureCurrent(parts: SchemePart[]): Promise<SchemeData> {
     }
     data.home = { kv: values, images, font };
   }
-  if (parts.includes('chat')) {
-    const style = readChatTheme();
-    const font = style.fontType === 'file' ? await readChatFont(CHAT_THEME_KEY) : null;
-    data.chat = { style, wallpaper: await readChatWallpaper(CHAT_THEME_KEY), font };
-  }
+  if (parts.includes('css')) data.css = readChatCss();
   if (parts.includes('splash')) data.splash = kv.getItem(SPLASH_KEY);
   return data;
 }
@@ -100,15 +94,15 @@ async function printsOf(data: SchemeData): Promise<ThemeScheme['prints']> {
     for (const slot of HOME_IMAGES) images[slot] = await blobPrint(data.home.images[slot]);
     prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob) });
   }
-  if (data.chat) prints.chat = await textPrint({ style: normalizeChatTheme(data.chat.style), wallpaper: await blobPrint(data.chat.wallpaper), font: await blobPrint(data.chat.font) });
+  if (typeof data.css === 'string') prints.css = await textPrint(data.css.trim());
   if ('splash' in data) prints.splash = await textPrint(data.splash ?? null);
   return prints;
 }
 /** 现在这个样子的指纹，三块都算。 */
-export async function currentPrints() { return printsOf(await captureCurrent(['home', 'chat', 'splash'])); }
+export async function currentPrints() { return printsOf(await captureCurrent(['home', 'css', 'splash'])); }
 /** 方案存的每一块都跟现在一样，就是「目前用的」。 */
 export function matches(scheme: ThemeScheme, prints: ThemeScheme['prints']) {
-  const parts = (Object.keys(scheme.prints) as SchemePart[]);
+  const parts = (Object.keys(scheme.prints) as SchemePart[]).filter(part => PART_KEYS.includes(part));
   return parts.length > 0 && parts.every(part => scheme.prints[part] === prints[part]);
 }
 
@@ -130,7 +124,7 @@ async function previewOf(data: SchemeData): Promise<SchemePreview> {
     color: home?.kv.smallphone_theme_color || kv.getItem('smallphone_theme_color') || '#DDF2F4',
     wallpaper: await thumb(home?.images.smallphone_main_wallpaper, 72, false),
     icons: home ? await Promise.all(APP_ICONS.map(slot => thumb(home.images[slot], 24))) : [],
-    chatWallpaper: await thumb(data.chat?.wallpaper, 40, false),
+    chatWallpaper: '',
     radius: 2
   };
 }
@@ -154,28 +148,10 @@ export async function saveCurrent(name: string, parts: SchemePart[]) {
 }
 /** 用现在的样子覆盖这个方案（存的那几块不变）。 */
 export async function overwrite(scheme: ThemeScheme) {
-  const parts = Object.keys(scheme.prints) as SchemePart[], data = await captureCurrent(parts);
+  const parts = (Object.keys(scheme.prints) as SchemePart[]).filter(part => PART_KEYS.includes(part)), data = await captureCurrent(parts);
   const next: ThemeScheme = { id: scheme.id, name: scheme.name, createdAt: scheme.createdAt, updatedAt: Date.now(), ...data, prints: await printsOf(data), preview: await previewOf(data) };
   await putScheme(next);
   return next;
-}
-
-/** 加这个功能以前的聊天：看它自己设过哪几块，记下来，换方案时这些不会被盖掉。回传自己设过样式的聊天有几个。 */
-export async function settleChatStyles(): Promise<number> {
-  let store: Record<string, Record<string, unknown>>;
-  try { store = JSON.parse(kv.getItem(CHAT_PREFERENCES_BY_CHAT_KEY) || '{}') || {}; } catch { return 0; }
-  let changed = false, count = 0;
-  for (const [key, saved] of Object.entries(store)) {
-    if (!saved || typeof saved !== 'object') continue;
-    if (!saved.styleOwn || typeof saved.styleOwn !== 'object') {
-      const own = readStyleOwn(saved, true);
-      if (!own.wallpaper) own.wallpaper = Boolean(await readChatWallpaper(key).catch(() => null));
-      saved.styleOwn = own; changed = true;
-    }
-    if (Object.values(saved.styleOwn as Record<string, boolean>).some(Boolean)) count++;
-  }
-  if (changed) kv.setItem(CHAT_PREFERENCES_BY_CHAT_KEY, JSON.stringify(store));
-  return count;
 }
 
 async function write(data: SchemeData) {
@@ -188,11 +164,7 @@ async function write(data: SchemeData) {
     if (values.smallphone_custom_font_type === 'file' && !data.home.font) { values.smallphone_custom_font_type = null; values.smallphone_custom_font_name = null; }
     writeSettingsBatch(values);
   }
-  if (data.chat) {
-    await settleChatStyles();
-    await updateChatAssets(CHAT_THEME_KEY, { wallpaper: data.chat.wallpaper || null, font: data.chat.style.fontType === 'file' ? data.chat.font || null : null });
-    writeChatTheme(data.chat.style.fontType === 'file' && !data.chat.font ? { ...data.chat.style, fontType: 'inherit', fontName: '' } : data.chat.style);
-  }
+  if (typeof data.css === 'string') { try { writeChatCss(data.css); } catch { /* 写坏的不套 */ } }
   if ('splash' in data && data.splash !== undefined) writeSettingsBatch({ [SPLASH_KEY]: ['always', 'daily', 'off'].includes(String(data.splash)) ? data.splash! : null });
   await flushKv();
 }
@@ -202,10 +174,9 @@ function restart() {
 }
 /** 换成这个方案：写进去以后重新开启，整台一起换。 */
 export async function applyScheme(scheme: ThemeScheme) { await write(scheme); restart(); }
-/** 恢复默认样子：主画面、全部聊天的样式回到原本的（开屏设定不动）。 */
+/** 恢复默认样子：主画面回到原本的（开屏设定不动）。 */
 export async function resetLook() {
-  await write({ home: { kv: {}, images: {}, font: null }, chat: { style: normalizeChatTheme(null), wallpaper: null, font: null } });
-  writeChatTheme(null); await flushKv();
+  await write({ home: { kv: {}, images: {}, font: null } });
   restart();
 }
 
@@ -213,7 +184,7 @@ export async function resetLook() {
 interface ExportFile {
   app: 'qingtuan-theme'; version: 1; name: string; at: number;
   home?: { kv: Record<string, string | null>; images: Record<string, string | null>; font: { name: string; type: string; data: string } | null };
-  chat?: { style: ChatThemeStyle; wallpaper: string | null; font: string | null };
+  css?: string;
   splash?: string | null;
 }
 export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; fileName: string }> {
@@ -223,14 +194,14 @@ export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; f
     for (const slot of HOME_IMAGES) { const blob = scheme.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : null; }
     file.home = { kv: scheme.home.kv, images, font: scheme.home.font ? { name: scheme.home.font.name, type: scheme.home.font.type, data: await blobDataUrl(scheme.home.font.blob) } : null };
   }
-  if (scheme.chat) file.chat = { style: scheme.chat.style, wallpaper: scheme.chat.wallpaper ? await blobDataUrl(scheme.chat.wallpaper) : null, font: scheme.chat.font ? await blobDataUrl(scheme.chat.font) : null };
+  if (typeof scheme.css === 'string') file.css = scheme.css;
   if ('splash' in scheme && scheme.splash !== undefined) file.splash = scheme.splash;
   const safe = scheme.name.replace(/[\\/:*?"<>|]/g, '').trim() || '方案';
   return { blob: new Blob([JSON.stringify(file)], { type: 'application/json' }), fileName: `青团主题-${safe}.json` };
 }
 /** 现在的样子直接导出（不用先存）。 */
 export async function exportCurrent(name = '目前的样子') {
-  const data = await captureCurrent(['home', 'chat']);
+  const data = await captureCurrent(['home', 'css']);
   return exportScheme({ id: '', name, createdAt: 0, updatedAt: 0, ...data, prints: {}, preview: { color: '', wallpaper: '', icons: [], chatWallpaper: '', radius: 2 } });
 }
 const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -261,13 +232,9 @@ export async function importScheme(file: File) {
     const font = isRecord(raw.home.font) ? await fontFrom(raw.home.font.data) : null;
     data.home = { kv: values, images: blobs, font: font && isRecord(raw.home.font) ? { name: String(raw.home.font.name || '字体').slice(0, 160), type: String(raw.home.font.type || ''), blob: font } : null };
   }
-  if (isRecord(raw.chat)) {
-    const style = normalizeChatTheme(raw.chat.style);
-    if (style.fontType === 'url' && !/^https?:\/\//i.test(style.fontUrl)) { style.fontType = 'inherit'; style.fontUrl = ''; }
-    data.chat = { style, wallpaper: await imageFrom(raw.chat.wallpaper), font: await fontFrom(raw.chat.font) };
-  }
+  if (typeof raw.css === 'string') { try { scopeChatCss(raw.css); data.css = raw.css.slice(0, 30000); } catch (error) { throw Error('里面的聊天美化 CSS 有问题：' + (error as Error).message); } }
   if ('splash' in raw) data.splash = ['always', 'daily', 'off'].includes(String(raw.splash)) ? String(raw.splash) : null;
-  if (!data.home && !data.chat && !('splash' in data)) throw Error('这个文件里没有东西');
+  if (!data.home && typeof data.css !== 'string' && !('splash' in data)) throw Error('这个文件里没有东西');
   const now = Date.now();
   const scheme: ThemeScheme = { id: newId(), name: await uniqueName(String(raw.name || '导入的方案')), createdAt: now, updatedAt: now, imported: true, ...data, prints: await printsOf(data), preview: await previewOf(data) };
   await putScheme(scheme);

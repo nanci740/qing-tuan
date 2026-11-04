@@ -4,9 +4,8 @@ import type { MutableRefObject } from 'react';
 import type { ChatPreferenceServices, ChatPreferences } from '../types/chatPreferences';
 import { useChatNavigation } from '../providers/ChatNavigationProvider';
 import { saveChatPreferences, saveChatPreferencesOrThrow } from '../utils/chatPreferences';
-import { CHAT_THEME_KEY } from '../utils/chatTheme';
 import { showToast } from '../utils/toast';
-import { readChatWallpaper, writeChatWallpaper, deleteChatWallpaper, readChatFont, writeChatFont, deleteChatFont, scopeChatBubbleCss } from '../utils/chatAppearance';
+import { readChatWallpaper, writeChatWallpaper, deleteChatWallpaper, scopeChatBubbleCss } from '../utils/chatAppearance';
 async function readyAsset<T>(promise: Promise<T>): Promise<T> {
  let timer: ReturnType<typeof setTimeout> | undefined;
  try { return await Promise.race([promise,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(Error('聊天资源加载超时，请重试')),5000);})]); }
@@ -14,13 +13,13 @@ async function readyAsset<T>(promise: Promise<T>): Promise<T> {
 }
 export function useChatAppearance(services: MutableRefObject<ChatPreferenceServices | null>) {
  const navigation = useChatNavigation();
- const [view, setView] = useState({wallpaperState:'未设置', wallpaperEnabled:false, backgroundImage:'', fontName:'跟随全站字体',fontSource:'只调整当前聊天室的气泡文字',fontBadge:'DEFAULT',fontStatus:'',fontUrl:'',urlVersion:0,bubbleStyle:'',own:{wallpaper:false,size:false,font:false,bubble:false}});
+ const [view, setView] = useState({wallpaperState:'未设置', wallpaperEnabled:false, backgroundImage:'', bubbleStyle:''});
  const state = useRef(view);
- const wallpaperRequest=useRef(0), fontRequest=useRef(0), wallpaperOwner=useRef(''), wallpaperLoaded=useRef(false), fontOwner=useRef(''), assetBusy=useRef(false);
- const wallpaperUrl=useRef(''),fontObjectUrl=useRef(''),fontLoadKey=useRef(''),fontFace=useRef<FontFace|null>(null);
+ const wallpaperRequest=useRef(0), wallpaperOwner=useRef(''), wallpaperLoaded=useRef(false), assetBusy=useRef(false);
+ const wallpaperUrl=useRef('');
  function update(patch: Partial<typeof view>) {state.current={...state.current,...patch};flushSync(()=>setView(state.current));}
  function save() {saveChatPreferences(services.current!.currentKey(), services.current!.readCurrent());}
- useLayoutEffect(()=>()=>{wallpaperRequest.current++;fontRequest.current++;if(wallpaperUrl.current)URL.revokeObjectURL(wallpaperUrl.current);if(fontObjectUrl.current)URL.revokeObjectURL(fontObjectUrl.current);if(fontFace.current)document.fonts.delete(fontFace.current);},[]);
+ useLayoutEffect(()=>()=>{wallpaperRequest.current++;if(wallpaperUrl.current)URL.revokeObjectURL(wallpaperUrl.current);},[]);
     async function applyChatWallpaper(force = false) {
         const key = services.current!.currentKey();
         if (!force && wallpaperOwner.current === key && wallpaperLoaded.current) return;
@@ -33,15 +32,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             navigation.appearanceClass('chat-wallpaper-on', false);
         }
         try {
-            // 自己的壁纸图优先；没有自己的就用全部聊天的预设壁纸
-            const prefs = services.current!.readCurrent();
-            let blob = prefs.styleOwn.wallpaper ? await readChatWallpaper(key) : null, shared = false;
-            if (!prefs.styleOwn.wallpaper) {
-                const mine = await readChatWallpaper(key);
-                // 以前就设过壁纸的聊天：照旧用它自己的
-                if (mine) { blob = mine; if (current()) { prefs.styleOwn = {...prefs.styleOwn, wallpaper: true}; save(); update({own: {...prefs.styleOwn}}); } }
-                else { blob = await readChatWallpaper(CHAT_THEME_KEY); shared = Boolean(blob); }
-            }
+            const blob = await readChatWallpaper(key);
             if (!current()) return;
             const next = blob ? URL.createObjectURL(blob) : '';
             if (next) {
@@ -52,7 +43,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             wallpaperLoaded.current = true;
             if (wallpaperUrl.current) URL.revokeObjectURL(wallpaperUrl.current);
             wallpaperUrl.current = next;
-            update({backgroundImage: next ? `url("${next}")` : '', wallpaperState: shared ? '用的是全部聊天的壁纸' : blob ? '已设置当前角色壁纸' : '未设置'});
+            update({backgroundImage: next ? `url("${next}")` : '', wallpaperState: blob ? '已设置当前角色壁纸' : '未设置'});
             navigation.appearanceClass('chat-wallpaper-on', Boolean(blob));
             setChatWallpaperControlsEnabled(Boolean(blob));
         } catch {
@@ -66,49 +57,10 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
         navigation.appearanceStyle('--chat-wallpaper-fade', String(fade / 100));
         navigation.appearanceStyle('--chat-wallpaper-blur', `${blur}px`);
     }
-    function showChatFontStatus(message = '') { update({fontStatus: message}); }
-    function updateChatFontSummary(name = '', source = '', badge = 'DEFAULT') {
-        update({fontName: name || '跟随全站字体', fontSource: source || '只调整当前聊天室的气泡文字', fontBadge: badge, fontUrl: services.current!.readCurrent().fontType === 'url' ? services.current!.readCurrent().fontUrl : '', urlVersion: state.current.urlVersion + 1});
-    }
-    function clearActiveChatFont() {
-        if (fontFace.current && document.fonts?.delete) document.fonts.delete(fontFace.current);
-        if (fontObjectUrl.current) URL.revokeObjectURL(fontObjectUrl.current);
-        fontFace.current = null;
-        fontObjectUrl.current = '';
-        fontLoadKey.current = '';
+    /** 聊天室不再单独换字体：气泡文字一律跟着美化设置的全站字体。 */
+    async function applyChatFont(_force = false) {
         navigation.appearanceStyle('--chat-message-font-family', 'var(--font-active)');
-    }
-    async function applyChatFont(force = false) {
-        const key = services.current!.currentKey(), prefs = {...services.current!.readCurrent()}, request = ++fontRequest.current;
-        const current = () => request === fontRequest.current && key === services.current!.currentKey();
-        const loadKey = [key, prefs.fontType, prefs.fontName, prefs.fontUrl].join('|');
-        if (fontOwner.current !== key) {clearActiveChatFont();fontOwner.current = key;}
-        if (prefs.fontType === 'inherit') {
-            clearActiveChatFont(); updateChatFontSummary(); showChatFontStatus(''); return true;
-        }
-        if (!force && fontLoadKey.current === loadKey && fontFace.current) return true;
-        let objectUrl = '';
-        try {
-            let source = prefs.fontUrl;
-            if (prefs.fontType === 'file') {
-                const blob = await readChatFont(prefs.styleOwn.font ? key : CHAT_THEME_KEY);
-                if (!blob) throw new Error('找不到已保存的字体文件');
-                if (!current()) return false;
-                source = objectUrl = URL.createObjectURL(blob);
-            }
-            if (!source) throw new Error('字体来源为空');
-            const face = await readyAsset(new FontFace('SmallPhoneChatCustomFont', `url(${JSON.stringify(source)})`).load());
-            if (!current()) return false;
-            clearActiveChatFont(); document.fonts.add(face);
-            fontFace.current = face; fontObjectUrl.current = objectUrl; objectUrl = '';
-            fontLoadKey.current = loadKey;
-            navigation.appearanceStyle('--chat-message-font-family', '"SmallPhoneChatCustomFont", var(--font-active)');
-            updateChatFontSummary(prefs.fontName || '聊天室字体', prefs.fontType === 'file' ? '本地字体文件' : source, 'CUSTOM');
-            showChatFontStatus('字体已载入'); return true;
-        } catch (error) {
-            if (current()) showChatFontStatus((error as Error)?.message || '字体载入失败');
-            return false;
-        } finally { if (objectUrl) URL.revokeObjectURL(objectUrl); }
+        return true;
     }
     async function applyChatAppearance() {
         navigation.appearanceStyle('--chat-message-font-size', `${services.current!.readCurrent().fontSize}px`);
@@ -122,60 +74,16 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
         }
         await Promise.all([fontReady, applyChatWallpaper()]);
     }
-    async function changeFont(patch: Pick<ChatPreferences, 'fontType' | 'fontName' | 'fontUrl'>, file?: File) {
-        if (assetBusy.current) return showChatFontStatus('正在保存，请稍候');
-        assetBusy.current = true;
-        const key = services.current!.currentKey(), base = services.current!.readCurrent(), preferences = {...base, ...patch, styleOwn: {...base.styleOwn, font: true}};
-        try {
-            // Validate before replacing either the saved file or its metadata.
-            if (file) await new FontFace('ChatFontValidation', await file.arrayBuffer()).load();
-            else if (patch.fontType === 'url') await new FontFace('ChatFontValidation', `url(${JSON.stringify(patch.fontUrl)})`).load();
-            if (key !== services.current!.currentKey()) return;
-            const old = patch.fontType === 'url' ? undefined : await readChatFont(key);
-            if (file) await writeChatFont(key, file);
-            else if (patch.fontType === 'inherit') await deleteChatFont(key);
-            try { saveChatPreferencesOrThrow(key, preferences); }
-            catch (error) {
-                if (old !== undefined) {
-                    try { if (old) await writeChatFont(key, old); else await deleteChatFont(key); }
-                    catch { throw new Error('设置保存失败，字体文件恢复失败，请重新选择字体'); }
-                }
-                throw error;
-            }
-            if (key !== services.current!.currentKey()) return;
-            Object.assign(services.current!.readCurrent(), preferences);
-            update({own: {...preferences.styleOwn}});
-            if (await applyChatFont(true)) showToast(patch.fontType === 'inherit' ? '已恢复跟随全站字体' : '当前聊天室字体已保存并载入');
-        } catch (error) {
-            if (key === services.current!.currentKey()) showChatFontStatus((error as Error)?.message || '字体保存失败，请重试');
-        } finally {assetBusy.current = false;}
-    }
-    async function importFont(file: File) {
-        if (!file) return;
-        if (!/\.(ttf|otf|woff|woff2)$/i.test(file.name)) return showChatFontStatus('请选择 TTF、OTF、WOFF 或 WOFF2 字体文件');
-        if (file.size > 20 * 1024 * 1024) return showChatFontStatus('字体文件不能超过 20 MB');
-        await changeFont({fontType: 'file', fontName: file.name, fontUrl: ''}, file);
-    }
-    async function applyChatFontUrl(rawInput: string) {
-        try {
-            const parsed = new URL(String(rawInput || '').trim());
-            if (!/^https?:$/.test(parsed.protocol)) throw new Error('请填写 HTTP 或 HTTPS 字体直链');
-            await changeFont({fontType: 'url', fontName: decodeURIComponent(parsed.pathname.split('/').pop() || '网络字体').slice(0, 160), fontUrl: parsed.href});
-        } catch (error) {showChatFontStatus((error as Error)?.message || '字体链接载入失败');}
-    }
-    async function resetFont() {await changeFont({fontType: 'inherit', fontName: '', fontUrl: ''});}
     function applyBubble(raw: string) {
         try {
             scopeChatBubbleCss(raw || '');
             services.current!.readCurrent().bubbleCss = String(raw || '').slice(0, 5000);
-            own('bubble');
             save(); services.current!.apply();
             showToast(services.current!.readCurrent().bubbleCss ? '专属气泡样式已应用' : '已使用默认气泡样式');
         } catch (error) { showToast((error as Error).message || '气泡 CSS 格式不正确'); }
     }
     function resetBubble() {
         services.current!.readCurrent().bubbleCss = '';
-        own('bubble');
         save(); services.current!.apply();
         showToast('已恢复默认气泡样式');
     }
@@ -192,7 +100,6 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
             if (key !== services.current!.currentKey()) return;
             if (file) await writeChatWallpaper(key, file); else await deleteChatWallpaper(key);
             if (key !== services.current!.currentKey()) return;
-            own('wallpaper'); save();
             await applyChatWallpaper(true);
             showToast(file ? '当前角色壁纸已保存' : '已移除当前角色壁纸');
         } catch (error) {
@@ -207,13 +114,7 @@ export function useChatAppearance(services: MutableRefObject<ChatPreferenceServi
     }
     async function removeWallpaper() {await changeWallpaper(null);}
 
- /** 这一块改成这个聊天自己的（之后预设换了也不跟着变）。 */
- function own(group: 'wallpaper' | 'size' | 'font' | 'bubble') {const prefs=services.current!.readCurrent();if(!prefs.styleOwn[group])prefs.styleOwn={...prefs.styleOwn,[group]:true};update({own:{...prefs.styleOwn}});}
- /** 跟着预设壁纸时动了淡化、模糊：先把预设那张图复制成自己的，图才不会不见。 */
- async function claimWallpaper(key: string) {const blob=await readChatWallpaper(CHAT_THEME_KEY);if(blob&&!await readChatWallpaper(key))await writeChatWallpaper(key,blob);}
- /** 改回跟着预设以后重新套一次（不管之前载入过什么）。 */
- async function refresh() {wallpaperLoaded.current=false;fontLoadKey.current='';await sync();}
- function sync() {update({own:{...services.current!.readCurrent().styleOwn}});applyChatWallpaperEffects();updateChatFontSummary(services.current!.readCurrent().fontType==='inherit'?'':services.current!.readCurrent().fontName,services.current!.readCurrent().fontType==='file'?'本地字体文件':services.current!.readCurrent().fontUrl,services.current!.readCurrent().fontType==='inherit'?'DEFAULT':'CUSTOM');return applyChatAppearance();}
+ function sync() {applyChatWallpaperEffects();return applyChatAppearance();}
  function range(key: 'wallpaperFade'|'wallpaperBlur', value: number) {services.current!.readCurrent()[key]=value;applyChatWallpaperEffects();save();}
- return {view,sync,refresh,claimWallpaper,range,importFont,applyChatFontUrl,resetFont,applyBubble,resetBubble,importWallpaper,removeWallpaper,applyChatFont,applyChatWallpaper,applyChatWallpaperEffects};
+ return {view,sync,range,applyBubble,resetBubble,importWallpaper,removeWallpaper,applyChatFont,applyChatWallpaper,applyChatWallpaperEffects};
 }
