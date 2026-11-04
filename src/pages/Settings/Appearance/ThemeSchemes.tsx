@@ -5,10 +5,10 @@ import { useAppearance } from '../../../providers/AppearanceProvider';
 import { useSettingsNavigation } from '../../../providers/SettingsNavigationProvider';
 import { useChoice } from '../../../providers/ChoiceProvider';
 import { showToast } from '../../../utils/toast';
-import { AFTER_THEME_FLAG, SCHEME_LIMIT, applyScheme, currentPrints, deleteScheme, exportCurrent, exportScheme, importScheme, listSchemes, matches, overwrite, renameScheme, resetLook, saveCurrent, settleChatStyles } from '../../../utils/themeSchemes';
+import { AFTER_THEME_FLAG, SCHEME_LIMIT, applyScheme, currentPrints, deleteScheme, exportCurrent, exportScheme, importScheme, listSchemes, matches, overwrite, renameScheme, resetLook, saveCurrent } from '../../../utils/themeSchemes';
 import type { SchemePart, ThemeScheme } from '../../../utils/themeSchemes';
 
-const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['chat', '聊天样式', '全部聊天共用的壁纸、字号、气泡'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
+const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
 const day = (at: number) => { const d = new Date(at); return `${d.getMonth() + 1}/${String(d.getDate()).padStart(2, '0')}`; };
 type Prints = ThemeScheme['prints'];
 
@@ -80,7 +80,7 @@ export function ThemeSchemes() {
   /** 关掉一个弹窗以后再开下一个（不然会一起被关掉）。 */
   const next = (action: () => void) => window.setTimeout(action, 280);
   function naming(scheme?: ThemeScheme, then?: () => void) {
-    const store = { name: scheme?.name || '', parts: ['home', 'chat'] as SchemePart[] };
+    const store = { name: scheme?.name || '', parts: ['home'] as SchemePart[] };
     choice.openChoice({ style: 'settings', title: scheme ? '改名' : '存成方案', options: [], selected: '', confirmText: scheme ? '改好了' : '存起来',
       content: <SchemeForm key={Date.now()} store={store} withParts={!scheme} />,
       confirm: async () => {
@@ -96,8 +96,8 @@ export function ThemeSchemes() {
   async function choose(scheme: ThemeScheme) {
     if (pressed.current) { pressed.current = false; return; }
     if (current?.id === scheme.id) { showToast('现在用的就是这个'); return; }
-    const own = scheme.chat ? await settleChatStyles().catch(() => 0) : 0, unsaved = !current && !!prints;
-    const message = [unsaved ? '现在的样子还没存成方案，换过去就回不来了。' : '', own ? `自己设过样式的聊天（${own} 个）会保留它们自己的。` : '', '换好会重新开启一次。'].filter(Boolean).join('\n');
+    const unsaved = !current && !!prints;
+    const message = [unsaved ? '现在的样子还没存成方案，换过去就回不来了。' : '', '换好会重新开启一次。'].filter(Boolean).join('\n');
     const go = () => void work('正在换…', () => applyScheme(scheme));
     if (!unsaved) { dialog(`换成「${scheme.name}」？`, message, '换过去', go); return; }
     dialog(`换成「${scheme.name}」？`, message, '确定', go, [{ value: 'go', label: '直接换过去' }, { value: 'save', label: '先把现在的存起来，再换' }], 'go',
@@ -142,8 +142,8 @@ export function ThemeSchemes() {
         <PressedButton type="button" className="theme-font-btn secondary" disabled={!!busy} onClick={() => void work('正在导出…', async () => { const result = await exportCurrent(); download(result.blob, result.fileName); showToast('已导出现在的样子'); })}>导出目前的</PressedButton>
       </div>
       <input ref={file} type="file" accept="application/json,.json" hidden onChange={event => void onFile(event)} />
-      <p className="theme-scheme-note">{busy || '点一下缩图就整套换（主画面＋聊天样式）。长按缩图可以改名、用现在的样子覆盖、导出、删除。'}</p>
-      <PressedButton className="theme-reset-btn" type="button" disabled={!!busy} onClick={() => dialog('恢复默认样子', '主画面的配色、质感、字体、文字、背景、图标，和全部聊天的样式，都回到原本的样子。\n存过的方案不会删，自己设过样式的聊天也会保留。', '恢复', () => void work('正在恢复…', async () => { await settleChatStyles(); await resetLook(); }))}>恢复默认样子</PressedButton>
+      <p className="theme-scheme-note">{busy || '点一下缩图就整套换。长按缩图可以改名、用现在的样子覆盖、导出、删除。'}</p>
+      <PressedButton className="theme-reset-btn" type="button" disabled={!!busy} onClick={() => dialog('恢复默认样子', '主画面的配色、质感、字体、文字、背景、图标，都回到原本的样子。\n存过的方案不会删。', '恢复', () => void work('正在恢复…', resetLook))}>恢复默认样子</PressedButton>
     </div>
 
   </section>;
