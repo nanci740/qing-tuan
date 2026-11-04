@@ -59,9 +59,11 @@ function scopeSelector(selector: string, scope: string) {
   if (rest !== selector) return scope + rest;
   return `${scope} ${selector}`;
 }
-/** 麦克风跟图片、相机排在同一排，写法却不一样（.chat-mic-btn）：写给那排小按钮的，麦克风也一起套。上面生图那排（.chat-quick-actions）不算。 */
+/** 麦克风跟图片、相机排在同一排，写法却不一样（.chat-mic-btn）：写给那排小按钮的，麦克风也一起套。上面生图那排（.chat-quick-actions）不算，::before／::after 也不算。 */
 function withMic(selector: string) {
   if (!/\.chat-quick-action(?![\w-])/.test(selector) || /\.chat-quick-actions(?![\w-])/.test(selector)) return [selector];
+  // ::before、::after 不跟：麦克风录音时的红点就是用 ::before 画的，套过去会打架
+  if (/::?(before|after)\b/i.test(selector)) return [selector];
   return [selector, selector.replace(/\.chat-quick-action(?![\w-])/g, '.chat-mic-btn')];
 }
 /** 每一句都加 !important：聊天室原本的样式很多是 !important，不加盖不过去。分号在括号、引号里的不算（data:image;base64 那种）。 */
@@ -126,7 +128,7 @@ export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [
     ['.chat-message-row .chat-bubble', '消息文字（气泡）'], ['.chat-message-row.is-user .chat-bubble', '我的气泡'], ['.chat-message-row.is-chat .chat-bubble', '他的气泡'],
     ['.chat-message-name', '名字'], ['.chat-message-time', '时间'], ['.chat-message-mini-avatar', '头像'], ['.chat-date-divider', '中间的日期时间']] },
   { label: '底栏', items: [
-    ['.chat-composer', '整个输入区'], ['.chat-composer .chat-quick-action', '麦克风、图片那一排小按钮（麦克风也会一起改）'], ['.chat-composer .chat-quick-action svg', '那排小按钮的图示（color 换颜色）'], ['.chat-mic-btn', '只改麦克风这一颗'],
+    ['.chat-composer', '整个输入区'], ['.chat-composer .chat-quick-action', '麦克风、图片那一排小按钮（麦克风也会一起改）'], ['.chat-composer .chat-quick-action svg', '那排小按钮的图示（color 换颜色）'], ['.chat-mic-btn', '只改麦克风这一颗（录音红点在 ::before，别动它）'],
     ['.chat-compose-field', '输入框'], ['.chat-send-btn', '发送键（底色、圆角、阴影）'], ['.chat-send-btn::after', '发送键上的字（content: \'送出\' 换字）']] },
   { label: '右边那栏', items: [
     ['.cr-side', '整栏'], ['.cr-panel', '每一格（在线、动态）'], ['.cr-photo', '大头照']] }
