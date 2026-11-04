@@ -48,6 +48,8 @@ export const deleteChatWallpaper = (key: string) => updateChatAssets(key, {wallp
 export const writeChatFont = (key: string, file: Blob) => updateChatAssets(key, {font: file});
 export const readChatFont = (key: string) => readChatAsset('fonts', key);
 export const deleteChatFont = (key: string) => updateChatAssets(key, {font: null});
+/** 聊天室不再单独换字体：把以前存的字体文件全部清掉。 */
+export const clearChatFonts = () => chatAssetTransaction<void>(['fonts'], 'readwrite', tx => { tx.objectStore('fonts').clear(); });
     export function scopeChatBubbleCss(source: string) {
         const css = String(source || '').trim();
         if (!css) return '';

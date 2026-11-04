@@ -8,7 +8,7 @@ import { showToast } from '../../../utils/toast';
 import { AFTER_THEME_FLAG, SCHEME_LIMIT, applyScheme, currentPrints, deleteScheme, exportCurrent, exportScheme, importScheme, listSchemes, matches, overwrite, renameScheme, resetLook, saveCurrent, settleChatStyles } from '../../../utils/themeSchemes';
 import type { SchemePart, ThemeScheme } from '../../../utils/themeSchemes';
 
-const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['chat', '聊天样式', '全部聊天共用的壁纸、字号、字体、气泡'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
+const PARTS: [SchemePart, string, string][] = [['home', '主画面', '配色、质感、字体、主画面文字、背景、图标'], ['chat', '聊天样式', '全部聊天共用的壁纸、字号、气泡'], ['splash', '开屏设置', '每次显示、每天一次或不显示']];
 const day = (at: number) => { const d = new Date(at); return `${d.getMonth() + 1}/${String(d.getDate()).padStart(2, '0')}`; };
 type Prints = ThemeScheme['prints'];
 

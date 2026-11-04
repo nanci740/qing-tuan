@@ -11,6 +11,8 @@ import { flushSync } from 'react-dom';
 import type { MigratedChatSetting, ChatPreferences, ChatPreferenceBridge, ChatPreferenceServices } from '../types/chatPreferences';
 import { getChatPreferenceDefaults, loadChatPreferences, saveChatPreferences, withChatTheme } from '../utils/chatPreferences';
 import { CHAT_THEME_KEY, writeChatTheme } from '../utils/chatTheme';
+import { kv } from '../utils/kvStorage';
+const FONTS_CLEARED = 'qingtuan_chat_fonts_cleared_v1';
 import type { ChatStyleGroup } from '../utils/chatTheme';
 import { chatPhotoReady } from '../utils/chatPhoto';
 interface PreferenceConnect { services: ChatPreferenceServices; accept(api: ChatPreferenceBridge): void; }
@@ -40,6 +42,11 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
     else update();
   };
   useEffect(() => { ready.current = true; return () => { ready.current = false; }; }, []);
+  // 聊天室不再单独换字体：以前存的字体文件清掉，省空间（只做一次）
+  useEffect(() => {
+    try { if (kv.getItem(FONTS_CLEARED)) return; } catch { return; }
+    void assets.clearChatFonts().then(() => kv.setItem(FONTS_CLEARED, '1')).catch(() => {});
+  }, []);
   useLayoutEffect(() => {
     const connect = (event: Event) => {
       const detail = (event as CustomEvent<PreferenceConnect>).detail;
@@ -111,7 +118,6 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
     const key = service.currentKey(), prefs = service.readCurrent();
     try {
       if (group === 'wallpaper') await assets.deleteChatWallpaper(key);
-      if (group === 'font') await assets.deleteChatFont(key);
     } catch { showToast('改回失败，请重试'); return; }
     if (key !== service.currentKey()) return;
     const next = withChatTheme({ ...prefs, styleOwn: { ...prefs.styleOwn, [group]: false } });
@@ -123,19 +129,17 @@ export function ChatPreferencesProvider({ children }: { children: ReactNode }) {
   async function shareStyle() {
     const service = services.current;
     if (!service) return;
-    const ok = await confirmChat({ title: '设成全部聊天的样式', message: '壁纸、字号、字体、气泡会照这个聊天现在的样子，套到所有没有自己设过的聊天。\n存主题方案时，存的也是这一套。', confirmText: '设成预设', cancelText: '取消' });
+    const ok = await confirmChat({ title: '设成全部聊天的样式', message: '壁纸、字号、气泡会照这个聊天现在的样子，套到所有没有自己设过的聊天。\n存主题方案时，存的也是这一套。', confirmText: '设成预设', cancelText: '取消' });
     if (!ok) return;
     const key = service.currentKey(), prefs = service.readCurrent(), own = prefs.styleOwn;
     try {
       const wallpaper = await assets.readChatWallpaper(own.wallpaper ? key : CHAT_THEME_KEY);
-      const font = prefs.fontType === 'file' ? await assets.readChatFont(own.font ? key : CHAT_THEME_KEY) : null;
-      if (prefs.fontType === 'file' && !font) throw Error('字体文件读不到，先重新选一次字体');
-      await assets.updateChatAssets(CHAT_THEME_KEY, { wallpaper: wallpaper || null, font: font || null });
-      writeChatTheme({ wallpaperFade: prefs.wallpaperFade, wallpaperBlur: prefs.wallpaperBlur, fontSize: prefs.fontSize, fontType: prefs.fontType, fontName: prefs.fontName, fontUrl: prefs.fontUrl, bubbleCss: prefs.bubbleCss });
+      await assets.updateChatAssets(CHAT_THEME_KEY, { wallpaper: wallpaper || null });
+      writeChatTheme({ wallpaperFade: prefs.wallpaperFade, wallpaperBlur: prefs.wallpaperBlur, fontSize: prefs.fontSize, bubbleCss: prefs.bubbleCss });
       await assets.updateChatAssets(key, { wallpaper: null, font: null });
     } catch (error) { showToast((error as Error).message || '设定失败，请重试'); return; }
     if (key !== service.currentKey()) return;
-    const next = withChatTheme({ ...prefs, styleOwn: { wallpaper: false, size: false, font: false, bubble: false } });
+    const next = withChatTheme({ ...prefs, styleOwn: { wallpaper: false, size: false, bubble: false } });
     service.adopt(next); saveChatPreferences(key, next); publish(next, true);
     await appearance.refresh();
     showToast('已设成全部聊天的样式');

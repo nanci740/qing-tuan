@@ -43,7 +43,7 @@ export function getChatPreferenceDefaults(): ChatPreferences {
             pat: true,
             patSuffix: '',
             avatars: true,
-            styleOwn: { wallpaper: false, size: false, font: false, bubble: false }
+            styleOwn: { wallpaper: false, size: false, bubble: false }
         };
     }
 /** 没有自己设的那几块，换成全部聊天的预设样式（主题方案会换它）。 */
@@ -51,7 +51,6 @@ export function withChatTheme(preferences: ChatPreferences): ChatPreferences {
         const theme = readChatTheme(), own = preferences.styleOwn, next = { ...preferences };
         if (!own.wallpaper) { next.wallpaperFade = theme.wallpaperFade; next.wallpaperBlur = theme.wallpaperBlur; }
         if (!own.size) next.fontSize = theme.fontSize;
-        if (!own.font) { next.fontType = theme.fontType; next.fontName = theme.fontName; next.fontUrl = theme.fontUrl; }
         if (!own.bubble) next.bubbleCss = theme.bubbleCss;
         return next;
     }
@@ -88,9 +87,10 @@ export function loadChatPreferences(key: string): ChatPreferences {
                 wallpaperFade: Math.min(85, Math.max(0, Number.isFinite(Number(saved.wallpaperFade)) ? Number(saved.wallpaperFade) : defaults.wallpaperFade)),
                 wallpaperBlur: Math.min(8, Math.max(0, Number.isFinite(Number(saved.wallpaperBlur)) ? Number(saved.wallpaperBlur) : defaults.wallpaperBlur)),
                 fontSize: Math.min(16, Math.max(9, Number(saved.fontSize) || defaults.fontSize)),
-                fontType: ['inherit','file','url'].includes(saved.fontType as string) ? saved.fontType as ChatPreferences['fontType'] : defaults.fontType,
-                fontName: String(saved.fontName || '').slice(0, 160),
-                fontUrl: String(saved.fontUrl || '').slice(0, 1800),
+                // 聊天室不再单独换字体，一律跟着美化设置的全站字体
+                fontType: 'inherit',
+                fontName: '',
+                fontUrl: '',
                 bubbleCss: String(saved.bubbleCss || '').slice(0, 5000),
                 soundFeedback: saved.soundFeedback === true,
                 vibrationFeedback: saved.vibrationFeedback === true,

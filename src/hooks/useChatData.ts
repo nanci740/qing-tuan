@@ -23,7 +23,6 @@ export function useChatData(services: MutableRefObject<ChatPreferenceServices | 
   try {
   let wallpaperDataUrl='',fontDataUrl='';
   const wallpaper=await readChatWallpaper(key);if(wallpaper)wallpaperDataUrl=await blobToDataUrl(wallpaper);
-  if(preferences.fontType==='file'){const font=await readChatFont(key);if(!font)throw new Error('找不到已保存的字体，导出已停止');fontDataUrl=await blobToDataUrl(font);}
   const payload:ChatBackup={format:'qingtuan-chat',version:1,exportedAt:new Date().toISOString(),chatKey:key,chatName:chatName.trim()||'聊天',html,preferences,wallpaperDataUrl,fontDataUrl};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob);
   const name=`qingtuan-chat-${payload.chatName.replace(/[\\/:*?"<>|]/g,'_')}-${new Date().toISOString().slice(0,10)}.json`;
@@ -47,10 +46,6 @@ export function useChatData(services: MutableRefObject<ChatPreferenceServices | 
     const url=URL.createObjectURL(blob);
     try{const image=new Image();image.src=url;await image.decode();}finally{URL.revokeObjectURL(url);}
    }
-   if(typeof payload.fontDataUrl==='string'&&payload.fontDataUrl.startsWith('data:')){
-    const blob=await fetch(payload.fontDataUrl).then(response=>response.blob());assets.font=blob;
-    await new FontFace('ChatBackupFontValidation',await blob.arrayBuffer()).load();
-   }
    if(key!==service.currentKey())return;
    const [wallpaper,font]=await Promise.all([readChatWallpaper(key),readChatFont(key)]);
    // Store both resources together before replacing the visible chat or preferences.
@@ -72,7 +67,7 @@ export function useChatData(services: MutableRefObject<ChatPreferenceServices | 
  async function resetPreferences(){
   const service=services.current;if(!service)return;
   const key=service.currentKey();
-  if(!await confirm('恢复聊天设置','恢复当前角色的聊天设置，并移除专属壁纸与字体。'))return;
+  if(!await confirm('恢复聊天设置','恢复当前角色的聊天设置，并移除专属壁纸。'))return;
   if(key!==service.currentKey())return;
   try {
    const [wallpaper,font]=await Promise.all([readChatWallpaper(key),readChatFont(key)]);

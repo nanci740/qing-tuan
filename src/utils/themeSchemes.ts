@@ -4,7 +4,7 @@ import { readImageSlot, saveImageSlots, blobDataUrl } from './imageAssets';
 import { readLocalFontRecord, writeLocalFontRecord } from './appearanceStorage';
 import { CHAT_THEME_KEY, normalizeChatTheme, readChatTheme, readStyleOwn, writeChatTheme } from './chatTheme';
 import type { ChatThemeStyle } from './chatTheme';
-import { readChatFont, readChatWallpaper, updateChatAssets } from './chatAppearance';
+import { readChatWallpaper, updateChatAssets } from './chatAppearance';
 import { CHAT_PREFERENCES_BY_CHAT_KEY } from './chatPreferences';
 
 /** 主题方案：主画面（配色、质感、字体、文字、背景、图标）、全部聊天的样式、开屏，存成一套随时换。 */
@@ -21,7 +21,7 @@ export const AFTER_THEME_FLAG = 'qingtuan_after_theme';
 
 export type SchemePart = 'home' | 'chat' | 'splash';
 export interface HomeData { kv: Record<string, string | null>; images: Record<string, Blob | null>; font: { name: string; type: string; blob: Blob } | null }
-export interface ChatData { style: ChatThemeStyle; wallpaper: Blob | null; font: Blob | null }
+export interface ChatData { style: ChatThemeStyle; wallpaper: Blob | null }
 export interface SchemePreview { color: string; wallpaper: string; icons: string[]; chatWallpaper: string; radius: number }
 export interface ThemeScheme {
   id: string; name: string; createdAt: number; updatedAt: number; imported?: boolean;
@@ -82,8 +82,7 @@ async function captureCurrent(parts: SchemePart[]): Promise<SchemeData> {
   }
   if (parts.includes('chat')) {
     const style = readChatTheme();
-    const font = style.fontType === 'file' ? await readChatFont(CHAT_THEME_KEY) : null;
-    data.chat = { style, wallpaper: await readChatWallpaper(CHAT_THEME_KEY), font };
+    data.chat = { style, wallpaper: await readChatWallpaper(CHAT_THEME_KEY) };
   }
   if (parts.includes('splash')) data.splash = kv.getItem(SPLASH_KEY);
   return data;
@@ -100,7 +99,7 @@ async function printsOf(data: SchemeData): Promise<ThemeScheme['prints']> {
     for (const slot of HOME_IMAGES) images[slot] = await blobPrint(data.home.images[slot]);
     prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob) });
   }
-  if (data.chat) prints.chat = await textPrint({ style: normalizeChatTheme(data.chat.style), wallpaper: await blobPrint(data.chat.wallpaper), font: await blobPrint(data.chat.font) });
+  if (data.chat) prints.chat = await textPrint({ style: normalizeChatTheme(data.chat.style), wallpaper: await blobPrint(data.chat.wallpaper) });
   if ('splash' in data) prints.splash = await textPrint(data.splash ?? null);
   return prints;
 }
@@ -190,8 +189,8 @@ async function write(data: SchemeData) {
   }
   if (data.chat) {
     await settleChatStyles();
-    await updateChatAssets(CHAT_THEME_KEY, { wallpaper: data.chat.wallpaper || null, font: data.chat.style.fontType === 'file' ? data.chat.font || null : null });
-    writeChatTheme(data.chat.style.fontType === 'file' && !data.chat.font ? { ...data.chat.style, fontType: 'inherit', fontName: '' } : data.chat.style);
+    await updateChatAssets(CHAT_THEME_KEY, { wallpaper: data.chat.wallpaper || null });
+    writeChatTheme(normalizeChatTheme(data.chat.style));
   }
   if ('splash' in data && data.splash !== undefined) writeSettingsBatch({ [SPLASH_KEY]: ['always', 'daily', 'off'].includes(String(data.splash)) ? data.splash! : null });
   await flushKv();
@@ -204,7 +203,7 @@ function restart() {
 export async function applyScheme(scheme: ThemeScheme) { await write(scheme); restart(); }
 /** 恢复默认样子：主画面、全部聊天的样式回到原本的（开屏设定不动）。 */
 export async function resetLook() {
-  await write({ home: { kv: {}, images: {}, font: null }, chat: { style: normalizeChatTheme(null), wallpaper: null, font: null } });
+  await write({ home: { kv: {}, images: {}, font: null }, chat: { style: normalizeChatTheme(null), wallpaper: null } });
   writeChatTheme(null); await flushKv();
   restart();
 }
@@ -213,7 +212,7 @@ export async function resetLook() {
 interface ExportFile {
   app: 'qingtuan-theme'; version: 1; name: string; at: number;
   home?: { kv: Record<string, string | null>; images: Record<string, string | null>; font: { name: string; type: string; data: string } | null };
-  chat?: { style: ChatThemeStyle; wallpaper: string | null; font: string | null };
+  chat?: { style: ChatThemeStyle; wallpaper: string | null };
   splash?: string | null;
 }
 export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; fileName: string }> {
@@ -223,7 +222,7 @@ export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; f
     for (const slot of HOME_IMAGES) { const blob = scheme.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : null; }
     file.home = { kv: scheme.home.kv, images, font: scheme.home.font ? { name: scheme.home.font.name, type: scheme.home.font.type, data: await blobDataUrl(scheme.home.font.blob) } : null };
   }
-  if (scheme.chat) file.chat = { style: scheme.chat.style, wallpaper: scheme.chat.wallpaper ? await blobDataUrl(scheme.chat.wallpaper) : null, font: scheme.chat.font ? await blobDataUrl(scheme.chat.font) : null };
+  if (scheme.chat) file.chat = { style: scheme.chat.style, wallpaper: scheme.chat.wallpaper ? await blobDataUrl(scheme.chat.wallpaper) : null };
   if ('splash' in scheme && scheme.splash !== undefined) file.splash = scheme.splash;
   const safe = scheme.name.replace(/[\\/:*?"<>|]/g, '').trim() || '方案';
   return { blob: new Blob([JSON.stringify(file)], { type: 'application/json' }), fileName: `青团主题-${safe}.json` };
@@ -263,8 +262,7 @@ export async function importScheme(file: File) {
   }
   if (isRecord(raw.chat)) {
     const style = normalizeChatTheme(raw.chat.style);
-    if (style.fontType === 'url' && !/^https?:\/\//i.test(style.fontUrl)) { style.fontType = 'inherit'; style.fontUrl = ''; }
-    data.chat = { style, wallpaper: await imageFrom(raw.chat.wallpaper), font: await fontFrom(raw.chat.font) };
+    data.chat = { style, wallpaper: await imageFrom(raw.chat.wallpaper) };
   }
   if ('splash' in raw) data.splash = ['always', 'daily', 'off'].includes(String(raw.splash)) ? String(raw.splash) : null;
   if (!data.home && !data.chat && !('splash' in data)) throw Error('这个文件里没有东西');

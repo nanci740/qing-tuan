@@ -525,7 +525,7 @@ export function ChatSettings() {
                   {"聊天个性化"}
                 </OriginalElement>
                 <OriginalElement tag="span" attributes={[]}>
-                  {"壁纸、字号、字体与专属气泡"}
+                  {"壁纸、字号与专属气泡"}
                 </OriginalElement>
               </OriginalElement>
               {"\n                        "}
@@ -587,44 +587,6 @@ export function ChatSettings() {
                 <ChatAppearanceRange setting="fontSize" />
               </OriginalElement>
               {"\n                        "}
-              <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-font-card"}]}>
-                <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-style-head"}]}>
-                  <OriginalElement tag="strong" attributes={[]}>{"聊天字体"}</OriginalElement>
-                  <ChatStyleSource group="font" />
-                </OriginalElement>
-                {"\n                            "}
-                <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-current"}]}>
-                  <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-current-copy"}]}>
-                    <ChatAppearanceText id="chatFontName" tag="strong" />
-                    <ChatAppearanceText id="chatFontSource" tag="span" />
-                  </OriginalElement>
-                  <ChatAppearanceText id="chatFontBadge" tag="span" className="theme-font-badge" />
-                </OriginalElement>
-                {"\n                            "}
-                <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-actions"}]}>
-                  <ChatAppearanceAction id="chatFontChoose" className="theme-font-btn ui-cyan-btn">
-                    {"导入字体文件"}
-                  </ChatAppearanceAction>
-                  <ChatAppearanceAction id="chatFontReset" className="theme-font-btn secondary">
-                    {"恢复全站字体"}
-                  </ChatAppearanceAction>
-                </OriginalElement>
-                {"\n                            "}
-                <OriginalElement tag="div" attributes={[{"name":"class","value":"theme-font-url-row"}]}>
-                  <ChatAppearanceDraft />
-                  <ChatAppearanceAction id="chatFontUrlApply" className="theme-font-url-btn theme-font-btn ui-cyan-btn">
-                    {"载入"}
-                  </ChatAppearanceAction>
-                </OriginalElement>
-                {"\n                            "}
-                <OriginalElement tag="span" attributes={[{"name":"class","value":"theme-font-hint"}]}>
-                  {"支持 TTF、OTF、WOFF、WOFF2，仅套用当前聊天室。"}
-                </OriginalElement>
-                <ChatAppearanceText id="chatFontImportStatus" tag="div" />
-                <ChatAppearanceFile font />
-                {"\n                        "}
-              </OriginalElement>
-              {"\n                        "}
               <OriginalElement tag="label" attributes={[{"name":"class","value":"chat-setting-block"}]}>
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-block-title"}]}>
                   {"专属气泡 CSS"}
@@ -633,7 +595,7 @@ export function ChatSettings() {
                 <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-hint"}]}>
                   {"可修改 .chat-bubble 与气泡 SVG；只套用当前聊天室。"}
                 </OriginalElement>
-                <ChatAppearanceDraft bubble />
+                <ChatAppearanceDraft />
               </OriginalElement>
               {"\n                        "}
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-setting-inline-actions end"}]}>
@@ -645,7 +607,7 @@ export function ChatSettings() {
                 </ChatAppearanceAction>
               </OriginalElement>
               <OriginalElement tag="div" attributes={[{"name":"class","value":"chat-style-share"}]}>
-                <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-hint"}]}>{"把这个聊天现在的壁纸、字号、字体、气泡，套到所有没自己设过的聊天；主题方案存的也是这一套。"}</OriginalElement>
+                <OriginalElement tag="span" attributes={[{"name":"class","value":"chat-setting-hint"}]}>{"把这个聊天现在的壁纸、字号、气泡，套到所有没自己设过的聊天；主题方案存的也是这一套。"}</OriginalElement>
                 <ChatStyleShare />
               </OriginalElement>
               {"\n                    "}
