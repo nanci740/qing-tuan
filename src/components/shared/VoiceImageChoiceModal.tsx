@@ -21,16 +21,16 @@ export function VoiceImageChoiceModal() {
           {"\n            "}
         </div>
         {"\n            "}
-        <div className={cls('vi-choice-list','api-model-list api-provider-list')} id="viChoiceList">{choice.options.map((option,index)=><PressedButton type="button" className={`${cls('vi-choice-item','api-model-item')}${option.value===choice.selected ? ' selected' : ''}`} key={`${choice.revision}-${index}`} onClick={()=>choice.select(option.value)}><span className={chatSettings ? 'api-model-check' : cls('vi-choice-check','api-model-check')}>{!settings && !chatSettings && option.value===choice.selected ? '✓' : ''}</span><span className={settings ? 'api-model-name' : undefined}>{option.label}</span></PressedButton>)}</div>
+        <div className={cls('vi-choice-list','api-model-list api-provider-list')} id="viChoiceList">{choice.content ? <div className="choice-content">{choice.content}</div> : null}{choice.options.map((option,index)=><PressedButton type="button" className={`${cls('vi-choice-item','api-model-item')}${option.value===choice.selected ? ' selected' : ''}`} key={`${choice.revision}-${index}`} onClick={()=>choice.select(option.value)}><span className={chatSettings ? 'api-model-check' : cls('vi-choice-check','api-model-check')}>{!settings && !chatSettings && option.value===choice.selected ? '✓' : ''}</span><span className={settings ? 'api-model-name' : undefined}>{option.label}</span></PressedButton>)}</div>
         {"\n            "}
         <div className={cls('vi-choice-actions','api-model-actions')}>
           {"\n                "}
           <PressedButton className={cls('vi-btn','api-model-action')} id="viChoiceCancel" onClick={choice.close} type="button">
-            {"取消"}
+            {choice.cancelText || "取消"}
           </PressedButton>
           {"\n                "}
-          <PressedButton className={cls('vi-btn primary ui-cyan-btn','api-model-action primary ui-cyan-btn')} id="viChoiceConfirm" onClick={choice.confirm} type="button">
-            {"确定"}
+          <PressedButton className={cls('vi-btn primary ui-cyan-btn','api-model-action primary ui-cyan-btn')} id="viChoiceConfirm" onClick={() => void choice.confirm()} type="button">
+            {choice.confirmText || "确定"}
           </PressedButton>
           {"\n            "}
         </div>
