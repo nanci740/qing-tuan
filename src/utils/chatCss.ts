@@ -74,23 +74,24 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --cr-peer: #b07d62;    /* 他的名字 */
   --cr-self: #8c9a6e;    /* 我的名字 */
 }` },
-  { name: '旧 iPhone', css: `/* 旧 iPhone 泡泡：亮面、带小尾巴。他的白色，我的跟着主题色 */
+  { name: '旧 iPhone', css: `/* 旧 iPhone 泡泡：亮面、带小尾巴。他的在左边白色，我的在右边跟着主题色 */
 .chat-message-row .chat-bubble > div:last-child {
   position: relative;
   display: inline-block;
   max-width: 100%;
-  margin: 2px 0 2px 5px;
+  margin: 1px 6px;
   padding: 5px 13px;
   border: 1px solid #a9adb3;
   border-radius: 16px;
   background: linear-gradient(#ffffff, #f1f1f1 50%, #e3e3e3);
   box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(0, 0, 0, .18);
+  text-align: left;
 }
 .chat-message-row.is-user .chat-bubble > div:last-child {
   border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 20%, #fff), color-mix(in srgb, var(--theme-color) 55%, #fff) 50%, var(--theme-color));
 }
-/* 小尾巴 */
+/* 小尾巴：他的在左下，我的在右下 */
 .chat-message-row .chat-bubble > div:last-child::after {
   content: '';
   position: absolute;
@@ -104,7 +105,53 @@ export const EXAMPLES: { name: string; css: string }[] = [
   transform: rotate(45deg);
 }
 .chat-message-row.is-user .chat-bubble > div:last-child::after {
-  border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
+  left: auto;
+  right: -5px;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
+  border-right: 1px solid color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
   background: var(--theme-color);
+}
+/* 我的靠右 */
+.chat-message-row.is-user .chat-bubble {
+  text-align: right;
+}
+/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
+.chat-message-row.is-user > .chat-message-head,
+.chat-message-row > .chat-message-head .chat-message-time {
+  display: none;
+}
+.chat-message-row > .chat-message-head {
+  margin: 0 0 1px 8px;
+  font-size: 10px;
+}
+/* 时间和已读：小小的放在泡泡下面 */
+.chat-bubble-wrap > .chat-bubble-time {
+  order: 3;
+  flex: 0 0 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+  margin: 1px 0 2px 10px;
+  font-size: 9px;
+}
+.chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
+  justify-content: flex-end;
+  margin: 1px 10px 2px 0;
+}
+/* 头像：圆圆的白边 */
+.chat-message-mini-avatar {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(60, 80, 110, .3);
+}
+/* 我的不放头像 */
+.chat-message-row.is-user {
+  padding: 3px 12px 5px 48px;
+}
+.chat-message-row.is-user > .chat-message-mini-avatar {
+  display: none;
 }` }
 ];
