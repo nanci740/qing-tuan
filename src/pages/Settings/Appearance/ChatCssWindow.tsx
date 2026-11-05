@@ -15,7 +15,9 @@ const escape = (text: string) => text.replace(/[&<>"]/g, char => ({ '&': '&amp;'
 function sampleRows(name: string, peer: string, self: string) {
   const row = (user: boolean, text: string, time: string, tail = false) => {
     const head = `<div class="chat-message-head"><span class="chat-message-name">${escape(user ? '我' : name)}</span><span class="chat-message-time">${time}</span></div>`;
-    const wrap = `<div class="chat-bubble-wrap"><div class="chat-bubble">${escape(text)}</div></div>`;
+    // 跟真的消息一样：泡泡后面接一个时间（含已读）的小格
+    const receipt = user ? '<span class="chat-read-receipt" aria-label="已读"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 8.5l3 3 6-7M7 11.5l1 1 6-8"/></svg></span>' : '';
+    const wrap = `<div class="chat-bubble-wrap"><div class="chat-bubble"><div>${escape(text)}</div></div><div class="chat-bubble-time">${time.slice(0, 5)}${receipt}</div></div>`;
     const avatar = `<img class="chat-message-mini-avatar" src="${escape(user ? self : peer)}" alt="">`;
     return `<div class="chat-message-row ${user ? 'is-user' : 'is-chat'}${tail ? ' is-tail' : ''}${user ? ' is-read' : ''}">${user ? head + wrap + avatar : avatar + head + wrap}</div>`;
   };
