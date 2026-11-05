@@ -1,17 +1,24 @@
 import { kv } from './kvStorage';
+import { scopeChatCss } from './chatCssScope';
 
 /** 美化设置的「聊天美化 CSS」：套到全部聊天室。聊天设置里单独设的壁纸、字号、专属气泡还是会盖过它。 */
 const KEY = 'qingtuan_chat_css_v1', TEMPLATES = 'qingtuan_chat_css_templates_v1';
 export const CHAT_CSS_EVENT = 'qingtuan:chat-css';
-export const CHAT_CSS_LIMIT = 30000, TEMPLATE_LIMIT = 30;
-/** 六个 #chatAppPage：聊天室原本的样式最多到四层（像发送键），要盖得过去；专属气泡用七个，再盖过这里。 */
-export const CHAT_CSS_SCOPE = '#chatAppPage'.repeat(6);
+export const TEMPLATE_LIMIT = 30;
 
 export function readChatCss() { try { return kv.getItem(KEY) || ''; } catch { return ''; } }
 export function writeChatCss(css: string) {
   const value = String(css || '').trim();
   if (value) { scopeChatCss(value); kv.setItem(KEY, value); } else kv.removeItem(KEY);
+  try { kv.removeItem('qingtuan_chat_css_draft_v1'); } catch { /* 草稿清不掉没关系 */ }
   window.dispatchEvent(new CustomEvent(CHAT_CSS_EVENT));
+}
+
+/** 还没套用的草稿：离开美化设置、重新开启都还在。跟已套用的一样就不存。 */
+const DRAFT = 'qingtuan_chat_css_draft_v1';
+export function readDraft(): string | null { try { return kv.getItem(DRAFT); } catch { return null; } }
+export function writeDraft(draft: string, applied: string) {
+  try { if (draft.trim() === applied.trim()) kv.removeItem(DRAFT); else kv.setItem(DRAFT, draft.slice(0, 40000)); } catch { /* 存不了就算了 */ }
 }
 
 export interface ChatCssTemplate { id: string; name: string; css: string; at: number }
@@ -32,87 +39,8 @@ export function saveTemplate(name: string, css: string) {
 export function renameTemplate(id: string, name: string) { writeTemplates(readTemplates().map(item => item.id === id ? { ...item, name: String(name || '').trim().slice(0, 12) || item.name } : item)); }
 export function deleteTemplate(id: string) { writeTemplates(readTemplates().filter(item => item.id !== id)); }
 
-/* ---------- 把写的 CSS 关进聊天室里 ---------- */
-function matchBrace(text: string, open: number) {
-  let depth = 0;
-  for (let index = open; index < text.length; index++) {
-    if (text[index] === '{') depth++;
-    else if (text[index] === '}' && --depth === 0) return index;
-  }
-  return -1;
-}
-/** 逗号分开选择器，但 :is(a, b) 括号里的逗号不算。 */
-function splitSelectors(head: string) {
-  const parts: string[] = []; let depth = 0, start = 0;
-  for (let index = 0; index < head.length; index++) {
-    const char = head[index];
-    if (char === '(' || char === '[') depth++;
-    else if (char === ')' || char === ']') depth--;
-    else if (char === ',' && depth === 0) { parts.push(head.slice(start, index)); start = index + 1; }
-  }
-  parts.push(head.slice(start));
-  return parts.map(part => part.trim()).filter(Boolean);
-}
-function scopeSelector(selector: string, scope: string) {
-  // :root、html、body、#chatAppPage 都当成聊天室本身
-  const rest = selector.replace(/^(?::root|html|body|#chatAppPage)(?![\w-])/i, '');
-  if (rest !== selector) return scope + rest;
-  return `${scope} ${selector}`;
-}
-/** 麦克风跟图片、相机排在同一排，写法却不一样（.chat-mic-btn）：写给那排小按钮的，麦克风也一起套。上面生图那排（.chat-quick-actions）不算，::before／::after 也不算。 */
-function withMic(selector: string) {
-  if (!/\.chat-quick-action(?![\w-])/.test(selector) || /\.chat-quick-actions(?![\w-])/.test(selector)) return [selector];
-  // ::before、::after 不跟：麦克风录音时的红点就是用 ::before 画的，套过去会打架
-  if (/::?(before|after)\b/i.test(selector)) return [selector];
-  return [selector, selector.replace(/\.chat-quick-action(?![\w-])/g, '.chat-mic-btn')];
-}
-/** 每一句都加 !important：聊天室原本的样式很多是 !important，不加盖不过去。分号在括号、引号里的不算（data:image;base64 那种）。 */
-export function strengthen(body: string) {
-  const parts: string[] = []; let depth = 0, quote = '', start = 0;
-  for (let index = 0; index < body.length; index++) {
-    const char = body[index];
-    if (quote) { if (char === quote) quote = ''; continue; }
-    if (char === '"' || char === "'") quote = char;
-    else if (char === '(') depth++;
-    else if (char === ')') depth--;
-    else if (char === ';' && depth === 0) { parts.push(body.slice(start, index)); start = index + 1; }
-  }
-  parts.push(body.slice(start));
-  const list = parts.map(part => part.trim()).filter(text => text && text.includes(':') && !/^position\s*:\s*fixed/i.test(text));
-  // 聊天室很多字用 -webkit-text-fill-color 上色，只写 color 会没反应：写了 color 就顺便补上
-  const color = list.find(text => /^color\s*:/i.test(text));
-  if (color && !list.some(text => /^-webkit-text-fill-color\s*:/i.test(text))) list.push(color.replace(/^color/i, '-webkit-text-fill-color'));
-  return list.map(text => /!important$/i.test(text) ? text : `${text} !important`).join(';');
-}
-function scopeBlock(css: string, scope: string, strong: boolean): string {
-  let out = '', index = 0;
-  while (index < css.length) {
-    const open = css.indexOf('{', index);
-    if (open < 0) { if (css.slice(index).trim()) throw Error('最后少了一个 { }'); break; }
-    const close = matchBrace(css, open);
-    if (close < 0) throw Error('大括号 { } 没有配对好');
-    const head = css.slice(index, open).trim(), body = css.slice(open + 1, close);
-    if (head.startsWith('@')) {
-      if (/^@(media|supports|container)\b/i.test(head)) out += `${head}{${scopeBlock(body, scope, strong)}}`;
-      else if (/^@(-webkit-)?keyframes\b/i.test(head)) out += `${head}{${body}}`;
-      // @font-face、@page 这些不收
-    } else if (head) {
-      out += `${splitSelectors(head).flatMap(withMic).map(item => scopeSelector(item, scope)).join(',')}{${strong ? strengthen(body) : body}}`;
-    }
-    index = close + 1;
-  }
-  return out;
-}
-/** 检查、加范围。会去外面抓东西的写法挡掉；图片只收 data:image。 */
-export function scopeChatCss(source: string, scope = CHAT_CSS_SCOPE) {
-  const css = String(source || '').replace(/\/\*[\s\S]*?\*\//g, '').trim();
-  if (!css) return '';
-  if (css.length > CHAT_CSS_LIMIT) throw Error('写太长了，最多 3 万字');
-  if (/@import|expression\s*\(|javascript:|behavior\s*:|<\/?style|<script/i.test(css)) throw Error('里面有不能用的写法（@import、script 这类）');
-  const urls = css.match(/url\s*\(\s*(['"]?)([^'")]*)/gi) || [];
-  if (urls.some(item => !/url\s*\(\s*['"]?data:image\//i.test(item))) throw Error('图片只能用 data:image 开头的，不能连到外面的网址');
-  return scopeBlock(css, scope, true);
-}
+/* 检查、加范围的部分在 chatCssScope.ts（纯文字处理，可以单独测）。 */
+export { CHAT_CSS_SCOPE, CHAT_CSS_LIMIT, scopeChatCss, strengthen } from './chatCssScope';
 
 /* ---------- 类名小抄 ---------- */
 export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [

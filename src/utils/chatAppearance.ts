@@ -1,4 +1,4 @@
-import { strengthen } from './chatCss';
+import { strengthen } from './chatCssScope';
 // Keep the existing database and keys so previously saved chat assets remain readable.
 function openChatAssetDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
@@ -65,8 +65,8 @@ export const clearChatFonts = () => chatAssetTransaction<void>(['fonts'], 'readw
             if (!selectors.length) return '';
             count += 1;
             const safeBody = strengthen(body.replace(/z-index\s*:\s*\d+\s*;?/gi, ''));
-            // 七个 #chatAppPage：盖得过美化设置的聊天美化 CSS（六个）
-            return selectors.map(item => `${'#chatAppPage'.repeat(7)}.chat-custom-bubble-active ${item}`).join(',') + `{${safeBody}}`;
+            // 八个 #chatAppPage：盖得过美化设置的聊天美化 CSS（七层）
+            return selectors.map(item => `${'#chatAppPage'.repeat(8)}.chat-custom-bubble-active ${item}`).join(',') + `{${safeBody}}`;
         });
         if (!count) throw new Error('请使用 .chat-bubble 或 .chat-message-row 作为选择器');
         return scoped;
