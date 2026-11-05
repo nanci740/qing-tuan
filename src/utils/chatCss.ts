@@ -74,60 +74,24 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --cr-peer: #b07d62;    /* 他的名字 */
   --cr-self: #8c9a6e;    /* 我的名字 */
 }` },
-  { name: '旧 iPhone', css: `/* 旧 iPhone：浅蓝底、亮亮的泡泡、带小尾巴 */
-#chatRoomView {
-  --cr-bg: #dde4ee;
-}
-.chat-message-list {
-  background: #dde4ee;
-}
-/* 不显示名字和时间，像简讯那样 */
-.chat-message-row > .chat-message-head {
-  display: none;
-}
-.chat-message-row {
-  padding: 4px 14px 4px 54px;
-  min-height: 0;
-}
-/* 他的头像：圆圆的，白边 */
-.chat-message-mini-avatar {
-  top: 2px;
-  left: 12px;
-  width: 32px;
-  height: 32px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(60, 80, 110, .35);
-}
-/* 我的：靠右，不放头像 */
-.chat-message-row.is-user {
-  justify-content: flex-end;
-  padding: 4px 16px 4px 60px;
-}
-.chat-message-row.is-user > .chat-message-mini-avatar {
-  display: none;
-}
-/* 泡泡 */
-.chat-message-row .chat-bubble {
+  { name: '旧 iPhone', css: `/* 旧 iPhone 泡泡：亮面、带小尾巴。他的白色，我的跟着主题色 */
+.chat-message-row .chat-bubble > div:last-child {
   position: relative;
   display: inline-block;
-  flex: 0 0 auto;
   max-width: 100%;
-  margin: 2px 0;
+  margin: 2px 0 2px 5px;
   padding: 5px 13px;
   border: 1px solid #a9adb3;
   border-radius: 16px;
   background: linear-gradient(#ffffff, #f1f1f1 50%, #e3e3e3);
   box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(0, 0, 0, .18);
-  color: #2b2b2b;
 }
-.chat-message-row.is-user .chat-bubble {
-  margin-left: auto;
-  border-color: #8aa9cc;
-  background: linear-gradient(#f3f9ff, #d9e9fa 50%, #bfd6f0);
+.chat-message-row.is-user .chat-bubble > div:last-child {
+  border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 20%, #fff), color-mix(in srgb, var(--theme-color) 55%, #fff) 50%, var(--theme-color));
 }
-/* 小尾巴：贴在泡泡下方的小三角 */
-.chat-message-row .chat-bubble::after {
+/* 小尾巴 */
+.chat-message-row .chat-bubble > div:last-child::after {
   content: '';
   position: absolute;
   bottom: 5px;
@@ -139,70 +103,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: #e7e7e7;
   transform: rotate(45deg);
 }
-.chat-message-row.is-user .chat-bubble::after {
-  left: auto;
-  right: -5px;
-  border: 0;
-  border-top: 1px solid #8aa9cc;
-  border-right: 1px solid #8aa9cc;
-  background: #c4d9f1;
-}
-/* 时间和已读，小小的放在泡泡下面 */
-.chat-bubble-wrap > .chat-bubble-time {
-  order: 3;
-  flex: 0 0 100%;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 3px;
-  margin: 1px 0 3px 6px;
-  color: #8a94a3;
-  font-size: 9px;
-}
-.chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
-  justify-content: flex-end;
-  margin: 1px 6px 3px 0;
-}
-/* 中间的日期 */
-.chat-date-divider {
-  border: 0;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, .75);
-  color: #6b7380;
-}
-/* 顶栏：亮面的银蓝 */
-.chat-room-header {
-  border-bottom: 1px solid #8b9bb0;
-  background: linear-gradient(#e9eef5, #c4cfdd 50%, #b4c2d4 51%, #a9b8cc);
-}
-.chat-room-title {
-  color: #3d4b5e;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
-}
-.chat-room-back, .chat-room-more {
-  border: 1px solid #7f91a8;
-  border-radius: 6px;
-  background: linear-gradient(#d6dfea, #a7b6c9);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
-  color: #fff;
-}
-/* 输入区 */
-.chat-composer {
-  background: linear-gradient(#eef1f5, #d3d9e1);
-}
-.chat-compose-field {
-  border: 1px solid #a9b3bf;
-  border-radius: 14px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .15);
-}
-.chat-send-btn {
-  border: 1px solid #5f86b8;
-  border-radius: 14px;
-  background: linear-gradient(#a9c8ec, #6f9bd2 50%, #5b8bc8 51%, #6c9ad3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5);
-}
-.chat-send-btn::after {
-  content: 'Send';
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
+.chat-message-row.is-user .chat-bubble > div:last-child::after {
+  border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
+  background: var(--theme-color);
 }` }
 ];
