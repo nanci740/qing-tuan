@@ -2544,8 +2544,8 @@
 /* 类名小抄（设置子页面那种弹窗里） */
 .chat-css-cheat { padding: 4px 0; }
 .chat-css-cheat-title { margin: 0; padding: 10px 14px 4px; color: var(--color-muted); font-size: 10.5px; }
-.chat-css-cheat-row { display: flex; width: 100%; justify-content: space-between; align-items: baseline; gap: 10px; padding: 7px 14px; border: 0; border-bottom: 1px dotted var(--win-line); background: none; color: var(--color-text); font: inherit; text-align: left; cursor: pointer; }
+.chat-css-cheat-row { display: flex; flex-direction: column; align-items: flex-start; width: 100%; gap: 2px; padding: 7px 14px; border: 0; border-bottom: 1px dotted var(--win-line); background: none; color: var(--color-text); font: inherit; text-align: left; cursor: pointer; }
 .chat-css-cheat-row:active { opacity: .6; }
-.chat-css-cheat-row code { min-width: 0; overflow-wrap: anywhere; color: var(--win-ink, var(--color-text)); font: 10.5px/1.5 ui-monospace, Menlo, Consolas, monospace; }
-.chat-css-cheat-row span { flex: none; color: var(--color-muted); font-size: 10.5px; }
+.chat-css-cheat-row code { max-width: 100%; overflow-wrap: break-word; color: var(--win-ink, var(--color-text)); font: 10.5px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+.chat-css-cheat-row span { color: var(--color-muted); font-size: 10px; line-height: 1.5; }
 .chat-css-cheat-tip { margin: 0; padding: 10px 14px 6px; color: var(--color-muted); font-size: 10px; line-height: 1.6; }
