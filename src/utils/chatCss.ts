@@ -4,8 +4,8 @@ import { kv } from './kvStorage';
 const KEY = 'qingtuan_chat_css_v1', TEMPLATES = 'qingtuan_chat_css_templates_v1';
 export const CHAT_CSS_EVENT = 'qingtuan:chat-css';
 export const CHAT_CSS_LIMIT = 30000, TEMPLATE_LIMIT = 30;
-/** 三个 #chatAppPage：盖得过聊天室原本的样式；专属气泡用四个，再盖过这里。 */
-export const CHAT_CSS_SCOPE = '#chatAppPage#chatAppPage#chatAppPage';
+/** 六个 #chatAppPage：聊天室原本的样式最多到四层（像发送键），要盖得过去；专属气泡用七个，再盖过这里。 */
+export const CHAT_CSS_SCOPE = '#chatAppPage'.repeat(6);
 
 export function readChatCss() { try { return kv.getItem(KEY) || ''; } catch { return ''; } }
 export function writeChatCss(css: string) {
@@ -59,6 +59,13 @@ function scopeSelector(selector: string, scope: string) {
   if (rest !== selector) return scope + rest;
   return `${scope} ${selector}`;
 }
+/** 麦克风跟图片、相机排在同一排，写法却不一样（.chat-mic-btn）：写给那排小按钮的，麦克风也一起套。上面生图那排（.chat-quick-actions）不算，::before／::after 也不算。 */
+function withMic(selector: string) {
+  if (!/\.chat-quick-action(?![\w-])/.test(selector) || /\.chat-quick-actions(?![\w-])/.test(selector)) return [selector];
+  // ::before、::after 不跟：麦克风录音时的红点就是用 ::before 画的，套过去会打架
+  if (/::?(before|after)\b/i.test(selector)) return [selector];
+  return [selector, selector.replace(/\.chat-quick-action(?![\w-])/g, '.chat-mic-btn')];
+}
 /** 每一句都加 !important：聊天室原本的样式很多是 !important，不加盖不过去。分号在括号、引号里的不算（data:image;base64 那种）。 */
 export function strengthen(body: string) {
   const parts: string[] = []; let depth = 0, quote = '', start = 0;
@@ -71,11 +78,11 @@ export function strengthen(body: string) {
     else if (char === ';' && depth === 0) { parts.push(body.slice(start, index)); start = index + 1; }
   }
   parts.push(body.slice(start));
-  return parts.map(part => {
-    const text = part.trim();
-    if (!text || !text.includes(':') || /^position\s*:\s*fixed/i.test(text)) return '';
-    return /!important$/i.test(text) ? text : `${text} !important`;
-  }).filter(Boolean).join(';');
+  const list = parts.map(part => part.trim()).filter(text => text && text.includes(':') && !/^position\s*:\s*fixed/i.test(text));
+  // 聊天室很多字用 -webkit-text-fill-color 上色，只写 color 会没反应：写了 color 就顺便补上
+  const color = list.find(text => /^color\s*:/i.test(text));
+  if (color && !list.some(text => /^-webkit-text-fill-color\s*:/i.test(text))) list.push(color.replace(/^color/i, '-webkit-text-fill-color'));
+  return list.map(text => /!important$/i.test(text) ? text : `${text} !important`).join(';');
 }
 function scopeBlock(css: string, scope: string, strong: boolean): string {
   let out = '', index = 0;
@@ -90,7 +97,7 @@ function scopeBlock(css: string, scope: string, strong: boolean): string {
       else if (/^@(-webkit-)?keyframes\b/i.test(head)) out += `${head}{${body}}`;
       // @font-face、@page 这些不收
     } else if (head) {
-      out += `${splitSelectors(head).map(item => scopeSelector(item, scope)).join(',')}{${strong ? strengthen(body) : body}}`;
+      out += `${splitSelectors(head).flatMap(withMic).map(item => scopeSelector(item, scope)).join(',')}{${strong ? strengthen(body) : body}}`;
     }
     index = close + 1;
   }
@@ -113,14 +120,16 @@ export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [
     ['#chatRoomView { --cr-bg: ; }', '聊天室底色'], ['#chatRoomView { --cr-face: ; }', '顶栏、按钮的底色'], ['#chatRoomView { --cr-line: ; }', '框线'],
     ['#chatRoomView { --cr-title: ; }', '文字颜色'], ['#chatRoomView { --cr-peer: ; }', '他的名字颜色'], ['#chatRoomView { --cr-self: ; }', '我的名字颜色']] },
   { label: '顶栏', items: [
-    ['.chat-room-header', '整条顶栏'], ['.chat-room-back', '返回键'], ['.chat-room-title', '「与 XX 聊天中」'], ['.chat-room-more', '右上角「…」'],
-    ['.chat-quick-actions', '生图、位置、世界书那一排'], ['.chat-quick-actions .chat-quick-action', '那一排的其中一颗']] },
+    ['.chat-room-header', '整条顶栏（background 换底色）'], ['.chat-room-title', '「与 XX 聊天中」的字'], ['.chat-room-back', '返回键'], ['.chat-room-more', '右上角「…」'],
+    ['.chat-room-back svg, .chat-room-more svg', '返回、「…」的图示（color 换颜色）'],
+    ['.chat-quick-actions', '生图、位置、世界书那一排'], ['.chat-quick-actions .chat-quick-action', '那一排的其中一颗'], ['.chat-quick-actions .chat-quick-action svg', '那一排的小图示（color 换颜色）']] },
   { label: '消息', items: [
     ['.chat-message-list', '放消息的大框'], ['.chat-message-row', '一则消息（整行）'], ['.chat-message-row.is-chat', '他发的'], ['.chat-message-row.is-user', '我发的'],
     ['.chat-message-row .chat-bubble', '消息文字（气泡）'], ['.chat-message-row.is-user .chat-bubble', '我的气泡'], ['.chat-message-row.is-chat .chat-bubble', '他的气泡'],
     ['.chat-message-name', '名字'], ['.chat-message-time', '时间'], ['.chat-message-mini-avatar', '头像'], ['.chat-date-divider', '中间的日期时间']] },
   { label: '底栏', items: [
-    ['.chat-composer', '整个输入区'], ['.chat-composer .chat-quick-action', '麦克风、图片那一排小按钮'], ['.chat-compose-field', '输入框'], ['.chat-send-btn', '发送键']] },
+    ['.chat-composer', '整个输入区'], ['.chat-composer .chat-quick-action', '麦克风、图片那一排小按钮（麦克风也会一起改）'], ['.chat-composer .chat-quick-action svg', '那排小按钮的图示（color 换颜色）'], ['.chat-mic-btn', '只改麦克风这一颗（录音红点在 ::before，别动它）'],
+    ['.chat-compose-field', '输入框'], ['.chat-send-btn', '发送键（底色、圆角、阴影）'], ['.chat-send-btn::after', '发送键上的字（content: \'送出\' 换字）']] },
   { label: '右边那栏', items: [
     ['.cr-side', '整栏'], ['.cr-panel', '每一格（在线、动态）'], ['.cr-photo', '大头照']] }
 ];
