@@ -91,26 +91,33 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 20%, #fff), color-mix(in srgb, var(--theme-color) 55%, #fff) 50%, var(--theme-color));
 }
-/* 小尾巴：他的在左下，我的在右下 */
+/* 小尾巴：从泡泡底部弯出去的小勾（他的在左下，我的在右下） */
+.chat-message-row .chat-bubble > div:last-child {
+  border-bottom-left-radius: 5px;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 5px;
+}
 .chat-message-row .chat-bubble > div:last-child::after {
   content: '';
   position: absolute;
-  bottom: 5px;
-  left: -5px;
-  width: 8px;
-  height: 8px;
-  border-left: 1px solid #a9adb3;
+  bottom: -1px;
+  left: -11px;
+  width: 15px;
+  height: 14px;
   border-bottom: 1px solid #a9adb3;
-  background: #e7e7e7;
-  transform: rotate(45deg);
+  background: radial-gradient(ellipse 11px 13px at 0 0, transparent 91%, #a9adb3 92%, #a9adb3 99%, transparent 101%), linear-gradient(#efefef, #e3e3e3);
+  -webkit-mask: radial-gradient(ellipse 11px 13px at 0 0, transparent 90%, #000 92%);
+  mask: radial-gradient(ellipse 11px 13px at 0 0, transparent 90%, #000 92%);
 }
 .chat-message-row.is-user .chat-bubble > div:last-child::after {
   left: auto;
-  right: -5px;
-  border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
-  border-right: 1px solid color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
-  background: var(--theme-color);
+  right: -11px;
+  border-bottom-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
+  background: radial-gradient(ellipse 11px 13px at 100% 0, transparent 91%, color-mix(in srgb, var(--theme-color) 55%, #5d6b7a) 92%, color-mix(in srgb, var(--theme-color) 55%, #5d6b7a) 99%, transparent 101%), linear-gradient(color-mix(in srgb, var(--theme-color) 65%, #fff), var(--theme-color));
+  -webkit-mask: radial-gradient(ellipse 11px 13px at 100% 0, transparent 90%, #000 92%);
+  mask: radial-gradient(ellipse 11px 13px at 100% 0, transparent 90%, #000 92%);
 }
 /* 我的靠右 */
 .chat-message-row.is-user .chat-bubble {
