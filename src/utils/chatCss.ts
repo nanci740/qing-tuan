@@ -258,7 +258,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user > .chat-message-mini-avatar {
   display: none;
 }` },
-  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在上面 */
+  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴 */
 .chat-message-row .chat-bubble > div:last-child {
   position: relative;
   display: inline-block;
@@ -273,17 +273,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
   text-align: left;
 }
-/* 小尾巴：对着头像，在泡泡上面那一段 */
+/* 小尾巴：对着头像，在泡泡下面那一段 */
 .chat-message-row .chat-bubble > div:last-child::before {
   content: '';
   position: absolute;
-  top: calc(.85em - 4px);
+  bottom: calc(.85em - 4px);
   left: -5px;
   width: 8px;
   height: 8px;
   border-left: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
   border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
-  background: color-mix(in srgb, var(--theme-color) 35%, #7f7f7f);
+  background: color-mix(in srgb, var(--theme-color) 29%, #555);
   transform: rotate(45deg);
 }
 /* 我的：白色，靠右，尾巴在右边 */
@@ -305,7 +305,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-bottom: 0;
   border-top: 1px solid #c4c4c4;
   border-right: 1px solid #c4c4c4;
-  background: #fbfbfb;
+  background: #e9e9e9;
 }
 /* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
 .chat-message-row.is-user > .chat-message-head,
