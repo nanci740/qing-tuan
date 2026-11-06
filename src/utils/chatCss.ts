@@ -258,69 +258,58 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user > .chat-message-mini-avatar {
   display: none;
 }` },
-  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在中间 */
+  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在中间
+   泡泡和尾巴是一整块剪出来的：外面一层是框线，里面一层是渐层，影子一起打 */
 .chat-message-row .chat-bubble > div:last-child {
   position: relative;
+  isolation: isolate;
   display: inline-block;
   max-width: calc(100% - 1em);
-  margin: 2px 0 2px .6em;
-  padding: .5em .8em;
-  border: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
-  border-radius: 3px;
-  background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
-  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .3));   /* 影子连尾巴一起 */
+  margin: 2px 0;
+  padding: .5em .8em .5em calc(.8em + 7px);
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .3));
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
   text-align: left;
 }
-/* 小尾巴：两个三角叠起来，外面一层是框线色，里面一层是泡泡中间的颜色，跟泡泡的框线接在一起 */
 .chat-message-row .chat-bubble > div:last-child::before,
 .chat-message-row .chat-bubble > div:last-child::after {
   content: '';
   position: absolute;
-  top: 50%;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  z-index: -1;
+  pointer-events: none;
 }
+/* 外面一层：框线的颜色 */
 .chat-message-row .chat-bubble > div:last-child::before {
-  left: -8px;
-  width: 8px;
-  height: 12px;
-  margin-top: -6px;
+  inset: 0;
   background: color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+  clip-path: polygon(7px 3px, 7.9px .9px, 10px 0, calc(100% - 3px) 0, calc(100% - .9px) .9px, 100% 3px, 100% calc(100% - 3px), calc(100% - .9px) calc(100% - .9px), calc(100% - 3px) 100%, 10px 100%, 7.9px calc(100% - .9px), 7px calc(100% - 3px), 7px calc(50% + 6px), 0 50%, 7px calc(50% - 6px));
 }
+/* 里面一层：缩进 1px，渐层连着尾巴一起，上面一道亮线 */
 .chat-message-row .chat-bubble > div:last-child::after {
-  left: -6.5px;
-  width: 7.5px;
-  height: 9.6px;
-  margin-top: -4.8px;
-  background: color-mix(in srgb, var(--theme-color) 31%, #696969);
+  inset: 1px;
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+  clip-path: polygon(7px 2px, 7.6px .6px, 9px 0, calc(100% - 2px) 0, calc(100% - .6px) .6px, 100% 2px, 100% calc(100% - 2px), calc(100% - .6px) calc(100% - .6px), calc(100% - 2px) 100%, 9px 100%, 7.6px calc(100% - .6px), 7px calc(100% - 2px), 7px calc(50% + 5.5px), .55px 50%, 7px calc(50% - 5.5px));
 }
-/* 我的：白色，靠右，尾巴在右边 */
+/* 我的：白色，靠右，同一个形状翻过来 */
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
 }
 .chat-message-row.is-user .chat-bubble > div:last-child {
-  margin: 2px .6em 2px 0;
-  border-color: #c4c4c4;
-  background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
-  box-shadow: inset 0 1px 0 #fff;
+  padding: .5em calc(.8em + 7px) .5em .8em;
   filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2));
   color: #333;
   text-shadow: 0 1px 0 #fff;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::before,
-.chat-message-row.is-user .chat-bubble > div:last-child::after {
-  left: auto;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
 .chat-message-row.is-user .chat-bubble > div:last-child::before {
-  right: -8px;
   background: #c4c4c4;
+  clip-path: polygon(calc(100% - 7px) 3px, calc(100% - 7.9px) .9px, calc(100% - 10px) 0, 3px 0, .9px .9px, 0 3px, 0 calc(100% - 3px), .9px calc(100% - .9px), 3px 100%, calc(100% - 10px) 100%, calc(100% - 7.9px) calc(100% - .9px), calc(100% - 7px) calc(100% - 3px), calc(100% - 7px) calc(50% + 6px), 100% 50%, calc(100% - 7px) calc(50% - 6px));
 }
 .chat-message-row.is-user .chat-bubble > div:last-child::after {
-  right: -6.5px;
-  background: #f4f4f4;
+  background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
+  box-shadow: inset 0 1px 0 #fff;
+  clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
 }
 /* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
 .chat-message-row.is-user > .chat-message-head,
