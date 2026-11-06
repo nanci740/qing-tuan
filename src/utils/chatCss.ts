@@ -258,54 +258,69 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user > .chat-message-mini-avatar {
   display: none;
 }` },
-  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴 */
+  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在中间 */
 .chat-message-row .chat-bubble > div:last-child {
   position: relative;
   display: inline-block;
   max-width: calc(100% - 1em);
-  margin: 2px 0 2px .55em;
+  margin: 2px 0 2px .6em;
   padding: .5em .8em;
   border: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
   border-radius: 3px;
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 1px 2px rgba(0, 0, 0, .3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .3));   /* 影子连尾巴一起 */
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
   text-align: left;
 }
-/* 小尾巴：对着头像，在泡泡下面那一段 */
-.chat-message-row .chat-bubble > div:last-child::before {
+/* 小尾巴：两个三角叠起来，外面一层是框线色，里面一层是泡泡中间的颜色，跟泡泡的框线接在一起 */
+.chat-message-row .chat-bubble > div:last-child::before,
+.chat-message-row .chat-bubble > div:last-child::after {
   content: '';
   position: absolute;
-  bottom: calc(.85em - 4px);
-  left: -5px;
+  top: 50%;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+.chat-message-row .chat-bubble > div:last-child::before {
+  left: -8px;
   width: 8px;
-  height: 8px;
-  border-left: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
-  background: color-mix(in srgb, var(--theme-color) 29%, #555);
-  transform: rotate(45deg);
+  height: 12px;
+  margin-top: -6px;
+  background: color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+}
+.chat-message-row .chat-bubble > div:last-child::after {
+  left: -6.5px;
+  width: 7.5px;
+  height: 9.6px;
+  margin-top: -4.8px;
+  background: color-mix(in srgb, var(--theme-color) 31%, #696969);
 }
 /* 我的：白色，靠右，尾巴在右边 */
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
 }
 .chat-message-row.is-user .chat-bubble > div:last-child {
-  margin: 2px .55em 2px 0;
+  margin: 2px .6em 2px 0;
   border-color: #c4c4c4;
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, .2);
+  box-shadow: inset 0 1px 0 #fff;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2));
   color: #333;
   text-shadow: 0 1px 0 #fff;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::before {
+.chat-message-row.is-user .chat-bubble > div:last-child::before,
+.chat-message-row.is-user .chat-bubble > div:last-child::after {
   left: auto;
-  right: -5px;
-  border-left: 0;
-  border-bottom: 0;
-  border-top: 1px solid #c4c4c4;
-  border-right: 1px solid #c4c4c4;
-  background: #e9e9e9;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.chat-message-row.is-user .chat-bubble > div:last-child::before {
+  right: -8px;
+  background: #c4c4c4;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child::after {
+  right: -6.5px;
+  background: #f4f4f4;
 }
 /* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
 .chat-message-row.is-user > .chat-message-head,
