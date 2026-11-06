@@ -1,17 +1,24 @@
 import { kv } from './kvStorage';
+import { scopeChatCss } from './chatCssScope';
 
 /** 美化设置的「聊天美化 CSS」：套到全部聊天室。聊天设置里单独设的壁纸、字号、专属气泡还是会盖过它。 */
 const KEY = 'qingtuan_chat_css_v1', TEMPLATES = 'qingtuan_chat_css_templates_v1';
 export const CHAT_CSS_EVENT = 'qingtuan:chat-css';
-export const CHAT_CSS_LIMIT = 30000, TEMPLATE_LIMIT = 30;
-/** 六个 #chatAppPage：聊天室原本的样式最多到四层（像发送键），要盖得过去；专属气泡用七个，再盖过这里。 */
-export const CHAT_CSS_SCOPE = '#chatAppPage'.repeat(6);
+export const TEMPLATE_LIMIT = 30;
 
 export function readChatCss() { try { return kv.getItem(KEY) || ''; } catch { return ''; } }
 export function writeChatCss(css: string) {
   const value = String(css || '').trim();
   if (value) { scopeChatCss(value); kv.setItem(KEY, value); } else kv.removeItem(KEY);
+  try { kv.removeItem('qingtuan_chat_css_draft_v1'); } catch { /* 草稿清不掉没关系 */ }
   window.dispatchEvent(new CustomEvent(CHAT_CSS_EVENT));
+}
+
+/** 还没套用的草稿：离开美化设置、重新开启都还在。跟已套用的一样就不存。 */
+const DRAFT = 'qingtuan_chat_css_draft_v1';
+export function readDraft(): string | null { try { return kv.getItem(DRAFT); } catch { return null; } }
+export function writeDraft(draft: string, applied: string) {
+  try { if (draft.trim() === applied.trim()) kv.removeItem(DRAFT); else kv.setItem(DRAFT, draft.slice(0, 40000)); } catch { /* 存不了就算了 */ }
 }
 
 export interface ChatCssTemplate { id: string; name: string; css: string; at: number }
@@ -32,87 +39,8 @@ export function saveTemplate(name: string, css: string) {
 export function renameTemplate(id: string, name: string) { writeTemplates(readTemplates().map(item => item.id === id ? { ...item, name: String(name || '').trim().slice(0, 12) || item.name } : item)); }
 export function deleteTemplate(id: string) { writeTemplates(readTemplates().filter(item => item.id !== id)); }
 
-/* ---------- 把写的 CSS 关进聊天室里 ---------- */
-function matchBrace(text: string, open: number) {
-  let depth = 0;
-  for (let index = open; index < text.length; index++) {
-    if (text[index] === '{') depth++;
-    else if (text[index] === '}' && --depth === 0) return index;
-  }
-  return -1;
-}
-/** 逗号分开选择器，但 :is(a, b) 括号里的逗号不算。 */
-function splitSelectors(head: string) {
-  const parts: string[] = []; let depth = 0, start = 0;
-  for (let index = 0; index < head.length; index++) {
-    const char = head[index];
-    if (char === '(' || char === '[') depth++;
-    else if (char === ')' || char === ']') depth--;
-    else if (char === ',' && depth === 0) { parts.push(head.slice(start, index)); start = index + 1; }
-  }
-  parts.push(head.slice(start));
-  return parts.map(part => part.trim()).filter(Boolean);
-}
-function scopeSelector(selector: string, scope: string) {
-  // :root、html、body、#chatAppPage 都当成聊天室本身
-  const rest = selector.replace(/^(?::root|html|body|#chatAppPage)(?![\w-])/i, '');
-  if (rest !== selector) return scope + rest;
-  return `${scope} ${selector}`;
-}
-/** 麦克风跟图片、相机排在同一排，写法却不一样（.chat-mic-btn）：写给那排小按钮的，麦克风也一起套。上面生图那排（.chat-quick-actions）不算，::before／::after 也不算。 */
-function withMic(selector: string) {
-  if (!/\.chat-quick-action(?![\w-])/.test(selector) || /\.chat-quick-actions(?![\w-])/.test(selector)) return [selector];
-  // ::before、::after 不跟：麦克风录音时的红点就是用 ::before 画的，套过去会打架
-  if (/::?(before|after)\b/i.test(selector)) return [selector];
-  return [selector, selector.replace(/\.chat-quick-action(?![\w-])/g, '.chat-mic-btn')];
-}
-/** 每一句都加 !important：聊天室原本的样式很多是 !important，不加盖不过去。分号在括号、引号里的不算（data:image;base64 那种）。 */
-export function strengthen(body: string) {
-  const parts: string[] = []; let depth = 0, quote = '', start = 0;
-  for (let index = 0; index < body.length; index++) {
-    const char = body[index];
-    if (quote) { if (char === quote) quote = ''; continue; }
-    if (char === '"' || char === "'") quote = char;
-    else if (char === '(') depth++;
-    else if (char === ')') depth--;
-    else if (char === ';' && depth === 0) { parts.push(body.slice(start, index)); start = index + 1; }
-  }
-  parts.push(body.slice(start));
-  const list = parts.map(part => part.trim()).filter(text => text && text.includes(':') && !/^position\s*:\s*fixed/i.test(text));
-  // 聊天室很多字用 -webkit-text-fill-color 上色，只写 color 会没反应：写了 color 就顺便补上
-  const color = list.find(text => /^color\s*:/i.test(text));
-  if (color && !list.some(text => /^-webkit-text-fill-color\s*:/i.test(text))) list.push(color.replace(/^color/i, '-webkit-text-fill-color'));
-  return list.map(text => /!important$/i.test(text) ? text : `${text} !important`).join(';');
-}
-function scopeBlock(css: string, scope: string, strong: boolean): string {
-  let out = '', index = 0;
-  while (index < css.length) {
-    const open = css.indexOf('{', index);
-    if (open < 0) { if (css.slice(index).trim()) throw Error('最后少了一个 { }'); break; }
-    const close = matchBrace(css, open);
-    if (close < 0) throw Error('大括号 { } 没有配对好');
-    const head = css.slice(index, open).trim(), body = css.slice(open + 1, close);
-    if (head.startsWith('@')) {
-      if (/^@(media|supports|container)\b/i.test(head)) out += `${head}{${scopeBlock(body, scope, strong)}}`;
-      else if (/^@(-webkit-)?keyframes\b/i.test(head)) out += `${head}{${body}}`;
-      // @font-face、@page 这些不收
-    } else if (head) {
-      out += `${splitSelectors(head).flatMap(withMic).map(item => scopeSelector(item, scope)).join(',')}{${strong ? strengthen(body) : body}}`;
-    }
-    index = close + 1;
-  }
-  return out;
-}
-/** 检查、加范围。会去外面抓东西的写法挡掉；图片只收 data:image。 */
-export function scopeChatCss(source: string, scope = CHAT_CSS_SCOPE) {
-  const css = String(source || '').replace(/\/\*[\s\S]*?\*\//g, '').trim();
-  if (!css) return '';
-  if (css.length > CHAT_CSS_LIMIT) throw Error('写太长了，最多 3 万字');
-  if (/@import|expression\s*\(|javascript:|behavior\s*:|<\/?style|<script/i.test(css)) throw Error('里面有不能用的写法（@import、script 这类）');
-  const urls = css.match(/url\s*\(\s*(['"]?)([^'")]*)/gi) || [];
-  if (urls.some(item => !/url\s*\(\s*['"]?data:image\//i.test(item))) throw Error('图片只能用 data:image 开头的，不能连到外面的网址');
-  return scopeBlock(css, scope, true);
-}
+/* 检查、加范围的部分在 chatCssScope.ts（纯文字处理，可以单独测）。 */
+export { CHAT_CSS_SCOPE, CHAT_CSS_LIMIT, scopeChatCss, strengthen } from './chatCssScope';
 
 /* ---------- 类名小抄 ---------- */
 export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [
@@ -146,66 +74,97 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --cr-peer: #b07d62;    /* 他的名字 */
   --cr-self: #8c9a6e;    /* 我的名字 */
 }` },
-  { name: '气泡框', css: `/* 名字、时间占一整行，气泡排在下面 */
-.chat-message-row > .chat-message-head {
-  flex-basis: 100%;
-}
-/* 文字放进气泡里 */
-.chat-message-row .chat-bubble {
+  { name: '旧 iPhone', css: `/* 复古玻璃泡泡：他的灰色、我的跟着主题色；弯弯的小尾巴跟外框连在一起，字多字少都拉得开 */
+.chat-message-row .chat-bubble > div:last-child {
+  position: relative;
+  isolation: isolate;
   display: inline-block;
-  flex: 0 0 auto;          /* 气泡跟着字的长度，不要撑满一整行 */
-  max-width: 100%;
-  margin-top: 2px;
-  padding: 4px 9px;
-  border: 1px solid var(--cr-line);
-  border-radius: 2px 10px 10px 10px;
-  background: var(--color-surface);
+  max-width: calc(100% - 1em);
+  margin: 2px 0 2px .7em;
+  padding: .4em .65em .42em;
+  color: #3f373d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
+  text-align: left;
 }
-/* 我的气泡用主题色 */
+/* 他的：灰色泡泡（一张图的九宫格，中间跟着字拉长） */
+.chat-message-row .chat-bubble > div:last-child::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 0 -.34em;
+  border-style: solid;
+  border-color: transparent;
+  border-width: .83em 1.11em .83em 1.33em;
+  border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22h%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.96%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.7%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.22%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.75%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22f%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23cdcdd0%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23e6e6e8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f4f4f5%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22url%28%23f%29%22%20stroke%3D%22%239c9a9e%22%20stroke-width%3D%221.1%22%2F%3E%3Crect%20x%3D%2215.5%22%20y%3D%223.4%22%20width%3D%2254%22%20height%3D%2215%22%20rx%3D%227.5%22%20fill%3D%22url%28%23h%29%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2225%22%20width%3D%2249%22%20height%3D%2211%22%20rx%3D%225.5%22%20fill%3D%22url%28%23g%29%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
+  filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
+  pointer-events: none;
+}
+/* 我的：靠右，同一个形状翻过来，底色用主题色 */
 .chat-message-row.is-user .chat-bubble {
-  border-radius: 10px 2px 10px 10px;
-  background: color-mix(in srgb, var(--theme-color) 55%, #fff);
-}` },
-  { name: '便利贴', css: `/* 名字、时间占一整行，气泡排在下面 */
+  text-align: right;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child {
+  margin: 2px .7em 2px 0;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child::before {
+  inset: 0 -.34em 0 0;
+  transform: scaleX(-1);
+  border: 0;
+  border-image: none;
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 70%, #4f6a8c), color-mix(in srgb, var(--theme-color) 80%, #fff) 45%, color-mix(in srgb, var(--theme-color) 45%, #fff));
+  -webkit-mask-box-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 / .83em 1.11em .83em 1.33em stretch;
+  filter: none;
+}
+/* 我的：外框和亮光叠在上面 */
+.chat-message-row.is-user .chat-bubble > div:last-child::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 -.34em 0 0;
+  transform: scaleX(-1);
+  border-style: solid;
+  border-color: transparent;
+  border-width: .83em 1.11em .83em 1.33em;
+  border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22h%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.96%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.7%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.22%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.75%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%2215.5%22%20y%3D%223.4%22%20width%3D%2254%22%20height%3D%2215%22%20rx%3D%227.5%22%20fill%3D%22url%28%23h%29%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2225%22%20width%3D%2249%22%20height%3D%2211%22%20rx%3D%225.5%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22none%22%20stroke%3D%22%232f3e52%22%20stroke-opacity%3D%22.45%22%20stroke-width%3D%221.1%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
+  filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
+  pointer-events: none;
+}
+/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
+.chat-message-row.is-user > .chat-message-head,
+.chat-message-row > .chat-message-head .chat-message-time {
+  display: none;
+}
 .chat-message-row > .chat-message-head {
-  flex-basis: 100%;
+  margin: 0 0 1px 8px;
+  font-size: 10px;
 }
-/* 每一则像一张便利贴 */
-.chat-message-row .chat-bubble {
-  display: inline-block;
-  flex: 0 0 auto;          /* 气泡跟着字的长度，不要撑满一整行 */
-  max-width: 100%;
-  margin-top: 3px;
-  padding: 5px 10px;
-  border: 1px solid #e4dcc0;
-  background: #fffdf3;
-  box-shadow: 2px 2px 0 #e9e2c9;
-  transform: rotate(-.6deg);
+/* 时间和已读：小小的放在泡泡下面 */
+.chat-bubble-wrap > .chat-bubble-time {
+  order: 3;
+  flex: 0 0 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+  margin: 1px 0 2px 10px;
+  font-size: 9px;
 }
-.chat-message-row.is-user .chat-bubble {
-  border-color: #ecc9d2;
-  background: #fdf0f3;
-  box-shadow: 2px 2px 0 #f0d6dd;
-  transform: rotate(.6deg);
-}` },
-  { name: '像素方框', css: `/* 名字、时间占一整行，气泡排在下面 */
-.chat-message-row > .chat-message-head {
-  flex-basis: 100%;
+.chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
+  justify-content: flex-end;
+  margin: 1px 10px 2px 0;
 }
-/* 方方的像素框 */
-.chat-message-row .chat-bubble {
-  display: inline-block;
-  flex: 0 0 auto;          /* 气泡跟着字的长度，不要撑满一整行 */
-  max-width: 100%;
-  margin: 3px 2px;
-  padding: 4px 8px;
-  background: var(--color-surface);
-  box-shadow: 0 -2px 0 var(--cr-title), 0 2px 0 var(--cr-title), -2px 0 0 var(--cr-title), 2px 0 0 var(--cr-title);
-}
-.chat-message-row.is-user .chat-bubble {
-  background: color-mix(in srgb, var(--theme-color) 50%, #fff);
-}
+/* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
-  border-radius: 0;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(60, 80, 110, .3);
+}
+/* 我的不放头像 */
+.chat-message-row.is-user {
+  padding: 3px 12px 5px 48px;
+}
+.chat-message-row.is-user > .chat-message-mini-avatar {
+  display: none;
 }` }
 ];

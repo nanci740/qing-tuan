@@ -5,7 +5,7 @@ import { useAppearance } from '../../../providers/AppearanceProvider';
 import { useChoice } from '../../../providers/ChoiceProvider';
 import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
 import { showToast } from '../../../utils/toast';
-import { CHAT_CSS_EVENT, CLASS_GROUPS, EXAMPLES, deleteTemplate, readChatCss, readTemplates, renameTemplate, saveTemplate, scopeChatCss, writeChatCss } from '../../../utils/chatCss';
+import { CHAT_CSS_EVENT, CLASS_GROUPS, EXAMPLES, deleteTemplate, readChatCss, readDraft, writeDraft, readTemplates, renameTemplate, saveTemplate, scopeChatCss, writeChatCss } from '../../../utils/chatCss';
 import type { ChatCssTemplate } from '../../../utils/chatCss';
 
 const PHONE_W = 390, PHONE_H = 540;
@@ -15,7 +15,9 @@ const escape = (text: string) => text.replace(/[&<>"]/g, char => ({ '&': '&amp;'
 function sampleRows(name: string, peer: string, self: string) {
   const row = (user: boolean, text: string, time: string, tail = false) => {
     const head = `<div class="chat-message-head"><span class="chat-message-name">${escape(user ? '我' : name)}</span><span class="chat-message-time">${time}</span></div>`;
-    const wrap = `<div class="chat-bubble-wrap"><div class="chat-bubble">${escape(text)}</div></div>`;
+    // 跟真的消息一样：泡泡后面接一个时间（含已读）的小格
+    const receipt = user ? '<span class="chat-read-receipt" aria-label="已读"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 8.5l3 3 6-7M7 11.5l1 1 6-8"/></svg></span>' : '';
+    const wrap = `<div class="chat-bubble-wrap"><div class="chat-bubble"><div>${escape(text)}</div></div><div class="chat-bubble-time">${time.slice(0, 5)}${receipt}</div></div>`;
     const avatar = `<img class="chat-message-mini-avatar" src="${escape(user ? self : peer)}" alt="">`;
     return `<div class="chat-message-row ${user ? 'is-user' : 'is-chat'}${tail ? ' is-tail' : ''}${user ? ' is-read' : ''}">${user ? head + wrap + avatar : avatar + head + wrap}</div>`;
   };
@@ -54,7 +56,7 @@ function buildPreview(frame: HTMLIFrameElement) {
 /** 美化设置：「聊天美化 CSS」，写好按套用，全部聊天室一起换。 */
 export function ChatCssWindow() {
   const appearance = useAppearance(), choice = useChoice();
-  const [applied, setApplied] = useState(readChatCss), [draft, setDraft] = useState(readChatCss), [error, setError] = useState('');
+  const [applied, setApplied] = useState(readChatCss), [draft, setDraft] = useState(() => readDraft() ?? readChatCss()), [error, setError] = useState('');
   const [templates, setTemplates] = useState<ChatCssTemplate[]>(readTemplates);
   const frame = useRef<HTMLIFrameElement>(null), box = useRef<HTMLDivElement>(null), code = useRef<HTMLTextAreaElement>(null), file = useRef<HTMLInputElement>(null);
   const caret = useRef(-1), press = useRef(0), pressed = useRef(false), [scale, setScale] = useState(.8);
@@ -78,10 +80,10 @@ export function ChatCssWindow() {
     try { const scoped = scopeChatCss(css); if (target) target.textContent = scoped; setError(''); }
     catch (problem) { setError((problem as Error).message); }
   }
-  useEffect(() => { const timer = window.setTimeout(() => paint(draft), 250); return () => window.clearTimeout(timer); }, [draft]);
+  useEffect(() => { const timer = window.setTimeout(() => { paint(draft); writeDraft(draft, readChatCss()); }, 250); return () => window.clearTimeout(timer); }, [draft]);
 
   function apply() {
-    try { writeChatCss(draft); setApplied(draft.trim()); showToast(draft.trim() ? '已套用到全部聊天' : '已拿掉聊天美化 CSS'); }
+    try { writeChatCss(draft); setApplied(draft.trim()); writeDraft(draft, draft); showToast(draft.trim() ? '已套用到全部聊天' : '已拿掉聊天美化 CSS'); }
     catch (problem) { showToast((problem as Error).message); }
   }
   function insert(text: string) {
@@ -131,7 +133,7 @@ export function ChatCssWindow() {
     setDraft(await picked.text()); showToast('已放进编辑框，按「套用」才会换');
   }
 
-  const status = error ? `写错了：${error}` : draft.trim() === applied.trim() ? (applied.trim() ? '这就是现在套用的样子。' : '现在没有套用任何聊天美化。') : '上面是预览，还没套用。';
+  const status = error ? `写错了，${error}` : draft.trim() === applied.trim() ? (applied.trim() ? '这就是现在套用的样子。' : '现在没有套用任何聊天美化。') : '上面是预览，还没套用。';
   return <section className="theme-setting-group chat-css-group" id="chatCssGroup">
     <div className="theme-setting-label">聊天美化 CSS</div>
     <div className="theme-setting-card">
