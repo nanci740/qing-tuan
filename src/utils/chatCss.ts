@@ -257,5 +257,92 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row.is-user > .chat-message-mini-avatar {
   display: none;
+}` },
+  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在上面 */
+.chat-message-row .chat-bubble > div:last-child {
+  position: relative;
+  display: inline-block;
+  max-width: calc(100% - 1em);
+  margin: 2px 0 2px .55em;
+  padding: .5em .8em;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+  border-radius: 3px;
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 1px 2px rgba(0, 0, 0, .3);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
+  text-align: left;
+}
+/* 小尾巴：对着头像，在泡泡上面那一段 */
+.chat-message-row .chat-bubble > div:last-child::before {
+  content: '';
+  position: absolute;
+  top: calc(.85em - 4px);
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  border-left: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+  background: color-mix(in srgb, var(--theme-color) 35%, #7f7f7f);
+  transform: rotate(45deg);
+}
+/* 我的：白色，靠右，尾巴在右边 */
+.chat-message-row.is-user .chat-bubble {
+  text-align: right;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child {
+  margin: 2px .55em 2px 0;
+  border-color: #c4c4c4;
+  background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, .2);
+  color: #333;
+  text-shadow: 0 1px 0 #fff;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child::before {
+  left: auto;
+  right: -5px;
+  border-left: 0;
+  border-bottom: 0;
+  border-top: 1px solid #c4c4c4;
+  border-right: 1px solid #c4c4c4;
+  background: #fbfbfb;
+}
+/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
+.chat-message-row.is-user > .chat-message-head,
+.chat-message-row > .chat-message-head .chat-message-time {
+  display: none;
+}
+.chat-message-row > .chat-message-head {
+  margin: 0 0 1px 8px;
+  font-size: 10px;
+}
+/* 时间和已读：小小的放在泡泡下面 */
+.chat-bubble-wrap > .chat-bubble-time {
+  order: 3;
+  flex: 0 0 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+  margin: 1px 0 2px 10px;
+  font-size: 9px;
+}
+.chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
+  justify-content: flex-end;
+  margin: 1px 10px 2px 0;
+}
+/* 头像：圆圆的白边 */
+.chat-message-mini-avatar {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(60, 80, 110, .3);
+}
+/* 我的不放头像 */
+.chat-message-row.is-user {
+  padding: 3px 12px 5px 48px;
+}
+.chat-message-row.is-user > .chat-message-mini-avatar {
+  display: none;
 }` }
 ];
