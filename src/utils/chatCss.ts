@@ -74,54 +74,60 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --cr-peer: #b07d62;    /* 他的名字 */
   --cr-self: #8c9a6e;    /* 我的名字 */
 }` },
-  { name: '旧 iPhone', css: `/* 旧 iPhone 泡泡：亮面、带小尾巴。他的在左边白色，我的在右边跟着主题色 */
+  { name: '旧 iPhone', css: `/* 复古玻璃泡泡：他的灰色、我的跟着主题色；弯弯的小尾巴跟外框连在一起，字多字少都拉得开 */
 .chat-message-row .chat-bubble > div:last-child {
   position: relative;
+  isolation: isolate;
   display: inline-block;
-  max-width: 100%;
-  margin: 1px 6px;
-  padding: 5px 13px;
-  border: 1px solid #a9adb3;
-  border-radius: 16px;
-  background: linear-gradient(#ffffff, #f1f1f1 50%, #e3e3e3);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(0, 0, 0, .18);
+  max-width: calc(100% - 1em);
+  margin: 2px 0 2px .7em;
+  padding: .4em .65em .42em;
+  color: #3f373d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
   text-align: left;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child {
-  border-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
-  background: linear-gradient(color-mix(in srgb, var(--theme-color) 20%, #fff), color-mix(in srgb, var(--theme-color) 55%, #fff) 50%, var(--theme-color));
-}
-/* 小尾巴：从泡泡底部弯出去的小勾（他的在左下，我的在右下） */
-.chat-message-row .chat-bubble > div:last-child {
-  border-bottom-left-radius: 5px;
-}
-.chat-message-row.is-user .chat-bubble > div:last-child {
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 5px;
-}
-.chat-message-row .chat-bubble > div:last-child::after {
+/* 他的：灰色泡泡（一张图的九宫格，中间跟着字拉长） */
+.chat-message-row .chat-bubble > div:last-child::before {
   content: '';
   position: absolute;
-  bottom: -1px;
-  left: -11px;
-  width: 15px;
-  height: 14px;
-  border-bottom: 1px solid #a9adb3;
-  background: radial-gradient(ellipse 11px 13px at 0 0, transparent 91%, #a9adb3 92%, #a9adb3 99%, transparent 101%), linear-gradient(#efefef, #e3e3e3);
-  -webkit-mask: radial-gradient(ellipse 11px 13px at 0 0, transparent 90%, #000 92%);
-  mask: radial-gradient(ellipse 11px 13px at 0 0, transparent 90%, #000 92%);
+  z-index: -1;
+  inset: 0 0 0 -.34em;
+  border-style: solid;
+  border-color: transparent;
+  border-width: .83em 1.11em .83em 1.33em;
+  border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22f%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23f7f6f5%22%2F%3E%3Cstop%20offset%3D%22.4%22%20stop-color%3D%22%23f0efee%22%2F%3E%3Cstop%20offset%3D%22.73%22%20stop-color%3D%22%23e8e7e5%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f8f8f5%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22url%28%23f%29%22%20stroke%3D%22%23aaa7aa%22%20stroke-width%3D%221.1%22%2F%3E%3Cpath%20d%3D%22M27%202.4H59C64.5%202.4%2069.4%204.8%2072.6%208.8C66%2012.3%2020%2013.3%2012.5%2011C15.8%205.8%2021%202.4%2027%202.4Z%22%20fill%3D%22white%22%20opacity%3D%220.36%22%2F%3E%3Cpath%20d%3D%22M14%2032.2C17.3%2035.9%2022.3%2037.6%2027%2037.6H59C64.5%2037.6%2069.8%2035.1%2073%2030.8%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-opacity%3D%22.57%22%20stroke-width%3D%221%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
+  filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
+  pointer-events: none;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::after {
-  left: auto;
-  right: -11px;
-  border-bottom-color: color-mix(in srgb, var(--theme-color) 55%, #5d6b7a);
-  background: radial-gradient(ellipse 11px 13px at 100% 0, transparent 91%, color-mix(in srgb, var(--theme-color) 55%, #5d6b7a) 92%, color-mix(in srgb, var(--theme-color) 55%, #5d6b7a) 99%, transparent 101%), linear-gradient(color-mix(in srgb, var(--theme-color) 65%, #fff), var(--theme-color));
-  -webkit-mask: radial-gradient(ellipse 11px 13px at 100% 0, transparent 90%, #000 92%);
-  mask: radial-gradient(ellipse 11px 13px at 100% 0, transparent 90%, #000 92%);
-}
-/* 我的靠右 */
+/* 我的：靠右，同一个形状翻过来，底色用主题色 */
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child {
+  margin: 2px .7em 2px 0;
+}
+.chat-message-row.is-user .chat-bubble > div:last-child::before {
+  inset: 0 -.34em 0 0;
+  transform: scaleX(-1);
+  border: 0;
+  border-image: none;
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 85%, #8aa0bd), color-mix(in srgb, var(--theme-color) 70%, #fff) 40%, color-mix(in srgb, var(--theme-color) 50%, #fff) 73%, color-mix(in srgb, var(--theme-color) 30%, #fff));
+  -webkit-mask-box-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 / .83em 1.11em .83em 1.33em stretch;
+  filter: none;
+}
+/* 我的：外框和亮光叠在上面 */
+.chat-message-row.is-user .chat-bubble > div:last-child::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 -.34em 0 0;
+  transform: scaleX(-1);
+  border-style: solid;
+  border-color: transparent;
+  border-width: .83em 1.11em .83em 1.33em;
+  border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22none%22%20stroke%3D%22%233c4a5c%22%20stroke-opacity%3D%22.4%22%20stroke-width%3D%221.1%22%2F%3E%3Cpath%20d%3D%22M27%202.4H59C64.5%202.4%2069.4%204.8%2072.6%208.8C66%2012.3%2020%2013.3%2012.5%2011C15.8%205.8%2021%202.4%2027%202.4Z%22%20fill%3D%22white%22%20opacity%3D%220.31%22%2F%3E%3Cpath%20d%3D%22M14%2032.2C17.3%2035.9%2022.3%2037.6%2027%2037.6H59C64.5%2037.6%2069.8%2035.1%2073%2030.8%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-opacity%3D%22.57%22%20stroke-width%3D%221%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
+  filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
+  pointer-events: none;
 }
 /* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
 .chat-message-row.is-user > .chat-message-head,
