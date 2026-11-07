@@ -150,7 +150,11 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
 }
-/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  opacity: .6;
+}
 .chat-message-row .chat-bubble--voice .chat-voice-control::before {
   border-left-color: currentColor;
 }
@@ -298,7 +302,11 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
 }
-/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  opacity: .6;
+}
 .chat-message-row .chat-bubble--voice .chat-voice-control::before {
   border-left-color: currentColor;
 }
@@ -457,7 +465,11 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
 }
-/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  opacity: .6;
+}
 .chat-message-row .chat-bubble--voice .chat-voice-control::before {
   border-left-color: currentColor;
 }
