@@ -80,7 +80,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   isolation: isolate;
   display: inline-block;
   max-width: calc(100% - 1em);
-  margin: 2px 0 2px .7em;
+  /* 上面多空一点，一行字的泡泡跟头像中间对齐（头像 30px 高） */
+  margin: calc(2px + max(0px, 15px - 1.21em)) 0 2px .7em;
   padding: .4em .65em .42em;
   color: #3f373d;
   text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
@@ -168,7 +169,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   isolation: isolate;
   display: inline-block;
   max-width: calc(100% - 1em);
-  margin: 2px 0 2px .2em;
+  /* 上面多空一点，一行字的泡泡跟头像中间对齐（头像 30px 高） */
+  margin: calc(2px + max(0px, 15px - 1.21em)) 0 2px .2em;
   padding: .4em .65em .42em;
   color: #3f373d;
   text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
@@ -247,7 +249,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   isolation: isolate;
   display: inline-block;
   max-width: calc(100% - 1em);
-  margin: 2px 0;
+  /* 上面多空一点，一行字的泡泡跟头像中间对齐（头像 30px 高） */
+  margin: calc(2px + max(0px, 15px - 1.3em)) 0 2px;
   padding: .5em .8em .5em calc(.8em + 7px);
   filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .3));
   color: #fff;
