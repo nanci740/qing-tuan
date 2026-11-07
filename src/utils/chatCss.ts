@@ -75,7 +75,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --cr-self: #8c9a6e;    /* 我的名字 */
 }` },
   { name: '旧 iPhone', css: `/* 复古玻璃泡泡：他的灰色、我的跟着主题色；弯弯的小尾巴跟外框连在一起，字多字少都拉得开 */
-.chat-message-row .chat-bubble > div:last-child {
+.chat-message-row .chat-bubble > div:last-child:not([class]),
+.chat-message-row .chat-bubble--voice {
   position: relative;
   isolation: isolate;
   display: inline-block;
@@ -88,7 +89,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   text-align: left;
 }
 /* 他的：灰色泡泡（一张图的九宫格，中间跟着字拉长） */
-.chat-message-row .chat-bubble > div:last-child::before {
+.chat-message-row .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row .chat-bubble--voice::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -104,10 +106,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class]),
+.chat-message-row.is-user .chat-bubble--voice {
   margin: 2px .7em 2px 0;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::before {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row.is-user .chat-bubble--voice::before {
   inset: 0 -.34em 0 0;
   transform: scaleX(-1);
   border: 0;
@@ -117,7 +121,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   filter: none;
 }
 /* 我的：外框和亮光叠在上面 */
-.chat-message-row.is-user .chat-bubble > div:last-child::after {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class])::after,
+.chat-message-row.is-user .chat-bubble--voice::after {
   content: '';
   position: absolute;
   z-index: -1;
@@ -129,6 +134,61 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22h%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.96%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.7%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.22%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.75%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%2215.5%22%20y%3D%223.4%22%20width%3D%2254%22%20height%3D%2215%22%20rx%3D%227.5%22%20fill%3D%22url%28%23h%29%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2225%22%20width%3D%2249%22%20height%3D%2211%22%20rx%3D%225.5%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22none%22%20stroke%3D%22%232f3e52%22%20stroke-opacity%3D%22.45%22%20stroke-width%3D%221.1%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
   filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
   pointer-events: none;
+}
+/* 语音：整条（含转文字）放进同一个泡泡里 */
+.chat-message-row .chat-bubble--voice {
+  flex: 0 1 auto;
+  width: fit-content;
+  text-align: left;
+}
+.chat-message-row.is-user .chat-bubble--voice {
+  margin-left: auto;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-length,
+.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+  color: inherit;
+}
+/* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) {
+  display: flex;
+  flex-direction: column;
+}
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-start;
+}
+.chat-message-row.is-user .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-end;
+}
+.chat-message-row .chat-bubble > .chat-quoted-message {
+  order: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .25em .6em;
+  border: 0;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, .06);
+  font-size: .9em;
+  line-height: 1.45;
+  text-align: left;
+}
+/* 翻译：泡泡下面一块淡淡的主题色底 */
+.chat-message-row .chat-message-translation-card {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .3em .65em;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 35%, #d8d8d8);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--theme-color) 12%, #fff);
+  color: #555;
+}
+.chat-message-row.is-user .chat-message-translation-card {
+  margin-left: auto;
 }
 /* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
@@ -164,7 +224,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   display: none;
 }` },
   { name: '无尾巴', css: `/* 复古玻璃泡泡（没有尾巴）：圆圆的胶囊，他的淡淡带一点主题色、我的跟着主题色 */
-.chat-message-row .chat-bubble > div:last-child {
+.chat-message-row .chat-bubble > div:last-child:not([class]),
+.chat-message-row .chat-bubble--voice {
   position: relative;
   isolation: isolate;
   display: inline-block;
@@ -177,7 +238,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   text-align: left;
 }
 /* 底色：胶囊形状剪出来，他的是很淡的主题色（想更白就把 36%、25%、15% 调小） */
-.chat-message-row .chat-bubble > div:last-child::before {
+.chat-message-row .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row .chat-bubble--voice::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -187,7 +249,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   pointer-events: none;
 }
 /* 外框和亮光叠在上面（一张图的九宫格，中间跟着字拉长） */
-.chat-message-row .chat-bubble > div:last-child::after {
+.chat-message-row .chat-bubble > div:last-child:not([class])::after,
+.chat-message-row .chat-bubble--voice::after {
   content: '';
   position: absolute;
   z-index: -1;
@@ -203,11 +266,68 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class]),
+.chat-message-row.is-user .chat-bubble--voice {
   margin: 2px .2em 2px 0;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::before {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row.is-user .chat-bubble--voice::before {
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 70%, #4f6a8c), color-mix(in srgb, var(--theme-color) 80%, #fff) 45%, color-mix(in srgb, var(--theme-color) 45%, #fff));
+}
+/* 语音：整条（含转文字）放进同一个泡泡里 */
+.chat-message-row .chat-bubble--voice {
+  flex: 0 1 auto;
+  width: fit-content;
+  text-align: left;
+}
+.chat-message-row.is-user .chat-bubble--voice {
+  margin-left: auto;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-length,
+.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+  color: inherit;
+}
+/* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) {
+  display: flex;
+  flex-direction: column;
+}
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-start;
+}
+.chat-message-row.is-user .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-end;
+}
+.chat-message-row .chat-bubble > .chat-quoted-message {
+  order: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .25em .6em;
+  border: 0;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, .06);
+  font-size: .9em;
+  line-height: 1.45;
+  text-align: left;
+}
+/* 翻译：泡泡下面一块淡淡的主题色底 */
+.chat-message-row .chat-message-translation-card {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .3em .65em;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 35%, #d8d8d8);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--theme-color) 12%, #fff);
+  color: #555;
+}
+.chat-message-row.is-user .chat-message-translation-card {
+  margin-left: auto;
 }
 /* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
@@ -244,7 +364,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }` },
   { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在中间
    泡泡和尾巴是一整块剪出来的：外面一层是框线，里面一层是渐层，影子一起打 */
-.chat-message-row .chat-bubble > div:last-child {
+.chat-message-row .chat-bubble > div:last-child:not([class]),
+.chat-message-row .chat-bubble--voice {
   position: relative;
   isolation: isolate;
   display: inline-block;
@@ -257,21 +378,25 @@ export const EXAMPLES: { name: string; css: string }[] = [
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
   text-align: left;
 }
-.chat-message-row .chat-bubble > div:last-child::before,
-.chat-message-row .chat-bubble > div:last-child::after {
+.chat-message-row .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row .chat-bubble > div:last-child:not([class])::after,
+.chat-message-row .chat-bubble--voice::before,
+.chat-message-row .chat-bubble--voice::after {
   content: '';
   position: absolute;
   z-index: -1;
   pointer-events: none;
 }
 /* 外面一层：框线的颜色 */
-.chat-message-row .chat-bubble > div:last-child::before {
+.chat-message-row .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row .chat-bubble--voice::before {
   inset: 0;
   background: color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
   clip-path: polygon(7px 3px, 7.9px .9px, 10px 0, calc(100% - 3px) 0, calc(100% - .9px) .9px, 100% 3px, 100% calc(100% - 3px), calc(100% - .9px) calc(100% - .9px), calc(100% - 3px) 100%, 10px 100%, 7.9px calc(100% - .9px), 7px calc(100% - 3px), 7px calc(50% + 6px), 0 50%, 7px calc(50% - 6px));
 }
 /* 里面一层：缩进 1px，渐层连着尾巴一起，上面一道亮线 */
-.chat-message-row .chat-bubble > div:last-child::after {
+.chat-message-row .chat-bubble > div:last-child:not([class])::after,
+.chat-message-row .chat-bubble--voice::after {
   inset: 1px;
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
@@ -281,20 +406,78 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble {
   text-align: right;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class]),
+.chat-message-row.is-user .chat-bubble--voice {
   padding: .5em calc(.8em + 7px) .5em .8em;
   filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2));
   color: #333;
   text-shadow: 0 1px 0 #fff;
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::before {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class])::before,
+.chat-message-row.is-user .chat-bubble--voice::before {
   background: #c4c4c4;
   clip-path: polygon(calc(100% - 7px) 3px, calc(100% - 7.9px) .9px, calc(100% - 10px) 0, 3px 0, .9px .9px, 0 3px, 0 calc(100% - 3px), .9px calc(100% - .9px), 3px 100%, calc(100% - 10px) 100%, calc(100% - 7.9px) calc(100% - .9px), calc(100% - 7px) calc(100% - 3px), calc(100% - 7px) calc(50% + 6px), 100% 50%, calc(100% - 7px) calc(50% - 6px));
 }
-.chat-message-row.is-user .chat-bubble > div:last-child::after {
+.chat-message-row.is-user .chat-bubble > div:last-child:not([class])::after,
+.chat-message-row.is-user .chat-bubble--voice::after {
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
   box-shadow: inset 0 1px 0 #fff;
   clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
+}
+/* 语音：整条（含转文字）放进同一个泡泡里 */
+.chat-message-row .chat-bubble--voice {
+  flex: 0 1 auto;
+  width: fit-content;
+  text-align: left;
+}
+.chat-message-row.is-user .chat-bubble--voice {
+  margin-left: auto;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-length,
+.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+  color: inherit;
+}
+/* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) {
+  display: flex;
+  flex-direction: column;
+}
+.chat-message-row .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-start;
+}
+.chat-message-row.is-user .chat-bubble:has(> .chat-quoted-message) > * {
+  align-self: flex-end;
+}
+.chat-message-row .chat-bubble > .chat-quoted-message {
+  order: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .25em .6em;
+  border: 0;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, .06);
+  font-size: .9em;
+  line-height: 1.45;
+  text-align: left;
+}
+/* 翻译：泡泡下面一块淡淡的主题色底 */
+.chat-message-row .chat-message-translation-card {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: calc(100% - 1.5em);
+  margin: 3px .6em 0;
+  padding: .3em .65em;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 35%, #d8d8d8);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--theme-color) 12%, #fff);
+  color: #555;
+}
+.chat-message-row.is-user .chat-message-translation-card {
+  margin-left: auto;
 }
 /* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
