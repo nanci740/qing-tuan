@@ -129,14 +129,9 @@ export const EXAMPLES: { name: string; css: string }[] = [
   filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
   pointer-events: none;
 }
-/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
-.chat-message-row.is-user > .chat-message-head,
-.chat-message-row > .chat-message-head .chat-message-time {
-  display: none;
-}
+/* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
-  margin: 0 0 1px 8px;
-  font-size: 10px;
+  display: none;
 }
 /* 时间和已读：小小的放在泡泡下面 */
 .chat-bubble-wrap > .chat-bubble-time {
@@ -179,13 +174,13 @@ export const EXAMPLES: { name: string; css: string }[] = [
   text-shadow: 0 1px 0 rgba(255, 255, 255, .45);
   text-align: left;
 }
-/* 底色：胶囊形状剪出来，他的是很淡的主题色（想更白就把 45%、32%、20% 调小） */
+/* 底色：胶囊形状剪出来，他的是很淡的主题色（想更白就把 36%、25%、15% 调小） */
 .chat-message-row .chat-bubble > div:last-child::before {
   content: '';
   position: absolute;
   z-index: -1;
   inset: 0;
-  background: linear-gradient(color-mix(in srgb, var(--theme-color) 45%, #cdcdd0), color-mix(in srgb, var(--theme-color) 32%, #e6e6e8) 50%, color-mix(in srgb, var(--theme-color) 20%, #f4f4f5));
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 36%, #cdcdd0), color-mix(in srgb, var(--theme-color) 25%, #e6e6e8) 50%, color-mix(in srgb, var(--theme-color) 15%, #f4f4f5));
   -webkit-mask-box-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cpath%20d%3D%22M20%201H60C70.5%201%2079%209.5%2079%2020S70.5%2039%2060%2039H20C9.5%2039%201%2030.5%201%2020S9.5%201%2020%201Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E") 15 20 15 20 / .83em 1.11em .83em 1.11em stretch;
   pointer-events: none;
 }
@@ -212,14 +207,9 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble > div:last-child::before {
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 70%, #4f6a8c), color-mix(in srgb, var(--theme-color) 80%, #fff) 45%, color-mix(in srgb, var(--theme-color) 45%, #fff));
 }
-/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
-.chat-message-row.is-user > .chat-message-head,
-.chat-message-row > .chat-message-head .chat-message-time {
-  display: none;
-}
+/* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
-  margin: 0 0 1px 8px;
-  font-size: 10px;
+  display: none;
 }
 /* 时间和已读：小小的放在泡泡下面 */
 .chat-bubble-wrap > .chat-bubble-time {
@@ -303,14 +293,9 @@ export const EXAMPLES: { name: string; css: string }[] = [
   box-shadow: inset 0 1px 0 #fff;
   clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
 }
-/* 名字：我的不用写；他的留着（群聊才分得出是谁），时间挪到泡泡下面 */
-.chat-message-row.is-user > .chat-message-head,
-.chat-message-row > .chat-message-head .chat-message-time {
-  display: none;
-}
+/* 名字不放，上面的时间也拿掉（时间挪到泡泡下面） */
 .chat-message-row > .chat-message-head {
-  margin: 0 0 1px 8px;
-  font-size: 10px;
+  display: none;
 }
 /* 时间和已读：小小的放在泡泡下面 */
 .chat-bubble-wrap > .chat-bubble-time {
