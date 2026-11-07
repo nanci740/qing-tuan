@@ -145,8 +145,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
   margin-left: auto;
 }
 .chat-message-row .chat-bubble--voice .chat-voice-length,
-.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+.chat-message-row .chat-bubble--voice .chat-voice-text-result,
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
+}
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  border-left-color: currentColor;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
+  background: currentColor;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -284,8 +293,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
   margin-left: auto;
 }
 .chat-message-row .chat-bubble--voice .chat-voice-length,
-.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+.chat-message-row .chat-bubble--voice .chat-voice-text-result,
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
+}
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  border-left-color: currentColor;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
+  background: currentColor;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -434,8 +452,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
   margin-left: auto;
 }
 .chat-message-row .chat-bubble--voice .chat-voice-length,
-.chat-message-row .chat-bubble--voice .chat-voice-text-result {
+.chat-message-row .chat-bubble--voice .chat-voice-text-result,
+.chat-message-row .chat-bubble--voice .chat-voice-wave,
+.chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
+}
+/* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清 */
+.chat-message-row .chat-bubble--voice .chat-voice-control::before {
+  border-left-color: currentColor;
+}
+.chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
+  background: currentColor;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
