@@ -150,6 +150,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
 }
+/* 语音和转文字中间一条很淡的分隔线（跟着字色，只留 18%） */
+.chat-message-row .chat-bubble--voice .chat-voice-text-result:not(.is-collapsed) {
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
 /* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
 .chat-message-row .chat-bubble--voice .chat-voice-wave,
 .chat-message-row .chat-bubble--voice .chat-voice-control::before {
@@ -301,6 +307,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-wave,
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
+}
+/* 语音和转文字中间一条很淡的分隔线（跟着字色，只留 18%） */
+.chat-message-row .chat-bubble--voice .chat-voice-text-result:not(.is-collapsed) {
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
 }
 /* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
 .chat-message-row .chat-bubble--voice .chat-voice-wave,
@@ -464,6 +476,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-wave,
 .chat-message-row .chat-bubble--voice .chat-voice-control {
   color: inherit;
+}
+/* 语音和转文字中间一条很淡的分隔线（跟着字色，只留 18%） */
+.chat-message-row .chat-bubble--voice .chat-voice-text-result:not(.is-collapsed) {
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
 }
 /* 语音条的竖条和播放小三角跟着字色，浅色泡泡上才看得清；淡一点不抢字（想再淡把 .6 调小） */
 .chat-message-row .chat-bubble--voice .chat-voice-wave,
