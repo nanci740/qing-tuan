@@ -45,7 +45,7 @@ export { CHAT_CSS_SCOPE, CHAT_CSS_LIMIT, scopeChatCss, strengthen } from './chat
 /* ---------- 类名小抄 ---------- */
 export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [
   { label: '颜色（只想换颜色，改这几个就好）', items: [
-    ['#chatRoomView { --cr-bg: ; }', '聊天室底色'], ['#chatRoomView { --cr-face: ; }', '顶栏、按钮的底色'], ['#chatRoomView { --cr-line: ; }', '框线'],
+    ['#chatRoomView { --cr-bg: ; }', '聊天室底色'], ['#chatRoomView { --theme-color: ; }', '顶栏、按钮、在线圆点（这个聊天室自己的主题色，泡泡示例也会跟着）'], ['#chatRoomView { --cr-line: ; }', '框线'],
     ['#chatRoomView { --cr-title: ; }', '文字颜色'], ['#chatRoomView { --cr-peer: ; }', '他的名字颜色'], ['#chatRoomView { --cr-self: ; }', '我的名字颜色']] },
   { label: '顶栏', items: [
     ['.chat-room-header', '整条顶栏（background 换底色）'], ['.chat-room-title', '「与 XX 聊天中」的字'], ['.chat-room-back', '返回键'], ['.chat-room-more', '右上角「…」'],
@@ -68,7 +68,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   { name: '只换颜色', css: `/* 只想换颜色：改这几行，删掉不想改的 */
 #chatRoomView {
   --cr-bg: #fbf7f2;      /* 聊天室底色 */
-  --cr-face: #f3e7dc;    /* 顶栏、按钮的底色 */
+  --theme-color: #e3c6b0; /* 顶栏、按钮、在线圆点（这个聊天室自己的主题色） */
   --cr-line: #c9b3a2;    /* 框线 */
   --cr-title: #6b5a4e;   /* 文字 */
   --cr-peer: #b07d62;    /* 他的名字 */
