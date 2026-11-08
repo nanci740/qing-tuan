@@ -227,6 +227,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
 }
+/* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
+.chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time::after {
+  margin: 0;
+}
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
   width: 30px;
@@ -384,6 +390,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
+}
+/* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
+.chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time::after {
+  margin: 0;
 }
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
@@ -553,6 +565,12 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
+}
+/* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
+.chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
+.chat-message-row[data-favorite="true"] .chat-bubble-time::after {
+  margin: 0;
 }
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
