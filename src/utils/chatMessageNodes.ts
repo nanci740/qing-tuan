@@ -546,7 +546,7 @@ export function forwardNode(text: string, rawItems: unknown, source: unknown, mo
     const preview=(Array.isArray(record.items)?record.items as Record<string,unknown>[]:[]).slice(0,3).map(item=>factory.element('div',{class:'chat-forward-record-line'},[factory.text(htmlText(item.speaker||'消息')+': '+htmlText(item.text||'[消息]'))]));
     bubble.children=[factory.element('div',{class:'chat-forward-record-card','data-forward-record-id':htmlText(record.id)},[
       factory.element('div',{class:'chat-forward-record-title'},[factory.text(htmlText(record.title))]),factory.element('div',{class:'chat-forward-record-preview'},preview),factory.element('div',{class:'chat-forward-record-divider'}),factory.element('div',{class:'chat-forward-record-footer'},[factory.text('聊天记录')])])];
-  }else bubble.children=[factory.text('[转发] '+text)];
+  }else bubble.children=[factory.element('div',{},[factory.text('[转发] '+text)])]; // 跟一般消息一样包一层 div，气泡样式才套得上
   const line=(item:Record<string,unknown>)=>(item?.speaker==='我'?'用户':item?.speaker||'消息')+'：'+(item?.spoken?(item?.text||'[语音]')+'（内容：'+item.spoken+'）':item?.text||'[消息]');
   const sourceLabel=source?'用户与「'+source+'」的聊天':'用户的另一个聊天';
   const content=mode==='record'&&items.length?'[用户转发了一份聊天记录给你，来自'+sourceLabel+'，共 '+items.length+' 条'+(items.length>30?'，以下是最近 30 条':'')+'：]\n'+items.slice(-30).map(line).join('\n'):'[用户转发了一条消息给你，来自'+sourceLabel+'] '+(items[0]?line(items[0]):text);
