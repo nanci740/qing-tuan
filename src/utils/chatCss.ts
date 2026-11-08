@@ -167,6 +167,21 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
+/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+.chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
+  margin-left: auto;
+  margin-right: 0;
+}
+.chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
+  width: fit-content;
+}
+.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  text-align: left;
+}
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
   display: flex;
@@ -341,6 +356,21 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
+}
+/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+.chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
+  margin-left: auto;
+  margin-right: 0;
+}
+.chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
+  width: fit-content;
+}
+.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  text-align: left;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -527,6 +557,21 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
+}
+/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+.chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
+  margin-left: auto;
+  margin-right: 0;
+}
+.chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
+  width: fit-content;
+}
+.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  text-align: left;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
