@@ -233,6 +233,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row[data-favorite="true"] .chat-bubble-time::after {
   margin: 0;
 }
+/* 我的：图标放在时间左边，时间一直贴着右边不被推走（顺序：图钉、♡、已编辑、时间、已读） */
+.chat-message-row.is-user .chat-bubble-time .chat-message-pin-indicator {
+  order: -3;
+}
+.chat-message-row.is-user[data-favorite="true"] .chat-bubble-time::after {
+  order: -2;
+}
+.chat-message-row.is-user[data-edited="true"] .chat-bubble-time::before {
+  order: -1;
+  margin: 0 2px 0 0;
+}
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
   width: 30px;
@@ -396,6 +407,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
 .chat-message-row[data-favorite="true"] .chat-bubble-time::after {
   margin: 0;
+}
+/* 我的：图标放在时间左边，时间一直贴着右边不被推走（顺序：图钉、♡、已编辑、时间、已读） */
+.chat-message-row.is-user .chat-bubble-time .chat-message-pin-indicator {
+  order: -3;
+}
+.chat-message-row.is-user[data-favorite="true"] .chat-bubble-time::after {
+  order: -2;
+}
+.chat-message-row.is-user[data-edited="true"] .chat-bubble-time::before {
+  order: -1;
+  margin: 0 2px 0 0;
 }
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
@@ -571,6 +593,17 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
 .chat-message-row[data-favorite="true"] .chat-bubble-time::after {
   margin: 0;
+}
+/* 我的：图标放在时间左边，时间一直贴着右边不被推走（顺序：图钉、♡、已编辑、时间、已读） */
+.chat-message-row.is-user .chat-bubble-time .chat-message-pin-indicator {
+  order: -3;
+}
+.chat-message-row.is-user[data-favorite="true"] .chat-bubble-time::after {
+  order: -2;
+}
+.chat-message-row.is-user[data-edited="true"] .chat-bubble-time::before {
+  order: -1;
+  margin: 0 2px 0 0;
 }
 /* 头像：圆圆的白边 */
 .chat-message-mini-avatar {
