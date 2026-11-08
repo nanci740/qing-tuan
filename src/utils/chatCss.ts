@@ -360,6 +360,23 @@ export const EXAMPLES: { name: string; css: string }[] = [
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
 }
+/* 群聊：他的名字小小的放在泡泡上面（才分得出是谁说的），泡泡贴着名字 */
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head {
+  display: flex;
+  margin: 0 0 1px .9em;
+  font-size: 10px;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head .chat-message-time {
+  display: none;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-message-name {
+  color: #999;
+  font-weight: 400;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble > div:last-child:not([class]),
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble--voice {
+  margin-top: 0;
+}
 /* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
 .chat-bubble-time .chat-message-pin-indicator,
 .chat-message-row[data-favorite="true"] .chat-bubble-time .chat-message-pin-indicator,
@@ -667,6 +684,23 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
+}
+/* 群聊：他的名字小小的放在泡泡上面（才分得出是谁说的），泡泡贴着名字 */
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head {
+  display: flex;
+  margin: 0 0 1px .6em;
+  font-size: 10px;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head .chat-message-time {
+  display: none;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-message-name {
+  color: #999;
+  font-weight: 400;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble > div:last-child:not([class]),
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble--voice {
+  margin-top: 0;
 }
 /* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
 .chat-bubble-time .chat-message-pin-indicator,
@@ -1007,6 +1041,23 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble-wrap > .chat-bubble-time {
   justify-content: flex-end;
   margin: 1px 10px 2px 0;
+}
+/* 群聊：他的名字小小的放在泡泡上面（才分得出是谁说的），泡泡贴着名字 */
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head {
+  display: flex;
+  margin: 0 0 1px calc(7px + .4em);
+  font-size: 10px;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) > .chat-message-head .chat-message-time {
+  display: none;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-message-name {
+  color: #999;
+  font-weight: 400;
+}
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble > div:last-child:not([class]),
+:root:has(.cr-group-panel) .chat-message-row:not(.is-user) .chat-bubble--voice {
+  margin-top: 0;
 }
 /* 置顶的图钉、收藏的 ♡ 紧跟在时间后面，不要被推到最旁边 */
 .chat-bubble-time .chat-message-pin-indicator,
