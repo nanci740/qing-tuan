@@ -700,7 +700,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user > .chat-message-mini-avatar {
   display: none;
 }` },
-  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴在中间
+  { name: '复古方框', css: `/* 复古方框泡泡：他的深色（跟着主题色）、我的白色；尖尖的小尾巴对着第一行字（一行字时就是中间、对着头像）
    泡泡和尾巴是一整块剪出来的：外面一层是框线，里面一层是渐层，影子一起打 */
 .chat-message-row .chat-bubble > div:last-child:not([class]),
 .chat-message-row .chat-bubble--voice {
@@ -730,7 +730,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice::before {
   inset: 0;
   background: color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
-  clip-path: polygon(7px 3px, 7.9px .9px, 10px 0, calc(100% - 3px) 0, calc(100% - .9px) .9px, 100% 3px, 100% calc(100% - 3px), calc(100% - .9px) calc(100% - .9px), calc(100% - 3px) 100%, 10px 100%, 7.9px calc(100% - .9px), 7px calc(100% - 3px), 7px calc(50% + 6px), 0 50%, 7px calc(50% - 6px));
+  clip-path: polygon(7px 3px, 7.9px .9px, 10px 0, calc(100% - 3px) 0, calc(100% - .9px) .9px, 100% 3px, 100% calc(100% - 3px), calc(100% - .9px) calc(100% - .9px), calc(100% - 3px) 100%, 10px 100%, 7.9px calc(100% - .9px), 7px calc(100% - 3px), 7px calc(1.3em + 6px), 0 1.3em, 7px calc(1.3em - 6px));
 }
 /* 里面一层：缩进 1px，渐层连着尾巴一起，上面一道亮线 */
 .chat-message-row .chat-bubble > div:last-child:not([class])::after,
@@ -738,7 +738,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   inset: 1px;
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
-  clip-path: polygon(7px 2px, 7.6px .6px, 9px 0, calc(100% - 2px) 0, calc(100% - .6px) .6px, 100% 2px, 100% calc(100% - 2px), calc(100% - .6px) calc(100% - .6px), calc(100% - 2px) 100%, 9px 100%, 7.6px calc(100% - .6px), 7px calc(100% - 2px), 7px calc(50% + 5.5px), .55px 50%, 7px calc(50% - 5.5px));
+  clip-path: polygon(7px 2px, 7.6px .6px, 9px 0, calc(100% - 2px) 0, calc(100% - .6px) .6px, 100% 2px, 100% calc(100% - 2px), calc(100% - .6px) calc(100% - .6px), calc(100% - 2px) 100%, 9px 100%, 7.6px calc(100% - .6px), 7px calc(100% - 2px), 7px calc(1.3em + 4.5px), .55px calc(1.3em - 1px), 7px calc(1.3em - 6.5px));
 }
 /* 我的：白色，靠右，同一个形状翻过来 */
 .chat-message-row.is-user .chat-bubble {
@@ -754,13 +754,13 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble > div:last-child:not([class])::before,
 .chat-message-row.is-user .chat-bubble--voice::before {
   background: #c4c4c4;
-  clip-path: polygon(calc(100% - 7px) 3px, calc(100% - 7.9px) .9px, calc(100% - 10px) 0, 3px 0, .9px .9px, 0 3px, 0 calc(100% - 3px), .9px calc(100% - .9px), 3px 100%, calc(100% - 10px) 100%, calc(100% - 7.9px) calc(100% - .9px), calc(100% - 7px) calc(100% - 3px), calc(100% - 7px) calc(50% + 6px), 100% 50%, calc(100% - 7px) calc(50% - 6px));
+  clip-path: polygon(calc(100% - 7px) 3px, calc(100% - 7.9px) .9px, calc(100% - 10px) 0, 3px 0, .9px .9px, 0 3px, 0 calc(100% - 3px), .9px calc(100% - .9px), 3px 100%, calc(100% - 10px) 100%, calc(100% - 7.9px) calc(100% - .9px), calc(100% - 7px) calc(100% - 3px), calc(100% - 7px) calc(1.3em + 6px), 100% 1.3em, calc(100% - 7px) calc(1.3em - 6px));
 }
 .chat-message-row.is-user .chat-bubble > div:last-child:not([class])::after,
 .chat-message-row.is-user .chat-bubble--voice::after {
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
   box-shadow: inset 0 1px 0 #fff;
-  clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
+  clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(1.3em + 4.5px), calc(100% - .55px) calc(1.3em - 1px), calc(100% - 7px) calc(1.3em - 6.5px));
 }
 /* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
 .chat-message-row .chat-bubble > div:last-child:not([class]) {
