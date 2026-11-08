@@ -167,7 +167,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
@@ -175,12 +175,122 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
 }
-.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+.chat-message-row .chat-bubble > .chat-location {
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
+/* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
+.chat-message-row .chat-pay {
+  border-radius: 8px;
+}
+.chat-message-row .chat-pay .chat-pay-top,
+.chat-message-row .chat-pay .chat-pay-foot {
+  background: none;
+}
+.chat-message-row .chat-pay .chat-pay-top {
+  padding: 11px 11px 4px;
+}
+.chat-message-row .chat-pay .chat-pay-info b {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-info b {
+  font-size: 13.5px;
+}
+.chat-message-row .chat-pay .chat-pay-info small {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.chat-message-row .chat-pay .chat-pay-foot {
+  padding: 2px 11px 8px;
+  font-size: 9.5px;
+}
+/* 图标：亮面的小方块，上半截一道亮光，中间换成白色的图案（转账两个箭头、红包礼物盒、亲属卡一张卡） */
+.chat-message-row .chat-pay .chat-pay-icon {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .18));
+}
+.chat-message-row .chat-pay .chat-pay-icon svg {
+  display: none;
+}
+.chat-message-row .chat-pay .chat-pay-icon::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 1.5px;
+  height: 48%;
+  border-radius: calc(8px - 1.5px) calc(8px - 1.5px) 3px 3px;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+}
+.chat-message-row .chat-pay .chat-pay-icon::after {
+  content: '';
+  position: relative;
+  width: 17px;
+  height: 17px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+}
+.chat-message-row .chat-pay.is-family .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+}
+/* 聊天记录：同一种卡片，字靠左 */
 .chat-message-row .chat-bubble > .chat-forward-record-card {
+  padding: 8px 11px 7px;
+  border-radius: 8px;
   text-align: left;
+}
+.chat-message-row .chat-forward-record-title {
+  font-size: 12px;
+  color: #333;
+}
+.chat-message-row .chat-forward-record-preview {
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: #888;
+}
+.chat-message-row .chat-forward-record-footer {
+  font-size: 9.5px;
+  color: #9a9a9a;
+}
+/* 卡片颜色：淡淡的主题色，上浅下深；红包浓一点 */
+.chat-message-row .chat-pay,
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  border: 1px solid color-mix(in srgb, var(--theme-color) 45%, #c9c9c9);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 12%, #fff), color-mix(in srgb, var(--theme-color) 38%, #fff));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 3px rgba(0, 0, 0, .14);
+}
+.chat-message-row .chat-pay.is-packet {
+  border: 1px solid color-mix(in srgb, var(--theme-color) 60%, #b5b5b5);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
+}
+.chat-message-row .chat-pay .chat-pay-info b {
+  color: #333;
+}
+.chat-message-row .chat-pay .chat-pay-info small {
+  color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
+}
+.chat-message-row .chat-pay .chat-pay-foot {
+  color: #9a9a9a;
+}
+.chat-message-row .chat-pay .chat-pay-icon {
+  color: #fff;
+  background: radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--theme-color) 60%, #fff), transparent 60%), linear-gradient(color-mix(in srgb, var(--theme-color) 68%, #8299ad), color-mix(in srgb, var(--theme-color) 78%, #a9bbcb));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .25), inset 0 -1px 2px rgba(0, 0, 0, .08);
+}
+.chat-message-row .chat-forward-record-divider {
+  border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, #ddd);
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -357,7 +467,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
@@ -365,12 +475,122 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
 }
-.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+.chat-message-row .chat-bubble > .chat-location {
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
+/* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
+.chat-message-row .chat-pay {
+  border-radius: 8px;
+}
+.chat-message-row .chat-pay .chat-pay-top,
+.chat-message-row .chat-pay .chat-pay-foot {
+  background: none;
+}
+.chat-message-row .chat-pay .chat-pay-top {
+  padding: 11px 11px 4px;
+}
+.chat-message-row .chat-pay .chat-pay-info b {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-info b {
+  font-size: 13.5px;
+}
+.chat-message-row .chat-pay .chat-pay-info small {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.chat-message-row .chat-pay .chat-pay-foot {
+  padding: 2px 11px 8px;
+  font-size: 9.5px;
+}
+/* 图标：亮面的小方块，上半截一道亮光，中间换成白色的图案（转账两个箭头、红包礼物盒、亲属卡一张卡） */
+.chat-message-row .chat-pay .chat-pay-icon {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .18));
+}
+.chat-message-row .chat-pay .chat-pay-icon svg {
+  display: none;
+}
+.chat-message-row .chat-pay .chat-pay-icon::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 1.5px;
+  height: 48%;
+  border-radius: calc(8px - 1.5px) calc(8px - 1.5px) 3px 3px;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+}
+.chat-message-row .chat-pay .chat-pay-icon::after {
+  content: '';
+  position: relative;
+  width: 17px;
+  height: 17px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+}
+.chat-message-row .chat-pay.is-family .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+}
+/* 聊天记录：同一种卡片，字靠左 */
 .chat-message-row .chat-bubble > .chat-forward-record-card {
+  padding: 8px 11px 7px;
+  border-radius: 8px;
   text-align: left;
+}
+.chat-message-row .chat-forward-record-title {
+  font-size: 12px;
+  color: #333;
+}
+.chat-message-row .chat-forward-record-preview {
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: #888;
+}
+.chat-message-row .chat-forward-record-footer {
+  font-size: 9.5px;
+  color: #9a9a9a;
+}
+/* 卡片颜色：淡淡的主题色，上浅下深；红包浓一点 */
+.chat-message-row .chat-pay,
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  border: 1px solid color-mix(in srgb, var(--theme-color) 45%, #c9c9c9);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 12%, #fff), color-mix(in srgb, var(--theme-color) 38%, #fff));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 3px rgba(0, 0, 0, .14);
+}
+.chat-message-row .chat-pay.is-packet {
+  border: 1px solid color-mix(in srgb, var(--theme-color) 60%, #b5b5b5);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
+}
+.chat-message-row .chat-pay .chat-pay-info b {
+  color: #333;
+}
+.chat-message-row .chat-pay .chat-pay-info small {
+  color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
+}
+.chat-message-row .chat-pay .chat-pay-foot {
+  color: #9a9a9a;
+}
+.chat-message-row .chat-pay .chat-pay-icon {
+  color: #fff;
+  background: radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--theme-color) 60%, #fff), transparent 60%), linear-gradient(color-mix(in srgb, var(--theme-color) 68%, #8299ad), color-mix(in srgb, var(--theme-color) 78%, #a9bbcb));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .25), inset 0 -1px 2px rgba(0, 0, 0, .08);
+}
+.chat-message-row .chat-forward-record-divider {
+  border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, #ddd);
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -558,7 +778,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：维持原本的样子，我的靠右；圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
@@ -566,12 +786,143 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
 }
-.chat-message-row .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card) {
+.chat-message-row .chat-bubble > .chat-location {
   border-radius: 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
+/* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
+.chat-message-row .chat-pay {
+  border-radius: 3px;
+}
+.chat-message-row .chat-pay .chat-pay-top,
+.chat-message-row .chat-pay .chat-pay-foot {
+  background: none;
+}
+.chat-message-row .chat-pay .chat-pay-top {
+  padding: 11px 11px 4px;
+}
+.chat-message-row .chat-pay .chat-pay-info b {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-info b {
+  font-size: 13.5px;
+}
+.chat-message-row .chat-pay .chat-pay-info small {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.chat-message-row .chat-pay .chat-pay-foot {
+  padding: 2px 11px 8px;
+  font-size: 9.5px;
+}
+/* 图标：亮面的小方块，上半截一道亮光，中间换成白色的图案（转账两个箭头、红包礼物盒、亲属卡一张卡） */
+.chat-message-row .chat-pay .chat-pay-icon {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .18));
+}
+.chat-message-row .chat-pay .chat-pay-icon svg {
+  display: none;
+}
+.chat-message-row .chat-pay .chat-pay-icon::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 1.5px;
+  height: 48%;
+  border-radius: calc(4px - 1.5px) calc(4px - 1.5px) 3px 3px;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+}
+.chat-message-row .chat-pay .chat-pay-icon::after {
+  content: '';
+  position: relative;
+  width: 17px;
+  height: 17px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%208h15l-4-4M20%2016H5l4%204%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-pay.is-packet .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%279%27%20width%3D%2716%27%20height%3D%2711%27%20rx%3D%271%27%2F%3E%3Cpath%20d%3D%27M4%2013h16M12%209v11M12%209c-2-4-6-4-6-1s6%201%206%201c2-4%206-4%206-1s-6%201-6%201%27%2F%3E%3C%2Fsvg%3E");
+}
+.chat-message-row .chat-pay.is-family .chat-pay-icon::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%273%27%20y%3D%276%27%20width%3D%2718%27%20height%3D%2712%27%20rx%3D%272%27%2F%3E%3Cpath%20d%3D%27M3%2010h18M7%2015h4%27%2F%3E%3C%2Fsvg%3E");
+}
+/* 聊天记录：同一种卡片，字靠左 */
 .chat-message-row .chat-bubble > .chat-forward-record-card {
+  padding: 8px 11px 7px;
+  border-radius: 3px;
   text-align: left;
+}
+.chat-message-row .chat-forward-record-title {
+  font-size: 12px;
+  color: #333;
+}
+.chat-message-row .chat-forward-record-preview {
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: #888;
+}
+.chat-message-row .chat-forward-record-footer {
+  font-size: 9.5px;
+  color: #9a9a9a;
+}
+/* 卡片颜色跟泡泡一样：我的白色、他的深色（跟着主题色）；图标跟卡片同色系 */
+.chat-message-row.is-user .chat-pay,
+.chat-message-row .chat-bubble > .chat-forward-record-card {
+  border: 1px solid #c4c4c4;
+  background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, .2);
+}
+.chat-message-row.is-user .chat-pay .chat-pay-info b {
+  color: #333;
+}
+.chat-message-row.is-user .chat-pay .chat-pay-info small {
+  color: #666;
+}
+.chat-message-row.is-user .chat-pay .chat-pay-foot {
+  color: #9a9a9a;
+}
+.chat-message-row.is-user .chat-pay .chat-pay-icon {
+  color: color-mix(in srgb, var(--theme-color) 30%, #555);
+  background: linear-gradient(#fdfdfd, #ececec 50%, #d6d6d6);
+  box-shadow: 0 1px 1.5px rgba(0, 0, 0, .22), inset 0 0 0 1px #bdbdbd;
+  filter: drop-shadow(0 1px 0 #fff);
+}
+.chat-message-row:not(.is-user) .chat-pay {
+  border: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 1px 2px rgba(0, 0, 0, .3);
+}
+.chat-message-row:not(.is-user) .chat-pay .chat-pay-info b {
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
+}
+.chat-message-row:not(.is-user) .chat-pay .chat-pay-info small {
+  color: #e6e6e6;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
+}
+.chat-message-row:not(.is-user) .chat-pay .chat-pay-foot {
+  color: rgba(255, 255, 255, .65);
+}
+.chat-message-row:not(.is-user) .chat-pay .chat-pay-icon {
+  color: #fff;
+  background: linear-gradient(color-mix(in srgb, var(--theme-color) 32%, #9a9a9a), color-mix(in srgb, var(--theme-color) 26%, #5a5a5a));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .35), inset 0 0 0 1px color-mix(in srgb, var(--theme-color) 25%, #2e2e2e);
+}
+.chat-message-row:not(.is-user) .chat-pay .chat-pay-icon::before {
+  background: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .06));
+}
+.chat-message-row .chat-forward-record-divider {
+  border-top: 1px solid #d4d4d4;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
