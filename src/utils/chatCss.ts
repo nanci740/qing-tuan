@@ -45,7 +45,7 @@ export { CHAT_CSS_SCOPE, CHAT_CSS_LIMIT, scopeChatCss, strengthen } from './chat
 /* ---------- 类名小抄 ---------- */
 export const CLASS_GROUPS: { label: string; items: [string, string][] }[] = [
   { label: '颜色（只想换颜色，改这几个就好）', items: [
-    ['#chatRoomView { --cr-bg: ; }', '聊天室底色'], ['#chatRoomView { --cr-face: ; }', '顶栏、按钮的底色'], ['#chatRoomView { --cr-line: ; }', '框线'],
+    ['#chatRoomView { --cr-bg: ; }', '聊天室底色'], ['#chatRoomView { --theme-color: ; }', '顶栏、按钮、在线圆点（这个聊天室自己的主题色，泡泡示例也会跟着）'], ['#chatRoomView { --cr-line: ; }', '框线'],
     ['#chatRoomView { --cr-title: ; }', '文字颜色'], ['#chatRoomView { --cr-peer: ; }', '他的名字颜色'], ['#chatRoomView { --cr-self: ; }', '我的名字颜色']] },
   { label: '顶栏', items: [
     ['.chat-room-header', '整条顶栏（background 换底色）'], ['.chat-room-title', '「与 XX 聊天中」的字'], ['.chat-room-back', '返回键'], ['.chat-room-more', '右上角「…」'],
@@ -68,7 +68,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   { name: '只换颜色', css: `/* 只想换颜色：改这几行，删掉不想改的 */
 #chatRoomView {
   --cr-bg: #fbf7f2;      /* 聊天室底色 */
-  --cr-face: #f3e7dc;    /* 顶栏、按钮的底色 */
+  --theme-color: #e3c6b0; /* 顶栏、按钮、在线圆点（这个聊天室自己的主题色） */
   --cr-line: #c9b3a2;    /* 框线 */
   --cr-title: #6b5a4e;   /* 文字 */
   --cr-peer: #b07d62;    /* 他的名字 */
@@ -134,6 +134,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22h%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.96%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.7%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.22%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.75%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%2215.5%22%20y%3D%223.4%22%20width%3D%2254%22%20height%3D%2215%22%20rx%3D%227.5%22%20fill%3D%22url%28%23h%29%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2225%22%20width%3D%2249%22%20height%3D%2211%22%20rx%3D%225.5%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cpath%20d%3D%22M27%201H59C69.5%201%2078%209.5%2078%2020S69.5%2039%2059%2039H27C20.8%2039%2015.5%2036.6%2012.2%2032.2C9.8%2034.5%206.6%2035.9%203.7%2035.4C3.3%2035.3%203.2%2035%203.6%2034.7C6.2%2032.9%207.9%2030.4%208.6%2027.2C7.6%2024.9%207%2022.5%207%2020C7%209.5%2016.5%201%2027%201Z%22%20fill%3D%22none%22%20stroke%3D%22%232f3e52%22%20stroke-opacity%3D%22.45%22%20stroke-width%3D%221.1%22%2F%3E%3C%2Fsvg%3E") 15 20 15 24 fill / / 0 stretch;
   filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
   pointer-events: none;
+}
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: 2.42em;
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
 }
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
@@ -434,6 +442,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble > div:last-child:not([class])::before,
 .chat-message-row.is-user .chat-bubble--voice::before {
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 70%, #4f6a8c), color-mix(in srgb, var(--theme-color) 80%, #fff) 45%, color-mix(in srgb, var(--theme-color) 45%, #fff));
+}
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: 2.42em;
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
 }
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
@@ -745,6 +761,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
   box-shadow: inset 0 1px 0 #fff;
   clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
+}
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: calc(2.6em + 7px);
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
 }
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
