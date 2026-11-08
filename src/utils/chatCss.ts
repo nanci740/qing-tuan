@@ -284,7 +284,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
 }
 .chat-message-row .chat-pay .chat-pay-info b {
-  color: color-mix(in srgb, var(--theme-color) 25%, #555);
+  color: #333;
 }
 .chat-message-row .chat-pay .chat-pay-info small {
   color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
@@ -592,7 +592,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
 }
 .chat-message-row .chat-pay .chat-pay-info b {
-  color: color-mix(in srgb, var(--theme-color) 25%, #555);
+  color: #333;
 }
 .chat-message-row .chat-pay .chat-pay-info small {
   color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
