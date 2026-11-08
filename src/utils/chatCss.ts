@@ -135,6 +135,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
   filter: drop-shadow(0 1.4px 1px rgba(126, 136, 155, .28));
   pointer-events: none;
 }
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: 2.42em;
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
+}
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
   flex: 0 1 auto;
@@ -276,7 +284,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
 }
 .chat-message-row .chat-pay .chat-pay-info b {
-  color: #333;
+  color: color-mix(in srgb, var(--theme-color) 25%, #555);
 }
 .chat-message-row .chat-pay .chat-pay-info small {
   color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
@@ -435,6 +443,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row.is-user .chat-bubble--voice::before {
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 70%, #4f6a8c), color-mix(in srgb, var(--theme-color) 80%, #fff) 45%, color-mix(in srgb, var(--theme-color) 45%, #fff));
 }
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: 2.42em;
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
+}
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
   flex: 0 1 auto;
@@ -576,7 +592,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 40%, #fff), color-mix(in srgb, var(--theme-color) 75%, #fff));
 }
 .chat-message-row .chat-pay .chat-pay-info b {
-  color: #333;
+  color: color-mix(in srgb, var(--theme-color) 25%, #555);
 }
 .chat-message-row .chat-pay .chat-pay-info small {
   color: color-mix(in srgb, var(--theme-color) 35%, #5b4a50);
@@ -745,6 +761,14 @@ export const EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
   box-shadow: inset 0 1px 0 #fff;
   clip-path: polygon(calc(100% - 7px) 2px, calc(100% - 7.6px) .6px, calc(100% - 9px) 0, 2px 0, .6px .6px, 0 2px, 0 calc(100% - 2px), .6px calc(100% - .6px), 2px 100%, calc(100% - 9px) 100%, calc(100% - 7.6px) calc(100% - .6px), calc(100% - 7px) calc(100% - 2px), calc(100% - 7px) calc(50% + 5.5px), calc(100% - .55px) 50%, calc(100% - 7px) calc(50% - 5.5px));
+}
+/* 一两个字的泡泡：至少跟高度一样宽，不然泡泡的图会被挤变形；纯文字的把字放中间 */
+.chat-message-row .chat-bubble > div:last-child:not([class]) {
+  min-width: calc(2.6em + 7px);
+}
+.chat-message-row .chat-bubble > div:last-child:not([class]):not(:has(*)) {
+  display: inline-flex;
+  justify-content: center;
 }
 /* 语音：整条（含转文字）放进同一个泡泡里 */
 .chat-message-row .chat-bubble--voice {
