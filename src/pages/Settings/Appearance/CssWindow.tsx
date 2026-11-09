@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 import { PressedButton } from '../../../components/shared/PressedButton';
 import { useAppearance } from '../../../providers/AppearanceProvider';
 import { useChoice } from '../../../providers/ChoiceProvider';
@@ -39,6 +39,8 @@ export interface CssWindowConfig {
   placeholder: string;
   note: string;
   words: { applied: string; cleared: string; none: string; file: string };
+  /** 示例下面多放的东西（主画面：快速调色），可以读、改编辑框 */
+  extra?: (draft: string, setDraft: (next: string) => void) => ReactNode;
 }
 
 /** 美化设置里写 CSS 的那一格（聊天美化、主画面美化共用）：上面预览、示例和模板、编辑框，按套用才换。 */
@@ -165,6 +167,7 @@ export function CssWindow({ config }: { config: CssWindowConfig }) {
           onContextMenu={event => { event.preventDefault(); endPress(); templateMenu(item); }}>{item.name}</button>)}
         <button type="button" className="chat-css-chip is-add" onClick={() => { if (!draft.trim()) { showToast('编辑框是空的'); return; } nameDialog('存成模板', '', name => { try { store.saveTemplate(name, draft); setTemplates(store.readTemplates()); showToast('存好了，长按可以改名、导出、删除'); } catch (problem) { showToast((problem as Error).message); } }); }}>＋ 存成模板</button>
       </div>
+      {config.extra?.(draft, setDraft)}
       <textarea ref={code} className="chat-css-code" value={draft} spellCheck={false} autoCapitalize="off" autoCorrect="off" placeholder={config.placeholder}
         onChange={event => { setDraft(event.currentTarget.value); caret.current = event.currentTarget.selectionStart; }}
         onBlur={event => { caret.current = event.currentTarget.selectionStart; }} onSelect={event => { caret.current = event.currentTarget.selectionStart; }} />

@@ -1,5 +1,6 @@
 import { HOME_CLASS_GROUPS, HOME_EXAMPLES, homeCssStore, scopeHomeCss } from '../../../utils/homeCss';
 import { CssWindow, pageStyles, previewDocument } from './CssWindow';
+import { QuickColors } from './QuickColors';
 import type { CssWindowConfig } from './CssWindow';
 
 /** 预览：把现在的主画面（第一页）复制一份放进小框里（iframe），里面的 App、音乐都拿掉，不会动到真的主画面。 */
@@ -26,7 +27,8 @@ const CONFIG: CssWindowConfig = {
   phone: { width: 390, height: 844, maxScale: .62 }, buildPreview, previewTitle: '主画面预览',
   placeholder: '在这里写 CSS，例如：\n.dock-bar {\n  background: #fbeff2;\n}',
   note: '套用后只会改到主画面（状态栏、小组件、图标、第二页、底下那排），各个 App 里面不受影响。底下那排不让藏起来，免得写错就回不到设置。',
-  words: { applied: '已套用到主画面', cleared: '已拿掉主画面美化 CSS', none: '现在没有套用任何主画面美化。', file: '青团主画面美化' }
+  words: { applied: '已套用到主画面', cleared: '已拿掉主画面美化 CSS', none: '现在没有套用任何主画面美化。', file: '青团主画面美化' },
+  extra: (draft, setDraft) => <QuickColors draft={draft} setDraft={setDraft} />
 };
 
 /** 美化设置：「主画面美化 CSS」，写好按套用，主画面跟着换。 */
