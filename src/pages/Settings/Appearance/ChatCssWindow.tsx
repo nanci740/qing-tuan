@@ -2,6 +2,7 @@ import { DEFAULT_AVATAR } from '../../../utils/defaultAvatar';
 import { CLASS_GROUPS, EXAMPLES, chatCssStore, scopeChatCss } from '../../../utils/chatCss';
 import { CssWindow, escapeHtml as escape, pageStyles, previewDocument } from './CssWindow';
 import type { CssWindowConfig } from './CssWindow';
+import { CHAT_QUICK, QuickColors } from './QuickColors';
 
 /** 预览里的几则假消息（跟真的聊天室同一套结构）。 */
 function sampleRows(name: string, peer: string, self: string) {
@@ -49,7 +50,8 @@ const CONFIG: CssWindowConfig = {
   phone: { width: 390, height: 540, maxScale: 1 }, buildPreview, previewTitle: '聊天预览',
   placeholder: '在这里写 CSS，例如：\n.chat-message-row.is-user .chat-bubble {\n  color: #c58;\n}',
   note: '套用后全部聊天室一起换，只会改到聊天室里面。聊天设置里单独设的壁纸、字号、专属气泡，还是会盖过这里。',
-  words: { applied: '已套用到全部聊天', cleared: '已拿掉聊天美化 CSS', none: '现在没有套用任何聊天美化。', file: '青团聊天美化' }
+  words: { applied: '已套用到全部聊天', cleared: '已拿掉聊天美化 CSS', none: '现在没有套用任何聊天美化。', file: '青团聊天美化' },
+  extra: (draft, setDraft) => <QuickColors draft={draft} setDraft={setDraft} set={CHAT_QUICK} />
 };
 
 /** 美化设置：「聊天美化 CSS」，写好按套用，全部聊天室一起换。 */
