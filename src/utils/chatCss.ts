@@ -317,12 +317,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
 }
 .chat-message-row .chat-location-pin {
-  width: 18px;
-  height: 18px;
-  margin: -17px 0 0 -9px;
-  border: 0;
   background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
-  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
 }
 .chat-message-row .chat-location-pin::before {
   content: '';
@@ -334,13 +329,6 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-radius: 50%;
   background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
   transform: rotate(45deg);
-}
-.chat-message-row .chat-location-pin::after {
-  left: 6px;
-  top: 6px;
-  width: 5px;
-  height: 5px;
-  background: #fff;
 }
 .chat-message-row .chat-location-info {
   position: relative;
@@ -753,12 +741,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
 }
 .chat-message-row .chat-location-pin {
-  width: 18px;
-  height: 18px;
-  margin: -17px 0 0 -9px;
-  border: 0;
   background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
-  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
 }
 .chat-message-row .chat-location-pin::before {
   content: '';
@@ -770,13 +753,6 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-radius: 50%;
   background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
   transform: rotate(45deg);
-}
-.chat-message-row .chat-location-pin::after {
-  left: 6px;
-  top: 6px;
-  width: 5px;
-  height: 5px;
-  background: #fff;
 }
 .chat-message-row .chat-location-info {
   position: relative;
@@ -1170,8 +1146,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row.is-user .chat-pay .chat-pay-icon {
   color: color-mix(in srgb, var(--theme-color) 30%, #555);
-  background: linear-gradient(#fdfdfd, #ececec 50%, #d6d6d6);
-  box-shadow: 0 1px 1.5px rgba(0, 0, 0, .22), inset 0 0 0 1px #bdbdbd;
+  background: linear-gradient(#f7f7f7, #e3e3e3 50%, #c9c9c9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .28), inset 0 -1px 2px rgba(0, 0, 0, .1);
   filter: drop-shadow(0 1px 0 #fff);
 }
 .chat-message-row:not(.is-user) .chat-pay,
@@ -1194,7 +1170,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row:not(.is-user) .chat-pay .chat-pay-icon {
   color: #fff;
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 32%, #9a9a9a), color-mix(in srgb, var(--theme-color) 26%, #5a5a5a));
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .35), inset 0 0 0 1px color-mix(in srgb, var(--theme-color) 25%, #2e2e2e);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .4), inset 0 -1px 2px rgba(0, 0, 0, .18);
 }
 .chat-message-row:not(.is-user) .chat-pay .chat-pay-icon::before {
   background: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .06));
@@ -1222,12 +1198,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
 }
 .chat-message-row .chat-location-pin {
-  width: 18px;
-  height: 18px;
-  margin: -17px 0 0 -9px;
-  border: 0;
   background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
-  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
 }
 .chat-message-row .chat-location-pin::before {
   content: '';
@@ -1239,13 +1210,6 @@ export const EXAMPLES: { name: string; css: string }[] = [
   border-radius: 50%;
   background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
   transform: rotate(45deg);
-}
-.chat-message-row .chat-location-pin::after {
-  left: 6px;
-  top: 6px;
-  width: 5px;
-  height: 5px;
-  background: #fff;
 }
 .chat-message-row .chat-location-info {
   position: relative;
@@ -1305,8 +1269,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --loc-map: color-mix(in srgb, var(--theme-color) 22%, #e9e9e9);
   --loc-pin-a: color-mix(in srgb, var(--theme-color) 35%, #858585);
   --loc-pin-b: color-mix(in srgb, var(--theme-color) 28%, #4d4d4d);
-  --loc-icon: linear-gradient(#fdfdfd, #ececec 50%, #d6d6d6);
-  --loc-icon-edge: 0 1px 1.5px rgba(0, 0, 0, .22), inset 0 0 0 1px #bdbdbd;
+  --loc-icon: linear-gradient(#f7f7f7, #e3e3e3 50%, #c9c9c9);
+  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .28), inset 0 -1px 2px rgba(0, 0, 0, .1);
   --loc-gloss: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
   --loc-glyph: color-mix(in srgb, var(--theme-color) 30%, #555);
 }
@@ -1321,7 +1285,7 @@ export const EXAMPLES: { name: string; css: string }[] = [
   --loc-pin-a: color-mix(in srgb, var(--theme-color) 35%, #5a5a5a);
   --loc-pin-b: color-mix(in srgb, var(--theme-color) 28%, #3a3a3a);
   --loc-icon: linear-gradient(color-mix(in srgb, var(--theme-color) 32%, #9a9a9a), color-mix(in srgb, var(--theme-color) 26%, #5a5a5a));
-  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .35), inset 0 0 0 1px color-mix(in srgb, var(--theme-color) 25%, #2e2e2e);
+  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .4), inset 0 -1px 2px rgba(0, 0, 0, .18);
   --loc-gloss: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .06));
   --loc-glyph: #fff;
 }
