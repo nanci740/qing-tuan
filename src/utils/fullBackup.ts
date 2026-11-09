@@ -15,7 +15,7 @@ export interface BackupFile { header: BackupHeader; kv: Record<string, string>; 
 const DBS: { name: string; part?: BackupPart }[] = [
   { name: 'qingtuan_chat_records_v1' }, { name: 'QingTuanDB' }, { name: 'QingTuanSpaceDB' }, { name: 'smallphone_custom_font_db' },
   { name: 'qingtuan_image_assets_v1', part: 'images' }, { name: 'qingtuan_chat_photos_v1', part: 'images' }, { name: 'smallphone_chat_assets_v1', part: 'images' },
-  { name: 'smallphone_music_db', part: 'music' }, { name: 'qingtuan_theme_schemes_v1', part: 'images' },
+  { name: 'smallphone_music_db', part: 'music' }, { name: 'qingtuan_theme_schemes_v1', part: 'images' }, { name: 'qingtuan_css_assets_v1', part: 'images' },
 ];
 const META = 'qingtuan_backup_v1', VOICE = /(<audio\b[^>]*?\ssrc=")data:audio\/[^"]*(")/g;
 /** API Key、MCP 的 token 这类金钥：照栏位名认。 */
@@ -142,7 +142,7 @@ function decode(value: unknown): unknown {
 
 const DB_LABEL: Record<string, string> = {
   qingtuan_chat_records_v1: '聊天记录', QingTuanDB: '角色、世界书、账本、备忘录', QingTuanSpaceDB: '小窝', smallphone_custom_font_db: '字体',
-  qingtuan_image_assets_v1: '图片和表情', qingtuan_chat_photos_v1: '聊天照片', smallphone_chat_assets_v1: '聊天壁纸', smallphone_music_db: '音乐', qingtuan_theme_schemes_v1: '主题方案',
+  qingtuan_image_assets_v1: '图片和表情', qingtuan_chat_photos_v1: '聊天照片', smallphone_chat_assets_v1: '聊天壁纸', smallphone_music_db: '音乐', qingtuan_theme_schemes_v1: '主题方案', qingtuan_css_assets_v1: '美化素材',
 };
 /** 备份前检查：有资料库读不到、或有角色却一条聊天都没有，就列出来（不让你带着一份缺东西的备份走）。 */
 export async function checkBackup(include: BackupInclude) {

@@ -4,6 +4,7 @@ import { readImageSlot, saveImageSlots, blobDataUrl } from './imageAssets';
 import { readLocalFontRecord, writeLocalFontRecord } from './appearanceStorage';
 import { readChatCss, scopeChatCss, writeChatCss } from './chatCss';
 import { readHomeCss, scopeHomeCss, writeHomeCss } from './homeCss';
+import { applyRenames, packAssets, unpackAssets, usedAssets } from './cssAssets';
 
 /** 主题方案：主画面（配色、质感、字体、文字、背景、图标、主画面美化 CSS）、聊天美化 CSS、开屏，存成一套随时换。 */
 const DB_NAME = 'qingtuan_theme_schemes_v1', STORE = 'schemes';
@@ -192,6 +193,8 @@ interface ExportFile {
   home?: { kv: Record<string, string | null>; images: Record<string, string | null>; font: { name: string; type: string; data: string } | null };
   css?: string;
   splash?: string | null;
+  /** 聊天美化、主画面美化 CSS 用到的美化素材（名字 → data:image） */
+  assets?: Record<string, string>;
 }
 export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; fileName: string }> {
   const file: ExportFile = { app: 'qingtuan-theme', version: 1, name: scheme.name, at: Date.now() };
@@ -202,6 +205,8 @@ export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; f
   }
   if (typeof scheme.css === 'string') file.css = scheme.css;
   if ('splash' in scheme && scheme.splash !== undefined) file.splash = scheme.splash;
+  const names = usedAssets(`${scheme.css || ''}\n${scheme.home?.kv[HOME_CSS_KEY] || ''}`);
+  if (names.length) file.assets = await packAssets(names);
   const safe = scheme.name.replace(/[\\/:*?"<>|]/g, '').trim() || '方案';
   return { blob: new Blob([JSON.stringify(file)], { type: 'application/json' }), fileName: `青团主题-${safe}.json` };
 }
@@ -228,6 +233,10 @@ export async function importScheme(file: File) {
   try { raw = JSON.parse(await file.text()); } catch { throw Error('这不是青团机的主题文件'); }
   if (!isRecord(raw) || raw.app !== 'qingtuan-theme') throw Error('这不是青团机的主题文件');
   if ((await listSchemes()).length >= SCHEME_LIMIT) throw Error(`最多存 ${SCHEME_LIMIT} 个方案，先删掉不用的`);
+  // 先把打包的素材放回素材库（名字被别的图占了会换名字，CSS 里的写法跟着改）
+  const renamed = isRecord(raw.assets) ? await unpackAssets(raw.assets) : {};
+  if (typeof raw.css === 'string') raw.css = applyRenames(raw.css, renamed);
+  if (isRecord(raw.home) && isRecord(raw.home.kv) && typeof raw.home.kv[HOME_CSS_KEY] === 'string') raw.home.kv[HOME_CSS_KEY] = applyRenames(String(raw.home.kv[HOME_CSS_KEY]), renamed);
   const data: SchemeData = {};
   if (isRecord(raw.home)) {
     const source = isRecord(raw.home.kv) ? raw.home.kv : {}, images = isRecord(raw.home.images) ? raw.home.images : {};

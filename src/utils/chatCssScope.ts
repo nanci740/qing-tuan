@@ -180,7 +180,7 @@ export function scopeCss(source: string, scoper: CssScoper) {
   if (banned >= 0) fail(css, banned, '这里有不能用的写法（@import、script 这类）');
   const url = /url\s*\(\s*(['"]?)\s*([^'")\s]*)/gi;
   for (let match = url.exec(css); match; match = url.exec(css)) {
-    if (!/^data:image\//i.test(match[2])) fail(css, match.index, '图片只能用 data:image 开头的，不能连到外面的网址');
+    if (!/^(data:image\/|asset:)/i.test(match[2])) fail(css, match.index, '图片只能用素材（url(asset:名字)）或 data:image 开头的，不能连到外面的网址');
   }
   return scopeRules(css, 0, css, scoper);
 }

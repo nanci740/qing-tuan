@@ -38,7 +38,7 @@ export async function scanStorage(): Promise<StorageUsage> {
   return {
     used: estimate?.usage || 0, quota: estimate?.quota || 0,
     chatText: Math.max(0, await sum(['qingtuan_chat_records_v1']) - Math.round(voice / .75)), photos: await sum(['qingtuan_chat_photos_v1']), voice,
-    images: await sum(['qingtuan_image_assets_v1', 'smallphone_chat_assets_v1']), music: await sum(['smallphone_music_db']),
+    images: await sum(['qingtuan_image_assets_v1', 'smallphone_chat_assets_v1', 'qingtuan_css_assets_v1']), music: await sum(['smallphone_music_db']),
     other: other + await sum(['QingTuanDB', 'QingTuanSpaceDB', 'smallphone_custom_font_db']),
   };
 }

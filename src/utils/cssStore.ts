@@ -16,6 +16,8 @@ export interface CssStore {
   saveTemplate(name: string, css: string): CssTemplate;
   renameTemplate(id: string, name: string): void;
   deleteTemplate(id: string): void;
+  /** 已套用的、草稿、模板一起改写（素材改名时用） */
+  rewriteAll(change: (css: string) => string): void;
 }
 
 export function createCssStore(keys: { applied: string; draft: string; templates: string; event: string }, check: (css: string) => unknown): CssStore {
@@ -49,6 +51,15 @@ export function createCssStore(keys: { applied: string; draft: string; templates
       return item;
     },
     renameTemplate(id, name) { writeTemplates(readTemplates().map(item => item.id === id ? { ...item, name: String(name || '').trim().slice(0, 12) || item.name } : item)); },
-    deleteTemplate(id) { writeTemplates(readTemplates().filter(item => item.id !== id)); }
+    deleteTemplate(id) { writeTemplates(readTemplates().filter(item => item.id !== id)); },
+    rewriteAll(change) {
+      try {
+        const applied = kv.getItem(keys.applied) || '', draft = kv.getItem(keys.draft);
+        if (applied && change(applied) !== applied) kv.setItem(keys.applied, change(applied));
+        if (draft && change(draft) !== draft) kv.setItem(keys.draft, change(draft));
+        writeTemplates(readTemplates().map(item => ({ ...item, css: change(item.css) })));
+      } catch { /* 改不了就算了，CSS 里那张图会变透明 */ }
+      window.dispatchEvent(new CustomEvent(keys.event));
+    }
   };
 }
