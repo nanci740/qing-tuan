@@ -1,15 +1,22 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CHAT_CSS_EVENT, readChatCss, scopeChatCss } from '../../utils/chatCss';
+import { chatCssStore, scopeChatCss } from '../../utils/chatCss';
+import { homeCssStore, scopeHomeCss } from '../../utils/homeCss';
+import type { CssStore } from '../../utils/cssStore';
 
-function scoped() { try { return scopeChatCss(readChatCss()); } catch { return ''; } }
-/** 美化设置写的聊天美化 CSS，放进 <head>，全部聊天室都套。 */
-export function ChatGlobalCss() {
-  const [css, setCss] = useState(scoped);
+function useScoped(store: CssStore, scope: (css: string) => string) {
+  const read = () => { try { return scope(store.read()); } catch { return ''; } };
+  const [css, setCss] = useState(read);
   useEffect(() => {
-    const update = () => setCss(scoped());
-    window.addEventListener(CHAT_CSS_EVENT, update);
-    return () => window.removeEventListener(CHAT_CSS_EVENT, update);
+    const update = () => setCss(read());
+    window.addEventListener(store.event, update);
+    return () => window.removeEventListener(store.event, update);
   }, []);
-  return createPortal(<style id="chatGlobalCss">{css}</style>, document.head);
+  return css;
+}
+
+/** 美化设置写的聊天美化、主画面美化 CSS，放进 <head>。 */
+export function ChatGlobalCss() {
+  const chat = useScoped(chatCssStore, scopeChatCss), home = useScoped(homeCssStore, scopeHomeCss);
+  return createPortal(<><style id="chatGlobalCss">{chat}</style><style id="homeGlobalCss">{home}</style></>, document.head);
 }

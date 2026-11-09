@@ -2,8 +2,9 @@
  * --theme-color / --theme-accent 是现有选色接口；不要改写用户保存的原色。
  * :root 与 body 都声明，使变量按 body 的柔化主色重新计算。
  * 页面旧变量只作兼容别名，不再维护独立颜色公式。
- * 聊天室也声明一次：聊天美化在 #chatRoomView 改 --theme-color 时，顶栏、按钮、在线圆点这些算出来的颜色跟着重算。 */
-:root, body, #chatAppPage #chatRoomView {
+ * 聊天室也声明一次：聊天美化在 #chatRoomView 改 --theme-color 时，顶栏、按钮、在线圆点这些算出来的颜色跟着重算。
+ * 主画面（#main-content）也声明一次：主画面美化改 --theme-accent 时跟着重算；放在里面的聊天、世界书再声明一次，换回全局的主题色。 */
+:root, body, #main-content, #chatAppPage, #worldPage, #chatAppPage #chatRoomView {
     --color-primary: var(--theme-color);
     --color-accent: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * var(--theme-lightness-retention, 0.25) - 0.015) min(var(--theme-chroma-limit, 0.025), calc(c * var(--theme-chroma-retention, 0.55))) h);
     --color-text: oklch(from var(--theme-color) calc(l - 0.25) calc(c * 0.25) h);
@@ -54,6 +55,9 @@
     --color-danger-soft: color-mix(in srgb, var(--color-danger) 32%, var(--color-surface));
 }
 #chatAppPage #chatRoomView { --theme-accent: var(--theme-color); }
+/* 主画面美化改的主题色（--theme-accent）只给主画面：聊天、世界书换回全局选的那个。 */
+:root { --app-theme-accent: var(--theme-color); }
+#chatAppPage, #worldPage { --theme-accent: var(--app-theme-accent); }
 
 /* 组件兼容别名与非颜色参数。重复的 :root/body 片段及被覆盖的旧色值已合并。
  * 调色盘、世界书标签和状态色保留各自用途；导出文档不受本次配色整理影响。 */
@@ -105,7 +109,7 @@
             --beautify-preview-radius: var(--ui-radius);
             --beautify-modal-radius: var(--ui-radius);
         }
-        body {
+        body, #main-content, #chatAppPage, #worldPage {
             --theme-color: oklch(from var(--theme-accent) calc(0.94 + (l - 0.94) * var(--theme-lightness-retention, 0.25)) min(var(--theme-chroma-limit, 0.025), calc(c * var(--theme-chroma-retention, 0.55))) h);
             --theme-dark: var(--color-accent-strong);
             --theme-deep: var(--color-text);

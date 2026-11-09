@@ -3,8 +3,9 @@ import { writeSettingsBatch } from './settingsPersistence';
 import { readImageSlot, saveImageSlots, blobDataUrl } from './imageAssets';
 import { readLocalFontRecord, writeLocalFontRecord } from './appearanceStorage';
 import { readChatCss, scopeChatCss, writeChatCss } from './chatCss';
+import { readHomeCss, scopeHomeCss, writeHomeCss } from './homeCss';
 
-/** 主题方案：主画面（配色、质感、字体、文字、背景、图标）、聊天美化 CSS、开屏，存成一套随时换。 */
+/** 主题方案：主画面（配色、质感、字体、文字、背景、图标、主画面美化 CSS）、聊天美化 CSS、开屏，存成一套随时换。 */
 const DB_NAME = 'qingtuan_theme_schemes_v1', STORE = 'schemes';
 export const SCHEME_LIMIT = 20;
 const HOME_KEYS = ['smallphone_theme_color', 'smallphone_theme_tone', 'smallphone_glass_strength', 'smallphone_wallpaper_opacity',
@@ -13,6 +14,8 @@ const HOME_KEYS = ['smallphone_theme_color', 'smallphone_theme_tone', 'smallphon
 const APP_ICONS = ['ledger', 'memos', 'world', 'memories'].map(id => `smallphone_app_icon_${id}`);
 const HOME_IMAGES = ['smallphone_main_wallpaper', ...APP_ICONS, ...['home', 'chat', 'diary', 'space', 'settings'].map(id => `smallphone_dock_icon_${id}`)];
 const SPLASH_KEY = 'smallphone_splash_mode';
+/** 主画面美化 CSS 跟着「主画面」那块一起存（放在 home.kv 里，但不算进 HOME_KEYS：以前存的方案指纹才认得出来）。 */
+const HOME_CSS_KEY = 'qingtuan_home_css_v1';
 /** 换方案后重新开启：这次不放开屏，开好后回到美化设置。 */
 export const AFTER_THEME_FLAG = 'qingtuan_after_theme';
 
@@ -67,7 +70,8 @@ function slotBlob(slot: string): Promise<Blob | null> {
 async function captureCurrent(parts: SchemePart[]): Promise<SchemeData> {
   const data: SchemeData = {};
   if (parts.includes('home')) {
-    const values = Object.fromEntries(HOME_KEYS.map(key => [key, kv.getItem(key)]));
+    const values: Record<string, string | null> = Object.fromEntries(HOME_KEYS.map(key => [key, kv.getItem(key)]));
+    values[HOME_CSS_KEY] = readHomeCss() || null;
     const images: Record<string, Blob | null> = {};
     for (const slot of HOME_IMAGES) images[slot] = await slotBlob(slot);
     let font: HomeData['font'] = null;
@@ -92,7 +96,8 @@ async function printsOf(data: SchemeData): Promise<ThemeScheme['prints']> {
   if (data.home) {
     const images: Record<string, string> = {};
     for (const slot of HOME_IMAGES) images[slot] = await blobPrint(data.home.images[slot]);
-    prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob) });
+    const homeCss = (data.home.kv[HOME_CSS_KEY] || '').trim();
+    prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob), ...(homeCss ? { css: homeCss } : {}) });
   }
   if (typeof data.css === 'string') prints.css = await textPrint(data.css.trim());
   if ('splash' in data) prints.splash = await textPrint(data.splash ?? null);
@@ -163,6 +168,7 @@ async function write(data: SchemeData) {
     await writeLocalFontRecord(values.smallphone_custom_font_type === 'file' && data.home.font ? { blob: data.home.font.blob, name: data.home.font.name, type: data.home.font.type } : null);
     if (values.smallphone_custom_font_type === 'file' && !data.home.font) { values.smallphone_custom_font_type = null; values.smallphone_custom_font_name = null; }
     writeSettingsBatch(values);
+    try { writeHomeCss(data.home.kv[HOME_CSS_KEY] || ''); } catch { /* 写坏的不套 */ }
   }
   if (typeof data.css === 'string') { try { writeChatCss(data.css); } catch { /* 写坏的不套 */ } }
   if ('splash' in data && data.splash !== undefined) writeSettingsBatch({ [SPLASH_KEY]: ['always', 'daily', 'off'].includes(String(data.splash)) ? data.splash! : null });
@@ -225,7 +231,8 @@ export async function importScheme(file: File) {
   const data: SchemeData = {};
   if (isRecord(raw.home)) {
     const source = isRecord(raw.home.kv) ? raw.home.kv : {}, images = isRecord(raw.home.images) ? raw.home.images : {};
-    const values = Object.fromEntries(HOME_KEYS.map(key => [key, typeof source[key] === 'string' ? String(source[key]).slice(0, 2000) : null]));
+    const values: Record<string, string | null> = Object.fromEntries(HOME_KEYS.map(key => [key, typeof source[key] === 'string' ? String(source[key]).slice(0, 2000) : null]));
+    if (typeof source[HOME_CSS_KEY] === 'string' && source[HOME_CSS_KEY]) { try { scopeHomeCss(String(source[HOME_CSS_KEY])); values[HOME_CSS_KEY] = String(source[HOME_CSS_KEY]).slice(0, 30000); } catch (error) { throw Error('里面的主画面美化 CSS 有问题：' + (error as Error).message); } }
     if (values.smallphone_custom_font_url && !/^https?:\/\//i.test(values.smallphone_custom_font_url)) values.smallphone_custom_font_url = null;
     const blobs: Record<string, Blob | null> = {};
     for (const slot of HOME_IMAGES) blobs[slot] = await imageFrom(images[slot]);
