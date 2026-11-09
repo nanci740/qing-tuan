@@ -175,17 +175,13 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
 }
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
-}
-.chat-message-row .chat-bubble > .chat-location {
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
 /* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
 .chat-message-row .chat-pay {
@@ -274,7 +270,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 /* 卡片颜色：淡淡的主题色，上浅下深；红包浓一点 */
 .chat-message-row .chat-pay,
-.chat-message-row .chat-bubble > .chat-forward-record-card {
+.chat-message-row .chat-bubble > .chat-forward-record-card,
+.chat-message-row .chat-bubble > .chat-location {
   border: 1px solid color-mix(in srgb, var(--theme-color) 45%, #c9c9c9);
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 12%, #fff), color-mix(in srgb, var(--theme-color) 38%, #fff));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 3px rgba(0, 0, 0, .14);
@@ -299,6 +296,120 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row .chat-forward-record-divider {
   border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, #ddd);
+}
+/* 定位：跟转账卡同一种卡片。地图缩进卡片里、压一圈凹边，中间一根亮面图钉；
+   下面一颗亮面方块图标配地点，地址和距离并成一行 */
+.chat-message-row .chat-bubble > .chat-location {
+  padding: 5px;
+  text-align: left;
+  border-radius: 8px;
+}
+.chat-message-row .chat-location-map {
+  height: 80px;
+  border: 0;
+  border-radius: calc(8px - 3px);
+  background:
+    linear-gradient(90deg, transparent 46%, rgba(255, 255, 255, .85) 46% 52%, transparent 52%),
+    linear-gradient(0deg, transparent 58%, rgba(255, 255, 255, .85) 58% 64%, transparent 64%),
+    repeating-linear-gradient(0deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    repeating-linear-gradient(90deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    var(--loc-map);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
+}
+.chat-message-row .chat-location-pin {
+  width: 18px;
+  height: 18px;
+  margin: -17px 0 0 -9px;
+  border: 0;
+  background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-location-pin::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 9px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
+  transform: rotate(45deg);
+}
+.chat-message-row .chat-location-pin::after {
+  left: 6px;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+}
+.chat-message-row .chat-location-info {
+  position: relative;
+  display: block;
+  min-height: 44px;
+  padding: 7px 6px 3px 47px;
+  line-height: 1.45;
+}
+/* 方块图标：底（::before）、上半截亮光（::after）、图钉图案（地点字的 ::before） */
+.chat-message-row .chat-location-info::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--loc-icon);
+  box-shadow: var(--loc-icon-edge);
+}
+.chat-message-row .chat-location-info::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 9.5px;
+  width: 28px;
+  height: 15px;
+  border-radius: calc(8px - 1.5px) calc(8px - 1.5px) 3px 3px;
+  background: var(--loc-gloss);
+}
+.chat-message-row .chat-location-place::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 13.5px;
+  top: 15.5px;
+  width: 17px;
+  height: 17px;
+  background: var(--loc-glyph);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-location-place {
+  font-size: 13px;
+}
+.chat-message-row .chat-location-address,
+.chat-message-row .chat-location-distance {
+  display: inline;
+  font-size: 10.5px;
+  opacity: 1;
+}
+.chat-message-row .chat-location-address + .chat-location-distance::before {
+  content: ' · ';
+}
+/* 定位的颜色：卡片跟转账卡一样，地图和图钉、图标跟着主题色 */
+.chat-message-row .chat-location {
+  --loc-map: color-mix(in srgb, var(--theme-color) 55%, #fff);
+  --loc-pin-a: color-mix(in srgb, var(--theme-color) 55%, #6a8399);
+  --loc-pin-b: color-mix(in srgb, var(--theme-color) 75%, #a9bbcb);
+  --loc-icon: linear-gradient(color-mix(in srgb, var(--theme-color) 68%, #8299ad), color-mix(in srgb, var(--theme-color) 78%, #a9bbcb));
+  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .25), inset 0 -1px 2px rgba(0, 0, 0, .08);
+  --loc-gloss: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+  --loc-glyph: #fff;
+}
+.chat-message-row .chat-location-place {
+  color: #333;
+}
+.chat-message-row :is(.chat-location-address, .chat-location-distance) {
+  color: #999;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -500,17 +611,13 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
 }
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
-}
-.chat-message-row .chat-bubble > .chat-location {
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
 /* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
 .chat-message-row .chat-pay {
@@ -599,7 +706,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 /* 卡片颜色：淡淡的主题色，上浅下深；红包浓一点 */
 .chat-message-row .chat-pay,
-.chat-message-row .chat-bubble > .chat-forward-record-card {
+.chat-message-row .chat-bubble > .chat-forward-record-card,
+.chat-message-row .chat-bubble > .chat-location {
   border: 1px solid color-mix(in srgb, var(--theme-color) 45%, #c9c9c9);
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 12%, #fff), color-mix(in srgb, var(--theme-color) 38%, #fff));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 3px rgba(0, 0, 0, .14);
@@ -624,6 +732,120 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row .chat-forward-record-divider {
   border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, #ddd);
+}
+/* 定位：跟转账卡同一种卡片。地图缩进卡片里、压一圈凹边，中间一根亮面图钉；
+   下面一颗亮面方块图标配地点，地址和距离并成一行 */
+.chat-message-row .chat-bubble > .chat-location {
+  padding: 5px;
+  text-align: left;
+  border-radius: 8px;
+}
+.chat-message-row .chat-location-map {
+  height: 80px;
+  border: 0;
+  border-radius: calc(8px - 3px);
+  background:
+    linear-gradient(90deg, transparent 46%, rgba(255, 255, 255, .85) 46% 52%, transparent 52%),
+    linear-gradient(0deg, transparent 58%, rgba(255, 255, 255, .85) 58% 64%, transparent 64%),
+    repeating-linear-gradient(0deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    repeating-linear-gradient(90deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    var(--loc-map);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
+}
+.chat-message-row .chat-location-pin {
+  width: 18px;
+  height: 18px;
+  margin: -17px 0 0 -9px;
+  border: 0;
+  background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-location-pin::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 9px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
+  transform: rotate(45deg);
+}
+.chat-message-row .chat-location-pin::after {
+  left: 6px;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+}
+.chat-message-row .chat-location-info {
+  position: relative;
+  display: block;
+  min-height: 44px;
+  padding: 7px 6px 3px 47px;
+  line-height: 1.45;
+}
+/* 方块图标：底（::before）、上半截亮光（::after）、图钉图案（地点字的 ::before） */
+.chat-message-row .chat-location-info::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--loc-icon);
+  box-shadow: var(--loc-icon-edge);
+}
+.chat-message-row .chat-location-info::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 9.5px;
+  width: 28px;
+  height: 15px;
+  border-radius: calc(8px - 1.5px) calc(8px - 1.5px) 3px 3px;
+  background: var(--loc-gloss);
+}
+.chat-message-row .chat-location-place::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 13.5px;
+  top: 15.5px;
+  width: 17px;
+  height: 17px;
+  background: var(--loc-glyph);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-location-place {
+  font-size: 13px;
+}
+.chat-message-row .chat-location-address,
+.chat-message-row .chat-location-distance {
+  display: inline;
+  font-size: 10.5px;
+  opacity: 1;
+}
+.chat-message-row .chat-location-address + .chat-location-distance::before {
+  content: ' · ';
+}
+/* 定位的颜色：卡片跟转账卡一样，地图和图钉、图标跟着主题色 */
+.chat-message-row .chat-location {
+  --loc-map: color-mix(in srgb, var(--theme-color) 55%, #fff);
+  --loc-pin-a: color-mix(in srgb, var(--theme-color) 55%, #6a8399);
+  --loc-pin-b: color-mix(in srgb, var(--theme-color) 75%, #a9bbcb);
+  --loc-icon: linear-gradient(color-mix(in srgb, var(--theme-color) 68%, #8299ad), color-mix(in srgb, var(--theme-color) 78%, #a9bbcb));
+  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .25), inset 0 -1px 2px rgba(0, 0, 0, .08);
+  --loc-gloss: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+  --loc-glyph: #fff;
+}
+.chat-message-row .chat-location-place {
+  color: #333;
+}
+.chat-message-row :is(.chat-location-address, .chat-location-distance) {
+  color: #999;
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
@@ -836,17 +1058,13 @@ export const EXAMPLES: { name: string; css: string }[] = [
 .chat-message-row .chat-bubble--voice .chat-voice-control.is-playing::before {
   background: currentColor;
 }
-/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右；定位的圆角和影子跟泡泡搭 */
+/* 照片、表情包、转账、红包、定位、聊天记录：我的靠右 */
 .chat-message-row.is-user .chat-bubble > :is(.chat-pay, .chat-location, .chat-forward-record-card, .chat-photo, .chat-sticker) {
   margin-left: auto;
   margin-right: 0;
 }
 .chat-message-row .chat-bubble > :is(.chat-sticker, .chat-photo) {
   width: fit-content;
-}
-.chat-message-row .chat-bubble > .chat-location {
-  border-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
 }
 /* 转账、红包、亲属卡：一整块卡片，金额大字，种类和状态是底下的小灰字 */
 .chat-message-row .chat-pay {
@@ -935,7 +1153,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 /* 卡片颜色跟泡泡一样：我的白色、他的深色（跟着主题色）；图标跟卡片同色系 */
 .chat-message-row.is-user .chat-pay,
-.chat-message-row .chat-bubble > .chat-forward-record-card {
+.chat-message-row .chat-bubble > .chat-forward-record-card,
+.chat-message-row.is-user .chat-bubble > .chat-location {
   border: 1px solid #c4c4c4;
   background: linear-gradient(#ffffff, #f5f5f5 50%, #e6e6e6);
   box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, .2);
@@ -955,7 +1174,8 @@ export const EXAMPLES: { name: string; css: string }[] = [
   box-shadow: 0 1px 1.5px rgba(0, 0, 0, .22), inset 0 0 0 1px #bdbdbd;
   filter: drop-shadow(0 1px 0 #fff);
 }
-.chat-message-row:not(.is-user) .chat-pay {
+.chat-message-row:not(.is-user) .chat-pay,
+.chat-message-row:not(.is-user) .chat-bubble > .chat-location {
   border: 1px solid color-mix(in srgb, var(--theme-color) 30%, #3b3b3b);
   background: linear-gradient(color-mix(in srgb, var(--theme-color) 35%, #858585), color-mix(in srgb, var(--theme-color) 28%, #4d4d4d));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 1px 2px rgba(0, 0, 0, .3);
@@ -981,6 +1201,136 @@ export const EXAMPLES: { name: string; css: string }[] = [
 }
 .chat-message-row .chat-forward-record-divider {
   border-top: 1px solid #d4d4d4;
+}
+/* 定位：跟转账卡同一种卡片。地图缩进卡片里、压一圈凹边，中间一根亮面图钉；
+   下面一颗亮面方块图标配地点，地址和距离并成一行 */
+.chat-message-row .chat-bubble > .chat-location {
+  padding: 5px;
+  text-align: left;
+  border-radius: 3px;
+}
+.chat-message-row .chat-location-map {
+  height: 80px;
+  border: 0;
+  border-radius: calc(3px - 3px);
+  background:
+    linear-gradient(90deg, transparent 46%, rgba(255, 255, 255, .85) 46% 52%, transparent 52%),
+    linear-gradient(0deg, transparent 58%, rgba(255, 255, 255, .85) 58% 64%, transparent 64%),
+    repeating-linear-gradient(0deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    repeating-linear-gradient(90deg, transparent 0 13px, rgba(0, 0, 0, .06) 13px 14px),
+    var(--loc-map);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18), inset 0 0 0 1px rgba(0, 0, 0, .08);
+}
+.chat-message-row .chat-location-pin {
+  width: 18px;
+  height: 18px;
+  margin: -17px 0 0 -9px;
+  border: 0;
+  background: linear-gradient(135deg, var(--loc-pin-a), var(--loc-pin-b));
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.chat-message-row .chat-location-pin::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 9px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .1));
+  transform: rotate(45deg);
+}
+.chat-message-row .chat-location-pin::after {
+  left: 6px;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+}
+.chat-message-row .chat-location-info {
+  position: relative;
+  display: block;
+  min-height: 44px;
+  padding: 7px 6px 3px 47px;
+  line-height: 1.45;
+}
+/* 方块图标：底（::before）、上半截亮光（::after）、图钉图案（地点字的 ::before） */
+.chat-message-row .chat-location-info::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--loc-icon);
+  box-shadow: var(--loc-icon-edge);
+}
+.chat-message-row .chat-location-info::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 9.5px;
+  width: 28px;
+  height: 15px;
+  border-radius: calc(4px - 1.5px) calc(4px - 1.5px) 3px 3px;
+  background: var(--loc-gloss);
+}
+.chat-message-row .chat-location-place::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 13.5px;
+  top: 15.5px;
+  width: 17px;
+  height: 17px;
+  background: var(--loc-glyph);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%2021s-6-5.6-6-11a6%206%200%200%201%2012%200c0%205.4-6%2011-6%2011z%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2710%27%20r%3D%272.2%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.chat-message-row .chat-location-place {
+  font-size: 13px;
+}
+.chat-message-row .chat-location-address,
+.chat-message-row .chat-location-distance {
+  display: inline;
+  font-size: 10.5px;
+  opacity: 1;
+}
+.chat-message-row .chat-location-address + .chat-location-distance::before {
+  content: ' · ';
+}
+/* 定位的颜色：跟转账卡一样，我的白色、他的深色 */
+.chat-message-row.is-user .chat-location {
+  --loc-map: color-mix(in srgb, var(--theme-color) 22%, #e9e9e9);
+  --loc-pin-a: color-mix(in srgb, var(--theme-color) 35%, #858585);
+  --loc-pin-b: color-mix(in srgb, var(--theme-color) 28%, #4d4d4d);
+  --loc-icon: linear-gradient(#fdfdfd, #ececec 50%, #d6d6d6);
+  --loc-icon-edge: 0 1px 1.5px rgba(0, 0, 0, .22), inset 0 0 0 1px #bdbdbd;
+  --loc-gloss: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .15));
+  --loc-glyph: color-mix(in srgb, var(--theme-color) 30%, #555);
+}
+.chat-message-row.is-user .chat-location-place {
+  color: #333;
+}
+.chat-message-row.is-user :is(.chat-location-address, .chat-location-distance) {
+  color: #999;
+}
+.chat-message-row:not(.is-user) .chat-location {
+  --loc-map: color-mix(in srgb, var(--theme-color) 22%, #d9d9d9);
+  --loc-pin-a: color-mix(in srgb, var(--theme-color) 35%, #5a5a5a);
+  --loc-pin-b: color-mix(in srgb, var(--theme-color) 28%, #3a3a3a);
+  --loc-icon: linear-gradient(color-mix(in srgb, var(--theme-color) 32%, #9a9a9a), color-mix(in srgb, var(--theme-color) 26%, #5a5a5a));
+  --loc-icon-edge: 0 1px 2px rgba(0, 0, 0, .35), inset 0 0 0 1px color-mix(in srgb, var(--theme-color) 25%, #2e2e2e);
+  --loc-gloss: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .06));
+  --loc-glyph: #fff;
+}
+.chat-message-row:not(.is-user) .chat-location-place {
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .35);
+}
+.chat-message-row:not(.is-user) :is(.chat-location-address, .chat-location-distance) {
+  color: rgba(255, 255, 255, .65);
 }
 /* 引用：挪到泡泡下面，小小的灰底一块，不影响泡泡跟头像对齐 */
 .chat-message-row .chat-bubble:has(> .chat-quoted-message) {
