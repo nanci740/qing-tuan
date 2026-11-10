@@ -10,7 +10,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "verify:migration": "node scripts/verify-migration.mjs",
     "test:chat-css": "node --experimental-strip-types --no-warnings scripts/test-chat-css.mjs",
-    "test:home-css": "node --experimental-strip-types --no-warnings scripts/test-home-css.mjs"
+    "test:home-css": "node --experimental-strip-types --no-warnings scripts/test-home-css.mjs",
+    "test:home-layout": "node --experimental-strip-types --no-warnings scripts/test-home-layout.mjs"
   },
   "dependencies": {
     "react": "19.3.0",

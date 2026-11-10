@@ -10,7 +10,11 @@ function buildPreview(frame: HTMLIFrameElement) {
   if (main) {
     const copy = main.cloneNode(true) as HTMLElement;
     copy.querySelectorAll('#chatAppPage, #worldPage, audio, .floating-note').forEach(node => node.remove());
-    copy.classList.remove('on-page-2'); copy.classList.add('visible');
+    // 预览固定看第一页；编辑中的框框、按钮拿掉
+    copy.classList.remove('is-editing-home'); copy.classList.add('visible');
+    copy.querySelector('.home-pages')?.classList.remove('is-editing', 'is-dragging');
+    copy.querySelectorAll('.home-edit-layer > *, .home-slot-remove, .home-drop').forEach(node => node.remove());
+    const track = copy.querySelector<HTMLElement>('.home-track'); if (track) track.style.transform = 'none';
     copy.style.opacity = '1';
     copy.removeAttribute('inert');
     html = copy.outerHTML;

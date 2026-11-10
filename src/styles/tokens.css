@@ -396,9 +396,7 @@
             --win-deep: var(--set-block);
         }
         #main-content > .ios-status-bar,
-        #main-content > .widget-card,
-        #main-content > .app-section,
-        #main-content > .home-page2,
+        #main-content > .home-pages,
         #main-content > .home-dots,
         #main-content .dock-bar {
             --theme-color: var(--wk-src);
