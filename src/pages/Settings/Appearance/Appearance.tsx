@@ -6,6 +6,7 @@ import { showToast } from '../../../utils/toast';
 import { IconEditor } from './components/IconEditor';
 import { ThemeSchemes } from './ThemeSchemes';
 import { ChatCssWindow } from './ChatCssWindow';
+import { HomeCssWindow } from './HomeCssWindow';
 /** 原页面的静态结构；所有页面保持挂载，由原脚本切换显示状态。 */
 export function Appearance() {
   const appearance = useAppearance();
@@ -58,6 +59,7 @@ export function Appearance() {
       <div className="theme-settings-content">
         <ThemeSchemes />
         <ChatCssWindow />
+        <HomeCssWindow />
         {"\n            "}
         <section className="theme-setting-group">
           {"\n                "}

@@ -1,43 +1,12 @@
-import { kv } from './kvStorage';
+import { createCssStore } from './cssStore';
 import { scopeChatCss } from './chatCssScope';
 
 /** 美化设置的「聊天美化 CSS」：套到全部聊天室。聊天设置里单独设的壁纸、字号、专属气泡还是会盖过它。 */
-const KEY = 'qingtuan_chat_css_v1', TEMPLATES = 'qingtuan_chat_css_templates_v1';
-export const CHAT_CSS_EVENT = 'qingtuan:chat-css';
-export const TEMPLATE_LIMIT = 30;
-
-export function readChatCss() { try { return kv.getItem(KEY) || ''; } catch { return ''; } }
-export function writeChatCss(css: string) {
-  const value = String(css || '').trim();
-  if (value) { scopeChatCss(value); kv.setItem(KEY, value); } else kv.removeItem(KEY);
-  try { kv.removeItem('qingtuan_chat_css_draft_v1'); } catch { /* 草稿清不掉没关系 */ }
-  window.dispatchEvent(new CustomEvent(CHAT_CSS_EVENT));
-}
-
-/** 还没套用的草稿：离开美化设置、重新开启都还在。跟已套用的一样就不存。 */
-const DRAFT = 'qingtuan_chat_css_draft_v1';
-export function readDraft(): string | null { try { return kv.getItem(DRAFT); } catch { return null; } }
-export function writeDraft(draft: string, applied: string) {
-  try { if (draft.trim() === applied.trim()) kv.removeItem(DRAFT); else kv.setItem(DRAFT, draft.slice(0, 40000)); } catch { /* 存不了就算了 */ }
-}
-
-export interface ChatCssTemplate { id: string; name: string; css: string; at: number }
-export function readTemplates(): ChatCssTemplate[] {
-  try { const list = JSON.parse(kv.getItem(TEMPLATES) || '[]'); return Array.isArray(list) ? list.filter(item => item && typeof item.css === 'string' && item.name) : []; } catch { return []; }
-}
-function writeTemplates(list: ChatCssTemplate[]) { kv.setItem(TEMPLATES, JSON.stringify(list)); }
-export function saveTemplate(name: string, css: string) {
-  const list = readTemplates();
-  if (list.length >= TEMPLATE_LIMIT) throw Error(`最多存 ${TEMPLATE_LIMIT} 个模板，先删掉不用的`);
-  let next = String(name || '').trim().slice(0, 12) || '我的模板', index = 2;
-  const base = next, names = new Set(list.map(item => item.name));
-  while (names.has(next)) next = `${base.slice(0, 9)}(${index++})`;
-  const item = { id: `css_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, name: next, css: String(css || ''), at: Date.now() };
-  writeTemplates([...list, item]);
-  return item;
-}
-export function renameTemplate(id: string, name: string) { writeTemplates(readTemplates().map(item => item.id === id ? { ...item, name: String(name || '').trim().slice(0, 12) || item.name } : item)); }
-export function deleteTemplate(id: string) { writeTemplates(readTemplates().filter(item => item.id !== id)); }
+export const chatCssStore = createCssStore({ applied: 'qingtuan_chat_css_v1', draft: 'qingtuan_chat_css_draft_v1', templates: 'qingtuan_chat_css_templates_v1', event: 'qingtuan:chat-css' }, scopeChatCss);
+export const CHAT_CSS_EVENT = chatCssStore.event;
+export const readChatCss = () => chatCssStore.read();
+export const writeChatCss = (css: string) => chatCssStore.write(css);
+export type { CssTemplate as ChatCssTemplate } from './cssStore';
 
 /* 检查、加范围的部分在 chatCssScope.ts（纯文字处理，可以单独测）。 */
 export { CHAT_CSS_SCOPE, CHAT_CSS_LIMIT, scopeChatCss, strengthen } from './chatCssScope';

@@ -14,11 +14,6 @@
 .preset-page .preset-move:disabled { opacity: .35; cursor: default; }
 .preset-page .world-book-open:disabled { cursor: default; opacity: 1; color: inherit; }
 .preset-page .world-action-bar { flex-wrap: wrap; }
-/* 主画面第二页的 App 图标：消息小窗下面一排。跟第一页的图标区一样宽（最宽 330px、置中），
-   每格也一样宽，所以第一个图标跟第一页的「记账」左右对齐。 */
-#main-content .home-page2 .home-page2-apps {
-  width: 100%; max-width: 330px; margin: 30px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 0;
-}
 
 /* 跑马灯色带的前后两句换成预设的 */
 .world-page.preset-page .world-address-field::before { content: '★ welcome to my preset ★ 现在位置 → '; }

@@ -7,7 +7,12 @@ import { useHomePlayer, formatPlayerTime } from '../../hooks/useHomePlayer';
 import { useHomeAvatarUpload } from '../../hooks/useHomeAvatarUpload';
 import { DeviceStatusBar } from './components/DeviceStatusBar';
 import { HomeNotice } from './components/HomeNotice';
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+import { HomeGrid } from './components/HomeGrid';
+import { dropEmptyPages } from '../../utils/homeLayout';
+import type { HomeItemId, HomeLayout } from '../../utils/homeLayout';
+import { readLayout, writeLayout } from '../../utils/homeLayoutStore';
 import { Memos } from '../Memos/Memos';
 import { PresetApp } from '../Preset/Preset';
 import { Ledger } from '../Ledger/Ledger';
@@ -37,19 +42,15 @@ export function Home() {
   const player = useHomePlayer();
   const starAvatar = useHomeAvatarUpload('avatar_star_custom');
   const moonAvatar = useHomeAvatarUpload('avatar_moon_custom');
-  const pagination = useHomePagination();
-  return <div id="main-content" className={[boot.mainVisible ? 'visible' : '', pagination.page === 1 ? 'on-page-2' : ''].filter(Boolean).join(' ') || undefined} onTouchStart={pagination.onTouchStart} onTouchEnd={pagination.onTouchEnd} onPointerDown={pagination.onPointerDown} onPointerUp={pagination.onPointerUp} style={{
-    ...(boot.mainOpaque ? {
-      opacity: '1'
-    } : {}),
-    backgroundImage: appearance.wallpaperLayers
-  }}>
-      {"\n        "}
-      <OriginalComment text={" 顶部状态栏 "} />
-      {"\n        "}
-      <DeviceStatusBar />
-      {"\n"}
-      <div className="widget-card" inert={navigation.spaceOpen}>
+  const [layout, setLayout] = useState(readLayout), [editing, setEditing] = useState(false);
+  const pagination = useHomePagination(layout.pages, editing);
+  const saveLayout = useCallback((next: HomeLayout) => { setLayout(next); writeLayout(next); }, []);
+  /** 离开编辑时把空的页拿掉。 */
+  const finishOrStart = useCallback((next: boolean) => { setEditing(next); if (!next) setLayout(current => { const cleaned = dropEmptyPages(current); writeLayout(cleaned); return cleaned; }); }, []);
+  /** 主画面上的每个东西（摆在哪里由 HomeGrid 照排法放）。 */
+  const blocks: Record<HomeItemId, ReactNode> = {
+    main: (
+      <div className="widget-card">
         {"\n"}
         <svg className="earphone-wires" fill="none" viewBox="0 0 380 320">
           {"\n"}
@@ -411,15 +412,8 @@ export function Home() {
         </div>
         {"\n"}
       </div>
-      {"\n"}
-      <OriginalComment text={" App 和 拍立得 区域 "} />
-      {"\n"}
-      <div className="app-section" inert={navigation.spaceOpen}>
-        {"\n"}
-        <OriginalComment text={" 左侧 2x2 App 图标区 "} />
-        {"\n"}
-        <div className="app-grid-container">
-          {"\n"}
+    ),
+    ledger: (
           <div className="app-item" data-app-icon-key="ledger" role="button" tabIndex={0} aria-label="打开记账" onClick={event => { event.stopPropagation(); setLedgerOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setLedgerOpen(true); } }}>
             {"\n"}
             <div className="app-card">
@@ -501,7 +495,8 @@ export function Home() {
             </span>
             {"\n"}
           </div>
-          {"\n"}
+    ),
+    memos: (
           <div className="app-item" data-app-icon-key="memos" role="button" tabIndex={0} aria-label="打开备忘录" onClick={event => { event.stopPropagation(); setMemosOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setMemosOpen(true); } }}>
             {"\n"}
             <div className="app-card">
@@ -590,7 +585,8 @@ export function Home() {
             </span>
             {"\n"}
           </div>
-          {"\n"}
+    ),
+    world: (
           <div className="app-item" data-app-icon-key="world" onClick={event=>{event.preventDefault();event.stopPropagation();world.openWorld();}}>
             {"\n"}
             <div className="app-card">
@@ -698,7 +694,8 @@ export function Home() {
             </span>
             {"\n"}
           </div>
-          {"\n"}
+    ),
+    memories: (
           <div className="app-item" data-app-icon-key="memories" role="button" tabIndex={0} aria-label="打开记忆" onClick={event => { event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-memories')); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-memories')); } }}>
             {"\n"}
             <div className="app-card">
@@ -766,34 +763,8 @@ export function Home() {
             </span>
             {"\n"}
           </div>
-          {"\n"}
-        </div>
-        {"\n"}
-        <OriginalComment text={" 换 Star / Moon 头像用的隐藏上传框（原本放在拍立得里） "} />
-        {"\n"}
-        <input type="file" id="starAvatarInput" ref={starAvatar.input} onChange={event => starAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
-        "display": "none"
-      }} />
-        {"\n"}
-        <input type="file" id="moonAvatarInput" ref={moonAvatar.input} onChange={event => moonAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
-        "display": "none"
-      }} />
-        {"\n"}
-        <OriginalComment text={" 电子宠物：蛋形果冻机，放在 App 右边代替拍立得；液晶小窗里住着一只像素小鸟，下面三颗按钮；像素图和互动都在底部 initTamaPet 里 "} />
-        {"\n"}
-        <TamaPet />
-        {"\n"}
-      </div>
-      {"\n"}
-      <OriginalComment text={" 主画面第二页（往左滑出现）和页数小圆点；换页逻辑在底部 initHomePages "} />
-      {"\n"}
-      <div className="home-page2" id="homePage2" aria-hidden={pagination.page !== 1} inert={navigation.spaceOpen}>
-        {"\n"}
-        <OriginalComment text={" 消息小窗（在第二页最上面）：显示角色最新传来的一句话，点一下打开那个聊天；内容由底部 initHomeNotice 填 "} />
-        {"\n"}
-        <HomeNotice />
-        {"\n"}
-        <div className="app-grid-container home-page2-apps">
+    ),
+    preset: (
           <div className="app-item" data-app-icon-key="preset" role="button" tabIndex={0} aria-label="打开预设" onClick={event => { event.stopPropagation(); setPresetOpen(true); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); setPresetOpen(true); } }}>
             <div className="app-card">
               <div className={"icon-box icon-preset" + (appearance.icons.app['preset'] ? ' has-custom-icon' : '')}>
@@ -816,13 +787,35 @@ export function Home() {
             </div>
             <span className="app-label-cn">{"Preset"}</span>
           </div>
-        </div>
+    ),
+    tama: <TamaPet />,
+    notice: <HomeNotice />
+  };
+  return <div id="main-content" className={[boot.mainVisible ? 'visible' : '', editing ? 'is-editing-home' : ''].filter(Boolean).join(' ') || undefined} onTouchStart={pagination.onTouchStart} onTouchEnd={pagination.onTouchEnd} onPointerDown={pagination.onPointerDown} onPointerUp={pagination.onPointerUp} style={{
+    ...(boot.mainOpaque ? {
+      opacity: '1'
+    } : {}),
+    backgroundImage: appearance.wallpaperLayers
+  }}>
+      {"\n        "}
+      <OriginalComment text={" 顶部状态栏 "} />
+      {"\n        "}
+      <DeviceStatusBar />
+      {"\n"}
+      <OriginalComment text={" 主画面的格子：头像和播放器、图标、电子宠物、消息小窗照排法摆；长按进编辑，可以拖着换位置、收起组件 "} />
+      <HomeGrid layout={layout} setLayout={saveLayout} page={pagination.page} go={pagination.jump} blocks={blocks} editing={editing} setEditing={finishOrStart} inert={navigation.spaceOpen} />
+        <OriginalComment text={" 换 Star / Moon 头像用的隐藏上传框（原本放在拍立得里） "} />
         {"\n"}
-      </div>
+        <input type="file" id="starAvatarInput" ref={starAvatar.input} onChange={event => starAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
+        "display": "none"
+      }} />
+        {"\n"}
+        <input type="file" id="moonAvatarInput" ref={moonAvatar.input} onChange={event => moonAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
+        "display": "none"
+      }} />
       {"\n"}
       <div className="home-dots" id="homeDots" role="tablist" aria-label="主画面页数" inert={navigation.spaceOpen}>
-        <PressedButton type="button" className={pagination.page === 0 ? 'home-dot active' : 'home-dot'} role="tab" aria-selected={pagination.page === 0} data-page="0" onClick={event => pagination.select(0, event)} aria-label="第 1 页" />
-        <PressedButton type="button" className={pagination.page === 1 ? 'home-dot active' : 'home-dot'} role="tab" aria-selected={pagination.page === 1} data-page="1" onClick={event => pagination.select(1, event)} aria-label="第 2 页" />
+        {Array.from({ length: layout.pages }, (_, index) => <PressedButton type="button" key={index} className={pagination.page === index ? 'home-dot active' : 'home-dot'} role="tab" aria-selected={pagination.page === index} data-page={index} onClick={event => pagination.select(index, event)} aria-label={`第 ${index + 1} 页`} />)}
       </div>
       {"\n"}
       <OriginalComment text={" World 世界书：用户调整版 "} />

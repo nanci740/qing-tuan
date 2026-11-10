@@ -587,34 +587,12 @@
 /* @qingtuan-order:000128 */
 
 
-        /* ---------------- 底部 App & 拍立得 区域 ---------------- */
+        /* ---------------- App 图标 ---------------- */
 
 /* @qingtuan-order:000129 */
 
-        .app-section {
-            width: 100%;
-            max-width: 380px;
-            padding: 0 16px;
-            margin-top: 0;
-            display: flex;
-            justify-content: center; /* 從 space-between 改為 center，防止兩側擴展 */
-            align-items: center;
-            gap: 25px;               /* 固定 App 與拍立得之間的距離 */
-            flex-shrink: 0; /* 锁定弹性缩放 */
-        }
-
 /* @qingtuan-order:000130 */
 
-
-        .app-grid-container {
-            width: 130px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px 10px;
-            flex-shrink: 0;
-            margin-top: -15px;
-            margin-left: 5px;
-        }
 
 /* @qingtuan-order:000131 */
 
@@ -1690,58 +1668,42 @@
 
 /* @qingtuan-order:003405 */
 
-        #main-content > .widget-card {
-            margin-top: 19px; /* 固定从上方开始，对话框顶端跟第二页消息小窗后面最上面那扇叠窗同一个高度 */
-            margin-bottom: 0;
-            transform: none; /* 票根拿掉后空间够了，头像和 MP3 回到 100% */
+        /* 头像和播放器：放在格子里（4×4），比格子宽一点（左右各多 18px），往上提一点，位置跟原本一样 */
+        #main-content .home-slot[data-item="main"] > .widget-card {
+            width: calc(100% + 36px);
+            max-width: none;
+            margin: -14px 0 0 -18px;
+            transform: none;
         }
 
 /* @qingtuan-order:003406 */
 
 
-        /* 矮屏幕：上半部缩回 90%，免得拍立得顶到 MP3 */
-
 /* @qingtuan-order:003407 */
-
-        @media (max-height: 720px) {
-            #main-content > .widget-card {
-                transform: scale(0.9);
-                margin-bottom: -30px;
-            }
-        }
 
 /* @qingtuan-order:003408 */
 
 
-        /* 手机桌面式格子：跟 MP3 同宽 330px，切成 4 栏；左 2 栏是 2x2 的 App，右 2 栏是 2x2 的拍立得小组件 */
+        /* 图标：一格一个，置中、贴着格子上面 */
 
 /* @qingtuan-order:003409 */
 
-        #main-content > .app-section {
-            margin-top: 26px; /* 固定贴在 MP3 下面，空白留在下面 */
-            margin-bottom: 0;
-            width: 100%;
-            max-width: 330px;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0;
-            align-items: center;
-            justify-items: center;
+        #main-content .home-slot.is-app {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
 /* @qingtuan-order:003410 */
 
 
-        /* 两栏强制等宽，名字再长也撑不开 */
+        /* 图标跟格子一样宽，名字再长也撑不开 */
 
 /* @qingtuan-order:003411 */
 
-        #main-content .app-grid-container {
+        #main-content .home-slot.is-app > .app-item {
             width: 100%;
-            margin: 0;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px 0;
+            margin-top: 2.4px;
         }
 
 /* @qingtuan-order:003412 */
@@ -1813,7 +1775,7 @@
 /* @qingtuan-order:003423 */
 
 
-        /* ---- 主画面分两页：往左滑，头像到电子宠物整块滑出去，第二页从右边滑进来；导航栏、状态栏不动 ---- */
+        /* ---- 主画面最多三页：全部页排在同一条轨道上，往左滑整条移过去；导航栏、状态栏不动 ---- */
 
 /* @qingtuan-order:003424 */
 
@@ -1822,42 +1784,43 @@
 /* @qingtuan-order:003425 */
 
 
-        #main-content > .widget-card,
-        #main-content > .app-section {
+        /* 放格子的那一块：状态栏下面到页数小圆点上面 */
+        #main-content > .home-pages {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 44px;
+            bottom: 112px;
+        }
+        #main-content .home-ruler { position: absolute; width: 330px; height: 0; visibility: hidden; pointer-events: none; }
+        #main-content .home-track {
+            position: absolute;
+            inset: 0;
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
 /* @qingtuan-order:003426 */
 
 
-        #main-content.on-page-2 > .widget-card,
-        #main-content.on-page-2 > .app-section {
-            transform: translateX(-110vw);
+        /* 每个东西照排法放在格子上（位置写在 style 里）；换位置时滑过去 */
+        #main-content .home-slot {
+            position: absolute;
+            box-sizing: border-box;
+            transition: left 0.25s ease, top 0.25s ease;
         }
 
 /* @qingtuan-order:003427 */
 
 
-        #main-content .home-page2 {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 44px;
-            bottom: 112px;
+        /* 电子宠物（2×2）在两格中间、贴着上面；消息小窗（4×1）往下一点，给后面叠着的两扇窗留位子 */
+        #main-content .home-slot[data-item="tama"] {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 30px 12px 0; /* 上面留空给小窗后面往上叠的两扇窗 */
-            transform: translateX(110vw);
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            pointer-events: none;
+            justify-content: center;
+            align-items: flex-start;
         }
+        #main-content .home-slot[data-item="tama"] > .tama-widget { margin-top: -1px; }
+        #main-content .home-slot[data-item="notice"] > .home-notice { margin-top: 8px; }
 
-/* @qingtuan-order:003428 */
-
-
-        #main-content.on-page-2 .home-page2 { transform: none; pointer-events: auto; }
 
 /* @qingtuan-order:003429 */
 
@@ -1905,15 +1868,7 @@
 /* @qingtuan-order:003435 */
 
 
-        /* 导航栏以外的内容整体往上挪 5px（用 top 挪，不影响排版计算） */
-
 /* @qingtuan-order:003436 */
-
-        #main-content > .widget-card,
-        #main-content > .app-section {
-            position: relative;
-            top: -5px;
-        }
 
 /* @qingtuan-order:003437 */
 
@@ -2624,14 +2579,9 @@
 /* @qingtuan-order:003553 */
 
         @media (max-height: 780px) {
-            #main-content > .widget-card {
-                transform: none;
-                margin-top: 13px; /* 缩到 90% 时第二页的叠窗也跟着往上，这里少留一点才对得齐 */
-                margin-bottom: 0;
-                zoom: 0.9;
-            }
-            #main-content > .app-section,
-            #main-content .home-page2 { zoom: 0.9; }
+            #main-content > .home-pages { zoom: 0.9; }
+            /* 缩小以后头像和播放器跟原本一样宽（380px 的 90%） */
+            #main-content .home-slot[data-item="main"] > .widget-card { width: calc(100% + 50px); margin: -15.8px 0 0 -25px; }
         }
 
 /* @qingtuan-order:003554 */
@@ -2910,9 +2860,7 @@
 /* @qingtuan-order:003610 */
 
         #main-content > .ios-status-bar,
-        #main-content > .widget-card,
-        #main-content > .app-section,
-        #main-content > .home-page2,
+        #main-content > .home-pages,
         #main-content > .home-dots,
         #main-content .dock-bar {
             /* 主画面直接用框架色 */ /* 框架色已经在 body 算好深浅，这里不再另外限制（原本的上限会让深色主题在主画面没变化） */
@@ -3043,3 +2991,55 @@
                 10px -12px 0 -1px var(--color-surface),
                 10px -12px 0 0 var(--win-deep) !important;
         }
+
+/* ---------------- 编辑主画面：长按进来，拖着换位置、收起组件、加组件 ---------------- */
+#main-content > .home-edit-layer { display: contents; }
+#main-content > .home-pages.is-editing { touch-action: none; user-select: none; -webkit-user-select: none; }
+#main-content.is-editing-home > .ios-status-bar { visibility: hidden; }
+/* 编辑中里面的东西不能按（按了是要拖），一直轻轻晃 */
+#main-content .home-pages.is-editing .home-slot { cursor: grab; outline: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); outline-offset: -3px; border-radius: 8px; }
+#main-content .home-pages.is-editing .home-slot > :not(.home-slot-remove) { pointer-events: none; animation: homeJiggle 0.28s ease-in-out infinite alternate; }
+#main-content .home-pages.is-editing .home-slot.is-widget > :not(.home-slot-remove) { animation-name: homeJiggleSoft; }
+#main-content .home-pages.is-editing .home-slot:nth-child(2n) > :not(.home-slot-remove) { animation-delay: -0.14s; }
+#main-content .home-slot.is-held { z-index: 30; transition: none; cursor: grabbing; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18)); }
+#main-content .home-pages.is-editing .home-slot.is-held > :not(.home-slot-remove) { animation: none; }
+#main-content .home-drop { position: absolute; z-index: 1; box-sizing: border-box; border: 2px dashed var(--win-deep); border-radius: 8px; background: color-mix(in srgb, var(--theme-color) 30%, transparent); pointer-events: none; }
+#main-content .home-drop.is-bad { border-color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 15%, transparent); }
+@keyframes homeJiggle { from { transform: rotate(-1.2deg); } to { transform: rotate(1.2deg); } }
+@keyframes homeJiggleSoft { from { transform: rotate(-0.35deg); } to { transform: rotate(0.35deg); } }
+@media (prefers-reduced-motion: reduce) { #main-content .home-pages.is-editing .home-slot > * { animation: none !important; } }
+/* 组件左上角的「－」：收起来 */
+#main-content .home-slot-remove {
+  position: absolute; left: -4px; top: -4px; z-index: 20; display: grid; place-items: center;
+  width: 22px; height: 22px; padding: 0; border: 1px solid var(--color-muted); border-radius: 50%;
+  background: var(--effect-face-white); box-shadow: var(--effect-raised), 0 1px 3px rgba(0, 0, 0, 0.2);
+  color: var(--color-text); font: 700 15px/1 sans-serif; cursor: pointer; pointer-events: auto;
+}
+/* 最上面：「＋ 加组件」「完成」；下面一行提示 */
+#main-content .home-edit-bar { position: absolute; left: 0; right: 0; top: 8px; z-index: 40; display: flex; justify-content: space-between; padding: 0 16px; pointer-events: none; }
+#main-content .home-edit-btn {
+  padding: 4px 12px; border: 1px solid var(--color-muted); border-radius: 3px; background: var(--effect-face-white);
+  box-shadow: var(--effect-button-shadow); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; pointer-events: auto;
+}
+#main-content .home-edit-btn:active { box-shadow: var(--effect-sunken); }
+#main-content .home-edit-btn.is-done { background: var(--win-bar); font-weight: 700; }
+#main-content .home-edit-tip { position: absolute; left: 0; right: 0; bottom: 112px; z-index: 40; margin: 0; color: var(--color-muted); font-size: 10px; text-align: center; pointer-events: none; }
+/* 加组件：从下面出来的一块 */
+#main-content .home-edit-sheet {
+  position: absolute; left: 10px; right: 10px; bottom: 104px; z-index: 60; padding: 8px 10px 10px;
+  border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised), 0 -3px 12px rgba(0, 0, 0, 0.14);
+}
+#main-content .home-edit-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--color-text); font-size: 12px; }
+#main-content .home-edit-sheet-head button { padding: 0 4px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 16px; line-height: 1; cursor: pointer; }
+#main-content .home-edit-sheet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+#main-content .home-edit-card {
+  display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 6px 4px; border: 1px solid var(--color-muted);
+  background: var(--color-surface); box-shadow: var(--effect-raised); color: var(--color-text); font: inherit; cursor: pointer;
+}
+#main-content .home-edit-card:active { box-shadow: var(--effect-sunken); }
+#main-content .home-edit-card.is-placed { opacity: 0.55; cursor: default; box-shadow: none; }
+#main-content .home-edit-card b { margin-top: 4px; font-size: 10.5px; font-weight: 400; }
+#main-content .home-edit-card small { color: var(--color-muted); font-size: 9px; }
+#main-content .home-edit-thumb { display: block; width: 100%; height: 34px; box-sizing: border-box; border: 1px dashed var(--color-muted); background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
+#main-content .home-edit-thumb.is-tama { width: 34px; }
+#main-content .home-edit-thumb.is-notice { height: 14px; margin: 10px 0; }

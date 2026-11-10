@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CHAT_CSS_EVENT, readChatCss, scopeChatCss } from '../../utils/chatCss';
+import { chatCssStore, scopeChatCss } from '../../utils/chatCss';
+import { homeCssStore, scopeHomeCss } from '../../utils/homeCss';
+import { CSS_ASSETS_EVENT, loadCssAssets, resolveAssets } from '../../utils/cssAssets';
+import type { CssStore } from '../../utils/cssStore';
 
-function scoped() { try { return scopeChatCss(readChatCss()); } catch { return ''; } }
-/** 美化设置写的聊天美化 CSS，放进 <head>，全部聊天室都套。 */
-export function ChatGlobalCss() {
-  const [css, setCss] = useState(scoped);
+/** 加好范围、把 url(asset:名字) 换成素材图片；套用、素材有变动时重算。 */
+function useScoped(store: CssStore, scope: (css: string) => string) {
+  const read = () => { try { return resolveAssets(scope(store.read())); } catch { return ''; } };
+  const [css, setCss] = useState(read);
   useEffect(() => {
-    const update = () => setCss(scoped());
-    window.addEventListener(CHAT_CSS_EVENT, update);
-    return () => window.removeEventListener(CHAT_CSS_EVENT, update);
+    const update = () => setCss(read());
+    window.addEventListener(store.event, update); window.addEventListener(CSS_ASSETS_EVENT, update);
+    return () => { window.removeEventListener(store.event, update); window.removeEventListener(CSS_ASSETS_EVENT, update); };
   }, []);
-  return createPortal(<style id="chatGlobalCss">{css}</style>, document.head);
+  return css;
+}
+
+/** 美化设置写的聊天美化、主画面美化 CSS，放进 <head>。 */
+export function ChatGlobalCss() {
+  useEffect(() => { void loadCssAssets(); }, []);
+  const chat = useScoped(chatCssStore, scopeChatCss), home = useScoped(homeCssStore, scopeHomeCss);
+  return createPortal(<><style id="chatGlobalCss">{chat}</style><style id="homeGlobalCss">{home}</style></>, document.head);
 }

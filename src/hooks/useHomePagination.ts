@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react';
 import type { MouseEvent, PointerEvent, TouchEvent } from 'react';
 const IGNORE = '#progressBarBg, .chat-app-page, .world-page, #dockBar, input, textarea, [contenteditable="true"]';
-export function useHomePagination(count = 2) {
-  const [page,setPage]=useState(0);
+/** 主画面翻页：左右滑、点小圆点。disabled（编辑主画面时）不理滑动；jump 直接跳到第几页（编辑时开新页用，不绕圈）。 */
+export function useHomePagination(count = 2, disabled = false) {
+  const [raw,setPage]=useState(0);
+  const page=Math.max(0,Math.min(count-1,raw));
   const latest=useRef(page);latest.current=page;
   const gesture=useRef({x:0,y:0,tracking:false});
   const go=(n:number)=>setPage(((n%count)+count)%count);
-  function start(x:number,y:number,target:EventTarget|null) { gesture.current={x,y,tracking:!(target instanceof Element && target.closest(IGNORE))}; }
+  function start(x:number,y:number,target:EventTarget|null) { gesture.current={x,y,tracking:!disabled&&!(target instanceof Element && target.closest(IGNORE))}; }
   function end(x:number,y:number) {
     if(!gesture.current.tracking)return;
     const {x:sx,y:sy}=gesture.current;gesture.current.tracking=false;
@@ -14,7 +16,7 @@ export function useHomePagination(count = 2) {
     if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.5)return;
     go(dx<0?latest.current+1:latest.current-1);
   }
-  return { page, go,
+  return { page, go, jump:(n:number)=>setPage(Math.max(0,n)),
     select:(n:number,event:MouseEvent)=>{event.stopPropagation();go(n);},
     onTouchStart:(event:TouchEvent)=>{if(event.touches.length!==1){gesture.current.tracking=false;return;}start(event.touches[0].clientX,event.touches[0].clientY,event.target);},
     onTouchEnd:(event:TouchEvent)=>{const touch=event.changedTouches[0];if(touch)end(touch.clientX,touch.clientY);},

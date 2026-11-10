@@ -48,7 +48,8 @@ test('写错时说第几行', () => {
 
 test('挡掉外面的东西', () => {
   err('@import url(x.css);', /@import/);
-  err('.a { background: url(https://x.com/a.png) }', /^第 1 行：图片只能用 data:image/);
+  err('.a { background: url(https://x.com/a.png) }', /^第 1 行：图片只能用素材/);
+  assert.doesNotThrow(() => scopeChatCss('.a { background: url(asset:云朵底) } .b { background: url("asset:star_1") }'));
   err(".a { background: url('//x.com/a.png') }", /data:image/);
   err('.a { width: expression(alert(1)) }', /不能用的写法/);
   err('</style><script>alert(1)</script>', /不能用的写法/);

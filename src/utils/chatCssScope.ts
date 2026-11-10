@@ -1,5 +1,5 @@
 /**
- * 聊天美化 CSS 的检查和加范围（纯文字处理，不碰画面，可以单独测）。
+ * 美化 CSS 的检查和加范围（纯文字处理，不碰画面，可以单独测）。聊天室用这里的 scopeChatCss，主画面在 homeCssScope.ts。
  * - 只作用在聊天室（#chatRoomView）里，聊天列表、聊天设置不受影响。
  * - 每一句补 !important；写了 color 顺便补 -webkit-text-fill-color。
  * - 返回键、顶栏、整个聊天室不让藏起来，免得写错就出不去。
@@ -78,10 +78,10 @@ function splitSelectors(head: string) {
 }
 
 const ROOT = /^(?::root|html|body|#chatAppPage|#chatRoomView)(?![\w-])/i;
-/** :root、html、body、#chatAppPage、#chatRoomView 都当成聊天室本身。 */
-export function scopeSelector(selector: string, scope = CHAT_CSS_SCOPE) {
+/** :root、html、body、#chatAppPage、#chatRoomView 都当成聊天室本身（主画面那边换一组，见 homeCssScope.ts）。 */
+export function scopeSelector(selector: string, scope = CHAT_CSS_SCOPE, root = ROOT) {
   let rest = selector, stripped = false, spaced = false;
-  for (let match = rest.match(ROOT); match; match = rest.match(ROOT)) {
+  for (let match = rest.match(root); match; match = rest.match(root)) {
     stripped = true; rest = rest.slice(match[0].length);
     const space = rest.match(/^\s+/); spaced = !!space; if (space) rest = rest.slice(space[0].length);
   }
@@ -98,10 +98,24 @@ export function withMic(selector: string) {
 }
 
 /** 这几个藏起来就出不了聊天室：整个聊天室、顶栏、返回键、右上角「…」。 */
-function guarded(selector: string) {
+function chatGuarded(selector: string) {
   if (/::?(before|after)\b/i.test(selector)) return false;
   if (scopeSelector(selector, '@') === '@') return true;
   return /(^|[\s>+~])(\.chat-room-header|\.chat-room-back|\.chat-room-more|#chatRoomBack|#chatRoomMore)(?![\w-])[^\s>+~]*$/.test(selector);
+}
+
+/** 一套「加范围」的规则：聊天室、主画面各一套。 */
+export interface CssScoper {
+  /** 每条选择器前面加的范围 */
+  scope: string;
+  /** 哪些写法当成范围本身（:root、body 这些） */
+  root: RegExp;
+  /** 这条选择器的「藏起来」要不要拿掉 */
+  guarded: (selector: string) => boolean;
+  /** 一条选择器要不要多套到别的地方（聊天室：写给小按钮的也套到麦克风） */
+  expand?: (selector: string) => string[];
+  /** 加好范围以后再改一下（主画面：排除掉放在里面的 App） */
+  finish?: (scoped: string, isRoot: boolean) => string;
 }
 const HIDE = /^(display\s*:\s*none|visibility\s*:\s*(hidden|collapse)|opacity\s*:\s*0*(\.0*)?(?![\d.])|pointer-events\s*:\s*none|content-visibility\s*:\s*hidden)\b/i;
 
@@ -135,28 +149,29 @@ function hasBrace(body: string) {
   return -1;
 }
 
-function scopeRules(css: string, offset: number, full: string, scope: string): string {
+function scopeRules(css: string, offset: number, full: string, scoper: CssScoper): string {
   let out = '';
   for (const block of blocks(css, offset, full)) {
     const { head, body } = block;
     if (!head) fail(full, block.bodyAt - 1, '{ 前面少了选择器');
     if (head.startsWith('@')) {
-      if (/^@(media|supports|container|layer)\b/i.test(head)) out += `${head}{${scopeRules(body, block.bodyAt, full, scope)}}`;
+      if (/^@(media|supports|container|layer)\b/i.test(head)) out += `${head}{${scopeRules(body, block.bodyAt, full, scoper)}}`;
       else if (/^@(-webkit-)?keyframes\b/i.test(head)) out += `${head}{${body}}`;
       // @font-face、@page 这些不收
       continue;
     }
     const inner = hasBrace(body);
     if (inner >= 0) fail(full, block.bodyAt + inner, '不支持把规则写在规则里面，请拆开写');
-    const selectors = splitSelectors(head).flatMap(withMic);
+    const selectors = splitSelectors(head).flatMap(item => scoper.expand ? scoper.expand(item) : [item]);
     if (!selectors.length) fail(full, block.headAt, '选择器是空的');
-    out += `${selectors.map(item => scopeSelector(item, scope)).join(',')}{${strengthen(body, selectors.some(guarded))}}`;
+    const scoped = selectors.map(item => { const next = scopeSelector(item, scoper.scope, scoper.root); return scoper.finish ? scoper.finish(next, next === scoper.scope) : next; });
+    out += `${scoped.join(',')}{${strengthen(body, selectors.some(scoper.guarded))}}`;
   }
   return out;
 }
 
 /** 检查、加范围。会去外面抓东西的写法挡掉；图片只收 data:image。写错就丢出「第几行：哪里错」。 */
-export function scopeChatCss(source: string, scope = CHAT_CSS_SCOPE) {
+export function scopeCss(source: string, scoper: CssScoper) {
   const raw = String(source || '');
   if (!raw.trim()) return '';
   if (raw.length > CHAT_CSS_LIMIT) throw new CssError('写太长了，最多 3 万字');
@@ -165,7 +180,11 @@ export function scopeChatCss(source: string, scope = CHAT_CSS_SCOPE) {
   if (banned >= 0) fail(css, banned, '这里有不能用的写法（@import、script 这类）');
   const url = /url\s*\(\s*(['"]?)\s*([^'")\s]*)/gi;
   for (let match = url.exec(css); match; match = url.exec(css)) {
-    if (!/^data:image\//i.test(match[2])) fail(css, match.index, '图片只能用 data:image 开头的，不能连到外面的网址');
+    if (!/^(data:image\/|asset:)/i.test(match[2])) fail(css, match.index, '图片只能用素材（url(asset:名字)）或 data:image 开头的，不能连到外面的网址');
   }
-  return scopeRules(css, 0, css, scope);
+  return scopeRules(css, 0, css, scoper);
+}
+
+export function scopeChatCss(source: string, scope = CHAT_CSS_SCOPE) {
+  return scopeCss(source, { scope, root: ROOT, guarded: chatGuarded, expand: withMic });
 }
