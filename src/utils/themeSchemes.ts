@@ -5,8 +5,12 @@ import { readLocalFontRecord, writeLocalFontRecord } from './appearanceStorage';
 import { readChatCss, scopeChatCss, writeChatCss } from './chatCss';
 import { readHomeCss, scopeHomeCss, writeHomeCss } from './homeCss';
 import { applyRenames, packAssets, unpackAssets, usedAssets } from './cssAssets';
+import { DEFAULT_LAYOUT, normalize as normalizeLayout } from './homeLayout';
+import type { HomeLayout } from './homeLayout';
+import { HOME_LAYOUT_KEY, readLayout } from './homeLayoutStore';
+import { HOME_WIDGETS_KEY, WIDGET_IMAGE, normalizeWidgets, readWidgets } from './homeWidgets';
 
-/** 主题方案：主画面（配色、质感、字体、文字、背景、图标、主画面美化 CSS）、聊天美化 CSS、开屏，存成一套随时换。 */
+/** 主题方案：主画面（配色、质感、字体、文字、背景、图标、主画面美化 CSS、排法和组件）、聊天美化 CSS、开屏，存成一套随时换。 */
 const DB_NAME = 'qingtuan_theme_schemes_v1', STORE = 'schemes';
 export const SCHEME_LIMIT = 20;
 const HOME_KEYS = ['smallphone_theme_color', 'smallphone_theme_tone', 'smallphone_glass_strength', 'smallphone_wallpaper_opacity',
@@ -17,6 +21,18 @@ const HOME_IMAGES = ['smallphone_main_wallpaper', ...APP_ICONS, ...['home', 'cha
 const SPLASH_KEY = 'smallphone_splash_mode';
 /** 主画面美化 CSS 跟着「主画面」那块一起存（放在 home.kv 里，但不算进 HOME_KEYS：以前存的方案指纹才认得出来）。 */
 const HOME_CSS_KEY = 'qingtuan_home_css_v1';
+/**
+ * 主画面排法、组件（一句话、登录框、日历）的字和图也跟着「主画面」那块存，一样不算进 HOME_KEYS / HOME_IMAGES：
+ * 跟原本一样（预设排法、没改过的字、没有图）就不算进指纹，以前存的方案才认得出来；
+ * 以前存的方案里没有这几样，换过去时排法和组件就照现在的不动。
+ */
+const WIDGET_IMAGES = Object.values(WIDGET_IMAGE);
+/** 排法写成固定的样子再比（同样的摆法不管先后顺序都一样）。 */
+function layoutText(layout: HomeLayout) {
+  return JSON.stringify({ pages: layout.pages, hidden: [...layout.hidden].sort(), items: [...layout.items].sort((a, b) => a.id.localeCompare(b.id)) });
+}
+const parseJson = (text: string | null | undefined) => { try { return text ? JSON.parse(text) : null; } catch { return null; } };
+const DEFAULT_LAYOUT_TEXT = layoutText(normalizeLayout(DEFAULT_LAYOUT)), DEFAULT_WIDGETS_TEXT = JSON.stringify(normalizeWidgets(null));
 /** 换方案后重新开启：这次不放开屏，开好后回到美化设置。 */
 export const AFTER_THEME_FLAG = 'qingtuan_after_theme';
 
@@ -73,8 +89,10 @@ async function captureCurrent(parts: SchemePart[]): Promise<SchemeData> {
   if (parts.includes('home')) {
     const values: Record<string, string | null> = Object.fromEntries(HOME_KEYS.map(key => [key, kv.getItem(key)]));
     values[HOME_CSS_KEY] = readHomeCss() || null;
+    values[HOME_LAYOUT_KEY] = layoutText(readLayout());
+    values[HOME_WIDGETS_KEY] = JSON.stringify(readWidgets());
     const images: Record<string, Blob | null> = {};
-    for (const slot of HOME_IMAGES) images[slot] = await slotBlob(slot);
+    for (const slot of [...HOME_IMAGES, ...WIDGET_IMAGES]) images[slot] = await slotBlob(slot);
     let font: HomeData['font'] = null;
     if (values.smallphone_custom_font_type === 'file') {
       const record = await readLocalFontRecord();
@@ -98,7 +116,13 @@ async function printsOf(data: SchemeData): Promise<ThemeScheme['prints']> {
     const images: Record<string, string> = {};
     for (const slot of HOME_IMAGES) images[slot] = await blobPrint(data.home.images[slot]);
     const homeCss = (data.home.kv[HOME_CSS_KEY] || '').trim();
-    prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob), ...(homeCss ? { css: homeCss } : {}) });
+    // 排法、组件：跟原本一样就不放进指纹
+    const layout = data.home.kv[HOME_LAYOUT_KEY] ? layoutText(normalizeLayout(parseJson(data.home.kv[HOME_LAYOUT_KEY]))) : '';
+    const widgets = data.home.kv[HOME_WIDGETS_KEY] ? JSON.stringify(normalizeWidgets(parseJson(data.home.kv[HOME_WIDGETS_KEY]))) : '';
+    const widgetImages: Record<string, string> = {};
+    for (const slot of WIDGET_IMAGES) { const print = await blobPrint(data.home.images[slot]); if (print) widgetImages[slot] = print; }
+    prints.home = await textPrint({ kv: HOME_KEYS.map(key => data.home!.kv[key] ?? null), images, font: await blobPrint(data.home.font?.blob), ...(homeCss ? { css: homeCss } : {}),
+      ...(layout && layout !== DEFAULT_LAYOUT_TEXT ? { layout } : {}), ...(widgets && widgets !== DEFAULT_WIDGETS_TEXT ? { widgets } : {}), ...(Object.keys(widgetImages).length ? { widgetImages } : {}) });
   }
   if (typeof data.css === 'string') prints.css = await textPrint(data.css.trim());
   if ('splash' in data) prints.splash = await textPrint(data.splash ?? null);
@@ -163,8 +187,12 @@ export async function overwrite(scheme: ThemeScheme) {
 async function write(data: SchemeData) {
   if (data.home) {
     const values: Record<string, string | null> = Object.fromEntries(HOME_KEYS.map(key => [key, data.home!.kv[key] ?? null]));
+    // 排法、组件：方案里有才换（以前存的方案没有，就照现在的不动）
+    if (HOME_LAYOUT_KEY in data.home.kv) values[HOME_LAYOUT_KEY] = data.home.kv[HOME_LAYOUT_KEY] ? JSON.stringify(normalizeLayout(parseJson(data.home.kv[HOME_LAYOUT_KEY]))) : null;
+    if (HOME_WIDGETS_KEY in data.home.kv) values[HOME_WIDGETS_KEY] = data.home.kv[HOME_WIDGETS_KEY] ? JSON.stringify(normalizeWidgets(parseJson(data.home.kv[HOME_WIDGETS_KEY]))) : null;
     const images: Record<string, string> = {};
     for (const slot of HOME_IMAGES) { const blob = data.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : ''; }
+    for (const slot of WIDGET_IMAGES) if (slot in data.home.images) { const blob = data.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : ''; }
     await saveImageSlots(images);
     await writeLocalFontRecord(values.smallphone_custom_font_type === 'file' && data.home.font ? { blob: data.home.font.blob, name: data.home.font.name, type: data.home.font.type } : null);
     if (values.smallphone_custom_font_type === 'file' && !data.home.font) { values.smallphone_custom_font_type = null; values.smallphone_custom_font_name = null; }
@@ -183,7 +211,7 @@ function restart() {
 export async function applyScheme(scheme: ThemeScheme) { await write(scheme); restart(); }
 /** 恢复默认样子：主画面回到原本的（开屏设定不动）。 */
 export async function resetLook() {
-  await write({ home: { kv: {}, images: {}, font: null } });
+  await write({ home: { kv: { [HOME_LAYOUT_KEY]: null, [HOME_WIDGETS_KEY]: null }, images: Object.fromEntries(WIDGET_IMAGES.map(slot => [slot, null])), font: null } });
   restart();
 }
 
@@ -201,6 +229,7 @@ export async function exportScheme(scheme: ThemeScheme): Promise<{ blob: Blob; f
   if (scheme.home) {
     const images: Record<string, string | null> = {};
     for (const slot of HOME_IMAGES) { const blob = scheme.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : null; }
+    for (const slot of WIDGET_IMAGES) if (slot in scheme.home.images) { const blob = scheme.home.images[slot]; images[slot] = blob ? await blobDataUrl(blob) : null; }
     file.home = { kv: scheme.home.kv, images, font: scheme.home.font ? { name: scheme.home.font.name, type: scheme.home.font.type, data: await blobDataUrl(scheme.home.font.blob) } : null };
   }
   if (typeof scheme.css === 'string') file.css = scheme.css;
@@ -243,8 +272,12 @@ export async function importScheme(file: File) {
     const values: Record<string, string | null> = Object.fromEntries(HOME_KEYS.map(key => [key, typeof source[key] === 'string' ? String(source[key]).slice(0, 2000) : null]));
     if (typeof source[HOME_CSS_KEY] === 'string' && source[HOME_CSS_KEY]) { try { scopeHomeCss(String(source[HOME_CSS_KEY])); values[HOME_CSS_KEY] = String(source[HOME_CSS_KEY]).slice(0, 30000); } catch (error) { throw Error('里面的主画面美化 CSS 有问题：' + (error as Error).message); } }
     if (values.smallphone_custom_font_url && !/^https?:\/\//i.test(values.smallphone_custom_font_url)) values.smallphone_custom_font_url = null;
+    // 排法、组件的字：读得懂才收（读进来一律整理成认得的样子）
+    if (typeof source[HOME_LAYOUT_KEY] === 'string') values[HOME_LAYOUT_KEY] = layoutText(normalizeLayout(parseJson(String(source[HOME_LAYOUT_KEY]))));
+    if (typeof source[HOME_WIDGETS_KEY] === 'string') values[HOME_WIDGETS_KEY] = JSON.stringify(normalizeWidgets(parseJson(String(source[HOME_WIDGETS_KEY]))));
     const blobs: Record<string, Blob | null> = {};
     for (const slot of HOME_IMAGES) blobs[slot] = await imageFrom(images[slot]);
+    for (const slot of WIDGET_IMAGES) if (slot in images) blobs[slot] = await imageFrom(images[slot]);
     const font = isRecord(raw.home.font) ? await fontFrom(raw.home.font.data) : null;
     data.home = { kv: values, images: blobs, font: font && isRecord(raw.home.font) ? { name: String(raw.home.font.name || '字体').slice(0, 160), type: String(raw.home.font.type || ''), blob: font } : null };
   }

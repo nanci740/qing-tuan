@@ -7,7 +7,7 @@ const images = new Map<string, string>();
 const references = new Map<string, string>();
 const slots = new Map<string, string>();
 const pendingImages = new Set<string>();
-const imageKeys = ['personal_profile_polaroid_photo', ...['chatMemoryStar','chatMemoryPolaroid','chatMemoryMoon','chatMemoryExtra'].map(id => `smallphone_chat_memory_photo_v1_${id}`), 'smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`)];
+const imageKeys = ['personal_profile_polaroid_photo', ...['chatMemoryStar','chatMemoryPolaroid','chatMemoryMoon','chatMemoryExtra'].map(id => `smallphone_chat_memory_photo_v1_${id}`), 'smallphone_main_wallpaper', 'smallphone_settings_profile_avatar_v1', 'avatar_star_custom', 'avatar_moon_custom', ...['ledger','memos','world','memories'].map(id => `smallphone_app_icon_${id}`), ...['home','chat','diary','space','settings'].map(id => `smallphone_dock_icon_${id}`), ...['hello','login','calendar'].map(id => `qingtuan_home_widget_${id}`)];
 function legacy(key: string) { try { return kv.getItem(key) || ''; } catch { return ''; } }
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

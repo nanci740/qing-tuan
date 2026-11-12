@@ -1,7 +1,7 @@
 // 主画面排法：node --experimental-strip-types scripts/test-home-layout.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_LAYOUT, normalize, moveItem, hideItem, addItem, dropEmptyPages, firstFree, ROWS, COLS, itemInfo } from '../src/utils/homeLayout.ts';
+import { DEFAULT_LAYOUT, EXTRA_ITEMS, normalize, moveItem, hideItem, addItem, dropEmptyPages, firstFree, ROWS, COLS, itemInfo } from '../src/utils/homeLayout.ts';
 
 const at = (layout, id) => layout.items.find(item => item.id === id);
 const valid = layout => {
@@ -31,7 +31,7 @@ test('读回来坏掉的：缺的补回去、叠在一起的重新找位子、�
   valid(stacked); assert.ok(at(stacked, 'preset'));
   // 图标不能收起来
   const hiddenApp = normalize({ ...DEFAULT_LAYOUT, hidden: ['ledger'] });
-  assert.ok(at(hiddenApp, 'ledger')); assert.deepEqual(hiddenApp.hidden, []);
+  assert.ok(at(hiddenApp, 'ledger')); assert.deepEqual(hiddenApp.hidden, EXTRA_ITEMS);
 });
 
 test('挪位置：放到空格；放到别人那里，别人往旁边找空位', () => {
@@ -52,10 +52,10 @@ test('挪到第 3 页会开新页；最多 3 页', () => {
 
 test('收起、加回组件；空的页拿掉', () => {
   const hidden = hideItem(DEFAULT_LAYOUT, 'notice');
-  assert.ok(!at(hidden, 'notice')); assert.deepEqual(hidden.hidden, ['notice']);
+  assert.ok(!at(hidden, 'notice')); assert.deepEqual(hidden.hidden, [...EXTRA_ITEMS, 'notice']);
   assert.deepEqual(hideItem(DEFAULT_LAYOUT, 'ledger'), DEFAULT_LAYOUT, '图标不能收');
   const back = addItem(hidden, 'notice', 1);
-  valid(back); assert.equal(at(back, 'notice').page, 1); assert.deepEqual(back.hidden, []);
+  valid(back); assert.equal(at(back, 'notice').page, 1); assert.deepEqual(back.hidden, EXTRA_ITEMS);
   const full = addItem(hideItem(DEFAULT_LAYOUT, 'main'), 'main', 0);
   valid(full); assert.ok(at(full, 'main'));
   const empty = dropEmptyPages(moveItem(moveItem(hideItem(DEFAULT_LAYOUT, 'notice'), 'preset', 0, 3, 6), 'preset', 0, 3, 6));
@@ -69,4 +69,19 @@ test('找空位：从上往下、从左往右', () => {
   assert.deepEqual(firstFree(DEFAULT_LAYOUT.items, 'notice', 0), { id: 'notice', page: 0, col: 0, row: 6 });
   assert.equal(firstFree(DEFAULT_LAYOUT.items, 'tama', 0)?.row, 4, '自己原本的位子不算被占');
   assert.equal(firstFree(DEFAULT_LAYOUT.items.filter(item => item.id !== 'tama').concat({ id: 'tama', page: 0, col: 2, row: 4 }), 'main', 0)?.row, 0);
+});
+
+test('后来加的组件：以前存的排法里没有它们，就当作收起来，不会自己跑出来', () => {
+  const old = { pages: 2, hidden: [], items: DEFAULT_LAYOUT.items };
+  const read = normalize(old);
+  for (const id of EXTRA_ITEMS) assert.ok(!at(read, id), `${id} 不该自己出来`);
+  assert.deepEqual(read.hidden, EXTRA_ITEMS);
+  // 加进来以后存回去再读，还在原位
+  let next = addItem(read, 'calendar', 1); valid(next);
+  next = addItem(next, 'hello', 0); valid(next);
+  next = addItem(next, 'login', 1); valid(next);
+  const again = normalize(JSON.parse(JSON.stringify(next)));
+  assert.deepEqual(again, next);
+  // 收起来再读，一样是收着
+  assert.ok(!at(normalize(hideItem(next, 'calendar')), 'calendar'));
 });

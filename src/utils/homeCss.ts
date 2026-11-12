@@ -29,6 +29,11 @@ export const HOME_CLASS_GROUPS: { label: string; items: [string, string][] }[] =
   { label: '第二页和小点', items: [
     ['.home-notice', '消息卡'], ['.home-notice-bar', '消息卡的标题栏'], ['.home-notice-text', '消息卡的字'],
     ['.home-dot', '页数小点'], ['.home-dot.active', '现在这页的小点']] },
+  { label: '加进来的组件', items: [
+    ['.home-hello', '一句话整块'], ['.home-hello-name', '一句话的名字'], ['.home-hello-text', '一句话那行字'], ['.home-hello-link', '「回复」'],
+    ['.home-login-frame', '登录框的大头像框'], ['.home-login-field', '登录框的两栏'], ['.home-login-go', '登录框的箭头钮'],
+    ['.home-cal', '日历整块'], ['.home-cal-title', '日历的标题栏'], ['.home-cal-pic', '日历左边的图'], ['.home-cal-month', '日历的月份'],
+    ['.home-cal-day', '日历的日期'], ['.home-cal-day.is-today', '今天那一格'], ['.home-cal-status', '日历最底下那栏']] },
   { label: '底下那排', items: [
     ['.dock-bar', '整排（不能藏起来）'], ['.dock-item', '每一颗'], ['.dock-item.active', '现在这一页的那颗'], ['.dock-item span', '每一颗下面的字']] }
 ];

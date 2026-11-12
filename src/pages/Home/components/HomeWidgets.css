@@ -1,0 +1,136 @@
+/* ---------------- 主画面后来加的组件：一句话、登录框、日历（颜色都用主画面现成的：播放器歌名的颜色、十字键小图示的颜色、snapshot 标题列） ---------------- */
+#main-content :is(.home-hello, .home-login, .home-cal) {
+  --hw-deep: var(--color-accent-strong);
+  --hw-soft: var(--color-accent);
+  box-sizing: border-box;
+  color: var(--win-ink);
+  text-align: left;
+}
+#main-content :is(.home-hello, .home-login, .home-cal) button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+
+/* 带光泽的头像框（一句话、登录框共用） */
+#main-content :is(.home-hello-frame, .home-login-frame) {
+  flex: none; display: block; box-sizing: border-box; padding: 4px; border: 0; border-radius: 8px;
+  background: linear-gradient(160deg, var(--color-surface), var(--hw-soft));
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--win-ink) 35%, transparent), inset 0 0 0 1px var(--effect-highlight), inset 0 -2px 3px color-mix(in srgb, var(--theme-color) 30%, transparent);
+}
+#main-content :is(.home-hello-frame, .home-login-frame) > i {
+  display: grid; place-items: center; width: 100%; height: 100%; box-sizing: border-box; border-radius: 4px;
+  background: var(--color-surface) center / cover no-repeat;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--win-ink) 15%, transparent);
+}
+#main-content :is(.home-hello-frame, .home-login-frame, .home-cal-pic) em { font-style: normal; font-size: 9px; line-height: 1.35; text-align: center; color: var(--color-muted); }
+
+/* ===== 一句话：上线提醒小窗 ===== */
+#main-content .home-hello {
+  position: absolute; left: 0; right: 10px; top: 8px; height: 116px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 50%, var(--win-deep)); border-radius: 6px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--theme-color) 8%, var(--color-surface)) 0%, color-mix(in srgb, var(--theme-color) 20%, var(--color-surface)) 55%, color-mix(in srgb, var(--theme-color) 34%, var(--color-surface)) 100%);
+  box-shadow: var(--win-drop), inset 0 1px 0 var(--effect-highlight);
+}
+#main-content .home-hello::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 44%; background: linear-gradient(var(--effect-highlight), transparent); opacity: 0.7; pointer-events: none; }
+#main-content .home-hello-head { position: relative; display: flex; align-items: center; gap: 7px; padding: 7px 10px 0; font-size: 12px; letter-spacing: 0.2px; }
+#main-content .home-hello-icon { width: 16px; height: 14px; flex: none; }
+#main-content .home-hello-icon .hi-a { fill: var(--hw-soft); }
+#main-content .home-hello-icon .hi-b { fill: var(--hw-deep); }
+#main-content .home-hello-x { margin-left: auto; font-size: 13px; line-height: 1; color: var(--win-line); }
+#main-content .home-hello-body { position: relative; display: flex; align-items: center; gap: 12px; padding: 8px 12px 0; }
+#main-content .home-hello-frame { width: 58px; height: 58px; }
+#main-content .home-hello-copy { display: block; flex: 1; min-width: 0; }
+#main-content .home-hello-name { display: block; margin-bottom: 3px; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#main-content .home-hello-text { display: block; font-size: 12px; line-height: 1.35; opacity: 0.85; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-all; }
+#main-content .home-hello-link { position: absolute; right: 8px; bottom: 4px; padding: 4px; border: 0; background: none; font-size: 12px !important; color: var(--hw-deep) !important; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ===== 登录框 ===== */
+#main-content .home-login { position: absolute; inset: 6px 0 0; display: flex; flex-direction: column; align-items: center; }
+#main-content .home-login-frame {
+  width: 108px; height: 108px; padding: 7px; border-radius: 12px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--theme-color) 20%, var(--color-surface)), color-mix(in srgb, var(--theme-color) 60%, var(--color-surface)));
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--win-ink) 30%, transparent), inset 0 1px 0 var(--effect-highlight), inset 0 -3px 5px color-mix(in srgb, var(--theme-color) 30%, transparent);
+}
+#main-content .home-login-frame > i { border-radius: 6px; box-shadow: 0 0 0 2px var(--color-surface), inset 0 0 0 1px color-mix(in srgb, var(--win-ink) 12%, transparent); }
+#main-content .home-login-field {
+  display: block; width: 140px; height: 22px; box-sizing: border-box; margin-top: 12px; padding: 0 6px;
+  border: 1px solid var(--win-shade); border-radius: 2px; background: var(--color-surface);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-shade) 40%, transparent), 0 0 0 2px color-mix(in srgb, var(--color-surface) 70%, transparent);
+  font-size: 11px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#main-content .home-login-row { display: flex; align-items: center; gap: 5px; margin-left: 24px; }
+#main-content .home-login-field.is-second { width: 116px; margin-top: 8px; color: var(--color-muted); }
+#main-content .home-login-go {
+  display: grid; place-items: center; width: 20px; height: 20px; margin-top: 8px; padding: 0; box-sizing: border-box;
+  border: 1.5px solid var(--color-surface); border-radius: 50%;
+  background: radial-gradient(ellipse 70% 45% at 50% 22%, color-mix(in srgb, var(--color-surface) 75%, transparent), transparent 70%), linear-gradient(var(--hw-soft), var(--hw-deep));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hw-deep) 55%, transparent), 0 1px 2px color-mix(in srgb, var(--win-ink) 40%, transparent);
+}
+#main-content .home-login-go svg { width: 11px; height: 11px; color: var(--color-surface); }
+
+/* ===== 日历：古早弹窗月历 ===== */
+#main-content .home-cal {
+  position: absolute; left: 0; right: 0; top: 4px; height: 256px; padding: 3px; display: flex; flex-direction: column; gap: 3px;
+  background: var(--win-face);
+  box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-deep), inset 2px 2px 0 var(--effect-highlight), inset -2px -2px 0 var(--win-shade), var(--win-drop);
+}
+#main-content .home-cal-title {
+  position: relative; flex: none; height: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-surface);
+  background:
+    linear-gradient(rgba(var(--color-surface-rgb), 0.35), rgba(var(--color-surface-rgb), 0.08) 50%, transparent 52%),
+    linear-gradient(90deg, var(--color-accent-strong) 8%, color-mix(in srgb, var(--theme-color) 50%, var(--color-surface)) 82%, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 100%);
+}
+#main-content .home-cal-title-text { height: 7px; filter: drop-shadow(0 0 0.6px rgba(0, 0, 0, 0.18)); }
+#main-content .home-cal-btns { position: absolute; right: 2px; top: 2px; display: flex; gap: 1px; }
+#main-content .home-cal-btns i { width: 12px; height: 11px; background: var(--win-face); box-shadow: inset 1px 1px 0 var(--color-surface), inset -1px -1px 0 var(--win-deep); font: 700 8px/11px sans-serif; font-style: normal; color: var(--hw-deep); text-align: center; }
+#main-content .home-cal-body { flex: 1; display: flex; gap: 3px; min-height: 0; }
+#main-content .home-cal-pic {
+  position: relative; flex: none; width: 140px; display: grid; place-items: center; padding: 0; border: 0; overflow: hidden;
+  background: var(--hw-soft) center / cover no-repeat; box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface);
+}
+#main-content .home-cal-caption {
+  position: absolute; left: 6px; right: 6px; bottom: 8px; padding: 2px 4px; box-sizing: border-box;
+  background: color-mix(in srgb, var(--hw-deep) 70%, transparent); color: var(--color-surface);
+  font-size: 8px; line-height: 11px; letter-spacing: 0.5px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#main-content .home-cal-side { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+#main-content .home-cal-month {
+  flex: none; height: 44px; box-sizing: border-box; display: grid; place-items: center; color: var(--hw-deep);
+  background: color-mix(in srgb, var(--theme-color) 8%, var(--color-surface));
+  border: 3px solid transparent; border-image: repeating-linear-gradient(90deg, var(--hw-soft) 0 3px, var(--color-surface) 3px 6px) 3;
+  box-shadow: inset 0 0 0 1px var(--hw-soft);
+}
+#main-content .home-cal-month svg { display: block; height: 20px; max-width: 94%; filter: drop-shadow(1px 1px 0 var(--color-surface)) drop-shadow(-1px -1px 0 var(--color-surface)); }
+#main-content .home-cal-grid {
+  flex: 1; min-height: 0; overflow: hidden; display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 1fr; align-items: center; justify-items: center;
+  padding: 3px 3px 2px; background: var(--color-surface);
+  border: 2px solid color-mix(in srgb, var(--theme-color) 35%, var(--color-surface));
+  box-shadow: inset 0 0 0 1px var(--color-surface), inset 0 0 0 2px color-mix(in srgb, var(--theme-color) 35%, var(--color-surface));
+}
+#main-content .home-cal-grid svg { display: block; }
+#main-content .home-cal-week { color: var(--hw-deep); }
+#main-content .home-cal-week svg { height: 9px; }
+#main-content .home-cal-day { color: var(--hw-deep); }
+#main-content .home-cal-day svg { height: 7px; }
+#main-content .home-cal-day.is-today { display: grid; place-items: center; width: 15px; height: 13px; background: var(--hw-deep); color: var(--color-surface); }
+#main-content .home-cal-blank { color: var(--hw-soft); }
+#main-content .home-cal-heart { width: 11px; height: 10px; }
+#main-content .home-cal-status { flex: none; height: 14px; display: flex; gap: 2px; }
+#main-content .home-cal-status > span { flex: 0 0 20px; box-shadow: inset 1px 1px 0 var(--win-shade), inset -1px -1px 0 var(--color-surface); }
+#main-content .home-cal-status > .home-cal-status-text { flex: 1; min-width: 0; padding-left: 5px; color: var(--hw-deep); font-size: 8.5px; line-height: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ===== 加组件里的小预览 ===== */
+#main-content .home-edit-thumb.is-hello { height: 22px; margin: 6px 0; border-radius: 3px; }
+#main-content .home-edit-thumb.is-login { width: 23px; }
+#main-content .home-edit-thumb.is-calendar { height: 26px; margin: 4px 0; }
+
+/* ===== 设定组件的那一块 ===== */
+#main-content .home-widget-photo { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+#main-content .home-widget-photo-thumb { flex: none; width: 44px; height: 44px; box-sizing: border-box; border: 1px solid var(--color-muted); background: var(--win-face) center / cover no-repeat; box-shadow: var(--effect-sunken); }
+#main-content .home-widget-photo-thumb.is-empty { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
+#main-content .home-widget-photo .home-edit-btn:disabled { opacity: 0.6; cursor: default; }
+#main-content .home-widget-field { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--color-text); font-size: 11px; }
+#main-content .home-widget-field > span { flex: 0 0 64px; }
+#main-content .home-widget-field input {
+  flex: 1; min-width: 0; height: 26px; box-sizing: border-box; padding: 0 7px; border: 1px solid var(--color-muted); border-radius: 2px;
+  background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: inherit; font-size: 12px;
+}
+#main-content .home-widget-field input:focus { outline: 1.5px solid var(--color-accent-strong); outline-offset: 0; }
+#main-content .home-widget-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
