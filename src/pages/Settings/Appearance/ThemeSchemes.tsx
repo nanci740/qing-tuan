@@ -151,7 +151,7 @@ export function ThemeSchemes() {
       </div>
       <input ref={file} type="file" accept="application/json,.json" hidden onChange={event => void onFile(event)} />
       <p className="theme-scheme-note">{busy || '点一下缩图就整套换。长按缩图可以改名、用现在的样子覆盖、导出、删除。'}</p>
-      <PressedButton className="theme-reset-btn" type="button" disabled={!!busy} onClick={() => dialog('恢复默认样子', '主画面的配色、质感、字体、文字、背景、图标，都回到原本的样子。\n存过的方案不会删。', '恢复', () => void work('正在恢复…', resetLook))}>恢复默认样子</PressedButton>
+      <PressedButton className="theme-reset-btn" type="button" disabled={!!busy} onClick={() => dialog('恢复默认样子', '主画面的配色、质感、字体、文字、背景、图标、排法和组件，都回到原本的样子。\n存过的方案不会删。', '恢复', () => void work('正在恢复…', resetLook))}>恢复默认样子</PressedButton>
     </div>
 
   </section>;

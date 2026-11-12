@@ -2,17 +2,22 @@
  * 主画面的排法：每页是一张 4 栏 × 7 列的格子，图标占 1 格、组件占好几格。
  * 预设就是原本的样子：第 1 页头像和播放器（4×4）、四个图标、电子宠物（2×2）；第 2 页消息小窗（4×1）、预设。
  * 图标只能换位置，不能收起来；组件可以收起来、再加回去。最多 3 页。
+ * 后来加的组件（一句话、登录框、日历）一开始是收起来的，要自己从「加组件」加进来。
  */
 export const COLS = 4, ROWS = 7, MAX_PAGES = 3;
 /** 格子的大小（px）：一栏 82.5（四栏 330，跟原本图标区一样宽），一列 88；第一列上面留 22。 */
 export const CELL_W = 82.5, CELL_H = 88, PAD_TOP = 22, GRID_W = COLS * CELL_W;
 
-export type HomeItemId = 'main' | 'tama' | 'notice' | 'ledger' | 'memos' | 'world' | 'memories' | 'preset';
-export interface HomeItemInfo { id: HomeItemId; name: string; w: number; h: number; widget: boolean }
+export type HomeItemId = 'main' | 'tama' | 'notice' | 'ledger' | 'memos' | 'world' | 'memories' | 'preset' | 'hello' | 'login' | 'calendar';
+/** extra：后来加的组件，存的排法里没提到它就当作收起来（不会自己跑出来）。 */
+export interface HomeItemInfo { id: HomeItemId; name: string; w: number; h: number; widget: boolean; extra?: boolean }
 export const HOME_ITEMS: HomeItemInfo[] = [
   { id: 'main', name: '头像和播放器', w: 4, h: 4, widget: true },
   { id: 'tama', name: '电子宠物', w: 2, h: 2, widget: true },
   { id: 'notice', name: '消息小窗', w: 4, h: 1, widget: true },
+  { id: 'hello', name: '一句话', w: 4, h: 2, widget: true, extra: true },
+  { id: 'login', name: '登录框', w: 2, h: 3, widget: true, extra: true },
+  { id: 'calendar', name: '日历', w: 4, h: 3, widget: true, extra: true },
   { id: 'ledger', name: 'Ledger', w: 1, h: 1, widget: false },
   { id: 'memos', name: 'Memos', w: 1, h: 1, widget: false },
   { id: 'world', name: 'World', w: 1, h: 1, widget: false },
@@ -24,7 +29,8 @@ export const itemInfo = (id: HomeItemId) => HOME_ITEMS.find(item => item.id === 
 export interface Placement { id: HomeItemId; page: number; col: number; row: number }
 export interface HomeLayout { pages: number; items: Placement[]; hidden: HomeItemId[] }
 
-export const DEFAULT_LAYOUT: HomeLayout = { pages: 2, hidden: [], items: [
+export const EXTRA_ITEMS = HOME_ITEMS.filter(item => item.extra).map(item => item.id);
+export const DEFAULT_LAYOUT: HomeLayout = { pages: 2, hidden: [...EXTRA_ITEMS], items: [
   { id: 'main', page: 0, col: 0, row: 0 },
   { id: 'ledger', page: 0, col: 0, row: 4 }, { id: 'memos', page: 0, col: 1, row: 4 },
   { id: 'world', page: 0, col: 0, row: 5 }, { id: 'memories', page: 0, col: 1, row: 5 },
@@ -70,7 +76,10 @@ export function normalize(raw: unknown): HomeLayout {
       if (spot.page >= 0 && spot.page < layout.pages && fits(spot) && !layout.items.some(other => overlaps(spot, other))) layout.items.push(spot);
       else pending.push(item.id);
     }
-    for (const info of HOME_ITEMS) if (!layout.hidden.includes(info.id) && !layout.items.some(item => item.id === info.id) && !pending.includes(info.id)) pending.push(info.id);
+    for (const info of HOME_ITEMS) {
+      if (layout.hidden.includes(info.id) || layout.items.some(item => item.id === info.id) || pending.includes(info.id)) continue;
+      if (info.extra) layout.hidden.push(info.id); else pending.push(info.id);
+    }
     for (const id of pending) {
       const found = findSpot(layout, layout.items, id, 0);
       if (!found) return DEFAULT_LAYOUT;

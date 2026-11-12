@@ -17,10 +17,12 @@ const slotLeft = (page: number, col: number) => `calc(${page} * (100% + 40px) + 
 /**
  * 主画面的格子（全部页放在同一条轨道上，换页只是整条移动，换页不会让组件重新开）。
  * 长按进编辑：拖着换位置（拖到画面边边翻页）、组件左上角「－」收起来、「＋ 加组件」加回来、「完成」离开。
+ * 编辑中点一下能设定的组件（configurable）会叫 onConfigure；layer 是要一起放进编辑层的东西（设定框）。
  */
-export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEditing, inert }: {
+export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEditing, inert, configurable = [], onConfigure, layer }: {
   layout: HomeLayout; setLayout: (next: HomeLayout) => void; page: number; go: (page: number) => void;
   blocks: Record<HomeItemId, ReactNode>; editing: boolean; setEditing: (editing: boolean) => void; inert?: boolean;
+  configurable?: HomeItemId[]; onConfigure?: (id: HomeItemId | null) => void; layer?: ReactNode;
 }) {
   const box = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null), ruler = useRef<HTMLSpanElement>(null);
   const hold = useRef({ timer: 0, x: 0, y: 0, id: null as HomeItemId | null, rect: null as DOMRect | null, active: false, swallow: false });
@@ -133,7 +135,12 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
       onClickCapture={event => {
         const remove = (event.target as Element).closest<HTMLElement>('.home-slot-remove');
         if (remove) { event.stopPropagation(); setLayout(hideItem(layout, remove.dataset.item as HomeItemId)); return; }
-        if (editing || hold.current.swallow) { event.preventDefault(); event.stopPropagation(); hold.current.swallow = false; }
+        if (editing || hold.current.swallow) {
+          // 编辑中点一下（不是拖完放手）能设定的组件：打开它的设定
+          const id = (event.target as Element).closest<HTMLElement>('.home-slot')?.dataset.item as HomeItemId | undefined;
+          if (editing && !hold.current.swallow && id && configurable.includes(id)) { setSheet(false); onConfigure?.(id); }
+          event.preventDefault(); event.stopPropagation(); hold.current.swallow = false;
+        }
       }}
       onContextMenu={event => { if (editing || hold.current.active) event.preventDefault(); }}>
       <span ref={ruler} className="home-ruler" aria-hidden="true" />
@@ -152,10 +159,10 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
     {/* 编辑用的东西放在一直都在的这一层里：主画面旁边有旧代码动过的节点，直接插在旁边会对不上 */}
     <div className="home-edit-layer">{editing && <>
       <div className="home-edit-bar">
-        <button type="button" className="home-edit-btn" onClick={() => setSheet(true)}>＋ 加组件</button>
+        <button type="button" className="home-edit-btn" onClick={() => { onConfigure?.(null); setSheet(true); }}>＋ 加组件</button>
         <button type="button" className="home-edit-btn is-done" onClick={() => setEditing(false)}>完成</button>
       </div>
-      {!sheet && <p className="home-edit-tip">按住拖动换位置，拖到画面边边可以换页</p>}
+      {!sheet && !layer && <p className="home-edit-tip">按住拖动换位置，拖到画面边边可以换页 · 点组件可以设定</p>}
     </>}
     {editing && sheet && <div className="home-edit-sheet" role="dialog" aria-label="加组件">
       <div className="home-edit-sheet-head"><span>加组件</span><button type="button" aria-label="关掉" onClick={() => setSheet(false)}>×</button></div>
@@ -170,6 +177,6 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
           </button>;
         })}
       </div>
-    </div>}</div>
+    </div>}{layer}</div>
   </>;
 }
