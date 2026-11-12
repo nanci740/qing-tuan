@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './HomeWidgets.css';
 import type { CSSProperties } from 'react';
 import { prepareImage, readImageSlot, saveImageSlots } from '../../../utils/imageAssets';
 import { HOME_WIDGETS_EVENT, WIDGET_FIELDS, WIDGET_IMAGE, readWidgets, writeWidgets } from '../../../utils/homeWidgets';
 import type { WidgetId, WidgetTexts } from '../../../utils/homeWidgets';
 import { showToast } from '../../../utils/toast';
-import { useChoice } from '../../../providers/ChoiceProvider';
-import { PressedButton } from '../../../components/shared/PressedButton';
 import { PixelText } from './PixelText';
+import { subscribeCatalog } from '../../../utils/catalogStorage';
+import { HELLO_AI_EVENT, askHello, helloPeople, helloTick, readHelloAi, writeHelloAi } from '../../../utils/helloWriter';
 
 /**
  * 主画面后来加的三个组件：一句话（上线提醒小窗）、登录框、日历（古早弹窗月历）。
@@ -35,18 +35,39 @@ function Frame({ className, src, onPick, label }: { className: string; src: stri
   </button>;
 }
 
+/** 一句话交给角色写的设定（谁来写、他留的那句）。 */
+function useHelloAi() {
+  const [state, setState] = useState(readHelloAi);
+  useEffect(() => {
+    const sync = () => setState(readHelloAi());
+    window.addEventListener(HELLO_AI_EVENT, sync); return () => window.removeEventListener(HELLO_AI_EVENT, sync);
+  }, []);
+  return state;
+}
+
 export function HomeHello({ texts, src, configure }: { texts: Record<string, string>; src: string; configure: () => void }) {
-  return <div className="home-hello">
+  const ai = useHelloAi(), [catalog, setCatalog] = useState(0);
+  useEffect(() => subscribeCatalog(() => setCatalog(value => value + 1)), []);
+  // 角色资料（名字、头像）只在换人、角色资料改了的时候重读（主画面播音乐时每秒都会重画）
+  const person = useMemo(() => ai.mode === 'ai' && ai.who ? helloPeople().find(item => item.key === ai.who) : undefined, [ai.mode, ai.who, catalog]);
+  // 交给他写：主画面开着时每五分钟看一次要不要问他
+  useEffect(() => {
+    if (!person) return;
+    const first = window.setTimeout(() => void helloTick(), 8000), timer = window.setInterval(() => void helloTick(), 5 * 60000);
+    return () => { window.clearTimeout(first); window.clearInterval(timer); };
+  }, [person?.key]);
+  const name = person ? person.name : texts.name, text = person ? ai.text || '……' : texts.text;
+  return <div className={'home-hello' + (person ? ' is-ai' : '')}>
     <div className="home-hello-head" aria-hidden="true">
       <svg className="home-hello-icon" viewBox="0 0 18 16" shapeRendering="crispEdges"><g className="hi-a"><rect x="2" y="1" width="4" height="4" /><rect x="0" y="6" width="8" height="6" /></g><g className="hi-b"><rect x="10" y="3" width="4" height="4" /><rect x="8" y="8" width="8" height="7" /></g></svg>
       <span className="home-hello-app">qingtuan messenger</span>
       <span className="home-hello-x">✕</span>
     </div>
     <div className="home-hello-body">
-      <Frame className="home-hello-frame" src={src} onPick={configure} label="设定一句话的图片和字" />
-      <span className="home-hello-copy"><b className="home-hello-name">{texts.name}</b><span className="home-hello-text">{texts.text}</span></span>
+      <Frame className="home-hello-frame" src={src || person?.photo || ''} onPick={configure} label="设定一句话的图片和字" />
+      <span className="home-hello-copy"><b className="home-hello-name">{name}</b><span className="home-hello-text">{text}</span></span>
     </div>
-    <button type="button" className="home-hello-link" onClick={event => { event.stopPropagation(); openChat(); }}>回复</button>
+    <button type="button" className="home-hello-link" onClick={event => { event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-notice-chat', { detail: person?.key })); }}>回复</button>
   </div>;
 }
 
@@ -103,45 +124,69 @@ export function HomeCalendar({ texts, src, configure }: { texts: Record<string, 
 }
 
 const NAMES: Record<WidgetId, string> = { hello: '一句话', login: '登录框', calendar: '日历' };
-interface Draft { texts: Record<string, string>; image: string; busy: boolean }
-
-/** 设定框里面：换图、改字（先放在草稿里，按「好了」才存）。 */
-function WidgetForm({ id, draft }: { id: WidgetId; draft: Draft }) {
-  const [texts, setTexts] = useState(draft.texts), [image, setImage] = useState(draft.image), [busy, setBusy] = useState(false), input = useRef<HTMLInputElement>(null);
-  draft.texts = texts; draft.image = image; draft.busy = busy;
+/** 设定一个组件：换图（马上存）、改字（打字就存）。 */
+export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () => void }) {
+  const { texts, images } = useHomeWidgets(), input = useRef<HTMLInputElement>(null), [busy, setBusy] = useState(false);
+  const src = images[id];
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => { if (event.key === 'Escape') { event.stopImmediatePropagation(); onClose(); } };
+    window.addEventListener('keydown', key, true); return () => window.removeEventListener('keydown', key, true);
+  }, [onClose]);
+  async function saveImage(value: string) {
+    await saveImageSlots({ [WIDGET_IMAGE[id]]: value });
+    window.dispatchEvent(new CustomEvent(HOME_WIDGETS_EVENT));
+  }
   async function pick(file?: File) {
     if (!file || busy) return;
     setBusy(true);
-    try { setImage(await prepareImage(file, id === 'calendar' ? 640 : 400, .88)); }
-    catch (error) { showToast((error as Error).message || '图片读不了，换一张试试'); }
+    try { await saveImage(await prepareImage(file, id === 'calendar' ? 640 : 400, .88)); showToast('图片已换好'); }
+    catch (error) { showToast((error as Error).message || '图片保存失败'); }
     finally { setBusy(false); }
   }
-  return <>
-    <div className="choice-field hw-photo">
-      <i className={'hw-photo-thumb' + (image ? '' : ' is-empty')} style={photo(image)} />
-      <PressedButton type="button" className="api-model-action" disabled={busy} onClick={() => { if (input.current) { input.current.value = ''; input.current.click(); } }}>{busy ? '读图中…' : image ? '换一张图' : '选图'}</PressedButton>
-      {image && <PressedButton type="button" className="api-model-action" disabled={busy} onClick={() => setImage('')}>拿掉图</PressedButton>}
+  async function clear() {
+    try { await saveImage(''); } catch { showToast('图片拿不掉，等一下再试'); }
+  }
+  const change = (key: string, value: string) => writeWidgets({ ...texts, [id]: { ...texts[id], [key]: value } });
+  // 一句话：自己写，或交给角色写
+  const ai = useHelloAi(), people = id === 'hello' ? helloPeople() : [], byAi = id === 'hello' && ai.mode === 'ai', [asking, setAsking] = useState(false);
+  function setMode(mode: 'self' | 'ai') {
+    const who = ai.who && people.some(item => item.key === ai.who) ? ai.who : people[0]?.key || '';
+    if (mode === 'ai' && !who) { showToast('还没有可以交给的角色，先去聊天加一个'); return; }
+    writeHelloAi({ mode, who });
+    if (mode === 'ai') void helloTick();
+  }
+  function setWho(who: string) { writeHelloAi({ who, text: '', at: 0, next: 0, history: [] }); void helloTick(); }
+  async function askNow() {
+    if (asking) return;
+    setAsking(true);
+    try { await askHello(true); showToast('他写好了'); }
+    catch (error) { showToast((error as Error).message || '他没写出来，等一下再试'); }
+    finally { setAsking(false); }
+  }
+  return <div className="home-edit-sheet home-widget-sheet" role="dialog" aria-label={`设定${NAMES[id]}`} onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()}>
+    <div className="home-edit-sheet-head"><span>{`设定「${NAMES[id]}」`}</span><button type="button" aria-label="关掉" onClick={onClose}>×</button></div>
+    <div className="home-widget-photo">
+      <i className={'home-widget-photo-thumb' + (src ? '' : ' is-empty')} style={photo(src)} />
+      <button type="button" className="home-edit-btn" disabled={busy} onClick={() => { if (input.current) { input.current.value = ''; input.current.click(); } }}>{busy ? '存图中…' : src ? '换一张图' : '选图'}</button>
+      {src && <button type="button" className="home-edit-btn" disabled={busy} onClick={clear}>拿掉图</button>}
       <input ref={input} type="file" accept="image/*" hidden onChange={event => pick(event.currentTarget.files?.[0])} />
     </div>
-    {WIDGET_FIELDS[id].map(field => <label key={field.key} className="choice-field hw-field">
-      <span className="hw-field-label">{field.label}</span>
-      <input className="choice-input" type="text" value={texts[field.key]} maxLength={field.max} placeholder={field.placeholder} onChange={event => { const value = event.currentTarget.value; setTexts(current => ({ ...current, [field.key]: value })); }} />
+    {id === 'hello' && <div className="home-widget-mode" role="radiogroup" aria-label="谁来写">
+      <span>谁来写</span>
+      <button type="button" role="radio" aria-checked={!byAi} className={'home-edit-btn' + (byAi ? '' : ' is-on')} onClick={() => setMode('self')}>自己写</button>
+      <button type="button" role="radio" aria-checked={byAi} className={'home-edit-btn' + (byAi ? ' is-on' : '')} onClick={() => setMode('ai')}>交给他写</button>
+    </div>}
+    {byAi && <>
+      <label className="home-widget-field"><span>交给</span>
+        <select value={ai.who} onChange={event => setWho(event.currentTarget.value)}>{people.map(item => <option key={item.key} value={item.key}>{item.name}</option>)}</select>
+      </label>
+      <p className="home-widget-note">{ai.text ? `现在这句：「${ai.text}」` : '他还没写。'}<br />他想换的时候会自己换，大约几个小时想一次，勿扰时间不会。名字用他的；没选图的话用他的头像。</p>
+      <div className="home-widget-actions is-left"><button type="button" className="home-edit-btn" disabled={asking} onClick={askNow}>{asking ? '他在想…' : '叫他现在写一句'}</button></div>
+    </>}
+    {!byAi && WIDGET_FIELDS[id].map(field => <label key={field.key} className="home-widget-field">
+      <span>{field.label}</span>
+      <input type="text" value={texts[id][field.key]} maxLength={field.max} placeholder={field.placeholder} onChange={event => change(field.key, event.currentTarget.value)} />
     </label>)}
-  </>;
-}
-
-/** 打开某个组件的设定（跟设置里其他弹窗同一套样子）；按「好了」才把图和字存起来。 */
-export function useWidgetEditor() {
-  const choice = useChoice();
-  return useCallback((id: WidgetId) => {
-    let original = ''; try { original = readImageSlot(WIDGET_IMAGE[id]); } catch { /* 读不到就当没有 */ }
-    const draft: Draft = { texts: { ...readWidgets()[id] }, image: original, busy: false };
-    choice.openChoice({ style: 'settings', title: `设定「${NAMES[id]}」`, options: [], selected: '', confirmText: '好了', content: <WidgetForm key={Date.now()} id={id} draft={draft} />,
-      confirm: async () => {
-        if (draft.busy) { showToast('图片还在读，等一下'); return false; }
-        try { if (draft.image !== original) await saveImageSlots({ [WIDGET_IMAGE[id]]: draft.image }); }
-        catch (error) { showToast((error as Error).message || '图片没存成，请重试'); return false; }
-        writeWidgets({ ...readWidgets(), [id]: draft.texts });
-      } });
-  }, [choice]);
+    <div className="home-widget-actions"><button type="button" className="home-edit-btn is-done" onClick={onClose}>好了</button></div>
+  </div>;
 }
