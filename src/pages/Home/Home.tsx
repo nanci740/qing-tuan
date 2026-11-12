@@ -20,7 +20,7 @@ import { HomeAvatar } from './components/HomeAvatar';
 import { useBoot } from '../../providers/BootProvider';
 import { useHomePagination } from '../../hooks/useHomePagination';
 import { TamaPet } from './components/TamaPet';
-import { HomeCalendar, HomeHello, HomeLogin, HomeWidgetEditor, useHomeWidgets } from './components/HomeWidgets';
+import { HomeCalendar, HomeHello, HomeLogin, useHomeWidgets, useWidgetEditor } from './components/HomeWidgets';
 import type { WidgetId } from '../../utils/homeWidgets';
 import { OriginalComment } from "../../components/shared/OriginalComment";
 import { World } from "../World/World";
@@ -49,9 +49,9 @@ export function Home() {
   const pagination = useHomePagination(layout.pages, editing);
   const saveLayout = useCallback((next: HomeLayout) => { setLayout(next); writeLayout(next); }, []);
   /** 离开编辑时把空的页拿掉。 */
-  const finishOrStart = useCallback((next: boolean) => { setEditing(next); if (!next) { setConfiguring(null); setLayout(current => { const cleaned = dropEmptyPages(current); writeLayout(cleaned); return cleaned; }); } }, []);
-  /** 一句话、登录框、日历：自己写的字和图；configuring = 正在设定哪一个 */
-  const widgets = useHomeWidgets(), [configuring, setConfiguring] = useState<WidgetId | null>(null);
+  const finishOrStart = useCallback((next: boolean) => { setEditing(next); if (!next) { setLayout(current => { const cleaned = dropEmptyPages(current); writeLayout(cleaned); return cleaned; }); } }, []);
+  /** 一句话、登录框、日历：自己写的字和图；editWidget 打开设定 */
+  const widgets = useHomeWidgets(), editWidget = useWidgetEditor();
   /** 主画面上的每个东西（摆在哪里由 HomeGrid 照排法放）。 */
   const blocks: Record<HomeItemId, ReactNode> = {
     main: (
@@ -795,9 +795,9 @@ export function Home() {
     ),
     tama: <TamaPet />,
     notice: <HomeNotice />,
-    hello: <HomeHello texts={widgets.texts.hello} src={widgets.images.hello} configure={() => setConfiguring('hello')} />,
-    login: <HomeLogin texts={widgets.texts.login} src={widgets.images.login} configure={() => setConfiguring('login')} />,
-    calendar: <HomeCalendar texts={widgets.texts.calendar} src={widgets.images.calendar} configure={() => setConfiguring('calendar')} />
+    hello: <HomeHello texts={widgets.texts.hello} src={widgets.images.hello} configure={() => editWidget('hello')} />,
+    login: <HomeLogin texts={widgets.texts.login} src={widgets.images.login} configure={() => editWidget('login')} />,
+    calendar: <HomeCalendar texts={widgets.texts.calendar} src={widgets.images.calendar} configure={() => editWidget('calendar')} />
   };
   return <div id="main-content" className={[boot.mainVisible ? 'visible' : '', editing ? 'is-editing-home' : ''].filter(Boolean).join(' ') || undefined} onTouchStart={pagination.onTouchStart} onTouchEnd={pagination.onTouchEnd} onPointerDown={pagination.onPointerDown} onPointerUp={pagination.onPointerUp} style={{
     ...(boot.mainOpaque ? {
@@ -812,8 +812,7 @@ export function Home() {
       {"\n"}
       <OriginalComment text={" 主画面的格子：头像和播放器、图标、电子宠物、消息小窗照排法摆；长按进编辑，可以拖着换位置、收起组件 "} />
       <HomeGrid layout={layout} setLayout={saveLayout} page={pagination.page} go={pagination.jump} blocks={blocks} editing={editing} setEditing={finishOrStart} inert={navigation.spaceOpen}
-        configurable={WIDGET_ITEMS} onConfigure={id => setConfiguring(id as WidgetId | null)}
-        layer={configuring && <HomeWidgetEditor id={configuring} onClose={() => setConfiguring(null)} />} />
+        configurable={WIDGET_ITEMS} onConfigure={id => { if (id) editWidget(id as WidgetId); }} />
         <OriginalComment text={" 换 Star / Moon 头像用的隐藏上传框（原本放在拍立得里） "} />
         {"\n"}
         <input type="file" id="starAvatarInput" ref={starAvatar.input} onChange={event => starAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{

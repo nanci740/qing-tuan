@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './HomeWidgets.css';
 import type { CSSProperties } from 'react';
 import { prepareImage, readImageSlot, saveImageSlots } from '../../../utils/imageAssets';
 import { HOME_WIDGETS_EVENT, WIDGET_FIELDS, WIDGET_IMAGE, readWidgets, writeWidgets } from '../../../utils/homeWidgets';
 import type { WidgetId, WidgetTexts } from '../../../utils/homeWidgets';
 import { showToast } from '../../../utils/toast';
+import { useChoice } from '../../../providers/ChoiceProvider';
+import { PressedButton } from '../../../components/shared/PressedButton';
 import { PixelText } from './PixelText';
 
 /**
@@ -101,41 +103,45 @@ export function HomeCalendar({ texts, src, configure }: { texts: Record<string, 
 }
 
 const NAMES: Record<WidgetId, string> = { hello: '一句话', login: '登录框', calendar: '日历' };
-/** 设定一个组件：换图（马上存）、改字（打字就存）。 */
-export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () => void }) {
-  const { texts, images } = useHomeWidgets(), input = useRef<HTMLInputElement>(null), [busy, setBusy] = useState(false);
-  const src = images[id];
-  useEffect(() => {
-    const key = (event: KeyboardEvent) => { if (event.key === 'Escape') { event.stopImmediatePropagation(); onClose(); } };
-    window.addEventListener('keydown', key, true); return () => window.removeEventListener('keydown', key, true);
-  }, [onClose]);
-  async function saveImage(value: string) {
-    await saveImageSlots({ [WIDGET_IMAGE[id]]: value });
-    window.dispatchEvent(new CustomEvent(HOME_WIDGETS_EVENT));
-  }
+interface Draft { texts: Record<string, string>; image: string; busy: boolean }
+
+/** 设定框里面：换图、改字（先放在草稿里，按「好了」才存）。 */
+function WidgetForm({ id, draft }: { id: WidgetId; draft: Draft }) {
+  const [texts, setTexts] = useState(draft.texts), [image, setImage] = useState(draft.image), [busy, setBusy] = useState(false), input = useRef<HTMLInputElement>(null);
+  draft.texts = texts; draft.image = image; draft.busy = busy;
   async function pick(file?: File) {
     if (!file || busy) return;
     setBusy(true);
-    try { await saveImage(await prepareImage(file, id === 'calendar' ? 640 : 400, .88)); showToast('图片已换好'); }
-    catch (error) { showToast((error as Error).message || '图片保存失败'); }
+    try { setImage(await prepareImage(file, id === 'calendar' ? 640 : 400, .88)); }
+    catch (error) { showToast((error as Error).message || '图片读不了，换一张试试'); }
     finally { setBusy(false); }
   }
-  async function clear() {
-    try { await saveImage(''); } catch { showToast('图片拿不掉，等一下再试'); }
-  }
-  const change = (key: string, value: string) => writeWidgets({ ...texts, [id]: { ...texts[id], [key]: value } });
-  return <div className="home-edit-sheet home-widget-sheet" role="dialog" aria-label={`设定${NAMES[id]}`} onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()}>
-    <div className="home-edit-sheet-head"><span>{`设定「${NAMES[id]}」`}</span><button type="button" aria-label="关掉" onClick={onClose}>×</button></div>
-    <div className="home-widget-photo">
-      <i className={'home-widget-photo-thumb' + (src ? '' : ' is-empty')} style={photo(src)} />
-      <button type="button" className="home-edit-btn" disabled={busy} onClick={() => { if (input.current) { input.current.value = ''; input.current.click(); } }}>{busy ? '存图中…' : src ? '换一张图' : '选图'}</button>
-      {src && <button type="button" className="home-edit-btn" disabled={busy} onClick={clear}>拿掉图</button>}
+  return <>
+    <div className="choice-field hw-photo">
+      <i className={'hw-photo-thumb' + (image ? '' : ' is-empty')} style={photo(image)} />
+      <PressedButton type="button" className="api-model-action" disabled={busy} onClick={() => { if (input.current) { input.current.value = ''; input.current.click(); } }}>{busy ? '读图中…' : image ? '换一张图' : '选图'}</PressedButton>
+      {image && <PressedButton type="button" className="api-model-action" disabled={busy} onClick={() => setImage('')}>拿掉图</PressedButton>}
       <input ref={input} type="file" accept="image/*" hidden onChange={event => pick(event.currentTarget.files?.[0])} />
     </div>
-    {WIDGET_FIELDS[id].map(field => <label key={field.key} className="home-widget-field">
-      <span>{field.label}</span>
-      <input type="text" value={texts[id][field.key]} maxLength={field.max} placeholder={field.placeholder} onChange={event => change(field.key, event.currentTarget.value)} />
+    {WIDGET_FIELDS[id].map(field => <label key={field.key} className="choice-field hw-field">
+      <span className="hw-field-label">{field.label}</span>
+      <input className="choice-input" type="text" value={texts[field.key]} maxLength={field.max} placeholder={field.placeholder} onChange={event => { const value = event.currentTarget.value; setTexts(current => ({ ...current, [field.key]: value })); }} />
     </label>)}
-    <div className="home-widget-actions"><button type="button" className="home-edit-btn is-done" onClick={onClose}>好了</button></div>
-  </div>;
+  </>;
+}
+
+/** 打开某个组件的设定（跟设置里其他弹窗同一套样子）；按「好了」才把图和字存起来。 */
+export function useWidgetEditor() {
+  const choice = useChoice();
+  return useCallback((id: WidgetId) => {
+    let original = ''; try { original = readImageSlot(WIDGET_IMAGE[id]); } catch { /* 读不到就当没有 */ }
+    const draft: Draft = { texts: { ...readWidgets()[id] }, image: original, busy: false };
+    choice.openChoice({ style: 'settings', title: `设定「${NAMES[id]}」`, options: [], selected: '', confirmText: '好了', content: <WidgetForm key={Date.now()} id={id} draft={draft} />,
+      confirm: async () => {
+        if (draft.busy) { showToast('图片还在读，等一下'); return false; }
+        try { if (draft.image !== original) await saveImageSlots({ [WIDGET_IMAGE[id]]: draft.image }); }
+        catch (error) { showToast((error as Error).message || '图片没存成，请重试'); return false; }
+        writeWidgets({ ...readWidgets(), [id]: draft.texts });
+      } });
+  }, [choice]);
 }

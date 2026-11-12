@@ -121,16 +121,10 @@
 #main-content .home-edit-thumb.is-login { width: 23px; }
 #main-content .home-edit-thumb.is-calendar { height: 26px; margin: 4px 0; }
 
-/* ===== 设定组件的那一块 ===== */
-#main-content .home-widget-photo { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-#main-content .home-widget-photo-thumb { flex: none; width: 44px; height: 44px; box-sizing: border-box; border: 1px solid var(--color-muted); background: var(--win-face) center / cover no-repeat; box-shadow: var(--effect-sunken); }
-#main-content .home-widget-photo-thumb.is-empty { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
-#main-content .home-widget-photo .home-edit-btn:disabled { opacity: 0.6; cursor: default; }
-#main-content .home-widget-field { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--color-text); font-size: 11px; }
-#main-content .home-widget-field > span { flex: 0 0 64px; }
-#main-content .home-widget-field input {
-  flex: 1; min-width: 0; height: 26px; box-sizing: border-box; padding: 0 7px; border: 1px solid var(--color-muted); border-radius: 2px;
-  background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: inherit; font-size: 12px;
-}
-#main-content .home-widget-field input:focus { outline: 1.5px solid var(--color-accent-strong); outline-offset: 0; }
-#main-content .home-widget-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+/* ===== 设定组件：用设置里那种弹窗（#viChoiceModal），里面多一排换图、几栏字 ===== */
+#viChoiceModal .hw-photo { display: flex; align-items: center; gap: 8px; }
+#viChoiceModal .hw-photo-thumb { flex: none; width: 46px; height: 46px; box-sizing: border-box; margin-right: 4px; border: 1px solid var(--win-line); background: var(--color-surface) center / cover no-repeat; box-shadow: var(--effect-sunken); }
+#viChoiceModal .hw-photo-thumb.is-empty { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
+#viChoiceModal#viChoiceModal .hw-photo .api-model-action { flex: 0 0 auto; width: auto; min-width: 0; padding: 0 14px; }
+#viChoiceModal .hw-field { display: block; }
+#viChoiceModal .hw-field-label { display: block; margin-bottom: 6px; color: var(--color-muted); font-size: 11px; }
