@@ -3008,7 +3008,7 @@
 #main-content .home-slot[data-item="tama"] { --hug-t: -1px; --hug-r: 12px; --hug-b: -1px; --hug-l: 12px; }
 #main-content .home-slot[data-item="notice"] { --hug-t: -4px; --hug-r: 0px; --hug-b: 10px; --hug-l: 0px; }
 #main-content .home-slot[data-item="hello"] { --hug-t: 8px; --hug-r: 10px; --hug-b: 52px; --hug-l: 0px; }
-#main-content .home-slot[data-item="login"] { --hug-t: 6px; --hug-r: 0px; --hug-b: 82px; --hug-l: 0px; }
+#main-content .home-slot[data-item="login"] { --hug-t: 11px; --hug-r: 0px; --hug-b: 11px; --hug-l: 0px; }
 #main-content .home-slot[data-item="calendar"] { --hug-t: 4px; --hug-r: 0px; --hug-b: 4px; --hug-l: 0px; }
 @media (max-height: 780px) { #main-content .home-slot[data-item="main"] { --hug-t: -24px; --hug-r: -25px; --hug-l: -25px; --hug-b: 39px; } }
 #main-content .home-pages.is-editing .home-slot > :not(.home-slot-remove) { pointer-events: none; animation: homeJiggle 0.28s ease-in-out infinite alternate; }

@@ -34,7 +34,7 @@
 #main-content .home-hello-icon .hi-a { fill: var(--hw-soft); }
 #main-content .home-hello-icon .hi-b { fill: var(--hw-deep); }
 #main-content .home-hello-x { margin-left: auto; font-size: 13px; line-height: 1; color: var(--win-line); }
-#main-content .home-hello-body { position: relative; display: flex; align-items: center; gap: 12px; padding: 8px 12px 0; }
+#main-content .home-hello-body { position: relative; display: flex; align-items: center; gap: 12px; padding: 15px 12px 0; }
 #main-content .home-hello-frame { width: 58px; height: 58px; }
 #main-content .home-hello-copy { display: block; flex: 1; min-width: 0; }
 #main-content .home-hello-name { display: block; margin-bottom: 3px; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -42,23 +42,23 @@
 #main-content .home-hello-link { position: absolute; right: 8px; bottom: 4px; padding: 4px; border: 0; background: none; font-size: 12px !important; color: var(--hw-deep) !important; text-decoration: underline; text-underline-offset: 2px; }
 
 /* ===== 登录框 ===== */
-#main-content .home-login { position: absolute; inset: 6px 0 0; display: flex; flex-direction: column; align-items: center; }
+#main-content .home-login { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #main-content .home-login-frame {
-  width: 108px; height: 108px; padding: 7px; border-radius: 12px;
+  width: 92px; height: 92px; padding: 6px; border-radius: 11px;
   background: linear-gradient(160deg, color-mix(in srgb, var(--theme-color) 20%, var(--color-surface)), color-mix(in srgb, var(--theme-color) 60%, var(--color-surface)));
   box-shadow: 0 2px 5px color-mix(in srgb, var(--win-ink) 30%, transparent), inset 0 1px 0 var(--effect-highlight), inset 0 -3px 5px color-mix(in srgb, var(--theme-color) 30%, transparent);
 }
 #main-content .home-login-frame > i { border-radius: 6px; box-shadow: 0 0 0 2px var(--color-surface), inset 0 0 0 1px color-mix(in srgb, var(--win-ink) 12%, transparent); }
 #main-content .home-login-field {
-  display: block; width: 140px; height: 22px; box-sizing: border-box; margin-top: 12px; padding: 0 6px;
+  display: block; width: 140px; height: 22px; box-sizing: border-box; margin-top: 10px; padding: 0 6px;
   border: 1px solid var(--win-shade); border-radius: 2px; background: var(--color-surface);
   box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--win-shade) 40%, transparent), 0 0 0 2px color-mix(in srgb, var(--color-surface) 70%, transparent);
   font-size: 11px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 #main-content .home-login-row { display: flex; align-items: center; gap: 5px; margin-left: 24px; }
-#main-content .home-login-field.is-second { width: 116px; margin-top: 8px; color: var(--color-muted); }
+#main-content .home-login-field.is-second { width: 116px; margin-top: 7px; color: var(--color-muted); }
 #main-content .home-login-go {
-  display: grid; place-items: center; width: 20px; height: 20px; margin-top: 8px; padding: 0; box-sizing: border-box;
+  display: grid; place-items: center; width: 20px; height: 20px; margin-top: 7px; padding: 0; box-sizing: border-box;
   border: 1.5px solid var(--color-surface); border-radius: 50%;
   background: radial-gradient(ellipse 70% 45% at 50% 22%, color-mix(in srgb, var(--color-surface) 75%, transparent), transparent 70%), linear-gradient(var(--hw-soft), var(--hw-deep));
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--hw-deep) 55%, transparent), 0 1px 2px color-mix(in srgb, var(--win-ink) 40%, transparent);
@@ -118,7 +118,7 @@
 
 /* ===== 加组件里的小预览 ===== */
 #main-content .home-edit-thumb.is-hello { height: 22px; margin: 6px 0; border-radius: 3px; }
-#main-content .home-edit-thumb.is-login { width: 23px; }
+#main-content .home-edit-thumb.is-login { width: 34px; }
 #main-content .home-edit-thumb.is-calendar { height: 26px; margin: 4px 0; }
 
 /* ===== 设定组件：用设置里那种弹窗（#viChoiceModal），里面多一排换图、几栏字 ===== */
