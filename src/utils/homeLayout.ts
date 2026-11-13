@@ -16,7 +16,7 @@ export const HOME_ITEMS: HomeItemInfo[] = [
   { id: 'tama', name: '电子宠物', w: 2, h: 2, widget: true },
   { id: 'notice', name: '消息小窗', w: 4, h: 1, widget: true },
   { id: 'hello', name: '一句话', w: 4, h: 2, widget: true, extra: true },
-  { id: 'login', name: '登录框', w: 2, h: 3, widget: true, extra: true },
+  { id: 'login', name: '登录框', w: 2, h: 2, widget: true, extra: true },
   { id: 'calendar', name: '日历', w: 4, h: 3, widget: true, extra: true },
   { id: 'ledger', name: 'Ledger', w: 1, h: 1, widget: false },
   { id: 'memos', name: 'Memos', w: 1, h: 1, widget: false },

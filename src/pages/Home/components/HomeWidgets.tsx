@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './HomeWidgets.css';
 import type { CSSProperties } from 'react';
 import { prepareImage, readImageSlot, saveImageSlots } from '../../../utils/imageAssets';
@@ -6,6 +6,8 @@ import { HOME_WIDGETS_EVENT, WIDGET_FIELDS, WIDGET_IMAGE, readWidgets, writeWidg
 import type { WidgetId, WidgetTexts } from '../../../utils/homeWidgets';
 import { showToast } from '../../../utils/toast';
 import { PixelText } from './PixelText';
+import { subscribeCatalog } from '../../../utils/catalogStorage';
+import { HELLO_AI_EVENT, askHello, helloPeople, helloTick, readHelloAi, writeHelloAi } from '../../../utils/helloWriter';
 
 /**
  * 主画面后来加的三个组件：一句话（上线提醒小窗）、登录框、日历（古早弹窗月历）。
@@ -33,18 +35,39 @@ function Frame({ className, src, onPick, label }: { className: string; src: stri
   </button>;
 }
 
+/** 一句话交给角色写的设定（谁来写、他留的那句）。 */
+function useHelloAi() {
+  const [state, setState] = useState(readHelloAi);
+  useEffect(() => {
+    const sync = () => setState(readHelloAi());
+    window.addEventListener(HELLO_AI_EVENT, sync); return () => window.removeEventListener(HELLO_AI_EVENT, sync);
+  }, []);
+  return state;
+}
+
 export function HomeHello({ texts, src, configure }: { texts: Record<string, string>; src: string; configure: () => void }) {
-  return <div className="home-hello">
+  const ai = useHelloAi(), [catalog, setCatalog] = useState(0);
+  useEffect(() => subscribeCatalog(() => setCatalog(value => value + 1)), []);
+  // 角色资料（名字、头像）只在换人、角色资料改了的时候重读（主画面播音乐时每秒都会重画）
+  const person = useMemo(() => ai.mode === 'ai' && ai.who ? helloPeople().find(item => item.key === ai.who) : undefined, [ai.mode, ai.who, catalog]);
+  // 交给他写：主画面开着时每五分钟看一次要不要问他
+  useEffect(() => {
+    if (!person) return;
+    const first = window.setTimeout(() => void helloTick(), 8000), timer = window.setInterval(() => void helloTick(), 5 * 60000);
+    return () => { window.clearTimeout(first); window.clearInterval(timer); };
+  }, [person?.key]);
+  const name = person ? person.name : texts.name, text = person ? ai.text || '……' : texts.text;
+  return <div className={'home-hello' + (person ? ' is-ai' : '')}>
     <div className="home-hello-head" aria-hidden="true">
       <svg className="home-hello-icon" viewBox="0 0 18 16" shapeRendering="crispEdges"><g className="hi-a"><rect x="2" y="1" width="4" height="4" /><rect x="0" y="6" width="8" height="6" /></g><g className="hi-b"><rect x="10" y="3" width="4" height="4" /><rect x="8" y="8" width="8" height="7" /></g></svg>
       <span className="home-hello-app">qingtuan messenger</span>
       <span className="home-hello-x">✕</span>
     </div>
     <div className="home-hello-body">
-      <Frame className="home-hello-frame" src={src} onPick={configure} label="设定一句话的图片和字" />
-      <span className="home-hello-copy"><b className="home-hello-name">{texts.name}</b><span className="home-hello-text">{texts.text}</span></span>
+      <Frame className="home-hello-frame" src={src || person?.photo || ''} onPick={configure} label="设定一句话的图片和字" />
+      <span className="home-hello-copy"><b className="home-hello-name">{name}</b><span className="home-hello-text">{text}</span></span>
     </div>
-    <button type="button" className="home-hello-link" onClick={event => { event.stopPropagation(); openChat(); }}>回复</button>
+    <button type="button" className="home-hello-link" onClick={event => { event.stopPropagation(); window.dispatchEvent(new CustomEvent('qingtuan:open-notice-chat', { detail: person?.key })); }}>回复</button>
   </div>;
 }
 
@@ -124,6 +147,22 @@ export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () =>
     try { await saveImage(''); } catch { showToast('图片拿不掉，等一下再试'); }
   }
   const change = (key: string, value: string) => writeWidgets({ ...texts, [id]: { ...texts[id], [key]: value } });
+  // 一句话：自己写，或交给角色写
+  const ai = useHelloAi(), people = id === 'hello' ? helloPeople() : [], byAi = id === 'hello' && ai.mode === 'ai', [asking, setAsking] = useState(false);
+  function setMode(mode: 'self' | 'ai') {
+    const who = ai.who && people.some(item => item.key === ai.who) ? ai.who : people[0]?.key || '';
+    if (mode === 'ai' && !who) { showToast('还没有可以交给的角色，先去聊天加一个'); return; }
+    writeHelloAi({ mode, who });
+    if (mode === 'ai') void helloTick();
+  }
+  function setWho(who: string) { writeHelloAi({ who, text: '', at: 0, next: 0, history: [] }); void helloTick(); }
+  async function askNow() {
+    if (asking) return;
+    setAsking(true);
+    try { await askHello(true); showToast('他写好了'); }
+    catch (error) { showToast((error as Error).message || '他没写出来，等一下再试'); }
+    finally { setAsking(false); }
+  }
   return <div className="home-edit-sheet home-widget-sheet" role="dialog" aria-label={`设定${NAMES[id]}`} onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()}>
     <div className="home-edit-sheet-head"><span>{`设定「${NAMES[id]}」`}</span><button type="button" aria-label="关掉" onClick={onClose}>×</button></div>
     <div className="home-widget-photo">
@@ -132,7 +171,19 @@ export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () =>
       {src && <button type="button" className="home-edit-btn" disabled={busy} onClick={clear}>拿掉图</button>}
       <input ref={input} type="file" accept="image/*" hidden onChange={event => pick(event.currentTarget.files?.[0])} />
     </div>
-    {WIDGET_FIELDS[id].map(field => <label key={field.key} className="home-widget-field">
+    {id === 'hello' && <div className="home-widget-mode" role="radiogroup" aria-label="谁来写">
+      <span>谁来写</span>
+      <button type="button" role="radio" aria-checked={!byAi} className={'home-edit-btn' + (byAi ? '' : ' is-on')} onClick={() => setMode('self')}>自己写</button>
+      <button type="button" role="radio" aria-checked={byAi} className={'home-edit-btn' + (byAi ? ' is-on' : '')} onClick={() => setMode('ai')}>交给他写</button>
+    </div>}
+    {byAi && <>
+      <label className="home-widget-field"><span>交给</span>
+        <select value={ai.who} onChange={event => setWho(event.currentTarget.value)}>{people.map(item => <option key={item.key} value={item.key}>{item.name}</option>)}</select>
+      </label>
+      <p className="home-widget-note">{ai.text ? `现在这句：「${ai.text}」` : '他还没写。'}<br />他想换的时候会自己换，大约几个小时想一次，勿扰时间不会。名字用他的；没选图的话用他的头像。</p>
+      <div className="home-widget-actions is-left"><button type="button" className="home-edit-btn" disabled={asking} onClick={askNow}>{asking ? '他在想…' : '叫他现在写一句'}</button></div>
+    </>}
+    {!byAi && WIDGET_FIELDS[id].map(field => <label key={field.key} className="home-widget-field">
       <span>{field.label}</span>
       <input type="text" value={texts[id][field.key]} maxLength={field.max} placeholder={field.placeholder} onChange={event => change(field.key, event.currentTarget.value)} />
     </label>)}

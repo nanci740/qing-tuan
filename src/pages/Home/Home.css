@@ -2998,6 +2998,19 @@
 #main-content.is-editing-home > .ios-status-bar { visibility: hidden; }
 /* 编辑中里面的东西不能按（按了是要拖），一直轻轻晃 */
 #main-content .home-pages.is-editing .home-slot { cursor: grab; outline: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); outline-offset: -3px; border-radius: 8px; }
+/* 组件的虚线框贴着组件真正画出来的范围（有的组件比格子大、有的比格子小）：--hug-* 是组件边缘离格子边的距离，负的是超出去 */
+#main-content .home-pages.is-editing .home-slot.is-widget { outline: none; }
+#main-content .home-pages.is-editing .home-slot.is-widget::after {
+  content: ''; position: absolute; z-index: 10; pointer-events: none; border: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); border-radius: 8px;
+  top: calc(var(--hug-t, 0px) - 5px); right: calc(var(--hug-r, 0px) - 5px); bottom: calc(var(--hug-b, 0px) - 5px); left: calc(var(--hug-l, 0px) - 5px);
+}
+#main-content .home-slot[data-item="main"] { --hug-t: -22px; --hug-r: -18px; --hug-b: 38px; --hug-l: -18px; }
+#main-content .home-slot[data-item="tama"] { --hug-t: -1px; --hug-r: 12px; --hug-b: -1px; --hug-l: 12px; }
+#main-content .home-slot[data-item="notice"] { --hug-t: -4px; --hug-r: 0px; --hug-b: 10px; --hug-l: 0px; }
+#main-content .home-slot[data-item="hello"] { --hug-t: 8px; --hug-r: 10px; --hug-b: 52px; --hug-l: 0px; }
+#main-content .home-slot[data-item="login"] { --hug-t: 11px; --hug-r: 0px; --hug-b: 11px; --hug-l: 0px; }
+#main-content .home-slot[data-item="calendar"] { --hug-t: 4px; --hug-r: 0px; --hug-b: 4px; --hug-l: 0px; }
+@media (max-height: 780px) { #main-content .home-slot[data-item="main"] { --hug-t: -24px; --hug-r: -25px; --hug-l: -25px; --hug-b: 39px; } }
 #main-content .home-pages.is-editing .home-slot > :not(.home-slot-remove) { pointer-events: none; animation: homeJiggle 0.28s ease-in-out infinite alternate; }
 #main-content .home-pages.is-editing .home-slot.is-widget > :not(.home-slot-remove) { animation-name: homeJiggleSoft; }
 #main-content .home-pages.is-editing .home-slot:nth-child(2n) > :not(.home-slot-remove) { animation-delay: -0.14s; }
@@ -3010,7 +3023,7 @@
 @media (prefers-reduced-motion: reduce) { #main-content .home-pages.is-editing .home-slot > * { animation: none !important; } }
 /* 组件左上角的「－」：收起来 */
 #main-content .home-slot-remove {
-  position: absolute; left: -4px; top: -4px; z-index: 20; display: grid; place-items: center;
+  position: absolute; left: calc(var(--hug-l, 0px) - 9px); top: calc(var(--hug-t, 0px) - 9px); z-index: 20; display: grid; place-items: center;
   width: 22px; height: 22px; padding: 0; border: 1px solid var(--color-muted); border-radius: 50%;
   background: var(--effect-face-white); box-shadow: var(--effect-raised), 0 1px 3px rgba(0, 0, 0, 0.2);
   color: var(--color-text); font: 700 15px/1 sans-serif; cursor: pointer; pointer-events: auto;
@@ -3022,7 +3035,7 @@
   box-shadow: var(--effect-button-shadow); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; pointer-events: auto;
 }
 #main-content .home-edit-btn:active { box-shadow: var(--effect-sunken); }
-#main-content .home-edit-btn.is-done { background: var(--win-bar); font-weight: 700; }
+#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); font-weight: 700; } /* 主按钮（完成、好了）：主题色的正面高光，跟其他按钮一样上亮下深 */
 #main-content .home-edit-tip { position: absolute; left: 0; right: 0; bottom: 112px; z-index: 40; margin: 0; color: var(--color-muted); font-size: 10px; text-align: center; pointer-events: none; }
 /* 加组件：从下面出来的一块 */
 #main-content .home-edit-sheet {
