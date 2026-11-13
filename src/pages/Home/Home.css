@@ -2998,12 +2998,9 @@
 #main-content.is-editing-home > .ios-status-bar { visibility: hidden; }
 /* 编辑中里面的东西不能按（按了是要拖），一直轻轻晃 */
 #main-content .home-pages.is-editing .home-slot { cursor: grab; outline: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); outline-offset: -3px; border-radius: 8px; }
-/* 组件的虚线框贴着组件真正画出来的范围（有的组件比格子大、有的比格子小）：--hug-* 是组件边缘离格子边的距离，负的是超出去 */
+/* 组件不画虚线框（组件本身就有框，编辑中会晃、左上角有「－」）；只有图标画。
+   --hug-* 是组件真正画出来的边离格子边的距离（负的是超出去），「－」照这个放在组件左上角 */
 #main-content .home-pages.is-editing .home-slot.is-widget { outline: none; }
-#main-content .home-pages.is-editing .home-slot.is-widget::after {
-  content: ''; position: absolute; z-index: 10; pointer-events: none; border: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); border-radius: 8px;
-  top: calc(var(--hug-t, 0px) - 5px); right: calc(var(--hug-r, 0px) - 5px); bottom: calc(var(--hug-b, 0px) - 5px); left: calc(var(--hug-l, 0px) - 5px);
-}
 #main-content .home-slot[data-item="main"] { --hug-t: -22px; --hug-r: -18px; --hug-b: 38px; --hug-l: -18px; }
 #main-content .home-slot[data-item="tama"] { --hug-t: -1px; --hug-r: 12px; --hug-b: -1px; --hug-l: 12px; }
 #main-content .home-slot[data-item="notice"] { --hug-t: -4px; --hug-r: 0px; --hug-b: 10px; --hug-l: 0px; }
