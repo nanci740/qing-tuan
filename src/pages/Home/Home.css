@@ -3035,7 +3035,7 @@
   box-shadow: var(--effect-button-shadow); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; pointer-events: auto;
 }
 #main-content .home-edit-btn:active { box-shadow: var(--effect-sunken); }
-#main-content .home-edit-btn.is-done { background: var(--win-bar); font-weight: 700; }
+#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); font-weight: 700; } /* 主按钮（完成、好了）：主题色的正面高光，跟其他按钮一样上亮下深 */
 #main-content .home-edit-tip { position: absolute; left: 0; right: 0; bottom: 112px; z-index: 40; margin: 0; color: var(--color-muted); font-size: 10px; text-align: center; pointer-events: none; }
 /* 加组件：从下面出来的一块 */
 #main-content .home-edit-sheet {
