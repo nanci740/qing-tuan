@@ -126,7 +126,7 @@
 #main-content .home-widget-photo-thumb { flex: none; width: 44px; height: 44px; box-sizing: border-box; border: 1px solid var(--color-muted); background: var(--win-face) center / cover no-repeat; box-shadow: var(--effect-sunken); }
 #main-content .home-widget-photo-thumb.is-empty { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
 #main-content .home-widget-photo .home-edit-btn:disabled { opacity: 0.6; cursor: default; }
-#main-content .home-widget-field { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--color-text); font-size: 11px; }
+#main-content .home-widget-field { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--color-text); font-size: 12px; }
 #main-content .home-widget-field > span { flex: 0 0 64px; }
 #main-content .home-widget-field input {
   flex: 1; min-width: 0; height: 26px; box-sizing: border-box; padding: 0 7px; border: 1px solid var(--color-muted); border-radius: 2px;
@@ -135,13 +135,29 @@
 #main-content .home-widget-field input:focus { outline: 1.5px solid var(--color-accent-strong); outline-offset: 0; }
 #main-content .home-widget-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
 #main-content .home-widget-actions.is-left { justify-content: flex-start; margin-top: 6px; }
-#main-content .home-widget-mode { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: var(--color-text); font-size: 11px; }
+#main-content .home-widget-mode { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: var(--color-text); font-size: 12px; }
 #main-content .home-widget-mode > span { flex: 0 0 64px; }
-#main-content .home-widget-mode .home-edit-btn { padding: 3px 10px; font-size: 11px; }
-#main-content .home-widget-mode .home-edit-btn.is-on { background: var(--win-bar); box-shadow: var(--effect-sunken); font-weight: 700; }
-#main-content .home-widget-field select {
-  flex: 1; min-width: 0; height: 26px; box-sizing: border-box; padding: 0 6px; border: 1px solid var(--color-muted); border-radius: 2px;
-  background: var(--color-surface); box-shadow: var(--effect-sunken); color: var(--color-text); font: inherit; font-size: 12px;
+#main-content .home-widget-mode .home-edit-btn { padding: 4px 12px; }
+#main-content .home-widget-mode .home-edit-btn.is-on { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+/* 选角色的下拉：按钮跟输入框同一个样子，展开的一排在下面 */
+#main-content .home-widget-pick { position: relative; flex: 1; min-width: 0; }
+#main-content .home-widget-pick-btn {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; height: 26px; box-sizing: border-box; padding: 0 8px 0 7px;
+  border: 1px solid var(--color-muted); border-radius: 2px; background: var(--color-surface); box-shadow: var(--effect-sunken);
+  color: var(--color-text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
 }
-#main-content .home-widget-note { margin: 8px 0 0; color: var(--color-muted); font-size: 10px; line-height: 1.6; }
+#main-content .home-widget-pick-btn > span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#main-content .home-widget-pick-btn svg { flex: none; width: 10px; height: 6px; color: var(--color-muted); }
+#main-content .home-widget-pick-btn:focus-visible { outline: 1.5px solid var(--color-accent-strong); outline-offset: 0; }
+#main-content .home-widget-pick-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 2px); z-index: 5; max-height: 140px; overflow-y: auto; padding: 2px;
+  border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised), 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+#main-content .home-widget-pick-list button {
+  display: block; width: 100%; height: 28px; padding: 0 8px; border: 0; background: none; color: var(--color-text); font: inherit; font-size: 12px; text-align: left;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+#main-content .home-widget-pick-list button.is-on { background: var(--win-bar); }
+#main-content .home-widget-pick-list button:active { background: color-mix(in srgb, var(--win-bar) 70%, var(--color-surface)); }
+#main-content .home-widget-note { margin: 8px 0 0; color: var(--color-muted); font-size: 11px; line-height: 1.6; }
 #main-content .home-widget-actions .home-edit-btn:disabled { opacity: 0.6; cursor: default; }

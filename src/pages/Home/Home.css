@@ -2998,12 +2998,9 @@
 #main-content.is-editing-home > .ios-status-bar { visibility: hidden; }
 /* 编辑中里面的东西不能按（按了是要拖），一直轻轻晃 */
 #main-content .home-pages.is-editing .home-slot { cursor: grab; outline: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); outline-offset: -3px; border-radius: 8px; }
-/* 组件的虚线框贴着组件真正画出来的范围（有的组件比格子大、有的比格子小）：--hug-* 是组件边缘离格子边的距离，负的是超出去 */
+/* 组件不画虚线框（组件本身就有框，编辑中会晃、左上角有「－」）；只有图标画。
+   --hug-* 是组件真正画出来的边离格子边的距离（负的是超出去），「－」照这个放在组件左上角 */
 #main-content .home-pages.is-editing .home-slot.is-widget { outline: none; }
-#main-content .home-pages.is-editing .home-slot.is-widget::after {
-  content: ''; position: absolute; z-index: 10; pointer-events: none; border: 1.5px dashed color-mix(in srgb, var(--color-muted) 65%, transparent); border-radius: 8px;
-  top: calc(var(--hug-t, 0px) - 5px); right: calc(var(--hug-r, 0px) - 5px); bottom: calc(var(--hug-b, 0px) - 5px); left: calc(var(--hug-l, 0px) - 5px);
-}
 #main-content .home-slot[data-item="main"] { --hug-t: -22px; --hug-r: -18px; --hug-b: 38px; --hug-l: -18px; }
 #main-content .home-slot[data-item="tama"] { --hug-t: -1px; --hug-r: 12px; --hug-b: -1px; --hug-l: 12px; }
 #main-content .home-slot[data-item="notice"] { --hug-t: -4px; --hug-r: 0px; --hug-b: 10px; --hug-l: 0px; }
@@ -3035,14 +3032,16 @@
   box-shadow: var(--effect-button-shadow); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; pointer-events: auto;
 }
 #main-content .home-edit-btn:active { box-shadow: var(--effect-sunken); }
-#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); font-weight: 700; } /* 主按钮（完成、好了）：主题色的正面高光，跟其他按钮一样上亮下深 */
+#main-content .home-edit-btn:focus { outline: none; }
+#main-content .home-edit-btn:focus-visible { outline: 1.5px solid var(--color-accent-strong); outline-offset: 1px; }
+#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); } /* 主按钮（完成、好了）：跟设置里的青色主按钮一样，主题色正面高光、白字 */
 #main-content .home-edit-tip { position: absolute; left: 0; right: 0; bottom: 112px; z-index: 40; margin: 0; color: var(--color-muted); font-size: 10px; text-align: center; pointer-events: none; }
 /* 加组件：从下面出来的一块 */
 #main-content .home-edit-sheet {
   position: absolute; left: 10px; right: 10px; bottom: 104px; z-index: 60; padding: 8px 10px 10px;
   border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised), 0 -3px 12px rgba(0, 0, 0, 0.14);
 }
-#main-content .home-edit-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--color-text); font-size: 12px; }
+#main-content .home-edit-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--color-text); font-size: 12px; font-weight: 400; }
 #main-content .home-edit-sheet-head button { padding: 0 4px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 16px; line-height: 1; cursor: pointer; }
 #main-content .home-edit-sheet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 #main-content .home-edit-card {
