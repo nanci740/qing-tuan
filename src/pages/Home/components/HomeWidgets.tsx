@@ -148,7 +148,7 @@ export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () =>
   }
   const change = (key: string, value: string) => writeWidgets({ ...texts, [id]: { ...texts[id], [key]: value } });
   // 一句话：自己写，或交给角色写
-  const ai = useHelloAi(), people = id === 'hello' ? helloPeople() : [], byAi = id === 'hello' && ai.mode === 'ai', [asking, setAsking] = useState(false);
+  const ai = useHelloAi(), people = id === 'hello' ? helloPeople() : [], byAi = id === 'hello' && ai.mode === 'ai', [asking, setAsking] = useState(false), [picking, setPicking] = useState(false);
   function setMode(mode: 'self' | 'ai') {
     const who = ai.who && people.some(item => item.key === ai.who) ? ai.who : people[0]?.key || '';
     if (mode === 'ai' && !who) { showToast('还没有可以交给的角色，先去聊天加一个'); return; }
@@ -177,9 +177,19 @@ export function HomeWidgetEditor({ id, onClose }: { id: WidgetId; onClose: () =>
       <button type="button" role="radio" aria-checked={byAi} className={'home-edit-btn' + (byAi ? ' is-on' : '')} onClick={() => setMode('ai')}>交给他写</button>
     </div>}
     {byAi && <>
-      <label className="home-widget-field"><span>交给</span>
-        <select value={ai.who} onChange={event => setWho(event.currentTarget.value)}>{people.map(item => <option key={item.key} value={item.key}>{item.name}</option>)}</select>
-      </label>
+      {/* 选角色：不用系统的下拉选单，在这块里面展开一排 */}
+      <div className="home-widget-field"><span>交给</span>
+        <div className="home-widget-pick">
+          <button type="button" className="home-widget-pick-btn" aria-haspopup="listbox" aria-expanded={picking} onClick={() => setPicking(open => !open)}>
+            <span>{people.find(item => item.key === ai.who)?.name || '选一个角色'}</span>
+            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true"><path d={picking ? 'M1 5l4-4 4 4' : 'M1 1l4 4 4-4'} /></svg>
+          </button>
+          {picking && <div className="home-widget-pick-list" role="listbox" aria-label="交给谁">
+            {people.map(item => <button type="button" role="option" aria-selected={item.key === ai.who} key={item.key} className={item.key === ai.who ? 'is-on' : ''}
+              onClick={() => { setPicking(false); if (item.key !== ai.who) setWho(item.key); }}>{item.name}</button>)}
+          </div>}
+        </div>
+      </div>
       <p className="home-widget-note">{ai.text ? `现在这句：「${ai.text}」` : '他还没写。'}<br />他想换的时候会自己换，大约几个小时想一次，勿扰时间不会。名字用他的；没选图的话用他的头像。</p>
       <div className="home-widget-actions is-left"><button type="button" className="home-edit-btn" disabled={asking} onClick={askNow}>{asking ? '他在想…' : '叫他现在写一句'}</button></div>
     </>}

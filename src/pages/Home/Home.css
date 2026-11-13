@@ -3035,14 +3035,16 @@
   box-shadow: var(--effect-button-shadow); color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; pointer-events: auto;
 }
 #main-content .home-edit-btn:active { box-shadow: var(--effect-sunken); }
-#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); font-weight: 700; } /* 主按钮（完成、好了）：主题色的正面高光，跟其他按钮一样上亮下深 */
+#main-content .home-edit-btn:focus { outline: none; }
+#main-content .home-edit-btn:focus-visible { outline: 1.5px solid var(--color-accent-strong); outline-offset: 1px; }
+#main-content .home-edit-btn.is-done { background: var(--effect-face-accent); color: var(--color-surface); -webkit-text-fill-color: var(--color-surface); text-shadow: var(--effect-text-white); } /* 主按钮（完成、好了）：跟设置里的青色主按钮一样，主题色正面高光、白字 */
 #main-content .home-edit-tip { position: absolute; left: 0; right: 0; bottom: 112px; z-index: 40; margin: 0; color: var(--color-muted); font-size: 10px; text-align: center; pointer-events: none; }
 /* 加组件：从下面出来的一块 */
 #main-content .home-edit-sheet {
   position: absolute; left: 10px; right: 10px; bottom: 104px; z-index: 60; padding: 8px 10px 10px;
   border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised), 0 -3px 12px rgba(0, 0, 0, 0.14);
 }
-#main-content .home-edit-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--color-text); font-size: 12px; }
+#main-content .home-edit-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--color-text); font-size: 12px; font-weight: 400; }
 #main-content .home-edit-sheet-head button { padding: 0 4px; border: 0; background: none; color: var(--color-muted); font: inherit; font-size: 16px; line-height: 1; cursor: pointer; }
 #main-content .home-edit-sheet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 #main-content .home-edit-card {
