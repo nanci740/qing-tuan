@@ -41,6 +41,7 @@ import {collectWorldInjection} from '../utils/chatWorldContext';
 import {loadChatPreferences as readPreferences} from '../utils/chatPreferences';
 import {DEFAULT_AVATAR} from '../utils/defaultAvatar';
 import {showToast} from '../utils/toast';
+import {confirmChat} from '../utils/chatConfirm';
 import {saveChatPhoto} from '../utils/chatPhotoStore';
 import {chatPhotoReady} from '../utils/chatPhoto';
 interface ChatPublicApi {
@@ -158,6 +159,13 @@ function initChatApplication(){
         },
         accept(api) { preferenceBridge = api; }
     }}));
+    /** 他最后这一轮回的话：从最后面往前数，碰到你说的话就停（撤回的、提示行不算）。 */
+    function lastRound(){
+        const out:HTMLElement[]=[];
+        const rows=messageNodes.rows().filter(row=>row.classList.contains('chat-message-row'));
+        for(let index=rows.length-1;index>=0;index--){const row=rows[index];if(row.classList.contains('is-user'))break;if(row.classList.contains('is-chat')&&row.dataset.recalled!=='true')out.push(row);}
+        return out;
+    }
     let messageOperations!:MessageOperationsApi;
     window.dispatchEvent(new CustomEvent<{services:MessageOperationsServices;accept(api:MessageOperationsApi):void}>('qingtuan:message-operations-connect', { detail: {
         services: {
@@ -170,7 +178,8 @@ function initChatApplication(){
                 for (let next = row.nextElementSibling; next; next = next.nextElementSibling) {
                     if (next.classList?.contains('chat-message-row') && next.classList.contains('is-chat')) { repliedAfter = true; break; }
                 }
-                return {user:row.classList.contains('is-user'),voice:!!row.querySelector('.chat-voice-audio'),sentAt:Number(row.dataset.sentAt),favorite:row.dataset.favorite==='true',pinned:row.dataset.pinned==='true',transcript:!!row.querySelector('.chat-voice-text-result'),editText:caption?.textContent||getMessageText(row),text:getMessageText(row),quote:getQuoteText(row),id:row.dataset.messageId||'',recallContent:String(row.dataset.chatAiContent||getForwardItemText(row)||getMessageText(row)||'').trim(),repliedAfter};
+                const regenerable = lastRound().includes(row);
+                return {user:row.classList.contains('is-user'),voice:!!row.querySelector('.chat-voice-audio'),sentAt:Number(row.dataset.sentAt),favorite:row.dataset.favorite==='true',pinned:row.dataset.pinned==='true',transcript:!!row.querySelector('.chat-voice-text-result'),editText:caption?.textContent||getMessageText(row),text:getMessageText(row),quote:getQuoteText(row),id:row.dataset.messageId||'',recallContent:String(row.dataset.chatAiContent||getForwardItemText(row)||getMessageText(row)||'').trim(),repliedAfter,regenerable};
             },
             id:ensureChatMessageId,
             anchor(row) {
@@ -195,7 +204,16 @@ function initChatApplication(){
             remove(rows,fromSelection){messageNodes.remove(rows.map(row=>messageNodes.resolve(row)));if(fromSelection)clearSelection();refreshChatBubbleGroups(messageList);refreshPinBar();},
             edit:(row,updated,before,changed)=>messageNodes.edit(row,updated,before,changed),
             recall:(row,data)=>messageNodes.recall(row,data.content,'你撤回了一条消息','user',data.sentAt,data.seen),
-            finishRecall(){refreshChatBubbleGroups(messageList);refreshPinBar();}
+            finishRecall(){refreshChatBubbleGroups(messageList);refreshPinBar();},
+            async regenerate(row){
+                const round=lastRound();
+                if(!round.includes(messageNodes.resolve(row))){showToast('只能重回他最后这一轮回的话');return;}
+                // 转账、红包已经记进钱包了，拿掉会对不上
+                if(round.some(item=>item.dataset.payId)){showToast('这一轮有转账或红包，不能重回');return;}
+                if(!await confirmChat({title:'重回',message:round.length>1?`他这一轮的 ${round.length} 条消息会拿掉，请他重新回一次。`:'他这条消息会拿掉，请他重新回一次。',confirmText:'重回'}))return;
+                messageNodes.remove(round);refreshChatBubbleGroups(messageList);refreshPinBar();
+                await requestCurrentChatAiReply();
+            }
         },accept(api){messageOperations=api;}
     }}));
     state.current.preferences = loadChatPreferences();

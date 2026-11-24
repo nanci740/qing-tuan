@@ -165,6 +165,9 @@ export function ChatMessageOperationsProvider({ children }: {
             case 'recall':
                 openRecall(row);
                 break;
+            case 'regenerate':
+                await service.regenerate(row);
+                break;
             case 'delete':
                 void deleteRows([row]);
                 break;

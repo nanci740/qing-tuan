@@ -1,4 +1,4 @@
-export type MessageAction = 'transcribe' | 'translate' | 'quote' | 'copy' | 'favorite' | 'forward' | 'multi' | 'pin' | 'edit' | 'recall' | 'delete';
+export type MessageAction = 'transcribe' | 'translate' | 'quote' | 'copy' | 'favorite' | 'forward' | 'multi' | 'pin' | 'edit' | 'recall' | 'regenerate' | 'delete';
 export interface MessageInfo {
     user: boolean;
     voice: boolean;
@@ -12,6 +12,8 @@ export interface MessageInfo {
     id: string;
     recallContent: string;
     repliedAfter: boolean;
+    /** 他最后这一轮回的话（后面还没有你说的话）：可以「重回」 */
+    regenerable: boolean;
 }
 export interface MessageOperationsServices {
     read(row: HTMLElement): MessageInfo;
@@ -35,6 +37,8 @@ export interface MessageOperationsServices {
     remove(rows: HTMLElement[], fromSelection: boolean): void;
     edit(row: HTMLElement, value: string, before: string, changed: boolean): void;
     finishRecall(): void;
+    /** 重回：拿掉他最后这一轮回的话，请他重新回一次 */
+    regenerate(row: HTMLElement): Promise<void>;
     recall(row: HTMLElement, data: {
         content: string;
         seen: boolean;
