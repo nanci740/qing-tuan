@@ -45,6 +45,10 @@ export function ChatMessageMenu(){const {view,panel,action,closeMenu}=useMessage
             {"撤回"}
           </PressedButton>
           {"\n            "}
+          <PressedButton type="button" role="menuitem" data-message-action="regenerate" onClick={()=>void action("regenerate")} hidden={!view.menuInfo?.regenerable}>
+            {"重回"}
+          </PressedButton>
+          {"\n            "}
           <PressedButton type="button" role="menuitem" data-message-action="delete" onClick={()=>void action("delete")}>
             {"删除"}
           </PressedButton>
